@@ -1,14 +1,6 @@
 const express = require('express');
 const router = express.Router();
-
-// Import necessary modules
 const socketIo = require('socket.io');
-
-// Define route for chat page
-// router.get('/', (req, res) => {
-//     // Render the chat page and pass the user object to the EJS template
-//     res.render('index', { user: req.user });
-// });
 
 // Export the router
 module.exports = router;
@@ -20,10 +12,12 @@ module.exports.setupSocketIO = (server) => {
     io.on('connection', (socket) => {
         console.log('A user connected');
 
+        // Listen for video streaming data from clients
         socket.on('stream', (data) => {
             // Broadcast the video data to all connected clients
-            socket.broadcast.emit('stream', data);
+            io.emit('stream', data);
         });
+
         // Listen for chat messages from clients
         socket.on('chat message', (msg) => {
             console.log('message: ' + msg);
