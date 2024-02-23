@@ -11,7 +11,7 @@ module.exports.setupSocketIO = (server) => {
 
     io.on('connection', (socket) => {
         console.log('A user connected');
-
+io.emit('')
         // Listen for video streaming data from clients
         socket.on('stream', (data) => {
             // Broadcast the video data to all connected clients
