@@ -1,0 +1,81 @@
+
+    <h1>Video Chatroom</h1>
+    <style>
+        #videos {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .video-container {
+            width: 50%; /* Adjust the width as needed */
+            margin: 10px;
+        }
+
+        .video-container video {
+            width: 100%;
+        }
+    </style>
+    <% if (user) { %>
+        <p>Welcome, <%= user.username %>!</p>
+        <!-- Display video chat interface -->
+        <div id="videoChat">
+            <!-- Video streams will be displayed here -->
+            <div id="videos"></div>
+        </div>
+    <% } else { %>
+        <p>Please log in to join the chat.</p>
+    <% } %>
+
+    <!-- Include Socket.IO library -->
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        // Establish a connection to the server
+        var socket = io();
+
+        // Function to add new video streams to the chat interface
+        function addVideoStream(stream, userId) {
+            var videoContainer = document.getElementById('videos');
+            var videoElement = document.createElement('video');
+            videoElement.autoplay = true;
+            videoElement.srcObject = stream;
+            videoContainer.appendChild(videoElement);
+        }
+
+        // Function to remove video stream when a user leaves
+        function removeVideoStream(userId) {
+            var videoContainer = document.getElementById('videos');
+            var videoToRemove = videoContainer.querySelector('[data-userid="' + userId + '"]');
+            if (videoToRemove) {
+                videoToRemove.remove();
+            }
+        }
+
+        // Receive video streams from the server
+        socket.on('user-connected', function(userId, stream) {
+            addVideoStream(stream, userId);
+        });
+
+        // Remove video streams when a user leaves
+        socket.on('user-disconnected', function(userId) {
+            removeVideoStream(userId);
+        });
+
+        // Capture user's own video stream
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(function(stream) {
+                // Display user's own video stream
+                addVideoStream(stream, 'self');
+
+                // Send user's video stream to the server
+                socket.emit('join-room', roomId, stream);
+
+                // Listen for new users joining and send user's own stream to them
+                socket.on('user-connected', function(userId) {
+                    socket.emit('send-stream', userId, stream);
+                });
+            })
+            .catch(function(err) {
+                console.error('Error accessing the webcam:', err);
+            });
+    </script>
+

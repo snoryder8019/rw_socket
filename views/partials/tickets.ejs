@@ -1,0 +1,26 @@
+<!-- open-tickets-form.ejs -->
+<div class="userData">
+    <h2>Nancy's Developer can help!!</h2>
+    <form action="/submitTicket" method="post">
+        <input type="hidden" name="userId" value="<%= user._id %>">
+        <div class="form-group">
+            <label for="ticketSubject">Subject:</label>
+           <select name
+           ="subject" id="ticketSubject">
+            <option value="broken links">broken links or pages</option>
+            <option value="card design">design issue</option>
+            <option value="payment issue">payment issue</option>
+            <option value="account issue">account issue</option>
+            <option value="card order">my card order</option>
+            <option value="other">it's something else</option>
+           </select>
+        </div>
+        <div class="form-group">
+            <label for="ticketDescription" style="width: 100%;">Description:</label><br>
+            <textarea class="form-control" id="ticketDescription" name="description" cols="50" rows="4" required></textarea>
+        </div>
+        <input type="submit" value="Submit Ticket">
+    </form>
+    <h6 style="margin-top: 5px;padding:0;transform: translateY(-50%);" id="ticketsCloseButton"><a>❌ Close this window</a></h6>
+</div>
+

@@ -1,0 +1,108 @@
+<style>
+    .logs-scrollable-div {
+      max-height: 300px;
+      overflow-y: auto; /* Changed to 'auto' for scrollbars to appear only when needed */
+      border: 1px solid #ccc;
+      padding: 10px;
+      margin-bottom: 20px; /* Added for spacing between tables */
+    }
+    .logs-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .logs-th, .logs-td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+    }
+    .logs-th {
+      background-color: #f2f2f2;
+    }
+  </style>
+  
+  <% if (logs.passReset && logs.passReset.data) { %>
+    <h2>Password Reset Logs</h2>
+    <div class="logs-scrollable-div">
+      <table class="logs-table">
+        <thead>
+          <tr>
+            <th class="logs-th">Date</th>
+            <th class="logs-th">Message</th>
+            <th class="logs-th">Error</th>
+            <th class="logs-th">Data</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% logs.passReset.data.forEach(function(log) { %>
+            <tr>
+              <td class="logs-td"><%= log.date %></td>
+              <td class="logs-td"><%= log.message %></td>
+              <td class="logs-td"><%= log.error ? log.error : 'None' %></td>
+              <td class="logs-td"><%= JSON.stringify(log.data) %></td>
+            </tr>
+          <% }); %>
+        </tbody>
+      </table>
+    </div>
+  <% } %>
+  
+  <% if (logs.errors && logs.errors.data) { %>
+    <h2>Error Logs</h2>
+    <div class="logs-scrollable-div">
+      <table class="logs-table">
+        <thead>
+          <tr>
+            <th class="logs-th">Date</th>
+            <th class="logs-th">Message</th>
+            <th class="logs-th">Error</th>
+            <th class="logs-th">Data</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% logs.errors.data.forEach(function(log) { %>
+            <tr>
+              <td class="logs-td"><%= log.date %></td>
+              <td class="logs-td"><%= log.message %></td>
+              <td class="logs-td"><%= log.error ? log.error : 'None' %></td>
+              <td class="logs-td"><%= JSON.stringify(log.data) %></td>
+            </tr>
+          <% }); %>
+        </tbody>
+      </table>
+    </div>
+  <% } %>
+
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+<div style="padding: 20px; display: flex; flex-wrap: wrap; gap: 20px; justify-content: center;">
+  <!-- Total Memory Card -->
+  <div style="flex: 1; min-width: 250px; background-color: #007bff; color: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+    <h2><i class="fas fa-memory"></i> Total Memory</h2>
+    <p><%= (system.totalmem / 1024 / 1024 / 1024).toFixed(2) %> GB</p>
+  </div>
+
+  <!-- Free Memory Card -->
+  <div style="flex: 1; min-width: 250px; background-color: #28a745; color: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+    <h2><i class="fas fa-tachometer-alt"></i> Free Memory</h2>
+    <div style="background-color: #ddd; border-radius: 20px; padding: 3px;">
+      <div style="background-color: #fff; width: <%= (system.freemem / system.totalmem * 100).toFixed(2) %>%; padding: 10px 0; border-radius: 20px; color: #28a745; text-align: center;">
+        <%= (system.freemem / 1024 / 1024 / 1024).toFixed(2) %> GB
+      </div>
+    </div>
+  </div>
+
+  <!-- CPU Count Card -->
+  <div style="flex: 1; min-width: 250px; background-color: #ffc107; color: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+    <h2><i class="fas fa-microchip"></i> CPU Count</h2>
+    <p><%= system.cpus %> Cores</p>
+  </div>
+
+  <!-- System Uptime Card -->
+  <div style="flex: 1; min-width: 250px; background-color: #dc3545; color: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+    <h2><i class="fas fa-clock"></i> System Uptime</h2>
+    <p><%= (system.uptime / 60 / 60).toFixed(2) %> Hours</p>
+  </div>
+</div>
+
+  

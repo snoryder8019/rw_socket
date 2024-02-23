@@ -1,0 +1,131 @@
+<!-- /partials/users.ejs -->
+<style>
+  @media (max-width: 600px) {
+    .cartTable th,
+    .cartTable td {
+      font-size: 0.8rem; /* Adjust font size for smaller screens */
+    }
+    .cartTable th:nth-last-child(-n+2),
+    .cartTable td:nth-last-child(-n+2) {
+      display: none; /* Hide less important columns on small screens */
+    }
+    .cartTableDiv {
+      overflow-x: auto; /* Enable horizontal scrolling for the table */
+    }
+  }
+</style>
+
+<% if (typeof users == 'object' && users) { %>
+  <%- include('./emailOutgoing') %>
+  <div id="usersDiv">
+    <h3>You have <span style="font-size:2.2rem;color:purple"><%=users.length%> users!!</span></h3>
+    <h4><a href="/admin">Link to download CSVs</a><br>New Actions and Downloads updates.</h4>
+
+    <div class="userAdminDiv_cell" style="overflow: auto;">
+      <div class="cartScroll">
+        <div class="cartTableDiv">
+          <table class="cartTable">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% users.forEach(function(user) { %>
+              <tr>
+                <td><a href="/userEditor?id=<%=user._id%>"> <%= user.lastName %>, <%= user.firstName %></a></td>
+                <td>Suspend ~ Delete</td>
+                <td><button class="emailOutgoing" data-email="<%= user.email %>" data-username="<%=user.firstName%>"
+                    data-userid="<%= user._id %>">Email</button></td>
+                <td><button class="adminPassReset" data-email="<%= user.email %>" data-userid="<%= user._id %>">Reset
+                    Password</button></td>
+              </tr>
+              <% }); %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+<% } else { %>
+<p>No users found.</p>
+<% } %>
+
+<!-- Email Modal -->
+<div id="emailModal" style="display:none; position:fixed; z-index:1; left:0; top:0; width:100%; height:100%; overflow:auto; background-color:rgba(0,0,0,0.4);">
+  <div style="background-color:#fefefe; margin:15% auto; padding:20px; border:1px solid #888; width:80%; max-width: 500px;">
+    <h2>Send Email</h2>
+    <form id="emailForm">
+      <input type="hidden" id="userName" name="userName">
+      <input type="hidden" id="emailTo" name="to">
+      <!-- Optional: If you want to use userId in your modal/form, ensure you have a corresponding input field for it -->
+      <input type="hidden" id="userId" name="userId">
+      <div>
+        <label for="emailBody">Body:</label>
+        <textarea id="emailBody" name="emailBody" rows="4" required></textarea>
+      </div>
+      <div>
+        <button type="submit">Send Email</button>
+        <button type="button" onclick="document.getElementById('emailModal').style.display='none'">Cancel</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    // Handle Password Reset
+    document.querySelectorAll('.adminPassReset').forEach(button => {
+      button.addEventListener('click', function () {
+        adminPassReset(this);
+      });
+    });
+
+    // Handle Sending Emails
+    document.querySelectorAll('.emailOutgoing').forEach(button => {
+      button.addEventListener('click', function () {
+        const email = this.getAttribute('data-email');
+        const userName = this.getAttribute('data-username'); // Ensure this attribute exists
+        const userId = this.getAttribute('data-userid'); // Assuming you want to use userId in your email modal
+
+        // Set the email address and user name in the modal's hidden fields
+        document.getElementById('emailTo').value = email;
+        document.getElementById('userName').value = userName; // Set the userName hidden field
+        // Optional: If you want to use userId in your modal/form, ensure you have a corresponding input field for it
+        document.getElementById('userId').value = userId;
+
+        // Show the email modal
+        document.getElementById('emailModal').style.display = 'block';
+      });
+    });
+  });
+
+  async function adminPassReset(buttonElement) {
+    const email = buttonElement.getAttribute('data-email');
+    try {
+      const response = await fetch('/reset-password-request', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: email
+        }),
+      });
+
+      const result = await response.json();
+      console.log(result.message);
+      // Check if the response indicates success and update the button
+      if (result.message === 'Success') {
+        buttonElement.innerHTML = '&#x2714;'; // Unicode for check mark
+        buttonElement.disabled = true; // Disable the button to prevent repeated clicks
+        alert(message)
+      } else {
+        console.error('Password reset failed:', result.message);
+      }
+    } catch (error) {
+      console.error('Error resetting password:', error);
+    }
+  }
+</script>

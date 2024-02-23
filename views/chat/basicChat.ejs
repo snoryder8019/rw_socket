@@ -1,0 +1,52 @@
+
+    <h1>Welcome to the Chat</h1>
+    
+   
+        <!-- Display chat interface -->
+        <form id="form" action="">
+            <input id="input" autocomplete="off" /><button>Send</button>
+        </form>
+        <div id="chat">
+            <!-- Chat messages will be displayed here -->
+            <ul id="messages"></ul>
+            <!-- Form for sending new messages -->
+        </div>
+
+        <p>Please log in to join the chat.</p>
+    
+
+    <!-- Include Socket.IO library -->
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        // Establish a connection to the server
+        var socket = io();
+
+        // Function to add new messages to the chat interface
+        function addMessage(message) {
+            var messages = document.getElementById('messages');
+            var li = document.createElement('li');
+            li.textContent = message;
+            messages.appendChild(li);
+        }
+
+        // Submit form event listener
+        document.getElementById('form').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent form submission
+            var input = document.getElementById('input');
+            var message = input.value.trim(); // Get input value
+
+            if (message !== '') {
+                // Emit the message to the server
+                socket.emit('chat message', message);
+                // Add the message to the chat interface
+               // addMessage('You: ' + message);
+                input.value = ''; // Clear input field
+            }
+        });
+
+        // Receive new messages from the server
+        socket.on('chat message', function(msg) {
+            addMessage(msg);
+        });
+    </script>
+

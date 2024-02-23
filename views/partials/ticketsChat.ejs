@@ -1,0 +1,42 @@
+
+<% if (typeof tickets == 'object' && tickets) { %>
+    <h4 style="color:red">We found Open Tickets</h4>
+    <% for (let i = 0; i < tickets.length; i++) { %>
+        <% if (tickets[i].status === 'open') { %>
+            <div class="card">
+            <div style="border: 1px dotted red; display: inline-block; width: 96%; margin: 1%; padding: 1%;">
+
+                <p> Ticket status: <%=tickets[i].status%> created: <%= tickets[i].createdAt.toLocaleDateString() %></p>
+                <p> Your description:"<%= tickets[i].description %> "</p>
+           
+                <p> messages:</p>               
+                <div style="border: 1px dotted red;" class="messagesContainer">
+                <div class="messagescrollbox" style="overflow-y: auto; max-height: 200px; ">
+                <% for (let x = 0; x < tickets[i].devUpdates.length; x++) { %>
+                    <div style="display: flex; align-items: center; margin-bottom: 10px; background-color: <%= tickets[i].devUpdates[x].source === 'user' ? '#f2f2f2' : 'inherit' %>;">
+                        <div style="flex: 1; border:1px dotted grey">
+                            <p style="margin: 0;"><strong></strong> <%= tickets[i].devUpdates[x].timestamp.toLocaleDateString() %></p>
+                        </div>
+                        <div style="flex: 1; border:1px dotted grey">
+                            <p style="margin: 0;"><strong></strong> <%= tickets[i].devUpdates[x].source %></p>
+                        </div>
+                        <div style="flex: 3; border:1px dotted grey">
+                            <p style="margin: 0;"><strong></strong> <%= tickets[i].devUpdates[x].message %></p>
+                        </div>
+                    </div>
+                <% } %>
+            </div>
+            </div>
+                <form action="/ticketUpdate" method="POST">
+                    <input type="hidden" name="ticketId" value="<%= tickets[i]._id %>">
+                    <input type="hidden" name="status" value="open">
+                    <input type="text" name="devUpdate" placeholder="respond to ticket">
+                    <input type="hidden" name="source" value="user">
+                    <button type="submit">Update Ticket</button>
+                </form>
+
+            </div>
+        </div>
+        <% } %>
+    <% } %>
+<% } %>

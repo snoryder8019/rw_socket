@@ -1,0 +1,139 @@
+
+-------------------------------------------------------------------------------
+   ROBOCOPY     ::     Robust File Copy for Windows                              
+-------------------------------------------------------------------------------
+
+  Started : Friday, February 23, 2024 11:07:55 AM
+   Source : C:\deployIt\deployBat\boiler\
+     Dest : C:\deployIt\rw_socket\
+
+    Files : *.*
+	    
+  Options : *.* /S /E /DCOPY:DA /COPY:DAT /NP /IS /R:1000000 /W:30 
+
+------------------------------------------------------------------------------
+
+	                   5	C:\deployIt\deployBat\boiler\
+	  *EXTRA File 		       0	copy_log.txt
+	  *EXTRA File 		     297	package.json
+	    New File  		     566	.env
+	    New File  		      61	.gitignore
+	    Older     		    2094	app.js
+	    New File  		     461	moveToC.bat
+	    New File  		     510	npm_dependencies.bat
+	                   1	C:\deployIt\deployBat\boiler\bin\
+	    Older     		    1604	www
+	  New Dir          1	C:\deployIt\deployBat\boiler\config\
+	    New File  		     597	config.js
+	  New Dir          1	C:\deployIt\deployBat\boiler\plugins\
+	    New File  		     804	index.js
+	  New Dir          1	C:\deployIt\deployBat\boiler\plugins\jwt\
+	    New File  		     650	tokenGenerator.js
+	  New Dir          2	C:\deployIt\deployBat\boiler\plugins\mongo\
+	    New File  		     517	db.js
+	    New File  		     762	mongo.js
+	  New Dir          2	C:\deployIt\deployBat\boiler\plugins\mongo\models\
+	    New File  		       0	cartItem.js
+	    New File  		    1236	User.js
+	  New Dir          1	C:\deployIt\deployBat\boiler\plugins\multer\
+	    New File  		    1287	setup.js
+	  New Dir          2	C:\deployIt\deployBat\boiler\plugins\nodemailer\
+	    New File  		    6373	setup.js
+	    New File  		     280	url to auth app
+	  New Dir          1	C:\deployIt\deployBat\boiler\plugins\nodemailer\styles\
+	    New File  		     793	emailStyle0.js
+	  New Dir          6	C:\deployIt\deployBat\boiler\plugins\nodemailer\templates\
+	    New File  		     482	confirmation.html
+	    New File  		     530	generalBody.html
+	    New File  		     971	newTicket.html
+	    New File  		     426	orderComplete.html
+	    New File  		     446	orderNotify.html
+	    New File  		     656	passwordReset.html
+	  New Dir          6	C:\deployIt\deployBat\boiler\plugins\passport\
+	    New File  		    3028	auth.js
+	    New File  		     210	index.js
+	    New File  		    7126	localStrat.js
+	    New File  		    5192	passport.js
+	    New File  		    4676	passwordReset.js
+	    New File  		     820	setup.js
+	  New Dir          4	C:\deployIt\deployBat\boiler\plugins\paypal\
+	    New File  		     186	config.js
+	    New File  		    3952	dbFunctions.js
+	    New File  		     260	index.js
+	    New File  		    9104	paypalFunctions.js
+	  New Dir          1	C:\deployIt\deployBat\boiler\plugins\paypal\webhooks\
+	    New File  		    4902	orders.js
+	  New Dir          1	C:\deployIt\deployBat\boiler\plugins\puppeteer\
+	    New File  		    3199	setup.js
+	  New Dir          1	C:\deployIt\deployBat\boiler\plugins\sharp\
+	    New File  		     523	sharp.js
+	  New Dir          2	C:\deployIt\deployBat\boiler\plugins\stripe\
+	    New File  		     722	index.js
+	    New File  		     896	webhook.js
+	  New Dir          0	C:\deployIt\deployBat\boiler\plugins\tickets\
+	  New Dir          1	C:\deployIt\deployBat\boiler\plugins\tickets\userTickets\
+	    New File  		     133	setup.js
+	  New Dir          0	C:\deployIt\deployBat\boiler\plugins\utilities\
+	                   1	C:\deployIt\deployBat\boiler\public\
+	*EXTRA Dir        -1	C:\deployIt\rw_socket\public\images\
+	*EXTRA Dir        -1	C:\deployIt\rw_socket\public\stylesheets\
+	    New File  		   21039	style.scss
+	                   1	C:\deployIt\deployBat\boiler\public\javascripts\
+	    New File  		    1040	loader.js
+	  New Dir          1	C:\deployIt\deployBat\boiler\public\javascripts\controllers\
+	    New File  		     977	buttonControl.js
+	                   3	C:\deployIt\deployBat\boiler\routes\
+	  *EXTRA File 		     203	users.js
+	    New File  		    1643	admin.js
+	    New File  		     416	auth.js
+	    Older     		    1949	index.js
+	  New Dir          3	C:\deployIt\deployBat\boiler\routes\adminFunctions\
+	    New File  		     960	adminFunctions.js
+	    New File  		    3749	ticketFunctions.js
+	    New File  		    1812	userControl.js
+	  New Dir          1	C:\deployIt\deployBat\boiler\routes\logFunctions\
+	    New File  		    1450	logFunctions.js
+	  New Dir          2	C:\deployIt\deployBat\boiler\routes\securityFunctions\
+	    New File  		    2548	forbiddens.js
+	    New File  		     219	updateBanned.js
+	  New Dir          1	C:\deployIt\deployBat\boiler\routes\systemFunctions\
+	    New File  		     491	systemFunctions.js
+	  New Dir          1	C:\deployIt\deployBat\boiler\routes\userFunctions\
+	    New File  		    8646	userFunctions.js
+	                   6	C:\deployIt\deployBat\boiler\views\
+	  *EXTRA File 		      84	error.jade
+	  *EXTRA File 		      66	index.jade
+	  *EXTRA File 		     125	layout.jade
+	    New File  		    1741	admin.ejs
+	    New File  		     733	error.ejs
+	    New File  		    1548	index.ejs
+	    New File  		     702	registeredPassword.ejs
+	    New File  		    1408	reset-password.ejs
+	    New File  		    2189	userEditor.ejs
+	  New Dir          2	C:\deployIt\deployBat\boiler\views\auth\
+	    New File  		    6049	login.ejs
+	    New File  		    1352	register.ejs
+	  New Dir          2	C:\deployIt\deployBat\boiler\views\forms\
+	    New File  		    1302	days.ejs
+	    New File  		     616	months.ejs
+	  New Dir          6	C:\deployIt\deployBat\boiler\views\partials\
+	    New File  		    4271	adminTickets.ejs
+	    New File  		     536	flashErrors.ejs
+	    New File  		     505	footer.ejs
+	    New File  		    4045	logs.ejs
+	    New File  		    2368	ticketsChat.ejs
+	    New File  		    5106	users.ejs
+
+------------------------------------------------------------------------------
+
+               Total    Copied   Skipped  Mismatch    FAILED    Extras
+    Dirs :        33        27         6         0         0         2
+   Files :        69        69         0         0         0         6
+   Bytes :   144.9 k   144.9 k         0         0         0       775
+   Times :   0:00:00   0:00:00                       0:00:00   0:00:00
+
+
+   Speed :           3,534,404 Bytes/sec.
+   Speed :             202.240 MegaBytes/min.
+   Ended : Friday, February 23, 2024 11:07:55 AM
+

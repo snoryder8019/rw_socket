@@ -1,0 +1,37 @@
+<div class="loginBox">
+  <h2>Register Email:</h2>
+  <p>Use your email to register</p>
+  <p>Keep your passwords safe so you may login in the future</p>
+  <form action="/regUser" method="post">
+    <div>
+      <label>First Name</label>
+      <input id="firstname" name="firstName" type="text" autocomplete="firstname" required />
+    </div>
+    <div>
+      <label>Last Name</label>
+      <input id="lastname" name="lastName" type="text" autocomplete="lastname" required />
+    </div>
+    <div>
+      <label>Email</label>
+      <input name="email" type="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" title="Valid email characters not recognized" required />
+    </div>
+    <div>
+      <label>Password</label>
+      <input id="password1" name="password" type="password" pattern=".{8,}" title="Minimum 8 characters" required />
+    </div>
+    <div>
+      <label>Confirm Password</label>
+      <input id="password2" type="password" required />
+      <h4>**passwords must be 8 characters long**</h4>
+    </div>
+    <div>
+      <button type="submit">Register</button>
+   <br>
+   
+   
+  </div>
+</form>
+</div>
+<h6 style="margin-top: 5px;padding:0;transform: translateY(-50%);" id="regClose"><a>❌ Close this window</a></h6>
+<h6>Register Issues? email <a href="mailto:w2marketing.scott@gmail.com">support</a></h6>
+

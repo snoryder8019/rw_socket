@@ -1,0 +1,2 @@
+https://login.microsoftonline.com/012bb593-0ad1-4b61-80a5-e7cea3866f36/oauth2/v2.0/authorize?client_id=7da7f55a-d6f5-4859-91d2-63f45cb04e21&response_type=code&redirect_uri=http://localhost:3000/oauth/callback&scope=https%3A%2F%2Foutlook.office.com%2Fmail.send%20offline_access
+

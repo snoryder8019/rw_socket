@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head> 
+    <link rel="stylesheet" href="/stylesheets/style.css">
+    <title>Edit User</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>      
+    <div id="main">
+        <h2>Edit User for <%= user._id %></h2>
+        <!-- User Edit Form -->
+        <form action="/postUserEdit" method="post">
+            <input type="hidden" name="_id" value="<%= user._id %>">
+            <label for="firstName">First Name:</label>
+            <input type="text" id="firstName" name="firstName"value="<%= user.firstName %>" required>
+
+            <label for="lastName">Last Name:</label>
+            <input type="text" id="lastName" name="lastName" value="<%= user.lastName %>" required>
+
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" value="<%= user.email %>" required>
+
+            <label for="phone">Phone:</label>
+            <input type="text" id="phone" name="phone" value="<%= user.phone %>" required>
+
+            <label for="address">Address:</label>
+            <input type="text" id="address" name="address" value="<%= user.address %>" required>
+
+       
+            <!-- Additional fields as needed -->
+            <button type="submit">Submit</button>
+        </form>
+<h3>Active user Image</h3>
+<div style="width:15%; margin-left:43%;"><img style="width: 100%;" src="./images/userHeadshots/<%=user.userImg%>" alt=""></div>
+        <!-- Separate Image Upload Form -->
+        <h3>Upload Image</h3>
+        <form action="/postUserImage" method="post" enctype="multipart/form-data">
+            <input type="hidden" name="_id" value="">
+            <input type="file" name="userImg" required>
+            <button type="submit">Upload Image</button>
+        </form>
+
+        <!-- Navigation -->
+        <form action="/admin" method="get">
+            <button type="submit">Go Back</button>
+        </form>
+        <% if(user.isAdmin) { %>
+            <div><h2>Go to <a href="/admin">Admin Panel</a></h2></div>
+        <% } %>
+    </div>
+    <script src="/javascripts/loader.js"></script>
+</body>
+</html>

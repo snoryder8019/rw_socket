@@ -1,0 +1,22 @@
+<div class="flashMessage">
+    <% if (message.info) { %>
+        <div class="alert-info">
+          <h2><%= message.info %></h2>
+    
+        </div>
+        <% } %>
+        
+        <% if (message.success) { %>
+          <div class="alert-success">
+          <h2>  <%= message.success %></h2>
+          </div>
+          <% } %>
+          <% if (message.error) { %>
+            <div class="alert-error">
+            
+           <h2>   <%= message.error%></h2>
+         
+            </div>
+            <% } %>
+
+</div>
