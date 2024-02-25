@@ -1,7 +1,7 @@
 
     <h1>Video and Text Chat</h1>
 
-    <% if (user) { %>
+    <%if(typeof user == 'object' && user){%>
         <p>Welcome, <%= user.username %>!</p>
         <!-- Video chat interface -->
         <div id="videoChat">
