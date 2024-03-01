@@ -12,21 +12,18 @@
   </head>
 
   <body>      
+    <div id="flashErrors"><%- include('./partials/flashErrors',{message:message})%></div>  
     
     <div id="main">
- <%=config.headline%>
-     <div id="div0">
-      <%- include('./chat/basicChatRoom')%>
-      
-
+      <h1><%=config.headline%></h1>
+ <div id=""></div>
+     <div id="div0">  
       <%- include('./chat/basicChat')%>
-
+      <button id="toggleDiv">collapse div</button>  
     </div>
-<button id="toggleDiv">collapse div</button>
-  
- <div id="flashErrors"><%- include('./partials/flashErrors',{message:message})%></div>  
-     <div id="login"><%- include('./auth/login',{user:user,message:message})%></div>   
-     <div id="register"><%- include('./auth/register',{user:user,message:message})%></div>   
+    
+    
+    
      <%if(typeof user == 'object' && user){%>
       
       <p>Having trouble ?</p>

@@ -1,8 +1,33 @@
-body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+:root {
+  font-size: 1rem;
+  text-align: center;
+  background: linear-gradient(to right, #410b4b, #711881, #711881, #410b4b);
+  color: #d7b436;
+  padding: 1%;
 }
 
-a {
-  color: #00B7FF;
+#div0, #login_div, #register_div {
+  display: none;
 }
+
+#footer {
+  padding: 2%;
+  background-color: #d7b436;
+  color: #711881;
+  width: 90%;
+  margin-left: 5%;
+  box-shadow: 5px 5px 12px #711881;
+}
+
+input {
+  margin-bottom: 1%;
+}
+
+.oneTouchLogin {
+  width: 75px;
+  align-items: center;
+  align-content: center;
+  display: flex;
+}
+
+/*# sourceMappingURL=style.css.map */

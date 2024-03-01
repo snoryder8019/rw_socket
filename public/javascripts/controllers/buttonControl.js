@@ -1,12 +1,26 @@
 const toggleDiv = document.getElementById('toggleDiv');
+const login_div = document.getElementById('login_div');
+const reg_div = document.getElementById('register_div');
+const reg_ctrl = document.getElementById('reg_ctrl');
+const regClose = document.getElementById('regClose');
+const loginClose = document.getElementById('loginClose');
+const login_ctrl = document.getElementById('login_ctrl');
 
 
 const div0 = document.getElementById('div0');
 
 
 
+const clsoeCtlGroups = [
+  { button: loginClose, div: login_div },
+  { button: regClose, div: reg_div },
+
+]
+
 const buttonCtlGroups = [
   { button: toggleDiv, div: div0 },
+  { button: login_ctrl, div: login_div },
+  { button: reg_ctrl, div: reg_div },
 
 
 ];
@@ -36,4 +50,21 @@ const buttonControl= ()=> {
   }
 }
 document.addEventListener('onload', buttonControl())
+//buttonControl();
+
+const closeControl= ()=> {
+  console.log('closeControl() ran');
+  for (let i = 0; i < closeCtlGroups.length; i++) {
+    const btn = closeCtlGroups[i].button;
+    const div = closeCtlGroups[i].div;
+    console.log(div)
+    console.log(btn)
+    btn.addEventListener('click', function () {
+   
+        div.style.display = 'none';
+   
+    });
+  }
+}
+document.addEventListener('onload', closeControl())
 //buttonControl();

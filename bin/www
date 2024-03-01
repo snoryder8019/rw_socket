@@ -29,11 +29,10 @@ const socketIo = require('socket.io');
 const io = socketIo(server);
 
 io.on('connection', (socket) => {
-    console.log('A user connected',socket.br);
 
     // Listen for chat messages from clients
     socket.on('chat message', (msg) => {
-        console.log('message: ' + msg);
+      //  console.log('message: ' + msg);
         // Broadcast the message to all connected clients
         io.emit('chat message', msg);
     });
