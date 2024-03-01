@@ -32,7 +32,7 @@
        
         <div id="ticketsChat"><%- include('./partials/ticketsChat',{user:user,tickets:tickets})%></div>
         <%}else{%>
-          <button id="ticketsButton">request help</button>
+          <button id="tickets_ctrl">request help</button>
           <div id="tickets"><%- include('./partials/tickets',{user:user,tickets:tickets})%></div>
       <%}%>
       <%}%>
@@ -42,7 +42,7 @@
     
     </div>    
     <%if(typeof user =='object' && user.isAdmin){%> <div><h2>go to <a href="/admin">admin</a> panel </h2></div><%}%>
-    
+    <%- include('./chat/basicChat')%>
     <div id="footer"><%- include('./partials/footer')%></div>        
     <script src="/javascripts/loader.js"></script>
     

@@ -8,12 +8,32 @@ const flash = require('connect-flash');
 const config = require('./config/config');
 var indexRouter = require('./routes/index');
 var adminRouter = require('./routes/admin');
-
+const session = require('express-session');
 const { connect } = require('./plugins/mongo/mongo');
 const createError = require('http-errors');
+const MongoStore = require('connect-mongo');
+
 const {exporterRoute} = require('./plugins/puppeteer/setup');
 const noNos = require('./routes/securityFunctions/forbiddens');
 var app = express();
+
+// Initialize session with your settings
+const expressSession = session({
+    secret: 'your_secret',
+    resave: false,
+    saveUninitialized: true,
+    store: MongoStore.create({ 
+      mongoUrl: "mongodb+srv://"+process.env.MONUSR+":"+encodeURIComponent(process.env.MONPASS)+"@royalcluster.sda0nl3.mongodb.net/"+config.DB_NAME+"?retryWrites=true&w=majority"
+
+     })
+});
+
+// Use shared session middleware for Express and Socket.IO
+app.use(expressSession);
+
+// Make sure to replace "io" initialization with the shared session
+
+
 
 app.use(noNos)
 async function startApp() {

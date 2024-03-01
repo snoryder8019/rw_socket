@@ -1,51 +1,68 @@
+<% if(typeof user == 'object' && user) { %>
 <h1>Welcome to the Chat</h1>
 
-<%if(typeof user == 'object' && user){%>
-    <%let firstName="scott"%>
+    <!-- Pass the user's first name to the client-side -->
+    <script>var firstName = "<%= user.firstName %>";</script>
+    <div>
+        <h4>users connected</h4>
+        <div id="userList"></div>
+
+    </div>
     <!-- Display chat interface -->
-    <form id="form" action="">
-        <input id="input" autocomplete="off" /><button>Send</button>
+    <form id="form" action="javascript:void(0);">
+        <input id="input" autocomplete="off" /><button type="submit">Send</button>
     </form>
     <div id="chat">
-        <!-- Chat messages will be displayed here -->
         <ul id="messages"></ul>
-        <!-- Form for sending new messages -->
     </div>
 <% } else { %>
     <p>Please log in to join the chat.</p>
 <% } %>
 
-<!-- Include Socket.IO library -->
 <script src="/socket.io/socket.io.js"></script>
 <script>
-    // Establish a connection to the server
-    var socket = io();
+     if (typeof firstName !== 'undefined') {
+        var socket = io();
 
-    // Function to add new messages to the chat interface
-    function addMessage(sender, message) {
-        var messages = document.getElementById('messages');
-        var li = document.createElement('li');
-        li.textContent = sender + ': ' + message; // Display sender's name
-        messages.appendChild(li);
+        // Existing message handling code...
+
+        // Listen for the 'user list' event from the server
+        socket.on('user list', function(users) {
+            var userList = document.getElementById('userList');
+            userList.innerHTML = ''; // Clear current list
+            users.forEach(function(user) {
+                var li = document.createElement('li');
+                li.textContent = user;
+                userList.appendChild(li);
+            });
+        });
     }
+    if (typeof firstName !== 'undefined') {
+        var socket = io();
 
-    // Submit form event listener
-    document.getElementById('form').addEventListener('submit', function(event) {
-        event.preventDefault(); // Prevent form submission
-        var input = document.getElementById('input');
-        var message = input.value.trim(); // Get input value
-
-        if (message !== ''&& typeof user =='object') {
-            // Emit the message to the server
-            socket.emit('chat message', message);
-            // Add the message to the chat interface with sender's name
-            addMessage(firstName, message); // Use user's first name as sender
-            input.value = ''; // Clear input field
+        function addMessage(sender, message) {
+            var messages = document.getElementById('messages');
+            var li = document.createElement('li');
+            li.textContent = sender + ': ' + message;
+            messages.appendChild(li);
         }
-    });
 
-    // Receive new messages from the server
-    socket.on('chat message', function(data) {
-        addMessage(data.sender, data.message); // Display sender's name
-    });
+        document.getElementById('form').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent form from causing page reload
+            var input = document.getElementById('input');
+            var message = input.value.trim();
+
+            if (message !== '') {
+                // Emit the message with sender information
+                socket.emit('chat message', { sender: firstName, message: message });
+                addMessage('You', message);
+                input.value = ''; // Clear the input after sending
+            }
+        });
+
+        // Listen for chat messages from the server
+        socket.on('chat message', function(data) {
+            addMessage(data.sender, data.message);
+        });
+    }
 </script>

@@ -2,6 +2,8 @@ const toggleDiv = document.getElementById('toggleDiv');
 const login_div = document.getElementById('login_div');
 const reg_div = document.getElementById('register_div');
 const reg_ctrl = document.getElementById('reg_ctrl');
+const tickets_ctrl = document.getElementById('tickets_ctrl');
+const tickets = document.getElementById('tickets');
 const regClose = document.getElementById('regClose');
 const loginClose = document.getElementById('loginClose');
 const login_ctrl = document.getElementById('login_ctrl');
@@ -14,6 +16,7 @@ const div0 = document.getElementById('div0');
 const clsoeCtlGroups = [
   { button: loginClose, div: login_div },
   { button: regClose, div: reg_div },
+  { button:tickets_ctrl , div: tickets },
 
 ]
 
