@@ -12,24 +12,21 @@ const session = require('express-session');
 const { connect } = require('./plugins/mongo/mongo');
 const createError = require('http-errors');
 const MongoStore = require('connect-mongo');
-
+const expressSession = require('express-session')
 const {exporterRoute} = require('./plugins/puppeteer/setup');
 const noNos = require('./routes/securityFunctions/forbiddens');
 var app = express();
-
-// Initialize session with your settings
-const expressSession = session({
-    secret: 'your_secret',
-    resave: false,
-    saveUninitialized: true,
-    store: MongoStore.create({ 
-      mongoUrl: "mongodb+srv://"+process.env.MONUSR+":"+encodeURIComponent(process.env.MONPASS)+"@royalcluster.sda0nl3.mongodb.net/"+config.DB_NAME+"?retryWrites=true&w=majority"
-
-     })
+const sessionMiddleware = session({
+  secret: 'your secret',
+  resave: true,
+  saveUninitialized: true,
+  store: MongoStore.create({
+      mongoUrl:"mongodb+srv://"+process.env.MONUSR+":"+encodeURIComponent(process.env.MONPASS)+"@cluster0.tpmae.mongodb.net/"+config.DB_NAME+"?retryWrites=true&w=majority"
+  })
 });
 
-// Use shared session middleware for Express and Socket.IO
-app.use(expressSession);
+// Make sure to use this middleware with your app
+app.use(sessionMiddleware);
 
 // Make sure to replace "io" initialization with the shared session
 
@@ -88,4 +85,4 @@ async function startApp() {
 
 startApp();
 
-module.exports = app;
+module.exports = {app, sessionMiddleware};
