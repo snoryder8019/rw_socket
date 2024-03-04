@@ -1,10 +1,13 @@
 ggl redirects for auth remove config.url from callback google
-pkg json nodemon dev cmd
+//pkg json nodemon dev cmd
 base images branding poi's and icon folder preset
-add partials/tickets.ejs
+//add partials/tickets.ejs
 add tickets route to routes/index endpoint
-remove nanacy name from tickets and card from ticket option
+//remove nanacy name from tickets and card from ticket option
 mongo db needs an auto deploy before running the app first time
 Move to c .bat completed would be nie
 tying it all together in one script then
 socket io setup in bin, dependencies and views
+//logs/passReset.json && logs/errors.json added for admin panel
+add javascript for admin control buttons
+remove manage cards button, to print, upl oad fonts, add a card 

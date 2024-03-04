@@ -1,4 +1,3 @@
-const env = require('dotenv').config();
 var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
@@ -9,6 +8,7 @@ const config = require('./config/config');
 var indexRouter = require('./routes/index');
 var adminRouter = require('./routes/admin');
 const session = require('express-session');
+const env = require('dotenv').config();
 const { connect } = require('./plugins/mongo/mongo');
 const createError = require('http-errors');
 const MongoStore = require('connect-mongo');

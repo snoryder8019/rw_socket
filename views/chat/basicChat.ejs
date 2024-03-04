@@ -1,68 +1,78 @@
-<% if(typeof user == 'object' && user) { %>
-<h1>Welcome to the Chat</h1>
-
-    <!-- Pass the user's first name to the client-side -->
-    <script>var firstName = "<%= user.firstName %>";</script>
-    <div>
-        <h4>users connected</h4>
-        <div id="userList"></div>
-
-    </div>
-    <!-- Display chat interface -->
-    <form id="form" action="javascript:void(0);">
-        <input id="input" autocomplete="off" /><button type="submit">Send</button>
-    </form>
-    <div id="chat">
-        <ul id="messages"></ul>
-    </div>
-<% } else { %>
-    <p>Please log in to join the chat.</p>
-<% } %>
-
+<div class="chat-window-basic">
+    <% if(typeof user === 'object' && user) { %>
+        <h1>Welcome to the Chat</h1>
+        <script>var firstName = "<%= user.firstName %>";</script>
+        <div>
+            <h4>users connected</h4>
+            <ul id="userList"></ul>
+        </div>
+      
+            <input id="chatInput" autocomplete="off" /><button id="submitChat">Send</button>
+     
+        <div id="chat">
+            <ul id="messages"></ul>
+        </div>
+    <% } else { %>
+        <p>Please log in to join the chat.</p>
+    <% } %>
+</div>
 <script src="/socket.io/socket.io.js"></script>
 <script>
-     if (typeof firstName !== 'undefined') {
-        var socket = io();
+    document.addEventListener('DOMContentLoaded', ()=>{
 
-        // Existing message handling code...
+    var socket = io(); 
 
-        // Listen for the 'user list' event from the server
-        socket.on('user list', function(users) {
-            var userList = document.getElementById('userList');
-            userList.innerHTML = ''; // Clear current list
-            users.forEach(function(user) {
-                var li = document.createElement('li');
-                li.textContent = user;
-                userList.appendChild(li);
-            });
-        });
+    // Function to add messages to the DOM
+    function addMessage(message) {
+        console.log(message)
+        var messages = document.getElementById('messages');
+        var li = document.createElement('li');
+        li.textContent = message;
+        messages.appendChild(li);
     }
-    if (typeof firstName !== 'undefined') {
-        var socket = io();
 
-        function addMessage(sender, message) {
-            var messages = document.getElementById('messages');
-            var li = document.createElement('li');
-            li.textContent = sender + ': ' + message;
-            messages.appendChild(li);
-        }
-
-        document.getElementById('form').addEventListener('submit', function(event) {
-            event.preventDefault(); // Prevent form from causing page reload
-            var input = document.getElementById('input');
+    // Add click event listener to the submit button
+    var submitChat = document.getElementById('submitChat');
+    if (submitChat) {
+        submitChat.addEventListener('click', function(event) {
+            var input = document.getElementById('chatInput');
             var message = input.value.trim();
 
             if (message !== '') {
-                // Emit the message with sender information
-                socket.emit('chat message', { sender: firstName, message: message });
-                addMessage('You', message);
-                input.value = ''; // Clear the input after sending
+                socket.emit('chat message', message); // Emit the message
+                addMessage('You: ' + message); // Add message to the DOM
+                input.value = ''; // Clear the input
             }
         });
-
-        // Listen for chat messages from the server
-        socket.on('chat message', function(data) {
-            addMessage(data.sender, data.message);
-        });
+    } else {
+        console.log('Submit Chat button not found'); // Debugging: Check if button is found
     }
+
+    // Listen for chat messages from the server
+    socket.on('chat message', function(msg) {
+        addMessage(msg); // Add incoming message to the DOM
+    });
+    socket.on('user list', function(users) {
+        var userList = document.getElementById('userList');
+        userList.innerHTML = ''; // Clear current list
+        users.forEach(function(user) {
+            var li = document.createElement('li');
+            li.textContent = user;
+            userList.appendChild(li);
+        });
+    });
+
+    // Error handling for Socket.IO
+    socket.on('connect_error', (error) => {
+        console.log('Connection Error:', error); // Log connection errors
+    });
+    socket.on('ping', (data) => {
+                console.log(data.msg); // Logging the ping message from the server
+
+                // Optionally, send a pong message back to the server
+                socket.emit('pong', { msg: 'Pong from client' });
+            });
+      
+    console.log('basic Chat!!')
+})
 </script>

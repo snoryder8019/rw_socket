@@ -15,6 +15,7 @@ const loadScript = (src) => {
 const scriptsToLoad = [
 
   '/javascripts/controllers/buttonControl.js',
+  '/javascripts/controllers/backendControllers.js',
  
 ];
 

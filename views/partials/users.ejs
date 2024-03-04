@@ -16,7 +16,7 @@
 </style>
 
 <% if (typeof users == 'object' && users) { %>
-  <%- include('./emailOutgoing') %>
+
   <div id="usersDiv">
     <h3>You have <span style="font-size:2.2rem;color:purple"><%=users.length%> users!!</span></h3>
     <h4><a href="/admin">Link to download CSVs</a><br>New Actions and Downloads updates.</h4>

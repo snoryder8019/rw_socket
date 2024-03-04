@@ -6,7 +6,7 @@
   padding: 1%;
 }
 
-#div0, #login_div, #register_div, #tickets {
+#div0, #login_div, #register_div, #tickets, #users, #ticketsAdmin, #logs {
   display: none;
 }
 
@@ -28,6 +28,19 @@ input {
   align-items: center;
   align-content: center;
   display: flex;
+}
+
+.chat-window-basic, #ticketsChat {
+  border: 1px solid #d7b436;
+  margin: 1%;
+}
+
+a {
+  background: linear-gradient(to right, #d7b436, white, #d7b436);
+  -webkit-background-clip: text;
+  color: transparent;
+  font-size: 1.2rem;
+  text-shadow: 1px 1px 2px rgb(38, 0, 255);
 }
 
 /*# sourceMappingURL=style.css.map */
