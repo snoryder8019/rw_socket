@@ -21,7 +21,7 @@ const sessionMiddleware = session({
   resave: true,
   saveUninitialized: true,
   store: MongoStore.create({
-      mongoUrl:"mongodb+srv://"+process.env.MONUSR+":"+encodeURIComponent(process.env.MONPASS)+"@cluster0.tpmae.mongodb.net/"+config.DB_NAME+"?retryWrites=true&w=majority"
+      mongoUrl:"mongodb+srv://"+process.env.MONUSR+":"+encodeURIComponent(process.env.MONPASS)+"@royalcluster.sda0nl3.mongodb.net/"+config.DB_NAME+"?retryWrites=true&w=majority"
   })
 });
 
