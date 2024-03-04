@@ -17,7 +17,7 @@ const {exporterRoute} = require('./plugins/puppeteer/setup');
 const noNos = require('./routes/securityFunctions/forbiddens');
 var app = express();
 const sessionMiddleware = session({
-  secret: 'your secret',
+  secret: process.env.SESHID,
   resave: true,
   saveUninitialized: true,
   store: MongoStore.create({
