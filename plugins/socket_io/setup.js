@@ -3,17 +3,12 @@ const socketIo = require('socket.io');
 const sharedsession = require("express-socket.io-session");
 const passport = require('passport')
 const { sessionMiddleware } = require('../../app'); // Adjust the path as necessary
+const {sendConnectionMeta} = require('../mongo/socketFunctions/update')
 module.exports.setupSocketIO = (server) => {
-    const io = socketIo(server);
-    
-    
+    const io = socketIo(server);    
+    const mainChat = io.of('/main_chat'); 
     const users = {}; // Tracks connected users
-    // Set up Socket.IO events
-
-    // io.use(sharedsession(sessionMiddleware, {
-    //     autoSave:true
-    //   }));
-
+    mainChat.use((socket, next) => {
     function onlyForHandshake(middleware) {
         return (req, res, next) => {
           const isHandshake = req._query.sid === undefined;
@@ -24,7 +19,8 @@ module.exports.setupSocketIO = (server) => {
           }
         };
       }
-      
+      sessionMiddleware(socket.request, {}, next);
+  
       io.engine.use(onlyForHandshake(sessionMiddleware));
       io.engine.use(onlyForHandshake(passport.session()));
       io.engine.use(
@@ -37,14 +33,17 @@ module.exports.setupSocketIO = (server) => {
           }
         }),
       );
+    });
+      mainChat.on('connection', (socket) => {
+        console.log('A user connected to main_chat');
+        const userName = socket.request.user ? socket.request.user.firstName : 'Anonymous';
+        socket.join('General');
+        updateUsersList(mainChat, 'General');
 
-
-    io.on('connection', (socket) => {
-        console.log('A user connected');
-        const userName = socket.request.user.firstName;
-        console.log(userName);
+        const socketInfo=socket
+        console.log(`userName: ${userName}, socketinfo:${socketInfo}`);
         users[socket.id] = userName; // Add user to the list
-
+//sendConnectionMeta('connection',user)
         io.emit('user list', Object.values(users));
         // Listen for video streaming data from clients
         socket.on('stream', (data) => {
@@ -54,16 +53,27 @@ module.exports.setupSocketIO = (server) => {
 
         // Listen for chat messages from clients
         socket.on('chat message', (msg) => {
-            console.log('message: ' + msg);
-            // Broadcast the message to all connected clients
-            io.emit('chat message', msg);
+          mainChat.to('General').emit('chat message', userName + ': ' + msg);
+          console.log(msg)
+      });
+       socket.on('join room', (room) => {
+            socket.join(room);
+            // Update users list for the room
+            updateUsersList(mainChat, room);
         });
-
+        socket.on('chat message in room', ({ room, msg }) => {
+          console.log(`message in ${room}: ${msg}`);
+          mainChat.to(room).emit('chat message', msg);
+        });
         // Handle disconnection
         socket.on('disconnect', () => {
-            delete users[socket.id]; // Remove user from the list
-            io.emit('user list', Object.values(users));
-            console.log('User disconnected');
-        });
+          // Update users list upon disconnect
+          updateUsersList(mainChat, 'General'); // Adjust this if the user can be in multiple rooms
+      });
     });
+    function updateUsersList(namespace, room) {
+      // Implement logic to update and broadcast the user list for the room
+      // This could involve tracking users in a data structure and emitting the updated list
+      namespace.to(room).emit('user list', /* Updated users list */);
+  }
 };
