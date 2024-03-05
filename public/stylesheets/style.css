@@ -30,9 +30,35 @@ input {
   display: flex;
 }
 
-.chat-window-basic, #ticketsChat {
-  border: 1px solid #d7b436;
-  margin: 1%;
+#chat-window-basic, #ticketsChat {
+  border: 3px solid #d7b436;
+  box-shadow: 3px 3px 3px #711881, inset 5px 5px 5px #1a0a1b;
+  margin: 2%;
+  position: fixed;
+  height: 90vh;
+  width: 40%;
+  left: 100%;
+  top: 0%;
+  transform-style: preserve-3d;
+  transition-timing-function: ease-in;
+  transition-duration: 0.4s;
+  transform: translateX(0%);
+  background-color: #711881;
+  filter: brightness(1);
+}
+
+#chatToggle {
+  transform: rotate(90deg);
+  position: absolute;
+  left: -25%;
+  top: 46%;
+  width: 200px;
+  border-radius: 5px;
+  border: 5px solid #711881;
+  background-color: #d7b436;
+  color: #711881;
+  font-size: 1.3rem;
+  box-shadow: 3px 3px 3px #1a0a1b;
 }
 
 a {
@@ -41,6 +67,11 @@ a {
   color: transparent;
   font-size: 1.2rem;
   text-shadow: 1px 1px 2px rgb(38, 0, 255);
+}
+
+#chat {
+  border: 1px dotted #d7b436;
+  box-shadow: inset 2px 2px 2px rgba(255, 255, 255, 0.756);
 }
 
 /*# sourceMappingURL=style.css.map */

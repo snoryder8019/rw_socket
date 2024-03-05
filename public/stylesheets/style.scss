@@ -14,6 +14,7 @@ $gradientEdge: #410b4b;
 #div0, #login_div, #register_div,#tickets, #users, #ticketsAdmin, #logs{
     display: none;
 }
+
 #footer{
     padding: 2%;
     background-color: $gold;
@@ -33,18 +34,47 @@ input{
     
 display: flex;
 }
-.chat-window-basic, #ticketsChat{
-    border:1px solid $gold;
-    margin: 1%;
-    
+#chat-window-basic, #ticketsChat{
+    border:3px solid $gold;
+    box-shadow: 3px 3px 3px $purple, inset 5px 5px 5px $black;
+   margin: 2%;
+    position: fixed;
+    height: 90vh;
+    width: 40%;
+    left:100%;
+    top:0%;
+    transform-style: preserve-3d;
+    transition-timing-function: ease-in;
+    transition-duration: .4s;
+    transform: translateX(0%);
+    background-color: $purple;
+filter: brightness(1);
   }
-  
+  #chatToggle{
+        transform: rotate(90deg);      
+    position: absolute;
+    left: -25%;
+    top:46%;
+   width:200px;
+    border-radius: 5px;
+border: 5px solid $purple;
+background-color: $gold;
+color: $purple;
+font-size: 1.3rem;
+box-shadow: 3px 3px 3px $black;
+  }
   a{
     background: linear-gradient(to right,$gold,white,$gold);
     -webkit-background-clip: text;
     color: transparent;
     font-size: 1.2rem;
-    text-shadow: 1px 1px 2px rgb(38, 0, 255);
-    
+    text-shadow: 1px 1px 2px rgb(38, 0, 255);    
+
+}
+#chat{
+    border: 1px dotted $gold;
+    box-shadow: inset 2px 2px 2px rgba(255, 255, 255, 0.756);
+}
+#messages{
 
 }

@@ -1,6 +1,7 @@
-<div class="chat-window-basic">
+<div id="chat-window-basic">
     <% if(typeof user === 'object' && user) { %>
         <h1>Welcome to the Chat</h1>
+        <button id="chatToggle">chat</button>
         <script>var firstName = "<%= user.firstName %>";</script>
         <div>
             <h4>users connected</h4>
@@ -75,4 +76,27 @@
       
     console.log('basic Chat!!')
 })
+document.addEventListener('DOMContentLoaded', ()=>{
+    let chatWindowState = null;
+const chatToggle = document.getElementById('chatToggle');
+const chatBasicWindow = document.getElementById('chat-window-basic');
+const main = document.getElementById('main')
+chatToggle.addEventListener('click', ()=>{
+    if(chatBasicWindow.style.transform!="translateX(-106%)"){
+        chatBasicWindow.style.transform="translateX(-106%)";
+  
+   chatToggle.innerHTML="close";  
+   chatWindowState="open"   
+}else{
+   
+    chatBasicWindow.style.transform="translateX(0%)";
+    chatToggle.innerHTML="chat";  
+    chatWindowState="hidden"   ;
+}
+})
+})
+
+
+
+
 </script>

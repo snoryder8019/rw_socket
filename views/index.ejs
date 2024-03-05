@@ -3,54 +3,57 @@
 <head> 
   <link rel="stylesheet" href="/stylesheets/style.css">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title><%=config.title%></title>
+  
+  <!---->
+  <!---->
+  <!---->
+</head>
 
-    <title><%=config.title%></title>
-
-<!---->
-<!---->
-<!---->
-  </head>
-
-  <body>      
+<body>      
+  <!--ALL FIXED PARTIALS OUTSIDE THE MAIN DIV-->
+    <%- include('./chat/basicChat',{user:user})%>
     <div id="flashErrors"><%- include('./partials/flashErrors',{message:message})%></div>  
     
     <div id="main">
 
       <h1><%=config.headline%></h1>
-      <%- include('./chat/basicChat',{user:user})%>
- <div id=""></div>
+      <div id=""></div>
      <div id="div0">  
-      <button id="toggleDiv">collapse div</button>  
-    </div>
-    
-    
-    
-     <%if(typeof user == 'object' && user){%>      
-      <p>Having trouble ?</p>
-      <!------------------->
-      <%if(typeof tickets =='object'&&tickets.length>0){%>       
-        <div id="ticketsChat"><%- include('./partials/ticketsChat',{user:user,tickets:tickets})%></div>
-        <%}else{%>
-          <button id="tickets_ctrl">request help</button>
-          <div id="tickets"><%- include('./partials/tickets',{user:user,tickets:tickets})%></div>
-      <%}%>
-      <%}%>    
-      <!----MENU IS CONSTANT FOOTER-->
-    
-    
-    </div>    
-    <%if(typeof user =='object' && user.isAdmin){%> <div><h2>go to <a href="/admin">admin</a> panel </h2></div><%}%>
-
-    <div id="footer"><%- include('./partials/footer')%></div>        
-    <script src="/javascripts/loader.js"></script>
-    
-  </body>
-
-</html>
-
-
-
-
-
-
-
+       <button id="toggleDiv">collapse div</button>  
+      </div>
+      
+      
+      
+      <%if(typeof user == 'object' && user){%>      
+        <p>Having trouble ?</p>
+        <!------------------->
+        <%if(typeof tickets =='object'&&tickets.length>0){%>       
+          <div id="ticketsChat"><%- include('./partials/ticketsChat',{user:user,tickets:tickets})%></div>
+          <%}else{%>
+            <button id="tickets_ctrl">request help</button>
+            <div id="tickets"><%- include('./partials/tickets',{user:user,tickets:tickets})%></div>
+            <%}%>
+            <%}%>    
+            <!----MENU IS CONSTANT FOOTER-->
+            
+            
+          </div>    
+          <%- include('./userDash/userDash',{user:user})%>
+          <%if(typeof user =='object' && user.isAdmin){%> <div><h2>go to <a href="/admin">admin</a> panel </h2></div><%}%>
+          
+          <div id="footer"><%- include('./partials/footer')%></div>        
+          <script src="/javascripts/loader.js"></script>
+          
+        </body>
+        
+        </html>
+        
+        
+        
+        
+        
+        
+        
+        
