@@ -1,2 +1,8 @@
-userDash.ejs
-<h1>user dash</h1>
+<div id="userDash">
+    <%if(typeof user =='object'&& user){%>
+        <h3>Welcome <%=user.firstName%></h3>
+        <h3>Logged in as: <%=user.email%></h3>
+        <%}else{%>
+            you must login to view your dashboard
+            <%}%>
+</div>

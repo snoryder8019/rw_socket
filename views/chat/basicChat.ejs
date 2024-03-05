@@ -3,13 +3,15 @@
         <h1>Room: Main Chat </h1>
         <button id="chatToggle">chat</button>
         <script>var firstName = "<%= user.firstName %>";</script>
-        <div>
+        
             <h4>users connected</h4>
-            <ul id="userList"></ul>
-        </div>
-      
+            <div id="userList">
+                <div class="loaderWheel"><div class="wheel">0</div></div>
+            <!--My Users Populate Here div class="userOnline"-->
+            </div>
+      <div class="inputBar">
             <input id="chatInput" autocomplete="off" /><button id="submitChat">Send</button>
-     
+        </div>
         <div id="chat">
             <ul id="messages"></ul>
         </div>
@@ -54,14 +56,20 @@
         addMessage(msg); // Add incoming message to the DOM
     });
     socket.on('user list', function(users) {
-        var userList = document.getElementById('userList');
-        userList.innerHTML = ''; // Clear current list
-        users.forEach(function(user) {
-            var li = document.createElement('li');
-            li.textContent = user;
-            userList.appendChild(li);
-        });
+    var userList = document.getElementById('userList');
+    userList.innerHTML = ''; // Clear current list
+    users.forEach(function(user) {
+        var div = document.createElement('div');
+        div.className = 'usersOnline';
+        var img = document.createElement('img'); // Correct method to create an img element
+        img.className = 'userImage'; // Assign a class for styling if needed
+        img.alt = user[0]; // Set alt text to user's name
+        img.src = '/images/userHeadshots/<%=user.userImg%>'; // Set the source of your image
+        
+        div.appendChild(img); // Append the img element to the div
+        userList.appendChild(div); // Append the div to the userList container
     });
+});
 
     // Error handling for Socket.IO
     socket.on('connect_error', (error) => {

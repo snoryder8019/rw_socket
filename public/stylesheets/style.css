@@ -30,6 +30,29 @@ input {
   display: flex;
 }
 
+.loaderWheel {
+  min-height: 40px;
+  min-width: 98%;
+  border: 1px dashed #d7b436;
+}
+
+@keyframes wheelSpin {
+  0% {
+    transform: rotate(0);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+.wheel {
+  min-height: 40px;
+  max-width: 40px;
+  border-top: 5px solid #d7b436;
+  border-block-end: 1px solid #d7b436;
+  border-radius: 50%;
+  animation: wheelSpin 2s infinte linear;
+}
+
 #chat-window-basic {
   border: 3px solid #d7b436;
   box-shadow: 3px 3px 3px #711881, inset 5px 5px 5px #1a0a1b;
@@ -81,14 +104,76 @@ a {
 }
 
 #chat {
-  width: 90%;
-  margin-left: 4%;
+  width: 96%;
+  margin-left: 2%;
   border: 1px dotted #d7b436;
   box-shadow: inset 2px 2px 2px rgba(255, 255, 255, 0.756);
+  min-height: 57%;
 }
 
 .banner img {
   width: 100%;
+}
+
+#userList {
+  width: 95%;
+  min-height: 95px;
+  margin: 2% 3%;
+  display: flex;
+  align-items: center; /* Ensure the circles are aligned in the center */
+  overflow-x: scroll;
+  overflow-y: visible;
+  padding: 0;
+  box-shadow: inset 1px 1px 4px rgba(0, 0, 0, 0.749);
+}
+
+.usersOnline {
+  background-color: #410b4b;
+  max-width: 55px;
+  min-width: 55px;
+  min-height: 55px;
+  border-radius: 50%;
+  border: 3px solid gold; /* Assuming $gold is a variable, replace it with an actual color if you're not using a preprocessor */
+  /* Overlap each circle by adjusting the X translation */
+  /* Each circle will be moved to the left by 15px more than the previous one */
+  margin-left: -15px;
+  overflow: hidden;
+  transform-style: preserve-3d;
+  transition-duration: 0.4s;
+  transform: scale(1);
+}
+
+.usersOnline:hover {
+  transform-style: preserve-3d;
+  transition-duration: 0.4s;
+  z-index: 5;
+  transform: scale(1.4);
+}
+
+.usersOnline img {
+  width: 100%;
+  overflow: hidden;
+}
+
+.inputBar {
+  position: absolute;
+  margin: 2%;
+  bottom: 0;
+  left: 0;
+  width: 96%;
+  height: 11%;
+  display: grid;
+  grid-template-columns: 8fr 3fr;
+}
+
+.inputBar input {
+  height: 100%;
+  font-size: 1.6rem;
+}
+
+.inputBar button {
+  width: 100%;
+  font-size: 1.5rem;
 }
 
 /*# sourceMappingURL=style.css.map */
