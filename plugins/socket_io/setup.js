@@ -44,7 +44,7 @@ module.exports.setupSocketIO = (server) => {
         console.log(`userName: ${userName}, socketinfo:${socketInfo}`);
         users[socket.id] = userName; // Add user to the list
 //sendConnectionMeta('connection',user)
-        io.emit('user list', Object.values(users));
+        mainChat.emit('user list', Object.values(users));
         // Listen for video streaming data from clients
         socket.on('stream', (data) => {
             // Broadcast the video data to all connected clients
