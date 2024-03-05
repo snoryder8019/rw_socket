@@ -30,14 +30,14 @@ input {
   display: flex;
 }
 
-#chat-window-basic, #ticketsChat {
+#chat-window-basic {
   border: 3px solid #d7b436;
   box-shadow: 3px 3px 3px #711881, inset 5px 5px 5px #1a0a1b;
   margin: 2%;
   position: fixed;
   height: 90vh;
   width: 40%;
-  left: 100%;
+  left: 90%;
   top: 0%;
   transform-style: preserve-3d;
   transition-timing-function: ease-in;
@@ -45,6 +45,12 @@ input {
   transform: translateX(0%);
   background-color: #711881;
   filter: brightness(1);
+}
+@media (max-width: 768px) {
+  #chat-window-basic {
+    width: 90%;
+    left: 100%;
+  }
 }
 
 #chatToggle {
@@ -59,6 +65,11 @@ input {
   color: #711881;
   font-size: 1.3rem;
   box-shadow: 3px 3px 3px #1a0a1b;
+}
+@media (max-width: 768px) {
+  #chatToggle {
+    left: -30%;
+  }
 }
 
 a {

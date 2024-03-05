@@ -34,22 +34,27 @@ input{
     
 display: flex;
 }
-#chat-window-basic, #ticketsChat{
+#chat-window-basic {
     border:3px solid $gold;
     box-shadow: 3px 3px 3px $purple, inset 5px 5px 5px $black;
    margin: 2%;
     position: fixed;
     height: 90vh;
     width: 40%;
-    left:100%;
+    left:90%;
     top:0%;
     transform-style: preserve-3d;
     transition-timing-function: ease-in;
     transition-duration: .4s;
     transform: translateX(0%);
     background-color: $purple;
-filter: brightness(1);
-  }
+    filter: brightness(1);
+    @media (max-width:768px) {
+        width: 90%;
+        left:100%;
+
+    }
+}
   #chatToggle{
         transform: rotate(90deg);      
     position: absolute;
@@ -62,6 +67,9 @@ background-color: $gold;
 color: $purple;
 font-size: 1.3rem;
 box-shadow: 3px 3px 3px $black;
+@media (max-width:768px) {
+ left: -30%;
+}
   }
   a{
     background: linear-gradient(to right,$gold,white,$gold);
