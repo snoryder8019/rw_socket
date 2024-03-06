@@ -34,66 +34,152 @@ input{
     
 display: flex;
 }
-
+.loaderDiv {
+    padding: 2%;
+    flex-shrink: 0;
+    display: flex;
+    justify-content: center; /* Center the content of loaderDiv */
+    align-items: center; /* Align the items vertically */
+}
 .loaderWheel{
     min-height: 40px;
-    min-width: 98%;
-    border: 1px dashed $gold;
+    min-width: 100%;
+  //  border: 1px dashed $gold;
+    display: flex;
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    flex-direction:row; 
 }
 @keyframes wheelSpin{
-    0%{transform: rotate(0);}
-    100%{transform: rotate(360deg);}
+    0%{transform: rotate(0deg);}
+    100%{transform: rotate(359deg);}
 }
 .wheel{
-    
+    flex-shrink: 0;
     min-height: 40px;
-    max-width: 40px;
+    min-width: 40px;
     border-top: 5px solid $gold;
-    border-block-end: 1px solid $gold;
+   
+    border-block-width: 1px;
     border-radius: 50%;
-    animation: wheelSpin 2s infinte linear;
+    transform: rotate(0deg);
+    //animation:  1s infinte 0s linear wheelSpin;
+    animation: wheelSpin 1s linear infinite;
 }
 
 
 
-
-#chat-window-basic {
+@mixin sliderWindows(){
     border:3px solid $gold;
     box-shadow: 3px 3px 3px $purple, inset 5px 5px 5px $black;
    margin: 2%;
     position: fixed;
     height: 90vh;
     width: 40%;
-    left:100%;
-    top:0%;
+   
     transform-style: preserve-3d;
     transition-timing-function: ease-in;
     transition-duration: .4s;
     transform: translateX(0%);
     background-color: $purple;
-    filter: brightness(1);
+}
+#chat-window-basic {
+    @include sliderWindows();
+    left:100%;
+    top:0%;
     @media (max-width:768px) {
         width: 90%;
         left:100%;
-
     }
 }
-  #chatToggle{
-        transform: rotate(90deg);      
+#userDash{
+    @include sliderWindows();
+    right:100%;
+    top:0%;
+    @media (max-width:768px) {
+        width: 90%;
+        right:100%;
+    }
+ 
+
+}
+
+@mixin toggleOpt(){
     position: absolute;
-    left: -25%;
-    top:46%;
-   width:200px;
-    border-radius: 5px;
-border: 5px solid $purple;
-background-color: $gold;
-color: $purple;
-font-size: 1.3rem;
-box-shadow: 3px 3px 3px $black;
+    width:200px;
+     border-radius: 5px;
+ border: 5px solid $purple;
+ background-color: $gold;
+ color: $purple;
+ font-size: 1.3rem;
+ box-shadow: 3px 3px 3px $black;
+}
+  #chatToggle{
+    @include toggleOpt();
+        transform: rotate(90deg);      
+        left: -25%;
+        top:46%;
+
 @media (max-width:768px) {
  left: -33%;
 }
   }
+  #dashToggle{
+    @include toggleOpt();
+    transform: rotate(90deg);
+    right:-25%;
+    top:46%;
+    @media (max-width:768px) {
+        right: -33%;
+       }
+  }
+
+  .dashHeader{
+    display: flex;
+    flex-direction: row; /* Align items horizontally */
+    justify-content: space-evenly; /* Even spacing around the items */
+    align-items: center; /* Vertically align items in the middle */
+  
+  }
+  #userNav{
+    position: absolute;
+    bottom: 0;
+    left:0;
+    display: flex;
+    flex-direction: row; /* Align items horizontally */
+    justify-content: space-evenly; /* Even spacing around the items */
+    align-items: center; /* Vertically align items in the middle */
+  }
+  .wallet{
+    background: linear-gradient(to right, purple,rgb(154, 1, 154));
+    box-shadow: inset 2px 2px 2px $black;
+    padding: 1%;
+    border-top: 1px solid $gold;
+    border-bottom: 1px solid $gold;
+    display: flex;
+    flex-direction: row; /* Align items horizontally */
+    justify-content: space-evenly; /* Even spacing around the items */
+    align-items: center; /* Vertically align items in the middle */
+  }
+  .jewel{
+align-content: center;
+
+  }
+  .jewel img{
+    width: 30px;
+  }
+  .userNavLink{
+    color:$gold;
+    justify-content: space-around;
+    align-items: center;
+    align-self: center;
+    align-content: center;
+    /* Apply desired styles for individual links here */
+    padding: 10px; /* Example padding */
+    text-decoration: none; /* Example to remove underline from links */
+    color: #333; /* Example link color */
+  }
+  
   a{
     background: linear-gradient(to right,$gold,white,$gold);
     -webkit-background-clip: text;
@@ -174,3 +260,41 @@ font-size: 1.6rem;
     width:100%;
     font-size: 1.5rem;
   }
+
+
+.message {
+display: grid;
+    grid-template-columns: 2fr 2fr 8fr;
+margin-bottom: 10px;
+width: 98%;
+padding: 5px;
+border-radius: 5px;
+//box-shadow: inset 2px 2px 1px $black;
+//border: 1px solid $black;
+background:linear-gradient(to right,rgba(128, 0, 128, 0.56),rgba(255, 217, 0, 0.229),$purple,$purple,$purple,$purple,$purple,$purple,$purple,$purple,$purple) /* Light grey background */
+}
+
+#messages:first-child{
+    padding: 2%;
+    margin-top: 4%;
+}
+.messageUser {
+    margin: 1%;
+    font-weight: bold;
+    margin-right: 5px;
+}
+.message img{
+    background-color: #410b4b;
+    max-width: $headshotPx;
+    min-width: $headshotPx;
+    min-height: $headshotPx;
+    border-radius: 50%;
+    border: 3px solid gold;
+    max-width: 40px;
+}
+.messageText {
+    text-align: left;
+    /* Additional styling as needed */
+}
+
+

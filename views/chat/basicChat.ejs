@@ -6,15 +6,22 @@
         
           
             <div id="userList">
-                <div class="loaderWheel"><div class="wheel">0</div></div>
+                <div class="loaderWheel">
+                    <div class="loaderDiv">  <h3> loading chatroom...</h3></div>
+                    <div class="loaderDiv"> <div class="wheel"></div></div>
+                  
+                   
+                </div>
             <!--My Users Populate Here div class="userOnline"-->
             </div>
       <div class="inputBar">
             <input id="chatInput" autocomplete="off" /><button id="submitChat">Send</button>
         </div>
         <div id="chat">
-            <ul id="messages"></ul>
+        
+            <div id="messages"> </div>
         </div>
+        <%let userImg=user.userImg%>
     <% } else { %>
         <p>Please log in to join the chat.</p>
     <% } %>
@@ -26,13 +33,34 @@
     var socket = io('/main_chat'); 
 
     // Function to add messages to the DOM
-    function addMessage(message) {
-        console.log(message)
-        var messages = document.getElementById('messages');
-        var li = document.createElement('li');
-        li.textContent = message;
-        messages.appendChild(li);
-    }
+    function addMessage(messageObject) {
+    var messagesContainer = document.getElementById('messages');
+    
+    // Create the message wrapper div
+    var messageDiv = document.createElement('div');
+    var messageAvatar =document.createElement('img');
+    messageAvatar.className = 'message';
+    messageAvatar.src = `/images/userHeadshots/${messageObject.user.userImg}`;
+    messageDiv.className = 'message'; // Assign a class for styling
+
+    // Optionally, create separate elements for the user name and message text
+    var userNameSpan = document.createElement('span');
+    userNameSpan.className = 'messageUser';
+    userNameSpan.textContent = messageObject.user.firstName + ': '; // Assuming this structure
+
+    var messageTextSpan = document.createElement('span');
+    messageTextSpan.className = 'messageText';
+    messageTextSpan.textContent = messageObject.text;
+
+    // Append user name and message text to the message div
+    messageDiv.appendChild(messageAvatar)
+    messageDiv.appendChild(userNameSpan);
+    messageDiv.appendChild(messageTextSpan);
+
+    // Append the complete message div to the messages container
+    messagesContainer.appendChild(messageDiv);
+}
+
 
     // Add click event listener to the submit button
     var submitChat = document.getElementById('submitChat');
@@ -63,12 +91,14 @@
         div.className = 'usersOnline';
         var img = document.createElement('img'); // Correct method to create an img element
         img.className = 'userImage'; // Assign a class for styling if needed
-        img.alt = user[0]; // Set alt text to user's name
-        img.src = '/images/userHeadshots/<%=user.userImg%>'; // Set the source of your image
+        img.alt = user.firstName; // Assuming `firstName` is the property
+        img.src = `/images/userHeadshots/${user.userImg}`; 
+        var text = document.createElement('span'); // Optional: add text next to the image
+        text.textContent = user.firstName; // Show user's name next to the image
         
-        div.appendChild(img); // Append the img element to the div
-        userList.appendChild(div); // Append the div to the userList container
-    });
+        div.appendChild(img);
+        div.appendChild(text); // Optional
+        userList.appendChild(div);   });
 });
 
     // Error handling for Socket.IO

@@ -1,8 +1,53 @@
 <div id="userDash">
     <%if(typeof user =='object'&& user){%>
-        <h3>Welcome <%=user.firstName%></h3>
-        <h3>Logged in as: <%=user.email%></h3>
+
+
+
+        <button id="dashToggle">dashboard</button>
+        
+        <div class="dashHeader">       
+            <div class="message"><img src="images/userHeadshots/<%=user.userImg%>" alt="">    <h3>Welcome <%=user.firstName%></h3><h3>Logged in as: <%=user.email%></h3></div>
+               
+            </div>
+
+            <div class="dashBody">
+     
+    </div>
+    <div class="wallet">
+        <div class="jewel"><img src="/images/icons/1.png">12</div>
+        <div class="jewel"><img src="/images/icons/2.png">6</div>
+        <div class="jewel"><img src="/images/icons/3.png">55</div>
+        <div class="jewel"><img src="/images/icons/4.png"></div>
+       
+    </div>
+
+
+
         <%}else{%>
             you must login to view your dashboard
             <%}%>
-</div>
+
+<%- include('userNav')%>
+        </div>
+<script>
+    document.addEventListener('DOMContentLoaded', ()=>{
+    let dashWindowState = null;
+const dashToggle = document.getElementById('dashToggle');
+const dashWindow = document.getElementById('userDash');
+const main = document.getElementById('main')
+dashToggle.addEventListener('click', ()=>{
+    if(dashWindow.style.transform!="translateX(106%)"){
+        dashWindow.style.transform="translateX(106%)";
+  
+   dashToggle.innerHTML="close";  
+   dashWindowState="open"   
+}else{
+   
+    dashWindow.style.transform="translateX(0%)";
+    dashToggle.innerHTML="dashboard";  
+    dashWindowState="hidden"   ;
+}
+})
+})
+
+</script>
