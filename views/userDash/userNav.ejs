@@ -1,9 +1,14 @@
 <div id="userNav">
+    <%if(typeof user === 'object' && user){%>
     <div class="userNavLink"><button  id="toggleNotifications">notifications</button></div>
     <div class="userNavLink"><button  id="toggleCart">cart</button></div>
-    <div class="userNavLink"><button  id="toggleWallet">wallet</button></div>
     <div class="userNavLink"><button  id="toggleRewards">rewards</button></div>
     <div class="userNavLink"><button  id="toggleSettings">settings</button></div>
     <div class="userNavLink"><button  id="toggleHelp">help</button></div>
     <div class="userNavLink"><button><a href="/logout"> logout</a></button></div>
+    <%if(user.isAdmin==true){%>
+        <div class="userNavLink"><button  id="toggleAdmin">admin</button></div>
+        
+    <%}%>
+    <%}%>
 </div>

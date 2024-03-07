@@ -13,38 +13,36 @@
 
 <body>      
   <!--ALL FIXED PARTIALS OUTSIDE THE MAIN DIV-->
-    <%- include('./chat/basicChat',{user:user})%>
-    <div id="flashErrors"><%- include('./partials/flashErrors',{message:message})%></div>  
+  <div id="flashErrors"><%- include('./partials/flashErrors',{message:message})%></div>  
+  
+  <div id="main">
+    <div class="banner">
+      <img class="banner" src="/images/MainBanner.png" alt="">
+    </div>
+    <h1><%=config.headline%></h1>
+
+    <div id="div0">  
+      <button id="toggleDiv">collapse div</button>  
+    </div>
+    <%if(typeof user === ' object' && user){%>
+      <%-include('./authTrueTemplates/template')%>
+      <%}else{%>
+        <%-include('./authFalseTemplates/template')%>
+    <%}%>
     
-    <div id="main">
-<div class="banner">
-  <img class="banner" src="/images/MainBanner.png" alt="">
-</div>
-      <h1><%=config.headline%></h1>
-      <div id=""></div>
-     <div id="div0">  
-       <button id="toggleDiv">collapse div</button>  
-      </div>
-      
-      
-      
-      <%if(typeof user == 'object' && user){%>      
-        <p>Having trouble ?</p>
-        <!------------------->
-        <%if(typeof tickets =='object'&&tickets.length>0){%>       
-          <div id="ticketsChat"><%- include('./partials/ticketsChat',{user:user,tickets:tickets})%></div>
-          <%}else{%>
-            <button id="tickets_ctrl">request help</button>
-            <div id="tickets"><%- include('./partials/tickets',{user:user,tickets:tickets})%></div>
-            <%}%>
-            <%}%>    
-            <!----MENU IS CONSTANT FOOTER-->
-            
-            
-          </div>    
+    <!----MENU IS CONSTANT FOOTER-->
+    
+    
+  </div>    
+
+
+  <%if(typeof user === ' object' && user){%>
+  <%- include('./chat/basicChat',{user:user})%>
           <%- include('./userDash/userDash',{user:user})%>
-          <%if(typeof user =='object' && user.isAdmin){%> <div><h2>go to <a href="/admin">admin</a> panel </h2></div><%}%>
-          
+          <%}else{%>
+            <%- include('./chat/basicChat',{user:""})%>
+                    <%- include('./userDash/userDash',{user:""})%>
+            <%}%>
           <div id="footer"><%- include('./partials/footer')%></div>        
           <script src="/javascripts/loader.js"></script>
           

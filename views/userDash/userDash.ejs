@@ -1,9 +1,6 @@
 <div id="userDash">
+    <button id="dashToggle">dashboard</button>
     <%if(typeof user =='object'&& user){%>
-
-
-
-        <button id="dashToggle">dashboard</button>
         
         <div class="dashHeader">       
             <div class="message"><img src="images/userHeadshots/<%=user.userImg%>" alt="">    <h3>Welcome <%=user.firstName%></h3><h3>Logged in as: <%=user.email%></h3></div>
@@ -23,16 +20,24 @@
     </div>
 
 
-<%- include('../notifications/notifications') %>
-<%- include('../cart/cartDetails') %>
-<%- include('../rewards/rewardsDetails') %>
-<%- include('../help/help') %>
-<%- include('userSettings') %>
+<%- include('../notifications/notifications',{user:user}) %>
+<%- include('../cart/cartDetails',{user:user}) %>
+<%- include('../rewards/rewardsDetails',{user:user}) %>
+<%- include('../help/help',{user:user}) %>
+<%- include('userSettings',{user:user}) %>
+<%if(user.isAdmin==true){%>
+    <%- include('../admin/admin',{user:user})%>
+    <%}%>
         <%}else{%>
+
+<h2>
             you must login to view your dashboard
+        </h2>
+            <%-include('../auth/login')%>
+
             <%}%>
 
-<%- include('userNav')%>
+<%- include('userNav',{user:user})%>
         </div>
 <script>
     document.addEventListener('DOMContentLoaded', ()=>{

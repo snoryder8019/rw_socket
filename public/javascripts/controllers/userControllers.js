@@ -1,10 +1,13 @@
 
+const userButtonControl= ()=> {
+
 //controller || button
 const toggleNotifications = document.getElementById('toggleNotifications');
 const toggleCart = document.getElementById('toggleCart');
 const toggleRewards = document.getElementById('toggleRewards');
 const toggleSettings = document.getElementById('toggleSettings');
 const toggleHelp = document.getElementById('toggleHelp');
+const toggleAdmin = document.getElementById('toggleAdmin');
 //const toggleWallet = document.getElementById('toggleWallet');
 
 //div || window
@@ -13,6 +16,7 @@ const cartDiv = document.getElementById('cart');
 const rewardsDiv = document.getElementById('rewards');
 const settingsDiv = document.getElementById('settings');
 const helpDiv = document.getElementById('help');
+const adminDiv = document.getElementById('admin');
 //const walletDiv = document.getElementById('wallet');
 
 
@@ -23,6 +27,7 @@ const buttonCtlGroups = [
 {button:toggleRewards,div:rewardsDiv},
 {button:toggleSettings,div:settingsDiv},
 {button:toggleHelp,div:helpDiv},
+{button:toggleAdmin,div:adminDiv},
 //{button:toggleWallet,div:walletDiv}
 
 ];
@@ -32,9 +37,7 @@ const buttonCtlGroups = [
 //     buttonCtlGroups[i].div.style.display="none"
 //   }
 // }
-
-const buttonControl= ()=> {
-  console.log('buttonControl() ran');
+  console.log('userButtonControl() ran');
   for (let i = 0; i < buttonCtlGroups.length; i++) {
     const btn = buttonCtlGroups[i].button;
     const div = buttonCtlGroups[i].div;
@@ -52,5 +55,4 @@ const buttonControl= ()=> {
     });
   }
 }
-document.addEventListener('onload', buttonControl())
-//buttonControl();
+

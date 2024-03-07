@@ -12,7 +12,7 @@ const config =
     //**********
     //custom changes below
     "title":"Royal World Socket Platform",
-    "headline":"Now Testing Chat",
+    "headline":"Now Testing Chat, Views, and Dashboard",
     "footerMessage":"config footer message",
     "companyPaypal":process.env.PPAL_CID,
     "baseShipping":"9.00",
