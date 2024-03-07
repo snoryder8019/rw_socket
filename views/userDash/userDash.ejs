@@ -14,15 +14,20 @@
      
     </div>
     <div class="wallet">
+        <div class="jewel">*</div>
         <div class="jewel"><img src="/images/icons/1.png">12</div>
         <div class="jewel"><img src="/images/icons/2.png">6</div>
         <div class="jewel"><img src="/images/icons/3.png">55</div>
-        <div class="jewel"><img src="/images/icons/4.png"></div>
+       <%- include('../wallet/walletDetails')%>
        
     </div>
 
 
-
+<%- include('../notifications/notifications') %>
+<%- include('../cart/cartDetails') %>
+<%- include('../rewards/rewardsDetails') %>
+<%- include('../help/help') %>
+<%- include('userSettings') %>
         <%}else{%>
             you must login to view your dashboard
             <%}%>
