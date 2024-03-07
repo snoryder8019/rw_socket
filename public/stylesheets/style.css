@@ -6,7 +6,7 @@
   padding: 1%;
 }
 
-#div0, #login_div, #register_div, #tickets, #users, #ticketsAdmin, #logs {
+#notifications, #cart, #rewards, #help, #settings, #admin, #wallet {
   display: none;
 }
 
@@ -174,7 +174,7 @@ input {
   align-items: center; /* Vertically align items in the middle */
 }
 
-#userNav {
+.navGroup {
   position: absolute;
   bottom: 0;
   left: 0;

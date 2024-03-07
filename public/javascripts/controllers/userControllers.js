@@ -7,8 +7,7 @@ const toggleCart = document.getElementById('toggleCart');
 const toggleRewards = document.getElementById('toggleRewards');
 const toggleSettings = document.getElementById('toggleSettings');
 const toggleHelp = document.getElementById('toggleHelp');
-const toggleAdmin = document.getElementById('toggleAdmin');
-//const toggleWallet = document.getElementById('toggleWallet');
+
 
 //div || window
 const notificationsDiv = document.getElementById('notifications');
@@ -16,8 +15,7 @@ const cartDiv = document.getElementById('cart');
 const rewardsDiv = document.getElementById('rewards');
 const settingsDiv = document.getElementById('settings');
 const helpDiv = document.getElementById('help');
-const adminDiv = document.getElementById('admin');
-//const walletDiv = document.getElementById('wallet');
+
 
 
 
@@ -27,8 +25,7 @@ const buttonCtlGroups = [
 {button:toggleRewards,div:rewardsDiv},
 {button:toggleSettings,div:settingsDiv},
 {button:toggleHelp,div:helpDiv},
-{button:toggleAdmin,div:adminDiv},
-//{button:toggleWallet,div:walletDiv}
+
 
 ];
 //became unused

@@ -27,7 +27,7 @@
 <%- include('../rewards/rewardsDetails',{user:user}) %>
 <%- include('../help/help',{user:user}) %>
 <%- include('userSettings',{user:user}) %>
-<%if(user.isAdmin==true){%>
+<%if(user.isAdmin===true){%>
     <%- include('../admin/admin',{user:user})%>
     <%}%>
         <%}else{%>
@@ -66,5 +66,70 @@ dashToggle.addEventListener('click', ()=>{
 }
 })
 })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+const walletButtonControl= ()=> {
+const toggleAdmin = document.getElementById('toggleAdmin');
+const toggleWallet = document.getElementById('toggleWallet');
+const adminDiv = document.getElementById('admin');
+const walletDiv = document.getElementById('wallet');
+const buttonCtlGroups = [ 
+{button:toggleAdmin,div:adminDiv},
+{button:toggleWallet,div:walletDiv}
+];
+  console.log('walletButtonControl() ran');
+  for (let i = 0; i < buttonCtlGroups.length; i++) {
+    const btn = buttonCtlGroups[i].button;
+    const div = buttonCtlGroups[i].div;
+    console.log(div)
+    console.log(btn)
+    btn.addEventListener('click', function () {
+      if (div.style.display === "block") {
+        div.style.display = 'none';
+      } else {
+        for(let i =0;i<buttonCtlGroups.length;i++){
+          buttonCtlGroups[i].div.style.display='none'
+        }
+                div.style.display = 'block';
+      }
+    });
+  }
+}
+document.addEventListener('DOMContentLoaded', walletButtonControl);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 </script>
