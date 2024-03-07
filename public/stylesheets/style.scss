@@ -17,11 +17,24 @@ $gradientEdge: #410b4b;
 
 #footer{
     padding: 2%;
-    background-color: $gold;
-    color: $purple;
+    background-color: $purple;
+    color: $gold;
 width: 90%;
-margin-left: 5%;
-    box-shadow: 5px 5px 12px $purple;
+margin-left: 3%;
+    box-shadow: inset 5px 5px 12px $black;
+}
+.footerContainer{
+    padding:1%;
+    display: flex;
+align-items: center;
+align-content: space-around;
+text-align: center;
+
+}
+.footerDiv{
+    text-align: center;
+    flex-shrink: 0;
+    width:33%;
 }
 //forms
 input{
@@ -100,10 +113,15 @@ display: flex;
         width: 90%;
         right:100%;
     }
- 
-
+    
+    
 }
-
+.dashContent{
+    height: 100%;
+   
+    overflow-y: scroll;
+//     overflow-y: scroll;
+}
 @mixin toggleOpt(){
     position: absolute;
     width:200px;

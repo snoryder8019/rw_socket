@@ -24,7 +24,7 @@
     <div id="div0">  
       <button id="toggleDiv">collapse div</button>  
     </div>
-    <%if(typeof user === ' object' && user){%>
+    <%if(typeof user === 'object' && user){%>
       <%-include('./authTrueTemplates/template')%>
       <%}else{%>
         <%-include('./authFalseTemplates/template')%>
@@ -36,7 +36,7 @@
   </div>    
 
 
-  <%if(typeof user === ' object' && user){%>
+  <%if(typeof user === 'object' && user){%>
   <%- include('./chat/basicChat',{user:user})%>
           <%- include('./userDash/userDash',{user:user})%>
           <%}else{%>

@@ -1,4 +1,6 @@
 <div id="userDash">
+    <div class="dashContent">
+        <div>
     <button id="dashToggle">dashboard</button>
     <%if(typeof user =='object'&& user){%>
         
@@ -29,15 +31,20 @@
     <%- include('../admin/admin',{user:user})%>
     <%}%>
         <%}else{%>
+<div style="overflow: scroll;height:auto;">
 
 <h2>
             you must login to view your dashboard
         </h2>
             <%-include('../auth/login')%>
-
+            <%-include('../auth/register')%>
+        </div>
+       
             <%}%>
 
-<%- include('userNav',{user:user})%>
+            <%- include('userNav',{user:user})%>
+        </div>
+        </div>
         </div>
 <script>
     document.addEventListener('DOMContentLoaded', ()=>{
