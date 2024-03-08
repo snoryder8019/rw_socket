@@ -9,6 +9,21 @@ const env = require('dotenv').config();
 const { ObjectId } = require('mongodb');
 const YahooStrategy = require('passport-yahoo-oauth').Strategy;
 const lib = require('../../routes/logFunctions/logFunctions')
+
+
+
+// const userKeyGen = async(req,res)=>{
+// try{}
+// catch{}
+// }
+
+
+
+
+
+
+
+
 passport.use(new YahooStrategy({
     consumerKey: process.env.YHO_CID,
     consumerSecret: process.env.YHO_SEC,

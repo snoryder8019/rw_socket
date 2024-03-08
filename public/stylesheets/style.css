@@ -338,4 +338,21 @@ a {
   /* Additional styling as needed */
 }
 
+#confettiCanvas {
+  background-color: transparent;
+  z-index: -1;
+  position: absolute;
+  width: 98%;
+  height: 98%;
+  top: 0;
+  left: 0;
+}
+
+#confettiControls {
+  position: fixed;
+  width: 200px;
+  bottom: 2%;
+  left: -25%;
+}
+
 /*# sourceMappingURL=style.css.map */
