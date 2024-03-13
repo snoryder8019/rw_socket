@@ -12,11 +12,13 @@ const {getUserEditor,postUserEdit} = require('./adminFunctions/userControl')
 const { userImgUpload, userDataUpload, submitTicket, saveRotation } = require('./userFunctions/userFunctions');
 const {updateBanned}=require('./securityFunctions/updateBanned');
 const upload = require('../plugins/multer/setup');
+const userAvatarUpload =require('./userFunctions/userBucketFunctions')
 
 
 
 
 
+router.use(userAvatarUpload);
 router.post('/userImgUpload', upload, userImgUpload);
 
 router.post('/submitTicket', submitTicket);

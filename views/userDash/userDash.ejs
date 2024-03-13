@@ -1,135 +1,109 @@
 <div id="userDash">
-    <div class="dashContent">
-        <div>
-    <button id="dashToggle">dashboard</button>
-    <%if(typeof user =='object'&& user){%>
-        
-        <div class="dashHeader">       
-            <div class="message"><img src="images/userHeadshots/<%=user.userImg%>" alt="">    <h3>Welcome <%=user.firstName%></h3><h3>Logged in as: <%=user.email%></h3></div>
-               
-            </div>
+  <div class="dashContent">
+    <div>
+      <button id="dashToggle">dashboard</button>
+      <%if(typeof user =='object'&& user){%>
 
-            <div class="dashBody">
-     
-    </div>
-    <div class="wallet">
+      <div class="dashHeader">
+        <div class="message"><img src="images/userHeadshots/<%=user.userImg%>" alt="">
+          <h3>Welcome <%=user.firstName%></h3>
+          <h3>Logged in as: <%=user.email%></h3>
+        </div>
+
+      </div>
+
+      <div class="dashBody">
+
+      </div>
+      <div class="wallet">
         <div class="jewel">*</div>
         <div class="jewel"><img src="/images/icons/1.png">12</div>
         <div class="jewel"><img src="/images/icons/2.png">6</div>
         <div class="jewel"><img src="/images/icons/3.png">55</div>
-       <%- include('../wallet/walletDetails')%>
-       
-    </div>
+        <%- include('../wallet/walletDetails')%>
+
+      </div>
 
 
-<%- include('../notifications/notifications',{user:user}) %>
-<%- include('../cart/cartDetails',{user:user}) %>
-<%- include('../rewards/rewardsDetails',{user:user}) %>
-<%- include('../help/help',{user:user}) %>
-<%- include('userSettings',{user:user}) %>
-<%if(user.isAdmin===true){%>
-    <%- include('../admin/admin',{user:user})%>
-    <%}%>
+      <%- include('../notifications/notifications',{user:user}) %>
+      <%- include('../cart/cartDetails',{user:user}) %>
+      <%- include('../rewards/rewardsDetails',{user:user}) %>
+      <%- include('../help/help',{user:user}) %>
+      <%- include('userSettings',{user:user}) %>
+      <%if(user.isAdmin===true){%>
+      <%- include('../admin/admin',{user:user})%>
+      <%}%>
         <%}else{%>
-<div style="overflow: scroll;height:auto;">
+      <div style="overflow: scroll;height:auto;">
 
-<h2>
-            you must login to view your dashboard
+        <h2>
+          you must login to view your dashboard
         </h2>
-            <%-include('../auth/login')%>
-            <%-include('../auth/register')%>
-        </div>
-       
-            <%}%>
+        <%-include('../auth/login')%>
+        <%-include('../auth/register')%>
+      </div>
+
+      <%}%>
 
             <%- include('userNav',{user:user})%>
-        </div>
-        </div>
-        </div>
+    </div>
+  </div>
+</div>
 <script>
-    document.addEventListener('DOMContentLoaded', ()=>{
+  document.addEventListener('DOMContentLoaded', () => {
     let dashWindowState = null;
-const dashToggle = document.getElementById('dashToggle');
-const dashWindow = document.getElementById('userDash');
-const main = document.getElementById('main')
-dashToggle.addEventListener('click', ()=>{
-    if(dashWindow.style.transform!="translateX(106%)"){
-        dashWindow.style.transform="translateX(106%)";
-  
-   dashToggle.innerHTML="close";  
-   dashWindowState="open"   
-}else{
-   
-    dashWindow.style.transform="translateX(0%)";
-    dashToggle.innerHTML="dashboard";  
-    dashWindowState="hidden"   ;
-}
-})
-})
+    const dashToggle = document.getElementById('dashToggle');
+    const dashWindow = document.getElementById('userDash');
+    const main = document.getElementById('main')
+    dashToggle.addEventListener('click', () => {
+      if (dashWindow.style.transform != "translateX(106%)") {
+        dashWindow.style.transform = "translateX(106%)";
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-const walletButtonControl= ()=> {
-const toggleAdmin = document.getElementById('toggleAdmin');
-const toggleWallet = document.getElementById('toggleWallet');
-const adminDiv = document.getElementById('admin');
-const walletDiv = document.getElementById('wallet');
-const buttonCtlGroups = [ 
-{button:toggleAdmin,div:adminDiv},
-{button:toggleWallet,div:walletDiv}
-];
-  console.log('walletButtonControl() ran');
-  for (let i = 0; i < buttonCtlGroups.length; i++) {
-    const btn = buttonCtlGroups[i].button;
-    const div = buttonCtlGroups[i].div;
-    console.log(div)
-    console.log(btn)
-    btn.addEventListener('click', function () {
-      if (div.style.display === "block") {
-        div.style.display = 'none';
+        dashToggle.innerHTML = "close";
+        dashWindowState = "open"
       } else {
-        for(let i =0;i<buttonCtlGroups.length;i++){
-          buttonCtlGroups[i].div.style.display='none'
-        }
-                div.style.display = 'block';
+
+        dashWindow.style.transform = "translateX(0%)";
+        dashToggle.innerHTML = "dashboard";
+        dashWindowState = "hidden";
       }
-    });
+    })
+  })
+
+
+
+
+  const walletButtonControl = () => {
+    const toggleAdmin = document.getElementById('toggleAdmin');
+    const toggleWallet = document.getElementById('toggleWallet');
+    const adminDiv = document.getElementById('admin');
+    const walletDiv = document.getElementById('wallet');
+    const buttonCtlGroups = [{
+        button: toggleAdmin,
+        div: adminDiv
+      },
+      {
+        button: toggleWallet,
+        div: walletDiv
+      }
+    ];
+    console.log('walletButtonControl() ran');
+    for (let i = 0; i < buttonCtlGroups.length; i++) {
+      const btn = buttonCtlGroups[i].button;
+      const div = buttonCtlGroups[i].div;
+      console.log(div)
+      console.log(btn)
+      btn.addEventListener('click', function() {
+        if (div.style.display === "block") {
+          div.style.display = 'none';
+        } else {
+          for (let i = 0; i < buttonCtlGroups.length; i++) {
+            buttonCtlGroups[i].div.style.display = 'none'
+          }
+          div.style.display = 'block';
+        }
+      });
+    }
   }
-}
-document.addEventListener('DOMContentLoaded', walletButtonControl);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  document.addEventListener('DOMContentLoaded', walletButtonControl);
 </script>
