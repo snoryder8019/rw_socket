@@ -32,17 +32,38 @@ module.exports.setupSocketIO = (server) => {
     mainChat.on('connection', (socket) => {
       const userName = socket.request.user.firstName;
       console.log(`${userName} connected to main_chat`);
-        users[socket.id] = userName; // Add user to the list
+      const avatarImage = socket.request.user.images.find(img => img.avatarTag === true);
+      const avatarThumbnailUrl = avatarImage ? avatarImage.thumbnailUrl : null;
+  
+      users[socket.id] = {
+          userName: userName,
+          avatarThumbnailUrl: avatarThumbnailUrl // Store this for use in broadcasts or direct messages
+      };
         socket.join('General');
-
+        if (avatarThumbnailUrl) {
+            socket.emit('user avatar', { thumbnailUrl: avatarThumbnailUrl });
+        }
         // Notify all clients in the namespace about the updated user list
-        mainChat.to('General').emit('user list', Object.values(users));
-
-        // Handle chat messages
-        socket.on('chat message', (msg) => {
-            // Broadcast the message to all clients in "General" room within the main_chat namespace
-            mainChat.to('General').emit('chat message', { text: msg, user: socket.request.user });
-        });
+        mainChat.to('General').emit('user list', Object.values(users).map(user => {
+            return { userName: user.userName, avatarThumbnailUrl: user.avatarThumbnailUrl };
+        }));
+                // Handle chat messages
+                socket.on('chat message', (msg) => {
+                    // Assuming the user's avatar information is part of `socket.request.user.images`
+                    // and you are looking for the image where `avatarTag === true`
+                    const userAvatar = socket.request.user.images.find(img => img.avatarTag === true);
+                    const avatarThumbnailUrl = userAvatar ? userAvatar.thumbnailUrl : 'defaultThumbnail.png'; // Use a default thumbnail if none is set
+                console.log(avatarThumbnailUrl)
+                    // Broadcast the message to all clients in "General" room within the main_chat namespace
+                    // Now includes the avatarThumbnailUrl in the data being sent
+                    mainChat.to('General').emit('chat message', {
+                        text: msg,
+                        user: socket.request.user,
+                        thumbnailUrl: avatarThumbnailUrl // Assuming you're correctly assigning this variable on the server
+                    });
+                    
+                });
+                
 
         // Handle joining specific rooms
         socket.on('join room', (room) => {

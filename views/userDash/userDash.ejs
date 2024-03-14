@@ -5,8 +5,14 @@
       <%if(typeof user =='object'&& user){%>
 
       <div class="dashHeader">
-        <div class="message"><img src="images/userHeadshots/<%=user.userImg%>" alt="">
-          <h3>Welcome <%=user.firstName%></h3>
+        <div class="message">
+          <% for(let i = 0; i < user.images.length; i++) { %>
+            <% if(user.images[i].avatarTag === true) { %>
+              <img src="<%= user.images[i].thumbnailUrl %>" alt="" loading="lazy">
+            <% } %>
+          <% } %>
+        </div>
+                  <h3>Welcome <%=user.firstName%></h3>
           <h3>Logged in as: <%=user.email%></h3>
         </div>
 

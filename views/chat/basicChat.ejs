@@ -29,60 +29,63 @@
 </div>
 <script src="/socket.io/socket.io.js"></script>
 <script>
+
     document.addEventListener('DOMContentLoaded', ()=>{
 
     var socket = io('/main_chat'); 
 
     // Function to add messages to the DOM
-    function addMessage(messageObject) {
+    function addMessage(messageObject, isOwnMessage = false) {
     var messagesContainer = document.getElementById('messages');
-    
-    // Create the message wrapper div
     var messageDiv = document.createElement('div');
-    var messageAvatar =document.createElement('img');
-    messageAvatar.className = 'message';
-    messageAvatar.src = `/images/userHeadshots/${messageObject.user.userImg}`;
-    messageDiv.className = 'message'; // Assign a class for styling
+    var messageAvatar = document.createElement('img');
+    messageAvatar.className = 'usersOnline';
 
-    // Optionally, create separate elements for the user name and message text
+   
+        // Use the thumbnailUrl from the message object, with a fallback to a default image
+        messageAvatar.src = messageObject.thumbnailUrl ? `${messageObject.thumbnailUrl}` : `/images/userHeadshots/defaultThumbnail.png`;
+   
+
     var userNameSpan = document.createElement('span');
     userNameSpan.className = 'messageUser';
-    userNameSpan.textContent = messageObject.user.firstName + ': '; // Assuming this structure
+    userNameSpan.textContent = isOwnMessage ? "You: " : messageObject.user.firstName + ': ';
 
     var messageTextSpan = document.createElement('span');
     messageTextSpan.className = 'messageText';
     messageTextSpan.textContent = messageObject.text;
 
-    // Append user name and message text to the message div
-    messageDiv.appendChild(messageAvatar)
+    messageDiv.appendChild(messageAvatar);
     messageDiv.appendChild(userNameSpan);
     messageDiv.appendChild(messageTextSpan);
 
-    // Append the complete message div to the messages container
     messagesContainer.appendChild(messageDiv);
 }
+
 
 
     // Add click event listener to the submit button
     var submitChat = document.getElementById('submitChat');
     if (submitChat) {
-        submitChat.addEventListener('click', function(event) {
-            var input = document.getElementById('chatInput');
-            var message = input.value.trim();
+       submitChat.addEventListener('click', function(event) {
+    var input = document.getElementById('chatInput');
+    var message = input.value.trim();
 
-            if (message !== '') {
-                socket.emit('chat message', message); // Emit the message
-                addMessage('You: ' + message); // Add message to the DOM
-                input.value = ''; // Clear the input
-            }
-        });
+    if (message !== '') {
+        // Construct a message object similar to what's expected
+        let messageObject = { text: message, user: {firstName: "You"}, thumbnailUrl: null }; // Adjust as necessary
+        socket.emit('chat message', message); // Emit the message
+        addMessage(messageObject, true); // Add message to the DOM, indicating it's the user's own
+        input.value = ''; // Clear the input
+    }
+});
+
     } else {
         console.log('Submit Chat button not found'); // Debugging: Check if button is found
     }
 
     // Listen for chat messages from the server
     socket.on('chat message', function(msg) {
-        addMessage(msg); // Add incoming message to the DOM
+        addMessage(msg, false); // Add incoming message to the DOM
     });
     socket.on('user list', function(users) {
     var userList = document.getElementById('userList');
@@ -90,17 +93,25 @@
     users.forEach(function(user) {
         var div = document.createElement('div');
         div.className = 'usersOnline';
-        var img = document.createElement('img'); // Correct method to create an img element
+        var img = document.createElement('img');
         img.className = 'userImage'; // Assign a class for styling if needed
-        img.alt = user.firstName; // Assuming `firstName` is the property
-        img.src = `/images/userHeadshots/${user.userImg}`; 
-        var text = document.createElement('span'); // Optional: add text next to the image
-        text.textContent = user.firstName; // Show user's name next to the image
+        img.alt = user.userName; // Use `userName` for alt text
+        // Use `avatarThumbnailUrl` for the image source. 
+        // Remember to handle the case where `avatarThumbnailUrl` might be null or an empty string
+        img.src = user.avatarThumbnailUrl ? `${user.avatarThumbnailUrl}` : '/path/to/default/avatar/image.jpg'; 
+        var text = document.createElement('span');
+        text.style.position="absolute";
+        text.style.left="0";
+        text.style.bottom="0";
+        text.style.textAlign="center";
+        text.textContent = user.userName; // Use `userName` to show the user's name next to the image
         
-        div.appendChild(img);
-        div.appendChild(text); // Optional
-        userList.appendChild(div);   });
+        div.appendChild(img); // Add the user image
+        div.appendChild(text); // Add the user name text
+        userList.appendChild(div); // Append this div to the userList container
+    });
 });
+
 
     // Error handling for Socket.IO
     socket.on('connect_error', (error) => {

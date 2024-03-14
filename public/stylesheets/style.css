@@ -355,4 +355,8 @@ a {
   left: -25%;
 }
 
+.imageThumbs {
+  display: flex;
+}
+
 /*# sourceMappingURL=style.css.map */
