@@ -29,59 +29,54 @@
 </div>
 <script src="/socket.io/socket.io.js"></script>
 <script>
-
-    document.addEventListener('DOMContentLoaded', ()=>{
-
+document.addEventListener('DOMContentLoaded', () => {
     var socket = io('/main_chat'); 
 
     // Function to add messages to the DOM
     function addMessage(messageObject, isOwnMessage = false) {
-    var messagesContainer = document.getElementById('messages');
-    var messageDiv = document.createElement('div');
-    var messageAvatar = document.createElement('img');
-    messageAvatar.className = 'usersOnline';
+        var messagesContainer = document.getElementById('messages');
+        var messageDiv = document.createElement('div');
+        messageDiv.className = isOwnMessage ? 'message ownMessage' : 'message'; // Differentiate own messages
 
-   
-        // Use the thumbnailUrl from the message object, with a fallback to a default image
+        var messageAvatar = document.createElement('img');
+        messageAvatar.className = 'usersOnline';
         messageAvatar.src = messageObject.thumbnailUrl ? `${messageObject.thumbnailUrl}` : `/images/userHeadshots/defaultThumbnail.png`;
-   
 
-    var userNameSpan = document.createElement('span');
-    userNameSpan.className = 'messageUser';
-    userNameSpan.textContent = isOwnMessage ? "You: " : messageObject.user.firstName + ': ';
+        var userNameSpan = document.createElement('span');
+        userNameSpan.className = 'messageUser';
+        userNameSpan.textContent = messageObject.user.firstName + ': ';
 
-    var messageTextSpan = document.createElement('span');
-    messageTextSpan.className = 'messageText';
-    messageTextSpan.textContent = messageObject.text;
+        var messageTextSpan = document.createElement('span');
+        messageTextSpan.className = 'messageText';
+        messageTextSpan.textContent = messageObject.text;
 
-    messageDiv.appendChild(messageAvatar);
-    messageDiv.appendChild(userNameSpan);
-    messageDiv.appendChild(messageTextSpan);
+        messageDiv.appendChild(messageAvatar);
+        messageDiv.appendChild(userNameSpan);
+        messageDiv.appendChild(messageTextSpan);
 
-    messagesContainer.appendChild(messageDiv);
-}
+        messagesContainer.appendChild(messageDiv);
+    }
 
+    // Listen for chat messages from the server
+    socket.on('chat message', function(msg) {
+        // Assuming `msg` is an object that includes `text`, `user`, and `thumbnailUrl`
+        // Determine if the message is from the current user
+        const isOwnMessage = msg.user.firstName === "You" || msg.user._id === socket.id; // Adjust according to your user ID management
+        addMessage(msg, isOwnMessage);
+    });
 
-
-    // Add click event listener to the submit button
+    // Submit message
     var submitChat = document.getElementById('submitChat');
-    if (submitChat) {
-       submitChat.addEventListener('click', function(event) {
-    var input = document.getElementById('chatInput');
-    var message = input.value.trim();
+    submitChat.addEventListener('click', function() {
+        var input = document.getElementById('chatInput');
+        var message = input.value.trim();
+        if (message !== '') {
+            socket.emit('chat message', message); // Emit the message
+            input.value = ''; // Clear the input
+        }
+    });
 
-    if (message !== '') {
-        // Construct a message object similar to what's expected
-        let messageObject = { text: message, user: {firstName: "You"}, thumbnailUrl: null }; // Adjust as necessary
-        socket.emit('chat message', message); // Emit the message
-        addMessage(messageObject, true); // Add message to the DOM, indicating it's the user's own
-        input.value = ''; // Clear the input
-    }
-});
 
-    } else {
-        console.log('Submit Chat button not found'); // Debugging: Check if button is found
-    }
 
     // Listen for chat messages from the server
     socket.on('chat message', function(msg) {
