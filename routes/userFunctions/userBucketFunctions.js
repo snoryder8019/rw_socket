@@ -13,7 +13,7 @@ router.post('/userImgUpload', upload, processImage, async (req, res) => {
     console.log('userImgUpload Endpoint Called');
 
     const db = getDb();
-    const user = req.user; // Ensure user is authenticated and available
+    const user = req.user;
     const collection = db.collection('users');
 console.log(req.file.filename)
 console.log(req.file.path)
@@ -32,7 +32,7 @@ console.log(req.file.path)
     console.log('Thumbnail created:', thumbnailPath);
 
     // Optionally, upload thumbnail to Linode and get its URL
-    const thumbFileKey = `${user._id}/thumb-${req.file.filename}`;
+    const thumbFileKey = `rw_users/${user._id}/thumb-${req.file.filename}`;
     const thumbnailUrl = await uploadToLinode(thumbnailPath, thumbFileKey);
     const refUserId =new ObjectId(user._id)
     console.log('Thumbnail uploaded to Linode:', thumbnailUrl);

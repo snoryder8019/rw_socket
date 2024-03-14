@@ -10,7 +10,43 @@ const { ObjectId } = require('mongodb');
 const YahooStrategy = require('passport-yahoo-oauth').Strategy;
 const lib = require('../../routes/logFunctions/logFunctions')
 
+// Adjusted newUser function for creating or retrieving user
+const newUser = async (profile, provider) => {
+  const db = getDb();
+  const users = db.collection('users');
 
+  // Check if the user already exists
+  let user = await users.findOne({ email: profile.emails[0].value });
+  if (user) {
+    return user; // User already exists, return existing user
+  }
+
+  // User doesn't exist, create new user object
+  user = {
+    providerID: profile.id,
+    provider: provider,
+    email: profile.emails[0].value,
+    displayName: profile.displayName,
+    firstName: profile.name.givenName,
+    lastName: profile.name.familyName,
+    password: '',
+    isAdmin: false,
+    cart: [],
+    images: [{thumbnailUrl: "/images/hugeIcon.png", avatarTag: true}],
+    clubs: [],
+    subscription: "free",
+    permissions: {
+      // permissions object as you defined
+    },
+    wallet: {},
+  };
+
+  // Insert the new user into the database
+  const result = await users.insertOne(user);
+  user._id = result.insertedId; // Assign the new MongoDB _id to the user object
+
+  return user; // Return the new user with _id
+};
 
 // const userKeyGen = async(req,res)=>{
 // try{}
@@ -50,9 +86,7 @@ passport.use(
         const db = getDb();
         const users = db.collection('users');
         console.log('awaiting email')
-        const user = await users.findOne({ email });
-      
-               
+        const user = await users.findOne({ email });              
      
         if (!user) {
           lib('login error: ', 'error: Email Not Found',  `Login Error:'email not found' , attempted email :${email} `,'errors.json','data')
@@ -81,16 +115,6 @@ passport.use(
           profileFields: ['id', 'displayName', 'photos', 'email', 'name']
         },
         async (accessToken, refreshToken, profile, done) => {
-          const newUser = {
-            providerID: profile.id,
-            provider: 'facebook',
-            email: profile.emails[0].value,
-            displayName: profile.displayName,
-            firstName: profile.name.givenName,
-            lastName: profile.name.familyName,
-            password: '',
-            isAdmin: false,
-          };
           
       try {
         const db = getDb();
@@ -109,45 +133,23 @@ passport.use(
     )
     );
     
-    
-    passport.use(
-      new GoogleStrategy(
-        {
-          clientID: process.env.GGLCID,
-          clientSecret: process.env.GGLSEC,
-          callbackURL: '/auth/google/callback',
-          proxy: true,
-        },
-        async (accessToken, refreshToken, profile, done) => {
-          const newUser = {
-            providerID: profile.id,
-            provider: 'google',
-            email: profile.emails[0].value,
-            displayName: profile.displayName,
-            firstName: profile.name.givenName,
-            lastName: profile.name.familyName,
-            password: '',
-            isAdmin: false,
-            cart:[]
-          };
-          
-          try {
-            const db = getDb();
-            const users = db.collection('users');
-            let user = await users.findOne({ email: profile.emails[0].value });
-            if (user) {
-              done(null, user);
-            } else {
-              await users.insertOne(newUser);
-              done(null, newUser);
-            }
-          } catch (err) {
-            console.error(err);
-          }
-        }
-        )
-        );
-        
+    passport.use(new GoogleStrategy({
+      clientID: process.env.GGLCID,
+      clientSecret: process.env.GGLSEC,
+      callbackURL: '/auth/google/callback',
+      proxy: true,
+    },
+    async (accessToken, refreshToken, profile, done) => {
+      try {
+        const user = await newUser(profile, 'google');
+        done(null, user);
+      } catch (err) {
+        console.error(err);
+        done(err, null);
+      }
+    }
+  ));
+  
         passport.serializeUser((user, done) => {
           // console.log('serialize')
           done(null, user._id);
