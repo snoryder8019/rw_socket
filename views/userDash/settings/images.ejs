@@ -1,8 +1,8 @@
 USER IMAGES.ejs
-<%if(typeof user.images === 'array' && user.images){%>
+<%if(typeof user.images === 'object' && user.images){%>
 
 
-    
+
 
 <%for (let i =0;i<user.images.length;i++){%>
     <div class="imageThumbs">
