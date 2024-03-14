@@ -29,7 +29,7 @@
       <%- include('../cart/cartDetails',{user:user}) %>
       <%- include('../rewards/rewardsDetails',{user:user}) %>
       <%- include('../help/help',{user:user}) %>
-      <%- include('userSettings',{user:user}) %>
+      <%- include('./settings/userSettings',{user:user}) %>
       <%if(user.isAdmin===true){%>
       <%- include('../admin/admin',{user:user})%>
       <%}%>
@@ -45,7 +45,7 @@
 
       <%}%>
 
-            <%- include('userNav',{user:user})%>
+            <%- include('./settings/userNav',{user:user})%>
     </div>
   </div>
 </div>
