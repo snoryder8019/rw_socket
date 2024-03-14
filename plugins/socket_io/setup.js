@@ -32,7 +32,7 @@ module.exports.setupSocketIO = (server) => {
     mainChat.on('connection', (socket) => {
       const userName = socket.request.user.firstName;
       console.log(`${userName} connected to main_chat`);
-      const avatarImage = socket.request.user.images.find(img => img.avatarTag === true);
+      const avatarImage = socket.request.user.images?.find(img => img.avatarTag === true) || null;
       const avatarThumbnailUrl = avatarImage ? avatarImage.thumbnailUrl : null;
   
       users[socket.id] = {
