@@ -9,18 +9,14 @@ const {ticketUpdate,ticketDelete, ticketData} = require('./adminFunctions/ticket
 const {resetPasswordRequest, resetPassword, handleResetPasswordGet} = require('../plugins/passport/passwordReset')
 const {isAdmin,gatherIp} = require('./adminFunctions/adminFunctions')
 const {getUserEditor,postUserEdit} = require('./adminFunctions/userControl')
-const { userImgUpload, userDataUpload, submitTicket, saveRotation } = require('./userFunctions/userFunctions');
+const { userDataUpload, submitTicket, saveRotation } = require('./userFunctions/userFunctions');
 const {updateBanned}=require('./securityFunctions/updateBanned');
 const upload = require('../plugins/multer/setup');
-const userAvatarUpload =require('./userFunctions/userBucketFunctions')
+const userBucketRouter = require('./userFunctions/userBucketFunctions')
 
 
 
-
-
-router.use(userAvatarUpload);
-router.post('/userImgUpload', upload, userImgUpload);
-
+router.use(userBucketRouter);
 router.post('/submitTicket', submitTicket);
 router.get('/ticketData',ticketData)
 router.post('/reset-password-request', resetPasswordRequest)

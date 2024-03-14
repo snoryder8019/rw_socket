@@ -1,48 +1,108 @@
+
 const express = require('express');
-const multer = require('multer');
-const  {S3Client} = require('@aws-sdk/client-s3');
-const { Upload } = require('@aws-sdk/lib-storage');
-require('dotenv').config();
-
-// Initialize the S3 client for Linode Object Storage
-const s3Client = new S3Client({
-    region: process.env.LINODE_BUCKET_REGION,
-    credentials: {
-      accessKeyId: process.env.LINODE_ACCESS_KEY_ID,
-      secretAccessKey: process.env.LINODE_SECRET_ACCESS_KEY,
-    },
-    endpoint: process.env.LINODE_ENDPOINT
-  });
-  
-const upload = multer({ storage: multer.memoryStorage() });
 const router = express.Router();
+const path = require('path');
+const { ObjectId } = require('mongodb');
+const { getDb } = require('../../plugins/mongo/mongo');
+const { upload, processImage } = require('../../plugins/multer/setup');
+const { resizeAndCropImage } = require('../../plugins/sharp/sharp');
+const { uploadToLinode } = require('../../plugins/aws_sdk/setup');
 
-router.post('/userAvatarUpload', upload.single('avatar'), async (req, res) => {
-  const file = req.file;
-  if (!file) {
-    return res.status(400).send('No file uploaded.');
-  }
-  
-  const uploadParams = {
-    Bucket: process.env.LINODE_BUCKET_NAME,
-    Key: `uploads/${file.originalname}`,
-    Body: file.buffer,
-    ACL: 'public-read',
-  };
-
+router.post('/userImgUpload', upload, processImage, async (req, res) => {
   try {
-    const uploadResult = new Upload({
-      client: s3Client,
-      params: uploadParams,
+    console.log('userImgUpload Endpoint Called');
+
+    const db = getDb();
+    const user = req.user; // Ensure user is authenticated and available
+    const collection = db.collection('users');
+console.log(req.file.filename)
+console.log(req.file.path)
+    // Assuming processImage middleware has set req.file.path to the processed image
+    const imagePath = req.file.path;
+    const fileKey = `${user._id}/${req.file.filename}`;
+    const fileBuffer = req.file.buffer;
+    console.log('Uploading to Linode...');
+    const bucketUrl = await uploadToLinode(imagePath, fileKey);
+
+    console.log('Uploaded to Linode:', bucketUrl);
+
+    // Generate thumbnail - modify resizeAndCropImage or create a separate function for thumbnail
+    const thumbnailPath = await resizeAndCropImage(fileBuffer, path.dirname(imagePath), `thumb-${req.file.filename}`, 'thumbnail');
+
+    console.log('Thumbnail created:', thumbnailPath);
+
+    // Optionally, upload thumbnail to Linode and get its URL
+    const thumbFileKey = `${user._id}/thumb-${req.file.filename}`;
+    const thumbnailUrl = await uploadToLinode(thumbnailPath, thumbFileKey);
+    const refUserId =new ObjectId(user._id)
+    console.log('Thumbnail uploaded to Linode:', thumbnailUrl);
+
+    // Update MongoDB with main image and thumbnail URLs
+    await collection.updateOne({ "_id":refUserId }, {
+      $push: {
+        images: {
+          bucketUrl: bucketUrl,
+          thumbnailUrl: thumbnailUrl,
+          alt: '',
+          tags: [],
+          avatarTag: false,
+          backgroundTag: false,
+          underReviewTag: false,
+          userLockedTag: false,
+          userShared: false,
+          adminTags: []
+        }
+      }
     });
 
-    await uploadResult.done();
-    console.log('Successfully uploaded');
-    res.status(200).send('File uploaded successfully');
-  } catch (err) {
-    console.error('Error uploading data: ', err);
-    res.status(500).send('Failed to upload');
+    console.log('MongoDB updated with image and thumbnail URLs.');
+
+    res.send({ success: true, urls: { main: bucketUrl, thumbnail: thumbnailUrl } });
+  } catch (error) {
+    console.error("Error in userImgUpload endpoint:", error);
+    res.status(500).send({ success: false, message: error.message });
   }
+});
+
+
+
+
+// IMAGE RETRIEVE
+router.get('/GETUSERIMAGES', async (req, res) => {
+  try {
+    const db = getDb();
+    const user = req.user;
+    const collection = db.collection('users');
+    const userData = await collection.findOne({ _id: ObjectId(user._id) });
+    res.send({ success: true, images: userData.images });
+  } catch (error) {
+    res.status(500).send({ success: false, message: error.message });
+  }
+});
+
+// IMAGE DELETE
+router.post('/DELETEIMAGE', async (req, res) => {
+  try {
+    const db = getDb();
+    const { imageId } = req.body; // Assuming you pass the imageId to delete
+    const user = req.user;
+    const collection = db.collection('users');
+    // Delete logic for Linode object bucket here
+    // Update user.images in MongoDB
+    await collection.updateOne({ _id: ObjectId(user._id) }, {
+      $pull: {
+        images: { bucketUrl: imageId }
+      }
+    });
+    res.send({ success: true, message: 'Image deleted successfully.' });
+  } catch (error) {
+    res.status(500).send({ success: false, message: error.message });
+  }
+});
+
+// IMAGE EDIT
+router.post('/EDITIMAGE', async (req, res) => {
+  // Implement edit logic, similar to DELETEIMAGE and USERIMGUPLOAD combined
 });
 
 module.exports = router;

@@ -52,7 +52,7 @@ let transporter = nodemailer.createTransport({
 
 
 
-const sendDynamicEmail = async (to, emailType, user, card, dynamicLink, ticket) => {
+const sendDynamicEmail = async (to, emailType, user, dynamicLink, ticket) => {
     await initializeTransporter();
     const settings = {
         confirmation: {

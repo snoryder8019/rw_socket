@@ -5,9 +5,9 @@ const {resizeAndCropImage} = require('../../plugins/sharp/sharp')
 const { sendDynamicEmail } = require('../../plugins/nodemailer/setup');
 const upload = require('../../plugins/multer/setup');
 const { getDb } = require('../../plugins/mongo/mongo');
+const { ObjectId } = require('mongodb');
 const config = require('../../config/config'); // Import config if you're using it
 const lib = require('../logFunctions/logFunctions')
-const { ObjectId } = require('mongodb');
 const fs = require('fs')
 const fsp = require('fs').promises
 const sharp = require('sharp')
@@ -227,7 +227,7 @@ console.log(imagePath)
   }
 }
 
-router.post('/userImgUpload', upload, userImgUpload);
+//router.post('/userImgUpload', upload, userImgUpload);
 
 router.post('/userDataUpload', userDataUpload)
 

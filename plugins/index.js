@@ -12,6 +12,7 @@ const stripeRoutes = require('./stripe');
 //router.post('/checkouts', checkouts);
 router.use('/stripe', stripeRoutes);
 
+
 router.get('/exporter', exporter);
 
 
