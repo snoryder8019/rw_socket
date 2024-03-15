@@ -1,9 +1,26 @@
-
-    <h2>Upload Image</h2>
-    <form action="http://localhost:3000/userImgUpload" method="post" enctype="multipart/form-data">
-        <label for="image">Choose image to upload:</label>
-        <input type="file" id="image" name="image" required>
-        <br><br>
-        <button type="submit">Upload Image</button>
-    </form>
-
+<h2>Upload a new profile image</h2>
+<form action="http://localhost:3000/userImgUpload" method="post" enctype="multipart/form-data">
+    <label for="image">Choose image to upload:</label>
+    <input type="file" id="image" name="image" required>
+    <br><br>
+    <div id="previewContainer" style="display:none;">
+        <img id="imagePreview" src="#" alt="Image Preview" style="max-width: 200px; max-height: 200px;"/>
+    </div>
+    <br>
+    <button type="submit">Upload Avatar</button>
+</form>
+<script>
+    document.getElementById('image').addEventListener('change', function(event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const preview = document.getElementById('imagePreview');
+                const container = document.getElementById('previewContainer');
+                preview.src = e.target.result;
+                container.style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+</script>

@@ -33,6 +33,26 @@
   width: 33%;
 }
 
+.imagesThumbs, #settings {
+  display: flex;
+  flex-direction: row; /* or column for a vertical layout */
+  justify-content: flex-start; /* Aligns items at the start of the container */
+  align-items: center; /* Centers items vertically in their line */
+  gap: 10px; /* Adjusts space between each .userSetting item */
+  padding: 20px; /* Adds some space inside the container */
+}
+
+.thumb {
+  display: block;
+  flex: 0 1 auto; /* Allows the item to grow and shrink, but not beyond its content size */
+  /* Additional styling for your .userSetting elements */
+  padding: 10px;
+  border: 1px solid #ccc; /* Example border, adjust as needed */
+  border-radius: 5px; /* Gives a slight rounded corner */
+  background-color: #f9f9f9; /* Light background color */
+  overflow-y: scroll;
+}
+
 input {
   margin-bottom: 1%;
 }

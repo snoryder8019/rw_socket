@@ -6,6 +6,7 @@ const toggleNotifications = document.getElementById('toggleNotifications');
 const toggleCart = document.getElementById('toggleCart');
 const toggleRewards = document.getElementById('toggleRewards');
 const toggleSettings = document.getElementById('toggleSettings');
+const toggleSettings1 = document.getElementById('toggleSettings1');
 const toggleHelp = document.getElementById('toggleHelp');
 
 
@@ -24,6 +25,7 @@ const buttonCtlGroups = [
 {button:toggleCart,div:cartDiv},
 {button:toggleRewards,div:rewardsDiv},
 {button:toggleSettings,div:settingsDiv},
+{button:toggleSettings1,div:settingsDiv},
 {button:toggleHelp,div:helpDiv},
 
 

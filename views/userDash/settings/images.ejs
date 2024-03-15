@@ -1,21 +1,12 @@
-USER IMAGES.ejs
+
 <%if(typeof user.images === 'object' && user.images){%>
-
-
-
-
+  <h2>your profile uploads</h2>
 <%for (let i =0;i<user.images.length;i++){%>
     <div class="imageThumbs">
-        <div class="thumb"><img src="  <%=user.images[i].thumbnailUrl%>" alt=""></div>
+        <div class="thumb"><img src="  <%=user.images[i].thumbnailUrl%>" alt="">
+      
+          <input type="radio" name="" placeholder="make avatar" id="">
+        </div> 
 </div>
-    <%}%>
-    
-    
-    
-    
-    
-    
-    
-    
-    
+    <%}%>   
     <%}%>

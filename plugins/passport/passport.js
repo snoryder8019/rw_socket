@@ -32,11 +32,24 @@ const newUser = async (profile, provider) => {
     password: '',
     isAdmin: false,
     cart: [],
+    notifications:[],
     images: [{thumbnailUrl: "/images/hugeIcon.png", avatarTag: true}],
     clubs: [],
     subscription: "free",
-    permissions: {
-      // permissions object as you defined
+    permissions:{
+      admin:false,
+      users:false,
+      games:false,
+      videoLead:false,
+      videoProduction:false,
+      bingoLead:false,
+      tickets:false,
+      chat:false,
+      travel:false,
+      clubs:false,
+      blogs:false,
+      webapp:false,
+      
     },
     wallet: {},
   };
