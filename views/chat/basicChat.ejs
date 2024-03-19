@@ -78,10 +78,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
-    // Listen for chat messages from the server
-    socket.on('chat message', function(msg) {
-        addMessage(msg, false); // Add incoming message to the DOM
-    });
+  
     socket.on('user list', function(users) {
     var userList = document.getElementById('userList');
     userList.innerHTML = ''; // Clear current list

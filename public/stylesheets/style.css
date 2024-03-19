@@ -428,4 +428,28 @@ a {
   display: flex;
 }
 
+.auth_view_true {
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  min-height: 360px;
+  width: 96%;
+  margin: 2%;
+  background-color: white;
+  box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.719);
+  border-radius: 5px;
+}
+
+.auth_view_false {
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  min-height: 360px;
+  width: 96%;
+  margin: 2%;
+  background-color: white;
+  box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.719);
+  border-radius: 5px;
+}
+
 /*# sourceMappingURL=style.css.map */
