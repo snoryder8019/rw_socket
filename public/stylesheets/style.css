@@ -33,13 +33,51 @@
   width: 33%;
 }
 
-.imagesThumbs, #settings {
+.collapse_carrot {
+  margin: 0 12px;
+  font-size: 3rem;
+  transform: rotate(180deg);
+}
+
+.collapse_carrot {
+  display: inline-block;
+  transition: transform 0.3s ease;
+}
+
+.rotated {
+  transform: rotate(180deg);
+}
+
+.imagesThumbs {
   display: flex;
   flex-direction: row; /* or column for a vertical layout */
   justify-content: flex-start; /* Aligns items at the start of the container */
   align-items: center; /* Centers items vertically in their line */
   gap: 10px; /* Adjusts space between each .userSetting item */
   padding: 20px; /* Adds some space inside the container */
+}
+
+#settings {
+  margin-bottom: 12%;
+}
+
+.userSetting {
+  transition: width 0.5s ease;
+  /* Set a default width or use another property as needed */
+}
+
+.collapse-section {
+  display: block;
+}
+
+.collapsible {
+  overflow: hidden;
+  transition: max-height 0.5s ease-out;
+  max-height: 700px; /* Adjust this value based on the maximum content height */
+}
+
+.collapsed {
+  max-height: 0; /* Collapse the div */
 }
 
 .thumb {
@@ -195,21 +233,26 @@ input {
 }
 
 .navGroup {
+  background-color: #711881;
   position: absolute;
   bottom: 0;
   left: 0;
+  width: 100%;
   display: flex;
   flex-direction: row; /* Align items horizontally */
   justify-content: space-evenly; /* Even spacing around the items */
   align-items: center; /* Vertically align items in the middle */
 }
 
-.wallet {
+.wallet, .collapse-section {
   background: linear-gradient(to right, purple, rgb(154, 1, 154));
   box-shadow: inset 2px 2px 2px #1a0a1b;
   padding: 1%;
   border-top: 1px solid #d7b436;
   border-bottom: 1px solid #d7b436;
+}
+
+.wallet {
   display: flex;
   flex-direction: row; /* Align items horizontally */
   justify-content: space-evenly; /* Even spacing around the items */
@@ -225,6 +268,7 @@ input {
 }
 
 .userNavLink {
+  filter: invert(1);
   color: #d7b436;
   justify-content: space-around;
   align-items: center;
@@ -234,6 +278,11 @@ input {
   padding: 10px; /* Example padding */
   text-decoration: none; /* Example to remove underline from links */
   color: #333; /* Example link color */
+  border-top-left-radius: 30px;
+}
+
+.userNavLink img {
+  width: 100%;
 }
 
 a {

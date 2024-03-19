@@ -38,8 +38,21 @@ text-align: center;
     flex-shrink: 0;
     width:33%;
 }
+.collapse_carrot{
+    margin: 0 12px;
+    font-size: 3rem;
+    transform: rotate(180deg);
+}
+.collapse_carrot {
+    display: inline-block;
+    transition: transform 0.3s ease;
+}
 
-.imagesThumbs, #settings {
+.rotated {
+    transform: rotate(180deg);
+}
+
+.imagesThumbs {
     display: flex;
     flex-direction: row; /* or column for a vertical layout */
     justify-content: flex-start; /* Aligns items at the start of the container */
@@ -47,7 +60,29 @@ text-align: center;
     gap: 10px; /* Adjusts space between each .userSetting item */
     padding: 20px; /* Adds some space inside the container */
   }
+  #settings{
+    margin-bottom: 12%;
+  }
   
+
+.userSetting {
+    transition: width 0.5s ease;
+    /* Set a default width or use another property as needed */
+}
+.collapse-section{
+  display: block;
+}
+.collapsible {
+    overflow: hidden;
+    transition: max-height 0.5s ease-out;
+    max-height: 700px; /* Adjust this value based on the maximum content height */
+}
+
+.collapsed {
+    max-height: 0; /* Collapse the div */
+}
+
+
   .thumb {
     display: block;
     flex: 0 1 auto; /* Allows the item to grow and shrink, but not beyond its content size */
@@ -58,7 +93,9 @@ text-align: center;
     background-color: #f9f9f9; /* Light background color */
     overflow-y: scroll;
   }
-  
+  .collapse-section{
+
+  }
 
 
 
@@ -189,25 +226,30 @@ display: flex;
   
   }
   .navGroup{
+    background-color: $purple;
     position: absolute;
     bottom: 0;
     left:0;
+    width: 100%;
     display: flex;
     flex-direction: row; /* Align items horizontally */
     justify-content: space-evenly; /* Even spacing around the items */
     align-items: center; /* Vertically align items in the middle */
   }
-  .wallet{
+  .wallet, .collapse-section{
     background: linear-gradient(to right, purple,rgb(154, 1, 154));
     box-shadow: inset 2px 2px 2px $black;
     padding: 1%;
     border-top: 1px solid $gold;
     border-bottom: 1px solid $gold;
+
+}
+.wallet{
     display: flex;
     flex-direction: row; /* Align items horizontally */
     justify-content: space-evenly; /* Even spacing around the items */
     align-items: center; /* Vertically align items in the middle */
-  }
+}
   .jewel{
 align-content: center;
 
@@ -216,6 +258,8 @@ align-content: center;
     width: 30px;
   }
   .userNavLink{
+
+    filter: invert(1);
     color:$gold;
     justify-content: space-around;
     align-items: center;
@@ -225,6 +269,10 @@ align-content: center;
     padding: 10px; /* Example padding */
     text-decoration: none; /* Example to remove underline from links */
     color: #333; /* Example link color */
+    border-top-left-radius:30px;
+  }
+  .userNavLink img{
+    width: 100%;
   }
   
   a{
@@ -361,3 +409,4 @@ background:linear-gradient(to right,rgba(128, 0, 128, 0.56),rgba(255, 217, 0, 0.
 .imageThumbs{
     display: flex;
 }
+//

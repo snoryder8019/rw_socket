@@ -1,6 +1,6 @@
 // plugins/passport/setup.js
 const config = require('../../config/config')
-const passport = require('./passport');
+const {passport} = require('./passport');
 const session = require('express-session');
 const MongoStore = require('connect-mongo');
 

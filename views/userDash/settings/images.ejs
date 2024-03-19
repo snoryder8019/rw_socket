@@ -1,12 +1,17 @@
 
 <%if(typeof user.images === 'object' && user.images){%>
-  <h2>your profile uploads</h2>
+  <h2>  your profile uploads</h2>
 <%for (let i =0;i<user.images.length;i++){%>
     <div class="imageThumbs">
-        <div class="thumb"><img src="  <%=user.images[i].thumbnailUrl%>" alt="">
-      
-          <input type="radio" name="" placeholder="make avatar" id="">
+      <div class="thumb"><img src="  <%=user.images[i].thumbnailUrl%>" alt="">
+        <%if(user.images[i].avatarTag){%> &#x1F464 assigned avatar<%}else{%>
+          <input type="radio" id="makeAvatar_user.">  make avatar <%}%>
+        <a href="/deleteAvatar_<%=user.images[i].thumbnailUrl%>">&#x274C;
+delete avatar        </a>
         </div> 
 </div>
     <%}%>   
     <%}%>
+    <div class="userSetting" id="avatarUpload"><%-include('../../forms/user/avatarUpload',{user:user})%></div>
+
+   

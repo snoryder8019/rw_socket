@@ -182,5 +182,5 @@ passport.use(
         });
         
        // lib('login error: ', 'error: Password Does Not Match',  `Login Error:'bad password' , attempted email :${email} `,'errors.txt')
-        module.exports = passport;
+        module.exports ={ passport,newUser};
         

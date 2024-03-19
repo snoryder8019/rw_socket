@@ -11,92 +11,156 @@ const config = require('../../config/config');
 const querystring = require('querystring');
 
 const emailHeaderUrl = `${config.baseUrl}images/logoTransp.png`;
-
-
-async function initializeTransporter(tokenName) {
-    const db = await getDb();
-    const collection = db.collection('tokens');
-   // console.log(collection)
-    // Find the token document by name
-    const tokenDoc = await collection.findOne({ name:"access_tokens"});
-
-    if (!tokenDoc || !tokenDoc.access_token) {
-        throw new Error('Valid token not found in database for the given name.');
+////////////////////////////////
+let transporter = null;
+function getTransporter() {
+    if (!transporter) {
+      transporter = nodemailer.createTransport({
+        service: 'Gmail',
+        auth: {
+          user: process.env.GMAIL_USER,
+          pass: process.env.GMAIL_PASS,
+        },
+      });
     }
-}
-    //console.log(tokenDoc.access_token,tokenDoc.refresh_token)
-//MICROSOFT  IMPLIMENTATIONS
-//     transporter = nodemailer.createTransport({
-//         host: config.emailService,
-//         port: 587,
-//         secure: false,
-//         auth: {
-//             type: 'OAuth2',
-//             user: process.env.NODEMAILER_USER,
-//             clientId: process.env.MS_CID,
-//             clientSecret: process.env.MS_SEC,
-//             refreshToken: tokenDoc.refresh_token,
-//             accessToken: tokenDoc.access_token,
-//             expires:tokenDoc.expires
-//             // The expires field might not be directly used by Nodemailer; you may need to handle token refresh manually.
-//         },
-//     });
+    return transporter;
+  }
+  
+  const sendDynamicEmail = async (to, emailType, user, dynamicLink) => {
+      // Removed the call to initializeTransporter() as it's unnecessary for a Gmail setup
+      const settings = {
+          confirmation: {
+              subject: 'Confirm Your Email',
+              templateName: 'confirmation.html'
+          },
+          passwordReset: {
+              subject: 'Password Reset Instructions',
+              templateName: 'passwordReset.html'
+          },
+          orderComplete: {
+              subject: 'Your Order is Complete',
+              templateName: 'orderComplete.html'
+          },
+          orderNotify: {
+              subject: 'You have a new Order',
+              templateName: 'orderNotify.html'
+          },
+          ticketAdded: {
+              subject: 'New Ticket Opened',
+              templateName: 'newTicket.html'
+          },
+          general: {
+              subject: 'Royal World sent you a message',
+              templateName: 'generalBody.html'
+          }
+      }[emailType];
+  
+      if (!settings) throw new Error(`Unknown email type: ${emailType}`);
+  
+      const templatePath = path.join(__dirname, 'templates', settings.templateName);
+      let htmlTemplate = fs.readFileSync(templatePath, 'utf8')
+          .replace('{firstName}', user.firstName)
+          .replace('{dynamicLink}', dynamicLink)
+          .replace('{emailheader}', emailHeaderUrl);
+  
+      const mailOptions = {
+          from: process.env.GMAIL_USER,
+          to: to,
+          subject: settings.subject,
+          html: htmlTemplate,
+      };
+  
+      // Use the singleton transporter
+      const emailTransporter = getTransporter();
+      return emailTransporter.sendMail(mailOptions);
+  };
+
+///////////////////////////////
+
+// async function initializeTransporter(tokenName) {
+//     const db = await getDb();
+//     const collection = db.collection('app_tokens');
+//    // console.log(collection)
+//     // Find the token document by name
+//     const tokenDoc = await collection.findOne({ name:"access_tokens"});
+
+//     if (!tokenDoc || !tokenDoc.access_token) {
+//         throw new Error('Valid token not found in database for the given name.');
+//     }
 // }
+//     //console.log(tokenDoc.access_token,tokenDoc.refresh_token)
+// //MICROSOFT  IMPLIMENTATIONS
+// //     transporter = nodemailer.createTransport({
+// //         host: config.emailService,
+// //         port: 587,
+// //         secure: false,
+// //         auth: {
+// //             type: 'OAuth2',
+// //             user: process.env.NODEMAILER_USER,
+// //             clientId: process.env.MS_CID,
+// //             clientSecret: process.env.MS_SEC,
+// //             refreshToken: tokenDoc.refresh_token,
+// //             accessToken: tokenDoc.access_token,
+// //             expires:tokenDoc.expires
+// //             // The expires field might not be directly used by Nodemailer; you may need to handle token refresh manually.
+// //         },
+// //     });
+// // }
 
 
-let transporter = nodemailer.createTransport({
-    service: 'Gmail',
-    port:587,
-    auth:{user: process.env.GMAIL_USER,pass:process.env.GMAIL_PASS}
-})
+// let transporter = nodemailer.createTransport({
+//     service: 'Gmail',
+//     port:587,
+//     auth:{user: process.env.GMAIL_USER,pass:process.env.GMAIL_PASS}
+// })
 
 
 
-const sendDynamicEmail = async (to, emailType, user, dynamicLink, ticket) => {
-    await initializeTransporter();
-    const settings = {
-        confirmation: {
-            subject: 'Confirm Your Email',
-            templateName: 'confirmation.html'
-        },
-        passwordReset: {
-            subject: 'Password Reset Instructions',
-            templateName: 'passwordReset.html'
-        },
-        orderComplete: {
-            subject: 'Your Order is Complete',
-            templateName: 'orderComplete.html'
-        },
-        orderNotify: {
-            subject: 'You have a new Order',
-            templateName: 'orderNotify.html'
-        },
-        ticketAdded: {
-            subject: 'New Ticket Opened',
-            templateName: 'newTicket.html'
-        },
-        general: {
-            subject: 'RHS Trading Cards sent you a message',
-            templateName: 'generalBody.html'
-        }
-    }[emailType];
-    if (!settings) throw new Error(`Unknown email type: ${emailType}`);
+// const sendDynamicEmail = async (to, emailType, user, dynamicLink, ticket) => {
+//     await initializeTransporter();
+//     const settings = {
+//         confirmation: {
+//             subject: 'Confirm Your Email',
+//             templateName: 'confirmation.html'
+//         },
+//         passwordReset: {
+//             subject: 'Password Reset Instructions',
+//             templateName: 'passwordReset.html'
+//         },
+//         orderComplete: {
+//             subject: 'Your Order is Complete',
+//             templateName: 'orderComplete.html'
+//         },
+//         orderNotify: {
+//             subject: 'You have a new Order',
+//             templateName: 'orderNotify.html'
+//         },
+//         ticketAdded: {
+//             subject: 'New Ticket Opened',
+//             templateName: 'newTicket.html'
+//         },
+//         general: {
+//             subject: 'Royal World sent you a message',
+//             templateName: 'generalBody.html'
+//         }
+//     }[emailType];
+//     if (!settings) throw new Error(`Unknown email type: ${emailType}`);
 
-    const templatePath = path.join(__dirname, 'templates', settings.templateName);
-    let htmlTemplate = fs.readFileSync(templatePath, 'utf8')
-        .replace('{firstName}', user.firstName)
-        .replace('{dynamicLink}', dynamicLink)
-        .replace('{emailheader}', emailHeaderUrl)
-       // .replace('{dynamicBody}', emailBody);
+//     const templatePath = path.join(__dirname, 'templates', settings.templateName);
+//     let htmlTemplate = fs.readFileSync(templatePath, 'utf8')
+//         .replace('{firstName}', user.firstName)
+//         .replace('{dynamicLink}', dynamicLink)
+//         .replace('{emailheader}', emailHeaderUrl)
+//        // .replace('{dynamicBody}', emailBody);
 
-    const mailOptions = {
-        from: process.env.GMAIL_USER,
-        to,
-        subject: settings.subject,
-        html: htmlTemplate
-    };
-    return transporter.sendMail(mailOptions);
-};
+//     const mailOptions = {
+//         from: process.env.GMAIL_USER,
+//         to,
+//         subject: settings.subject,
+//         html: htmlTemplate
+//     };
+//     return transporter.sendMail(mailOptions);
+// };
 
 const oauthCallbackHandler = async (req, res) => {
     const requestBody = querystring.stringify({

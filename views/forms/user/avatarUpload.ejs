@@ -1,4 +1,7 @@
-<h2>Upload a new profile image</h2>
+<div class="thumbbb">
+    <%if(user.subscription=="free" && user.images.length<4){%>
+        <h2>Upload a new profile image</h2>
+
 <form action="http://localhost:3000/userImgUpload" method="post" enctype="multipart/form-data">
     <label for="image">Choose image to upload:</label>
     <input type="file" id="image" name="image" required>
@@ -9,6 +12,10 @@
     <br>
     <button type="submit">Upload Avatar</button>
 </form>
+<%}else{%>
+  <h3>  Your subscription plan allows a max of 4 profile images</h3>
+<%}%>
+</div>
 <script>
     document.getElementById('image').addEventListener('change', function(event) {
         const file = event.target.files[0];
@@ -23,4 +30,5 @@
             reader.readAsDataURL(file);
         }
     });
+    
 </script>
