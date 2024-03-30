@@ -303,6 +303,11 @@ a {
   border-bottom-right-radius: 25px;
   background: linear-gradient(to left, rgb(168, 68, 158), rgba(122, 19, 98, 0.923));
 }
+@media (max-width: 768px) {
+  #chat {
+    max-height: 100%;
+  }
+}
 
 .banner img {
   width: 100%;
