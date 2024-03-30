@@ -322,6 +322,15 @@ a {
   border-bottom-right-radius: 25px;
   background: linear-gradient(to left, rgb(168, 68, 158), rgba(122, 19, 98, 0.923));
 }
+@media (max-width: 768px) {
+  #userList {
+    width: 100vh;
+    position: absolute;
+    top: 0%;
+    left: 2%;
+    transform: rotate(90deg);
+  }
+}
 
 .usersOnline {
   background-color: #410b4b;

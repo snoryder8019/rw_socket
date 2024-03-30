@@ -308,7 +308,14 @@ overflow-y: auto;
     box-shadow: inset 1px 1px 4px rgba(0, 0, 0, 0.749);
     border-top-left-radius:25px ;
     border-bottom-right-radius:25px ;
-    background:linear-gradient(to left, rgb(168, 68, 158), rgba(122, 19, 98, 0.923))
+    background:linear-gradient(to left, rgb(168, 68, 158), rgba(122, 19, 98, 0.923));
+@media (max-width:768px) {
+    width: 100vh;
+    position: absolute;
+    top: 0%;
+    left: 2%;
+    transform: rotate(90deg);
+}
 }
 $headshotPx:55px;
 .usersOnline {
