@@ -299,7 +299,7 @@ a {
   width: 96%;
   margin: 2%;
   overflow-y: auto;
-  max-height: 57%;
+  height: 57%;
   box-shadow: inset 1px 1px 4px rgba(0, 0, 0, 0.749);
   border-top-left-radius: 25px;
   border-bottom-right-radius: 25px;
@@ -307,7 +307,7 @@ a {
 }
 @media (max-width: 768px) {
   #chat {
-    max-height: 88%;
+    height: 88%;
   }
 }
 
