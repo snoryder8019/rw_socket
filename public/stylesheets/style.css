@@ -382,8 +382,9 @@ a {
 }
 @media (max-width: 768px) {
   .inputBar {
-    padding: 2%;
-    height: 8%;
+    padding: 0%;
+    width: 88%;
+    margin: 8%;
   }
 }
 

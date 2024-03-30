@@ -364,8 +364,10 @@ $headshotPx:55px;
     display: grid;
     grid-template-columns: 8fr 3fr;
     @media (max-width:768px) {
-        padding: 2%;
-        height: 8%;
+        padding: 0%;
+       // height: 8%;
+        width: 88%;
+        margin: 8%;
     }
   }
   .inputBar input{
