@@ -379,7 +379,7 @@ a {
 @media (max-width: 768px) {
   .inputBar {
     padding: 2%;
-    height: 100%;
+    height: 8%;
   }
 }
 
@@ -391,13 +391,14 @@ a {
   .inputBar input {
     font-size: 0.8rem;
     height: 50%;
-    margin-top: -2%;
+    padding: 2%;
   }
 }
 
 .inputBar button {
   width: 100%;
   font-size: 1.5rem;
+  padding: 1%;
 }
 
 .message {
