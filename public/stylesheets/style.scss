@@ -199,7 +199,7 @@ display: flex;
     @include toggleOpt();
         transform: rotate(90deg);      
         left: -25%;
-        top:46%;
+        top:56%;
 
 @media (max-width:768px) {
  left: -33%;
@@ -209,7 +209,7 @@ display: flex;
     @include toggleOpt();
     transform: rotate(90deg);
     right:-25%;
-    top:46%;
+    top:40%;
     @media (max-width:768px) {
         right: -33%;
        }
@@ -351,6 +351,11 @@ $headshotPx:55px;
   .inputBar input{
 height: 91%;
 font-size: 1.6rem;
+@media (max-width:768px) {
+    font-size: .8rem;
+    height: 50%;
+    
+}
   }
   .inputBar button{
     width:100%;

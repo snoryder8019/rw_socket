@@ -198,7 +198,7 @@ input {
   box-shadow: 3px 3px 3px #1a0a1b;
   transform: rotate(90deg);
   left: -25%;
-  top: 46%;
+  top: 56%;
 }
 @media (max-width: 768px) {
   #chatToggle {
@@ -217,7 +217,7 @@ input {
   box-shadow: 3px 3px 3px #1a0a1b;
   transform: rotate(90deg);
   right: -25%;
-  top: 46%;
+  top: 40%;
 }
 @media (max-width: 768px) {
   #dashToggle {
@@ -366,6 +366,12 @@ a {
 .inputBar input {
   height: 91%;
   font-size: 1.6rem;
+}
+@media (max-width: 768px) {
+  .inputBar input {
+    font-size: 0.8rem;
+    height: 50%;
+  }
 }
 
 .inputBar button {
