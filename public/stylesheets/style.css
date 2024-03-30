@@ -376,6 +376,11 @@ a {
   display: grid;
   grid-template-columns: 8fr 3fr;
 }
+@media (max-width: 768px) {
+  .inputBar {
+    padding: 8%;
+  }
+}
 
 .inputBar input {
   height: 91%;
