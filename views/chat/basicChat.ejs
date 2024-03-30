@@ -29,116 +29,119 @@
 </div>
 <script src="/socket.io/socket.io.js"></script>
 <script>
-document.addEventListener('DOMContentLoaded', () => {
-    var socket = io('/main_chat'); 
-
-    // Function to add messages to the DOM
-    function addMessage(messageObject, isOwnMessage = false) {
-        var messagesContainer = document.getElementById('messages');
-        var messageDiv = document.createElement('div');
-        messageDiv.className = isOwnMessage ? 'message ownMessage' : 'message'; // Differentiate own messages
-
-        var messageAvatar = document.createElement('img');
-        messageAvatar.className = 'usersOnline';
-        messageAvatar.src = messageObject.thumbnailUrl ? `${messageObject.thumbnailUrl}` : `/images/userHeadshots/defaultThumbnail.png`;
-
-        var userNameSpan = document.createElement('span');
-        userNameSpan.className = 'messageUser';
-        userNameSpan.textContent = messageObject.user.firstName + ': ';
-
-        var messageTextSpan = document.createElement('span');
-        messageTextSpan.className = 'messageText';
-        messageTextSpan.textContent = messageObject.text;
-
-        messageDiv.appendChild(messageAvatar);
-        messageDiv.appendChild(userNameSpan);
-        messageDiv.appendChild(messageTextSpan);
-
-        messagesContainer.appendChild(messageDiv);
-    }
-
-    // Listen for chat messages from the server
-    socket.on('chat message', function(msg) {
-        // Assuming `msg` is an object that includes `text`, `user`, and `thumbnailUrl`
-        // Determine if the message is from the current user
-        const isOwnMessage = msg.user.firstName === "You" || msg.user._id === socket.id; // Adjust according to your user ID management
-        addMessage(msg, isOwnMessage);
-    });
-
-    // Submit message
-    var submitChat = document.getElementById('submitChat');
-    submitChat.addEventListener('click', function() {
-        var input = document.getElementById('chatInput');
-        var message = input.value.trim();
-        if (message !== '') {
-            socket.emit('chat message', message); // Emit the message
-            input.value = ''; // Clear the input
+    document.addEventListener('DOMContentLoaded', () => {
+        var socket = io('/main_chat');
+        let currentPage = 1; // Track current page for message fetching
+        const messagesPerPage = 12; // Set the number of messages per page
+    
+        function requestInitialMessages() {
+            socket.emit('fetch messages', { roomId: 'YourRoomId', page: currentPage });
         }
-    });
-
-
-
-  
-    socket.on('user list', function(users) {
-    var userList = document.getElementById('userList');
-    userList.innerHTML = ''; // Clear current list
-    users.forEach(function(user) {
-        var div = document.createElement('div');
-        div.className = 'usersOnline';
-        var img = document.createElement('img');
-        img.className = 'userImage'; // Assign a class for styling if needed
-        img.alt = user.userName; // Use `userName` for alt text
-        // Use `avatarThumbnailUrl` for the image source. 
-        // Remember to handle the case where `avatarThumbnailUrl` might be null or an empty string
-        img.src = user.avatarThumbnailUrl ? `${user.avatarThumbnailUrl}` : '/path/to/default/avatar/image.jpg'; 
-        var text = document.createElement('span');
-        text.style.position="absolute";
-        text.style.left="0";
-        text.style.bottom="0";
-        text.style.textAlign="center";
-        text.textContent = user.userName; // Use `userName` to show the user's name next to the image
+    
+        socket.on('messages fetched', (messages) => {
+    if (messages.length) {
+        // Reverse the messages to display them in chronological order
+        // since they are fetched in reverse chronological order
+        const reversedMessages = messages.reverse();
         
-        div.appendChild(img); // Add the user image
-        div.appendChild(text); // Add the user name text
-        userList.appendChild(div); // Append this div to the userList container
-    });
+        reversedMessages.forEach(messageObject => {
+            // Determine if the message was sent by the current user
+            // This requires knowing the current user's identifier (userKey or displayName)
+            // Example: let isOwnMessage = messageObject.userKey === currentUserKey;
+            // Adjust the above line based on how you can identify the current user
+            let isOwnMessage = messageObject.user === "currentUserDisplayName"; // Placeholder check
+            
+            addMessage(messageObject, isOwnMessage);
+        });
+        
+        currentPage++;
+    }
 });
 
+    
+// Function to add messages to the DOM
+function addMessage(messageObject, isOwnMessage = false) {
+    const messagesContainer = document.getElementById('messages');
+    const messageDiv = document.createElement('div');
+    messageDiv.className = isOwnMessage ? 'message ownMessage' : 'message';
 
-    // Error handling for Socket.IO
-    socket.on('connect_error', (error) => {
-        console.log('Connection Error:', error); // Log connection errors
-    });
-    socket.on('ping', (data) => {
-                console.log(data.msg); // Logging the ping message from the server
+    const messageAvatar = document.createElement('img');
+    messageAvatar.className = 'usersOnline';
+    // Ensure thumbnailUrl is being correctly accessed
+    messageAvatar.src = messageObject.thumbnailUrl || `/images/userHeadshots/defaultThumbnail.png`;
 
-                // Optionally, send a pong message back to the server
-                socket.emit('pong', { msg: 'Pong from client' });
-            });
-      
-    console.log('basic Chat!!')
-})
-document.addEventListener('DOMContentLoaded', ()=>{
-    let chatWindowState = null;
-const chatToggle = document.getElementById('chatToggle');
-const chatBasicWindow = document.getElementById('chat-window-basic');
-const main = document.getElementById('main')
-chatToggle.addEventListener('click', ()=>{
-    if(chatBasicWindow.style.transform!="translateX(-106%)"){
-        chatBasicWindow.style.transform="translateX(-106%)";
-  
-   chatToggle.innerHTML="close";  
-   chatWindowState="open"   
-}else{
-   
-    chatBasicWindow.style.transform="translateX(0%)";
-    chatToggle.innerHTML="chat";  
-    chatWindowState="hidden"   ;
+    const userNameSpan = document.createElement('span');
+    userNameSpan.className = 'messageUser';
+    const userName = typeof messageObject.user === 'object' ? messageObject.user.firstName : messageObject.user;
+    userNameSpan.textContent = (userName || 'Unknown') + ': ';
+
+    const messageTextSpan = document.createElement('span');
+    messageTextSpan.className = 'messageText';
+    // Ensure text is being correctly accessed
+    messageTextSpan.textContent = messageObject.message || 'No message text.';
+
+    messageDiv.appendChild(messageAvatar);
+    messageDiv.appendChild(userNameSpan);
+    messageDiv.appendChild(messageTextSpan);
+    messagesContainer.appendChild(messageDiv);
 }
-})
-})
 
 
-
-
-</script>
+        const messageContainer = document.getElementById('messages');
+        messageContainer.addEventListener('scroll', () => {
+            // Load more messages if we've scrolled near the top
+            if (messageContainer.scrollTop < 50) {
+                socket.emit('fetch messages', { roomId: 'YourRoomId', page: currentPage });
+            }
+        });
+    
+        socket.on('chat message', (msg) => {
+            addMessage(msg, msg.user === 'You');
+        });
+    
+        document.getElementById('submitChat').addEventListener('click', () => {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+            if (message !== '') {
+                socket.emit('chat message', message); // Adjust payload as needed
+                input.value = ''; // Clear the input
+            }
+        });
+    
+        socket.on('user list', (users) => {
+            const userList = document.getElementById('userList');
+            userList.innerHTML = ''; // Clear current list
+            users.forEach((user) => {
+                const div = document.createElement('div');
+                div.className = 'usersOnline';
+                const img = document.createElement('img');
+                img.className = 'userImage';
+                img.alt = user.userName;
+                img.src = user.avatarThumbnailUrl || '/path/to/default/avatar/image.jpg';
+                const text = document.createElement('span');
+                text.textContent = user.userName;
+                div.appendChild(img);
+                div.appendChild(text);
+                userList.appendChild(div);
+            });
+        });
+    
+        // Error handling
+        socket.on('connect_error', (error) => {
+            console.log('Connection Error:', error);
+        });
+    
+        // Chat window toggle
+        const chatToggle = document.getElementById('chatToggle');
+        const chatWindow = document.getElementById('chat-window-basic');
+        chatToggle.addEventListener('click', () => {
+            const isOpen = chatWindow.style.transform === "translateX(-106%)";
+            chatWindow.style.transform = isOpen ? "translateX(0%)" : "translateX(-106%)";
+            chatToggle.innerHTML = isOpen ? "chat" : "close";
+        });
+    
+        // Initial message fetch
+        requestInitialMessages();
+    });
+    </script>
+    

@@ -286,8 +286,8 @@ align-content: center;
 #chat{
     width: 96%;
     margin: 2%;
-
-    min-height: 57%;
+overflow-y: auto;
+    max-height: 57%;
     box-shadow: inset 1px 1px 4px rgba(0, 0, 0, 0.749);
     border-top-left-radius:25px ;
     border-bottom-right-radius:25px ;
@@ -338,6 +338,7 @@ $headshotPx:55px;
       overflow: hidden;
 }
 .inputBar{
+    z-index: 2;
     position:absolute;
     margin: 2%;
     bottom: 0;
