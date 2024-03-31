@@ -453,3 +453,9 @@ background:linear-gradient(to right,rgba(128, 0, 128, 0.56),rgba(255, 217, 0, 0.
 }
 .auth_view_true{@include authViewSetup()}
 .auth_view_false{@include authViewSetup()}
+
+
+
+#notifications{
+    border: 1px solid $gold;
+}

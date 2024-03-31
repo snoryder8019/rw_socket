@@ -12,6 +12,38 @@ const fs = require('fs')
 const fsp = require('fs').promises
 const sharp = require('sharp')
 
+
+const deleteAvatar = async (req, res) => {
+  try {
+    const db = await getDb(); // Get the database connection
+    const avatarUrl = req.body.avatarUrl; // The URL of the avatar to be deleted
+    const userId = req.user._id; // Assuming you're identifying the user somehow, like with a session
+
+    // Step 1: Remove the avatar from the user's images array
+    const updateResult = await db.collection('users').updateOne(
+      { _id: userId },
+      { $pull: { images: { thumbnailUrl: avatarUrl } } } // $pull to remove an item from an array that matches a condition
+    );
+
+    if (updateResult.matchedCount === 0) {
+      throw new Error('User not found.');
+    }
+
+    if (updateResult.modifiedCount === 0) {
+      throw new Error('Avatar deletion failed.');
+    }
+
+    // Optional Step 2: Delete the avatar file from storage, if applicable
+
+    res.json({ success: true, message: 'Avatar successfully deleted' });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+
+
+
 const assignAvatar = async (req, res) => {
   try {
     const db = await getDb(); // Get the database connection
@@ -267,4 +299,4 @@ console.log(imagePath)
 
 router.post('/userDataUpload', userDataUpload)
 
-module.exports = { userDataUpload, userImgUpload, submitTicket ,saveRotation,assignAvatar};
+module.exports = { userDataUpload, userImgUpload, submitTicket ,saveRotation,deleteAvatar,assignAvatar};
