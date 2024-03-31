@@ -11,6 +11,42 @@ const lib = require('../logFunctions/logFunctions')
 const fs = require('fs')
 const fsp = require('fs').promises
 const sharp = require('sharp')
+
+const assignAvatar = async (req, res) => {
+  try {
+    const db = await getDb(); // Get the database connection
+    const avatarUrl = req.body.avatarUrl; // The URL of the selected avatar
+    const userId = req.user._id; // Assuming you're identifying the user somehow, like with a session
+
+    // Step 1: Set `assignAvatar: false` for all images
+    await db.collection('users').updateOne(
+      { _id: userId },
+      { $set: { "images.$[].avatarTag": false } } // Using $[] to update all items in an array
+    );
+
+    // Step 2: Set `assignAvatar: true` for the selected image
+    const updateResult = await db.collection('users').updateOne(
+      { _id: userId, "images.thumbnailUrl": avatarUrl },
+      { $set: { "images.$.avatarTag": true } } // $ operator to update the first item that matches the condition
+    );
+
+    if (updateResult.matchedCount === 0) {
+      throw new Error('User not found.');
+    }
+
+    if (updateResult.modifiedCount === 0) {
+      throw new Error('Avatar assignment failed.');
+    }
+
+    res.json({ success: true, message: 'Avatar successfully assigned' });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+
+
+
 // Function to handle user data upload
 async function userDataUpload(req, res) {
   try {
@@ -231,4 +267,4 @@ console.log(imagePath)
 
 router.post('/userDataUpload', userDataUpload)
 
-module.exports = { userDataUpload, userImgUpload, submitTicket ,saveRotation};
+module.exports = { userDataUpload, userImgUpload, submitTicket ,saveRotation,assignAvatar};

@@ -5,13 +5,51 @@
     <div class="imageThumbs">
       <div class="thumb"><img src="  <%=user.images[i].thumbnailUrl%>" alt="">
         <%if(user.images[i].avatarTag){%> &#x1F464 assigned avatar<%}else{%>
-          <input type="radio" id="makeAvatar_user.">  make avatar <%}%>
+          <input type="radio" name="avatar" data-avatar-url="<%=user.images[i].thumbnailUrl%>" onclick="assignAvatar(this)" id="makeAvatar_user_<%= i %>" /> make avatar
+    <%}%>
         <a href="/deleteAvatar_<%=user.images[i].thumbnailUrl%>">&#x274C;
 delete avatar        </a>
         </div> 
 </div>
+<script>
+  function assignAvatar(element) {
+    var avatarUrl = element.getAttribute('data-avatar-url');
+    fetch('/assignAvatar', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ avatarUrl: avatarUrl }),
+    })
+    .then(response => response.json())
+    .then(data => {
+      console.log('Success:', data);
+      // Clear previous selection
+      document.querySelectorAll('.imageThumbs .thumb').forEach(thumb => {
+        // Remove the emoji from all avatars
+        const assignedAvatarIcon = thumb.querySelector('.assigned-avatar-icon');
+        if (assignedAvatarIcon) assignedAvatarIcon.remove();
+        // Clear the radio button selection
+        thumb.querySelector('input[type="radio"]').checked = false;
+      });
+
+      // Mark the new avatar
+      element.checked = true; // Check the new radio button
+      const parentThumb = element.closest('.thumb');
+      // Assuming you want to add an emoji or some indicator for the newly assigned avatar
+      parentThumb.innerHTML += '<span class="assigned-avatar-icon">&#x1F464; assigned avatar</span>';
+    })
+    .catch((error) => {
+      console.error('Error:', error);
+    });
+  }
+</script>
+
     <%}%>   
     <%}%>
+
+
+
     <div class="userSetting" id="avatarUpload"><%-include('../../forms/user/avatarUpload',{user:user})%></div>
 
    
