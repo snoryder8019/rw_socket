@@ -1,6 +1,6 @@
 
 
-```markdown
+
 # Installation and Setup Guide for rw_socket
 
 This document provides a comprehensive guide for setting up the rw_socket web application for development, testing, and production environments.
@@ -8,7 +8,7 @@ This document provides a comprehensive guide for setting up the rw_socket web ap
 ## 1. Clone GitHub Repository
 
 Begin by cloning the repository to your local machine:
-```
+
 ```bash
 git clone https://github.com/snoryder8019/rw_socket.git
 cd rw_socket
