@@ -11,3 +11,15 @@ socket io setup in bin, dependencies and views
 //logs/passReset.json && logs/errors.json added for admin panel
 add javascript for admin control buttons
 remove manage cards button, to print, upl oad fonts, add a card 
+
+
+
+
+
+
+
+
+
+ask about ,,,,,family? learned? jobs? enjoyment? 
+
+look...talk....summmize

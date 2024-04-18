@@ -1,0 +1,129 @@
+convo: 
+
+
+{
+  "conversationId": "conv123",
+  "participants": ["user456", "user789"],
+  "status": "Active", // Can be "Active", "Archived", etc.
+  "messages": [
+    {
+      "messageId": "msg001",
+      "senderId": "user456",
+      "content": "Hey, are we still on for the meeting tomorrow?",
+      "sentTime": "2024-04-01T09:00:00Z",
+      "readStatus": false
+    },
+    {
+      "messageId": "msg002",
+      "senderId": "user789",
+      "content": "Yes, see you at 10 AM!",
+      "sentTime": "2024-04-01T09:15:00Z",
+      "readStatus": false
+    }
+  ],
+  "lastMessage": {
+    "messageId": "msg002",
+    "content": "Yes, see you at 10 AM!",
+    "sentTime": "2024-04-01T09:15:00Z",
+    "senderId": "user789"
+  },
+  "createdDate": "2024-04-01T09:00:00Z",
+  "updatedDate": "2024-04-01T09:15:00Z"
+}
+
+
+
+user-specific notification:
+
+
+{
+    "notificationId": "user123",
+    "type": "User",
+    "userId": "user789",
+    "content": "Your monthly report is ready for review.",
+    "createdDate": "2024-04-01T11:30:00Z",
+    "readStatus": false,
+    "cta": {
+      "text": "Review Report",
+      "url": "https://example.com/user-reports/789"
+    },
+    "metadata": {
+      "reportMonth": "March 2024",
+      "reportYear": 2024
+    }
+  }
+  
+
+  global notify:
+
+  {
+    "notificationId": "global123",
+    "type": "Global",
+    "content": "Maintenance downtime scheduled for 12th April 2 AM to 3 AM UTC.",
+    "createdDate": "2024-04-01T09:00:00Z",
+    "cta": {
+      "text": "View Details",
+      "url": "https://example.com/maintenance-details"
+    },
+    "readByUsers": ["user789", "user456"],
+    "actionTakenByUsers": ["user456"]
+  }
+  
+
+  p2p    
+
+  {
+    "notificationId": "p2p123",
+    "type": "P2P",
+    "senderId": "user456",
+    "receiverId": "user789",
+    "content": "You have a new message from Alice.",
+    "createdDate": "2024-04-01T10:00:00Z",
+    "readStatus": false,
+    "metadata": {
+      "messagePreview": "Hey, are we still on for the meeting tomorrow?",
+      "conversationId": "conv102"
+    }
+  }
+  
+
+
+  end points:
+
+  app.get('/notifications/user/:userId', async (req, res) => {
+    try {
+      const db = await getDB();
+      const notifications = await db.collection('userNotifications').find({ userId: req.params.userId }).toArray();
+      res.status(200).json(notifications);
+    } catch (error) {
+      res.status(500).json({ message: 'Error fetching user-specific notifications', error: error.message });
+    }
+  });
+  
+
+
+  app.post('/notifications/global/read', async (req, res) => {
+    try {
+      const db = await getDB();
+      const { notificationId, userId } = req.body;
+      const result = await db.collection('globalNotifications').updateOne(
+        { notificationId: notificationId },
+        { $addToSet: { readByUsers: userId } }
+      );
+      res.status(200).json({ message: 'Global notification marked as read', result });
+    } catch (error) {
+      res.status(500).json({ message: 'Error marking global notification as read', error: error.message });
+    }
+  });
+  
+
+  app.get('/notifications/p2p/:userId', async (req, res) => {
+    try {
+      const db = await getDB();
+      const notifications = await db.collection('p2pNotifications').find({ receiverId: req.params.userId }).toArray();
+      res.status(200).json(notifications);
+    } catch (error) {
+      res.status(500).json({ message: 'Error fetching P2P notifications', error: error.message });
+    }
+  });
+  

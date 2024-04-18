@@ -4,8 +4,8 @@ const connectDB = async ()  => {
 const conn = await mongoose.connect(
    "mongodb+srv://"+process.env.MONUSR+":"+encodeURIComponent(process.env.MONPASS)+"@royalcluster.sda0nl3.mongodb.net/"+config.DB_NAME+"?retryWrites=true&w=majority"
    , {
-    useNewUrlParser : true,
-    useUnifiedTopology: true,
+ //   useNewUrlParser : true,
+ //   useUnifiedTopology: true,
    
 })
 console.log(`mongo connected:`+ conn.connection.host)
