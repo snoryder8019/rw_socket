@@ -33,7 +33,7 @@ const config = {
     app_name: "rw_socket",
     DB_NAME: "rw_socket",
     baseUrl: process.env.BASE_URL_DEV,
-    ticketsEmail: "scott@w2marketing.biz",
+    ticketsEmail: "youremail@yourbusiness.biz",
     emailService: "smtp.office365.com",
     title: "Royal World Socket Platform",
     headline: "Now Testing Chat, Views, and Dashboard",
@@ -93,7 +93,8 @@ Verify that the server is running and all connections are established without er
 
 Additional documentation for debugging and deployment will be created and updated in future release notes.
 
-************** DEPLOYMENT 07-01-24 Release **************
+
 ```
 
-This structured guide will help in setting up the development environment systematically, ensuring that each component is configured before proceeding to the next step.
+## Additional Considerations
+To test locally you will need to setup an Atlas Cluster and adjust your mongo connect strings in the configurations of /plugins/mongo and whitelist your ip address in the network configurations @ mongoDB
