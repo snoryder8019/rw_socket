@@ -2,5 +2,7 @@
 /uploads
 /node_modules
 .env
+.env_devs
+.env_scott
 /public/uploads
 /logs/*

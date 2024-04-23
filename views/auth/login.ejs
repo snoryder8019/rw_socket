@@ -1,146 +1,88 @@
-
 <!-- Inside ./partials/login.ejs -->
-<!---login button-->
-<%if(typeof user == 'object' && user){%>
 <div class="loginBox">
-      <p>     You are logged in as <%=user.firstName%> <%=user.lastName%></p>
-      <p>     email <%=user.email%></p>
- 
-      <a href="/logout"> <button>logout</button></a>
- 
-  <button id="loginClose">close</button>
-  <%}else{%>
-
- 
-     
-      <%}%>
-
-<%if(typeof user=="object" && user){%>
-    
-    
-    <%}else{%>
-        <h2>   Sign in options:  </h2>
-        <div class="loginForm">
-            <p><span class="accent">Option #1:</span> email and password</p>
-            
-            <form action="/auth/local" method="post">
-                <p>*Notice to <u style="font-weight: 800;"> all first time users</u>: You must register with your favorite email to use option #1*</p> <a id="regLastLink">Register email here.</a> 
-                <br>
-                <label for="email"> Email:</label><br>
-                <input type="text" id="email" name="email" required>
-                <br>
-                <label for="password"> Password:</label><br>
-                <input type="password" id="password" name="password" required>
-                <script></script>
-                
-                
-                
-                
-                <div>
-                    <button id="loginButton" type="submit">Login</button>
-                </div>
-            </form>
-            
-            <h5>forot your password? <span style="color:blue;cursor: pointer;" onclick="showResetInput()" id="resetLink">reset password</span></h5>
-            <div id="resetEmailInput">  
-                <form id="resetPasswordForm">
-                    <h2>Reset Password ℹ️</h2>
-                    <h3>You will receive an email to securely reset your password.</h3>
-                    <h4>Enter your email to send a reset link</h4>
-                    <input id="resetPassInput"name="email" type="email" required>
-                    <button id="resetPassButton" type="submit">Request Password Reset</button>
-                </form>
-                
-                <button onclick="showResetInput()">close this window</button>
-            </div>
-            
-            
+    <h2>Login Methods:</h2>
+    <% if (typeof user === 'object' && user) { %>
+        <p>You are logged in as <%= user.firstName %> <%= user.lastName %></p>
+        <p>email <%= user.email %></p>
+        <a href="/logout"><button>logout</button></a>
+        <button id="loginClose">close</button>
+    <% } else { %>
+        <div id="authOptions">
+            <button id="localAuthButton">Login with Email</button>
+            <button id="googleAuthButton"><a style="text-decoration: none;" href="/auth/google">Login with Google</a></button>
         </div>
-        
-        
-        
-        <div class="loginForm">
-            <p><span class="accent">Option #2:</span> Register and login with your Google account:</p>
-  
-            
-            <a href="./auth/google">
-                <div class="oneTouchLogin">  
-                    <img class="oneTouchLogin" src="/images/google.png">   </div></a>
-                    <!--a href="./auth/yahoo">
-                        <div class="oneTouchLogin">  
-                            <img class="oneTouchLogin" src="/images/icons/yahoo_icon.png">   </div></a-->
-                            
- 
-                        </div>
-                        <h6 style="margin: 0;padding: 0;transform: translateY(-50%);" id="loginCloseTiny"><a>❌ Close this window</a></h6>
-                        <h6>Login Issues? email <a href="mailto:w2marketing.scott@gmail.com">support</a></h6>
 
-                    </div>
-                    
-                    <%}%>
-                    
-                    
-                    <script>
-        const resetLink = document.getElementById('resetLink')
-        const emailInput = document.getElementById('resetEmailInput')
-        const resetPassButton = document.getElementById('resetPassButton')
-        const resetPassInput = document.getElementById('resetPassInput')
-        function loginMessage(el,message){
-            
-        }
-        function showResetInput(){
-            if(emailInput.style.display=='block'){
-                emailInput.style.display='none'
-            }else{
-                emailInput.style.display = 'block'
+        <div class="loginFlows" id="emailLoginForm" style="display: none;">
+            <div class="loginForm">
+                <form action="/auth/local" method="post">
+                    <label for="email">Email:</label><br>
+                    <input type="text" id="email" name="email" required><br>
+                    <label for="password">Password:</label><br>
+                    <input type="password" id="password" name="password" required>
+                    <button id="loginButton" type="submit">Login</button>
+                </form>
+                <h5>Forgot your password? <span style="color:blue; cursor: pointer;" onclick="showResetInput()" id="resetLink">reset password</span></h5>
+                <div id="resetEmailInput" style="display: none;">
+                    <form id="resetPasswordForm">
+                        <h2>Reset Password ℹ️</h2>
+                        <h3>You will receive an email to securely reset your password.</h3>
+                        <h4>Enter your email to send a reset link</h4>
+                        <input id="resetPassInput" name="email" type="email" required>
+                        <button id="resetPassButton" type="submit">Request Password Reset</button>
+                    </form>
+                    <button onclick="showResetInput()">close this window</button>
+                </div>
+            </div>
+        </div>
+        <h6>Login Issues? email <a href="mailto:w2marketing.scott@gmail.com">support</a></h6>
+    <% } %>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const localAuthButton = document.getElementById('localAuthButton');
+    const emailLoginForm = document.getElementById('emailLoginForm');
+    const resetLink = document.getElementById('resetLink');
+    const resetEmailInput = document.getElementById('resetEmailInput');
+    const resetPasswordForm = document.getElementById('resetPasswordForm');
+    const resetPassInput = document.getElementById('resetPassInput');
+    const resetPassButton = document.getElementById('resetPassButton');
+
+    localAuthButton.addEventListener('click', function() {
+        emailLoginForm.style.display = (emailLoginForm.style.display === 'none' ? 'block' : 'none');
+    });
+
+    resetLink.addEventListener('click', function() {
+        resetEmailInput.style.display = (resetEmailInput.style.display === 'none' ? 'block' : 'none');
+    });
+
+    resetPasswordForm.addEventListener('submit', async function(event) {
+        event.preventDefault();
+        try {
+            const response = await fetch('/reset-password-request', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email: resetPassInput.value })
+            });
+
+            if (response.ok) {
+                resetEmailInput.style.display = 'none';
+                alert('Please check your email for your secure password reset link.');
+            } else {
+                alert("Hmmmm..something's not right \n\n User email not found, double check your email is correct. \n\n *Have you registered this email before?\n You must register before logging in the first time*");
             }
+        } catch (error) {
+            console.error('Error:', error);
         }
-        function passHandler() {
+    });
+
     resetPassInput.addEventListener('input', function() {
-        console.log('change listener added');
-        if ( !resetPassInput.value.includes('@')) {
+        if (!resetPassInput.value.includes('@')) {
             resetPassButton.style.display = 'none';
         } else {
             resetPassButton.style.display = 'block';
-            resetPassButton.style.marginLeft = '8%'
+            resetPassButton.style.marginLeft = '8%';
         }
     });
-}
-
-passHandler(); // Call the function to add the event listener
-
-    </script>
-      <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const resetPasswordForm = document.getElementById('resetPasswordForm');
-            const resetPassInput = document.getElementById('resetPassInput');
-
-            resetPasswordForm.addEventListener('submit', async function (event) {
-                event.preventDefault(); // Prevent the default form submission
-
-                // Perform client-side validation if needed
-
-                // Make an AJAX request to the server
-                try {
-                    const response = await fetch('/reset-password-request', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({ email: resetPassInput.value })
-                    });
-
-                    if (response.ok) {
-                       showResetInput()
-                        alert('Please check your email for your secure password reset link.')
-                        console.log('Password reset email sent successfully.');
-                    } else {
-                       alert('Hmmmm..somethings not right \n\n User email not found, double check your email is correct. \n\n *Have you registered this email before?\n You must register before logging in the first time*')
-                        console.error('Error:', response.status, response.statusText);
-                    }
-                } catch (error) {
-                    console.error('Error:', error);
-                }
-            });
-        });
-    </script>
+});
+</script>

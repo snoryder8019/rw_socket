@@ -287,14 +287,6 @@ input {
   width: 100%;
 }
 
-a {
-  background: linear-gradient(to right, #d7b436, white, #d7b436);
-  -webkit-background-clip: text;
-  color: transparent;
-  font-size: 1.2rem;
-  text-shadow: 1px 1px 2px rgb(38, 0, 255);
-}
-
 #chat {
   width: 96%;
   margin: 2%;
@@ -329,18 +321,6 @@ a {
   border-bottom-right-radius: 25px;
   background: linear-gradient(to left, rgb(168, 68, 158), rgba(122, 19, 98, 0.923));
 }
-@media (max-width: 768px) {
-  #userList {
-    width: 104vh;
-    position: absolute;
-    top: 46%;
-    left: 5%;
-    transform: rotate(90deg);
-    background: none;
-    box-shadow: none;
-  }
-}
-
 .usersOnline {
   background-color: #410b4b;
   max-width: 55px;
@@ -370,9 +350,6 @@ a {
 }
 
 .inputBar {
-  z-index: 2;
-  position: absolute;
-  margin: 2%;
   bottom: 0;
   left: 0;
   width: 95%;
@@ -489,6 +466,34 @@ a {
 
 #notifications {
   border: 1px solid #d7b436;
+}
+
+#regWindow, #loginWindow, #resetEmailInput, #emailLoginForm {
+  display: none;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(-40px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0px);
+  }
+}
+.authOpts {
+  padding: 2%;
+  margin: 2%;
+  font-size: 1.2rem;
+}
+
+.loginFlows {
+  padding: 5%;
+  animation: fadeIn 0.5s ease-out 1 0s;
+  transform-style: preserve-3d;
+  transition-duration: 0.8s;
+  transition-timing-function: ease-in-out;
 }
 
 /*# sourceMappingURL=style.css.map */

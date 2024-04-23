@@ -48,11 +48,15 @@
         <%}else{%>
       <div style="overflow: scroll;height:auto;">
 
-        <h2>
-          you must login to view your dashboard
-        </h2>
-        <%-include('../auth/login')%>
-        <%-include('../auth/register')%>
+        <h2>Login Portal</h2>
+        <div id="authOptionButtons">
+        <button class="authOpts" id="firstTimeYes">"This is my first time to login on this website."</button>
+        <button class="authOpts" id="firstTimeNo">"I have registered and created a login on this website."</button>
+       </div>
+        <div class="loginFlows" id="regWindow"><%-include('../auth/register')%></div>
+        <div class="loginFlows" id="loginWindow"><%-include('../auth/login')%></div>
+
+ 
       </div>
 
       <%}%>
@@ -62,6 +66,12 @@
   </div>
 </div>
 <script>
+
+
+
+
+
+
   document.addEventListener('DOMContentLoaded', () => {
     let dashWindowState = null;
     const dashToggle = document.getElementById('dashToggle');
@@ -81,8 +91,45 @@
       }
     })
   })
+  document.addEventListener('DOMContentLoaded', function() {
+    function changeToLoginMethod(divId) {
+        // Log the event for debugging
+        console.log(event);
+
+        // Hide both windows initially
+        document.getElementById('regWindow').style.display = 'none';
+        document.getElementById('loginWindow').style.display = 'none';
+
+        // Show the relevant window based on the argument passed
+        document.getElementById(divId).style.display = 'block';
+
+        // Reset the background color of all buttons to their default
+        const buttons = document.getElementById('authOptionButtons').getElementsByTagName('button');
+        for (let button of buttons) {
+            button.style.backgroundColor = ''; // Reset background color to default
+            button.style.color = ''; // Reset background color to default
+        }
+
+        // Change the background color of the clicked button to purple
+        if (event.target.tagName === 'BUTTON') {
+            event.target.style.backgroundColor = 'purple';
+            event.target.style.color = 'gold';
+        }
+    }
+
+    // Attach the function to the global scope
+    window.changeToLoginMethod = changeToLoginMethod;
+});
 
 
+document.addEventListener('DOMContentLoaded', () => {
+    const firstTimeYes = document.getElementById('firstTimeYes');
+    const firstTimeNo = document.getElementById('firstTimeNo');
+
+    // Use closures to pass the correct argument to the function
+    firstTimeYes.addEventListener('click', () => changeToLoginMethod('regWindow'));
+    firstTimeNo.addEventListener('click', () => changeToLoginMethod('loginWindow'));
+});
 
 
   const walletButtonControl = () => {

@@ -279,11 +279,7 @@ align-content: center;
   }
   
   a{
-    background: linear-gradient(to right,$gold,white,$gold);
-    -webkit-background-clip: text;
-    color: transparent;
-    font-size: 1.2rem;
-    text-shadow: 1px 1px 2px rgb(38, 0, 255);    
+
 
 }
 #chat{
@@ -317,13 +313,13 @@ overflow-y: auto;
     border-bottom-right-radius:25px ;
     background:linear-gradient(to left, rgb(168, 68, 158), rgba(122, 19, 98, 0.923));
 @media (max-width:768px) {
-    width: 104vh;
-    position: absolute;
-    top: 46%;
-    left: 5%;
-    transform: rotate(90deg);
-    background:none;
-    box-shadow: none;
+    // width: 104vh;
+    // position: absolute;
+    // top: 46%;
+    // left: 5%;
+    // transform: rotate(90deg);
+    // background:none;
+    // box-shadow: none;
 }
 }
 $headshotPx:55px;
@@ -354,9 +350,9 @@ $headshotPx:55px;
       overflow: hidden;
 }
 .inputBar{
-    z-index: 2;
-    position:absolute;
-    margin: 2%;
+   // z-index: 2;
+   // position:absolute;
+   // margin: 2%;
     bottom: 0;
     left:0;
     width:95%;
@@ -458,4 +454,27 @@ background:linear-gradient(to right,rgba(128, 0, 128, 0.56),rgba(255, 217, 0, 0.
 
 #notifications{
     border: 1px solid $gold;
+}
+
+#regWindow, #loginWindow, #resetEmailInput, #emailLoginForm{
+    display:none;
+}
+@keyframes fadeIn{
+    0%{opacity: 0; transform:translateY(-40px)}
+    100%{opacity: 1; transform:translateY(-0px)}
+}
+.authOpts{
+padding:2%;
+margin: 2%;
+font-size: 1.2rem;
+}
+#authOptsLesser{
+
+}
+.loginFlows{
+    padding: 5%;
+    animation: fadeIn .5s ease-out 1 0s;
+    transform-style: preserve-3d;
+    transition-duration: .8s;
+    transition-timing-function: ease-in-out;
 }

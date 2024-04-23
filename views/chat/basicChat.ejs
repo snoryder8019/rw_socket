@@ -116,12 +116,12 @@ function addMessage(messageObject, isOwnMessage = false) {
                 div.className = 'usersOnline';
                 const img = document.createElement('img');
                 img.className = 'userImage';
-                img.alt = user.userName;
+               // img.alt = user.userName;
                 img.src = user.avatarThumbnailUrl || '/path/to/default/avatar/image.jpg';
                 const text = document.createElement('span');
                 text.textContent = user.userName;
                 div.appendChild(img);
-                div.appendChild(text);
+               // div.appendChild(text);
                 userList.appendChild(div);
             });
         });
