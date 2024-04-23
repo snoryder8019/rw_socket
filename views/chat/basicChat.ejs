@@ -1,7 +1,7 @@
 <div id="chat-window-basic">
  
     <%- include('../animations/confetti')%>
-    <button id="chatToggle">chat</button>
+
     <% if(typeof user === 'object' && user) { %>
         <script>var firstName = "<%= user.firstName %>";</script>
         
@@ -15,13 +15,13 @@
                 </div>
             <!--My Users Populate Here div class="userOnline"-->
             </div>
-      <div class="inputBar">
-            <input id="chatInput" autocomplete="off" /><button id="submitChat">Send</button>
-        </div>
-        <div id="chat">
-        
-            <div id="messages"> </div>
-        </div>
+            <div id="chat">
+                
+                <div id="messages"> </div>
+            </div>
+            <div class="inputBar">
+                  <input id="chatInput" autocomplete="off" /><button id="submitChat">Send</button>
+              </div>
         <%let userImg=user.userImg%>
     <% } else { %>
         <p>Please log in to join the chat.</p>

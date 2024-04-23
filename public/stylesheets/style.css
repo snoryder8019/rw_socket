@@ -190,7 +190,6 @@ input {
 }
 
 #chatToggle {
-  position: absolute;
   width: 200px;
   border-radius: 5px;
   border: 5px solid #711881;
@@ -198,7 +197,6 @@ input {
   color: #711881;
   font-size: 1.3rem;
   box-shadow: 3px 3px 3px #1a0a1b;
-  transform: rotate(90deg);
   left: -25%;
   top: 56%;
 }
@@ -209,7 +207,6 @@ input {
 }
 
 #dashToggle {
-  position: absolute;
   width: 200px;
   border-radius: 5px;
   border: 5px solid #711881;
@@ -217,7 +214,6 @@ input {
   color: #711881;
   font-size: 1.3rem;
   box-shadow: 3px 3px 3px #1a0a1b;
-  transform: rotate(90deg);
   right: -25%;
   top: 40%;
 }
@@ -303,8 +299,47 @@ input {
   }
 }
 
+.banner {
+  width: 98%; /* Full width */
+  padding: 2%;
+  transition: all 0.3s ease; /* Smooth transition for shrinking */
+  display: flex; /* Use flexbox for layout */
+  justify-content: space-between; /* Space items appropriately */
+  align-items: center; /* Center items vertically */
+}
+
 .banner img {
+  width: 100%; /* Ensure image fills the banner */
+  transition: all 0.3s ease; /* Smooth transition for the image */
+  height: auto; /* Maintain aspect ratio */
+}
+
+#dashToggle, #chatToggle {
+  transition: all 0.3s ease; /* Smooth transition for buttons */
+  padding: 10px 20px; /* Initial padding for buttons */
+}
+
+.sticky {
+  position: fixed;
+  top: 0;
   width: 100%;
+  z-index: 1000; /* Ensure it stays on top */
+}
+
+.shrunk {
+  height: 50px; /* Adjusted height when scrolled */
+  padding: 4%;
+  width: 88%;
+}
+
+.shrunk img {
+  height: 50px; /* Adjust the image height to match the banner's new height */
+  width: auto;
+}
+
+.shrunk #dashToggle, .shrunk #chatToggle {
+  padding: 5px 10px; /* Reduced padding for buttons */
+  font-size: 0.8rem; /* Smaller text size */
 }
 
 #userList {
@@ -430,6 +465,7 @@ input {
 }
 
 #confettiControls {
+  display: none;
   position: fixed;
   width: 200px;
   bottom: 2%;

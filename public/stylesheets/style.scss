@@ -189,7 +189,7 @@ display: flex;
 //     overflow-y: scroll;
 }
 @mixin toggleOpt(){
-    position: absolute;
+  //  position: absolute;
     width:200px;
      border-radius: 5px;
  border: 5px solid $purple;
@@ -200,7 +200,7 @@ display: flex;
 }
   #chatToggle{
     @include toggleOpt();
-        transform: rotate(90deg);      
+      //  transform: rotate(90deg);      
         left: -25%;
         top:56%;
 
@@ -210,7 +210,7 @@ display: flex;
   }
   #dashToggle{
     @include toggleOpt();
-    transform: rotate(90deg);
+   // transform: rotate(90deg);
     right:-25%;
     top:40%;
     @media (max-width:768px) {
@@ -296,9 +296,49 @@ overflow-y: auto;
     
 }
 }
-.banner img{
+.banner {
+    width: 98%; /* Full width */
+    padding: 2%;
+    transition: all 0.3s ease; /* Smooth transition for shrinking */
+    display: flex; /* Use flexbox for layout */
+    justify-content: space-between; /* Space items appropriately */
+    align-items: center; /* Center items vertically */
+  }
+  
+  .banner img {
+    width: 100%; /* Ensure image fills the banner */
+    transition: all 0.3s ease; /* Smooth transition for the image */
+    height: auto; /* Maintain aspect ratio */
+  }
+  
+  #dashToggle, #chatToggle {
+    transition: all 0.3s ease; /* Smooth transition for buttons */
+    padding: 10px 20px; /* Initial padding for buttons */
+  }
+  
+  .sticky {
+    position: fixed;
+    top: 0;
     width: 100%;
+    z-index: 1000; /* Ensure it stays on top */
+  }
+  
+  .shrunk {
+    height: 50px; /* Adjusted height when scrolled */
+    padding: 4%;
+    width: 88%;
+  }
+  
+  .shrunk img {
+    height: 50px; /* Adjust the image height to match the banner's new height */
+  width: auto;
 }
+  
+  .shrunk #dashToggle, .shrunk #chatToggle {
+    padding: 5px 10px; /* Reduced padding for buttons */
+    font-size: 0.8rem; /* Smaller text size */
+  }
+  
 #userList {
     width: 95%;
     min-height: 95px;
@@ -427,6 +467,7 @@ background:linear-gradient(to right,rgba(128, 0, 128, 0.56),rgba(255, 217, 0, 0.
     left: 0;
 }
 #confettiControls{
+    display: none;
     position: fixed;
     width: 200px;
     bottom:2%;
