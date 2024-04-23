@@ -152,6 +152,7 @@ input {
   background-color: #711881;
   left: 100%;
   top: 0%;
+  z-index: 5;
 }
 @media (max-width: 768px) {
   #chat-window-basic {
@@ -301,11 +302,12 @@ input {
 
 .banner {
   width: 98%; /* Full width */
-  padding: 2%;
+  padding: 0%;
   transition: all 0.3s ease; /* Smooth transition for shrinking */
   display: flex; /* Use flexbox for layout */
   justify-content: space-between; /* Space items appropriately */
   align-items: center; /* Center items vertically */
+  background-color: rgba(113, 24, 129, 0);
 }
 
 .banner img {
@@ -324,6 +326,7 @@ input {
   top: 0;
   width: 100%;
   z-index: 1000; /* Ensure it stays on top */
+  background-color: #711881;
 }
 
 .shrunk {
@@ -507,8 +510,13 @@ input {
 }
 
 .expanded {
-  height: auto; /* Adjusted for auto height based on content */
-  max-height: 600px; /* Maximum height when expanded */
+  position: fixed;
+  top: 12%;
+  left: 1%;
+  min-height: 88vh;
+  min-width: 98%;
+  z-index: 5;
+  margin-top: 12vh;
 }
 
 .close-button {

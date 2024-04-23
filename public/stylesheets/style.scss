@@ -3,6 +3,8 @@ $goldDim : #695f38;
 
 $black:#1a0a1b;
 $purple:#711881;
+$purpleFade0:#71188100;
+
 $gradientEdge: #410b4b;
 :root{
     font-size: 1rem;
@@ -163,6 +165,7 @@ display: flex;
     @include sliderWindows();
     left:100%;
     top:0%;
+    z-index: 5;
     @media (max-width:768px) {
         width: 94%;
         left:100%;
@@ -298,29 +301,32 @@ overflow-y: auto;
 }
 .banner {
     width: 98%; /* Full width */
-    padding: 2%;
+    padding: 0%;
     transition: all 0.3s ease; /* Smooth transition for shrinking */
     display: flex; /* Use flexbox for layout */
     justify-content: space-between; /* Space items appropriately */
     align-items: center; /* Center items vertically */
-  }
-  
-  .banner img {
+    background-color:$purpleFade0;
+    
+}
+
+.banner img {
     width: 100%; /* Ensure image fills the banner */
     transition: all 0.3s ease; /* Smooth transition for the image */
     height: auto; /* Maintain aspect ratio */
-  }
-  
-  #dashToggle, #chatToggle {
+}
+
+#dashToggle, #chatToggle {
     transition: all 0.3s ease; /* Smooth transition for buttons */
     padding: 10px 20px; /* Initial padding for buttons */
-  }
-  
-  .sticky {
+}
+
+.sticky {
     position: fixed;
     top: 0;
     width: 100%;
     z-index: 1000; /* Ensure it stays on top */
+    background-color:$purple;
   }
   
   .shrunk {
@@ -501,8 +507,13 @@ background:linear-gradient(to right,rgba(128, 0, 128, 0.56),rgba(255, 217, 0, 0.
   }
   
   .expanded {
-    height: auto; /* Adjusted for auto height based on content */
-    max-height: 600px; /* Maximum height when expanded */
+    position: fixed;
+    top:12%;
+    left: 1%;
+    min-height: 88vh;
+    min-width: 98%;
+    z-index:5;
+    margin-top: 12vh;
   }
   
   .close-button {
@@ -544,3 +555,4 @@ font-size: 1.2rem;
     transition-duration: .8s;
     transition-timing-function: ease-in-out;
 }
+

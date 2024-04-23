@@ -4,23 +4,6 @@
      
       <%if(typeof user =='object'&& user){%>
 
-      <div class="dashHeader">
-        <div class="message">
-          <%if (user.images==='array' && user.images){%>
-          <% for(let i = 0; i < user.images.length; i++) { %>
-            <% if(user.images[i].avatarTag === true) { %>
-              <img src="<%= user.images[i].thumbnailUrl %>" alt="" loading="lazy">
-              <% } %>
-              <% } %>
-              <% }else{ %>
-
-                <img id="toggleSettings1" src="images/hugeIcon.png" alt="" loading="lazy">
-            
-            <%}%>
-            <h3>Welcome <%=user.firstName%>!</h3>
-            <h3>Logged in as: <%=user.email%></h3>
-        </div>
-        </div>
 
       </div>
 
