@@ -145,6 +145,7 @@ input {
   position: fixed;
   height: 90vh;
   width: 40%;
+  z-index: 6;
   transform-style: preserve-3d;
   transition-timing-function: ease-in;
   transition-duration: 0.4s;
@@ -170,6 +171,7 @@ input {
   position: fixed;
   height: 90vh;
   width: 40%;
+  z-index: 6;
   transform-style: preserve-3d;
   transition-timing-function: ease-in;
   transition-duration: 0.4s;
@@ -180,13 +182,14 @@ input {
 }
 @media (max-width: 768px) {
   #userDash {
-    width: 90%;
-    right: 100%;
+    width: 92%;
+    height: 80%;
+    margin-top: 20%;
   }
 }
 
 .dashContent {
-  height: 100%;
+  height: 87%;
   overflow-y: scroll;
 }
 
@@ -511,10 +514,10 @@ input {
 
 .expanded {
   position: fixed;
-  top: 12%;
+  top: 6%;
   left: 1%;
-  min-height: 88vh;
-  min-width: 98%;
+  min-height: 79vh;
+  width: 94%;
   z-index: 5;
   margin-top: 12vh;
 }
