@@ -486,6 +486,9 @@ input {
   background-color: white;
   box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.719);
   border-radius: 5px;
+  transition: all 0.3s ease;
+  position: relative;
+  cursor: pointer;
 }
 
 .auth_view_false {
@@ -498,6 +501,26 @@ input {
   background-color: white;
   box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.719);
   border-radius: 5px;
+  transition: all 0.3s ease;
+  position: relative;
+  cursor: pointer;
+}
+
+.expanded {
+  height: auto; /* Adjusted for auto height based on content */
+  max-height: 600px; /* Maximum height when expanded */
+}
+
+.close-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: #ff0000;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+  display: none;
 }
 
 #notifications {

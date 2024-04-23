@@ -477,21 +477,46 @@ background:linear-gradient(to right,rgba(128, 0, 128, 0.56),rgba(255, 217, 0, 0.
     display: flex;
 }
 //
-@mixin authViewSetup(){
-  background-size: cover;
+@mixin authViewSetup() {
+    background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-   min-height: 360px;
+    min-height: 360px;
     width: 96%;
     margin: 2%;
     background-color: white;
-    box-shadow:  3px 3px 6px rgba(0, 0, 0, 0.719);
+    box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.719);
     border-radius: 5px;
-}
-.auth_view_true{@include authViewSetup()}
-.auth_view_false{@include authViewSetup()}
-
-
+    transition: all 0.3s ease;
+    position: relative;
+    cursor: pointer;
+  }
+  
+  .auth_view_true {
+    @include authViewSetup();
+  }
+  
+  .auth_view_false {
+    @include authViewSetup();
+  }
+  
+  .expanded {
+    height: auto; /* Adjusted for auto height based on content */
+    max-height: 600px; /* Maximum height when expanded */
+  }
+  
+  .close-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: #ff0000;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    display: none; // initially hidden
+  }
+  
 
 #notifications{
     border: 1px solid $gold;
