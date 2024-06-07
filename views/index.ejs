@@ -18,14 +18,14 @@
   
   <div id="main">
     <div id="mainBanner" class="banner">
-      <img class="banner" src="/images/MainBanner.png" alt="">
       <button id="dashToggle">dashboard</button>
       <button id="chatToggle">chat</button>
+      <img class="banner" src="/images/MainBanner.png" alt="">
 
 
       <%if(typeof user === 'object' && user){%>
       <div class="dashHeader">
-        <div class="message">
+        <div class="userGreeting">
           <%if (user.images==='array' && user.images){%>
           <% for(let i = 0; i < user.images.length; i++) { %>
             <% if(user.images[i].avatarTag === true) { %>

@@ -9,7 +9,7 @@ const { generateTokenForUser } = require('../jwt/tokenGenerator');
 const {sendDynamicEmail} = require('../../plugins/nodemailer/setup');
 const crypto = require('crypto');
 const lib =require('../../routes/logFunctions/logFunctions')
-const {newUser} = require('./passport')
+const {newUser} = require('./passport');
 // Function to generate a random reset token
 const generateResetToken = () => {
     // Generate a random 32-character hexadecimal token
@@ -83,6 +83,7 @@ router.post('/regUser', async (req, res) => {
         const createUserResult = await createUser({
             provider: 'local',
             providerId: 'local' + Date.now(),
+            displayName:req.body.firstName,
             firstName: req.body.firstName,
             lastName: req.body.lastName,
             email: req.body.email,

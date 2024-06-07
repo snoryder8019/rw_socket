@@ -1,0 +1,147 @@
+<div id="chat-window-basic">
+ 
+    <%- include('../animations/confetti')%>
+
+    <% if(typeof user === 'object' && user) { %>
+        <script>var firstName = "<%= user.firstName %>";</script>
+        
+          
+            <div id="userList">
+                <div class="loaderWheel">
+                    <div class="loaderDiv">  <h3> loading chatroom...</h3></div>
+                    <div class="loaderDiv"> <div class="wheel"></div></div>
+                  
+                   
+                </div>
+            <!--My Users Populate Here div class="userOnline"-->
+            </div>
+            <div id="chat">
+                
+                <div id="messages"> </div>
+            </div>
+            <div class="inputBar">
+                  <input id="chatInput" autocomplete="off" /><button id="submitChat">Send</button>
+              </div>
+        <%let userImg=user.userImg%>
+    <% } else { %>
+        <p>Please log in to join the chat.</p>
+    <% } %>
+</div>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        var socket = io('/main_chat');
+        let currentPage = 1; // Track current page for message fetching
+        const messagesPerPage = 12; // Set the number of messages per page
+    
+        function requestInitialMessages() {
+            socket.emit('fetch messages', { roomId: 'YourRoomId', page: currentPage });
+        }
+    
+        socket.on('messages fetched', (messages) => {
+    if (messages.length) {
+        // Reverse the messages to display them in chronological order
+        // since they are fetched in reverse chronological order
+        const reversedMessages = messages.reverse();
+        
+        reversedMessages.forEach(messageObject => {
+            // Determine if the message was sent by the current user
+            // This requires knowing the current user's identifier (userKey or displayName)
+            // Example: let isOwnMessage = messageObject.userKey === currentUserKey;
+            // Adjust the above line based on how you can identify the current user
+            let isOwnMessage = messageObject.user === "currentUserDisplayName"; // Placeholder check
+            
+            addMessage(messageObject, isOwnMessage);
+        });
+        
+        currentPage++;
+    }
+});
+
+    
+// Function to add messages to the DOM
+function addMessage(messageObject, isOwnMessage = false) {
+    const messagesContainer = document.getElementById('messages');
+    const messageDiv = document.createElement('div');
+    messageDiv.className = isOwnMessage ? 'message ownMessage' : 'message';
+
+    const messageAvatar = document.createElement('img');
+    messageAvatar.className = 'usersOnline';
+    // Ensure thumbnailUrl is being correctly accessed
+    messageAvatar.src = messageObject.thumbnailUrl || `/images/userHeadshots/defaultThumbnail.png`;
+
+    const userNameSpan = document.createElement('span');
+    userNameSpan.className = 'messageUser';
+    const userName = typeof messageObject.user === 'object' ? messageObject.user.firstName : messageObject.user;
+    userNameSpan.textContent = (userName || 'Unknown') + ': ';
+
+    const messageTextSpan = document.createElement('span');
+    messageTextSpan.className = 'messageText';
+    // Ensure text is being correctly accessed
+    messageTextSpan.textContent = messageObject.message || 'No message text.';
+
+    messageDiv.appendChild(messageAvatar);
+  //  messageDiv.appendChild(userNameSpan);
+    messageDiv.appendChild(messageTextSpan);
+    messagesContainer.appendChild(messageDiv);
+}
+
+
+        const messageContainer = document.getElementById('messages');
+        messageContainer.addEventListener('scroll', () => {
+            // Load more messages if we've scrolled near the top
+            if (messageContainer.scrollTop < 50) {
+                socket.emit('fetch messages', { roomId: 'YourRoomId', page: currentPage });
+            }
+        });
+    
+        socket.on('chat message', (msg) => {
+            addMessage(msg, msg.user === 'You');
+        });
+    
+        document.getElementById('submitChat').addEventListener('click', () => {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+            if (message !== '') {
+                socket.emit('chat message', message); // Adjust payload as needed
+                input.value = ''; // Clear the input
+            }
+        });
+    
+        socket.on('user list', (users) => {
+            const userList = document.getElementById('userList');
+            userList.innerHTML = ''; // Clear current list
+            users.forEach((user) => {
+                const div = document.createElement('div');
+                div.className = 'usersOnline';
+                const img = document.createElement('img');
+                img.className = 'userImage';
+               // img.alt = user.userName;
+                img.src = user.avatarThumbnailUrl || '/path/to/default/avatar/image.jpg';
+                const text = document.createElement('span');
+                text.textContent = user.userName;
+                div.appendChild(img);
+               // div.appendChild(text);
+                userList.appendChild(div);
+            });
+        });
+    
+        // Error handling
+        socket.on('connect_error', (error) => {
+            console.log('Connection Error:', error);
+        });
+    
+        // Chat window toggle
+        const chatToggle = document.getElementById('chatToggle');
+        const chatWindow = document.getElementById('chat-window-basic');
+        chatToggle.addEventListener('click', () => {
+            const isOpen = chatWindow.style.transform === "translateX(-106%)";
+            chatWindow.style.transform = isOpen ? "translateX(0%)" : "translateX(-106%)";
+            chatToggle.innerHTML = isOpen ? "chat" : "close";
+        });
+    
+        // Initial message fetch
+        requestInitialMessages();
+    });
+    </script>
+    

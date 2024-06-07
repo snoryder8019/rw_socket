@@ -11,7 +11,6 @@ const { uploadToLinode } = require('../../plugins/aws_sdk/setup');
 router.post('/userImgUpload', upload, processImage, async (req, res) => {
   try {
     console.log('userImgUpload Endpoint Called');
-
     const db = getDb();
     const user = req.user;
     const collection = db.collection('users');
@@ -60,7 +59,8 @@ console.log(req.file.path)
     res.send({ success: true, urls: { main: bucketUrl, thumbnail: thumbnailUrl } });
   } catch (error) {
     console.error("Error in userImgUpload endpoint:", error);
-    res.status(500).send({ success: false, message: error.message });
+   // res.status(500).send({ success: false, message: error.message });
+   res.render('error',{error:error})
   }
 });
 
