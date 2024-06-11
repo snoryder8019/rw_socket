@@ -25,7 +25,7 @@ router.get('/auth/yahoo/callback',
       if (!user) {
         req.flash('info',info.message)
         const redirectUrl = req.headers.referer || '/';
-       return res.redirect(redirectUrl);
+       return res.redirect('/');
      // return res.send("email not registered")
       }
       req.logIn(user, (err) => {

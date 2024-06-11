@@ -306,15 +306,15 @@ overflow-y: auto;
     width: 98%; /* Full width */
     padding: 0%;
     transition: all 0.3s ease; /* Smooth transition for shrinking */
-   // display: flex; /* Use flexbox for layout */
-    justify-content: space-between; /* Space items appropriately */
-    align-items: center; /* Center items vertically */
+    //display: flex; /* Use flexbox for layout */
+   // justify-content: space-between; /* Space items appropriately */
+   // align-items: center; /* Center items vertically */
     background-color:$purpleFade0;
     
 }
 
 .banner img {
-    width: 100%; /* Ensure image fills the banner */
+    width: 87%; /* Ensure image fills the banner */
     transition: all 0.3s ease; /* Smooth transition for the image */
     height: auto; /* Maintain aspect ratio */
 }

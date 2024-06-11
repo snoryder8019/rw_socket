@@ -48,6 +48,12 @@
     </div>
   </div>
 </div>
+<%if(typeof user =='object'&&user){%>
+
+  <%let userObj = " user there"%>
+  <%}else{%>
+<%let userObj = "no user"%>
+    <%}%>
 <script>
 
 
@@ -56,21 +62,31 @@
 
 
   document.addEventListener('DOMContentLoaded', () => {
+    let user = "<%=user%>"
     let dashWindowState = null;
     const dashToggle = document.getElementById('dashToggle');
     const dashWindow = document.getElementById('userDash');
     const main = document.getElementById('main')
     dashToggle.addEventListener('click', () => {
+    
+    console.log(`is there user?: ${!user}`)
       if (dashWindow.style.transform != "translateX(106%)") {
         dashWindow.style.transform = "translateX(106%)";
 
         dashToggle.innerHTML = "close";
         dashWindowState = "open"
       } else {
-
-        dashWindow.style.transform = "translateX(0%)";
-        dashToggle.innerHTML = "dashboard";
-        dashWindowState = "hidden";
+if(!user==true){
+  dashToggle.innerHTML = "sign in";
+  dashWindow.style.transform = "translateX(0%)";
+  dashWindowState = "hidden";
+  
+}else{
+  
+  dashToggle.innerHTML = "dashboard";
+  dashWindow.style.transform = "translateX(0%)";
+  dashWindowState = "hidden";
+}
       }
     })
   })

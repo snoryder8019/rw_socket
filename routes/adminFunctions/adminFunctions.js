@@ -8,7 +8,7 @@ const config = require('../../config/config'); // Import config if you're using 
 const lib = require('../logFunctions/logFunctions')
 const fs = require('fs')
 
-// isAdmin Middleware
+// hmm isAdmin Middleware
 function isAdmin(req, res, next) {
   let user = req.user;
   console.log('ADMIN ACCESS: accessing admin routes: ' + user.displayName);

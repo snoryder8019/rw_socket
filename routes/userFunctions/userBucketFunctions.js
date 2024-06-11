@@ -18,7 +18,7 @@ console.log(req.file.filename)
 console.log(req.file.path)
     // Assuming processImage middleware has set req.file.path to the processed image
     const imagePath = req.file.path;
-    const fileKey = `${user._id}/${req.file.filename}`;
+    const fileKey = `rw_users_/${user._id}/${req.file.filename}`;
     const fileBuffer = req.file.buffer;
     console.log('Uploading to Linode...');
     const bucketUrl = await uploadToLinode(imagePath, fileKey);

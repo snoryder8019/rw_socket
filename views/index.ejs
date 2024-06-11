@@ -18,25 +18,19 @@
   
   <div id="main">
     <div id="mainBanner" class="banner">
+      <%if(typeof user ==='object'&& user){%>
       <button id="dashToggle">dashboard</button>
       <button id="chatToggle">chat</button>
+      <%}else{%>
+        <button id="dashToggle">sign in</button>
+        <%}%>
       <img class="banner" src="/images/MainBanner.png" alt="">
 
 
       <%if(typeof user === 'object' && user){%>
       <div class="dashHeader">
         <div class="userGreeting">
-          <%if (user.images==='array' && user.images){%>
-          <% for(let i = 0; i < user.images.length; i++) { %>
-            <% if(user.images[i].avatarTag === true) { %>
-              <img src="<%= user.images[i].thumbnailUrl %>" alt="" loading="lazy">
-              <% } %>
-              <% } %>
-              <% }else{ %>
-
-                <img id="toggleSettings1" src="images/hugeIcon.png" alt="" loading="lazy">
-            
-            <%}%>
+       
             <h3>Welcome <%=user.firstName%>!</h3>
             <h3>Logged in as: <%=user.email%></h3>
         </div>
@@ -72,39 +66,41 @@
           
             <script>
 
-window.addEventListener('scroll', function() {
-  var banner = document.getElementById('mainBanner');
-  var bannerHeight = banner.offsetHeight;
+// window.addEventListener('scroll', function() {
+//   var banner = document.getElementById('mainBanner');
+//   var bannerHeight = banner.offsetHeight;
   
-  if (window.pageYOffset > bannerHeight) {
-    banner.classList.add('sticky');
-    banner.classList.add('shrunk');
-  } else {
-    banner.classList.remove('sticky');
-    banner.classList.remove('shrunk');
-  }
-});
-document.addEventListener('DOMContentLoaded',()=>{})
-document.querySelectorAll('.auth_view_true').forEach(div => {
+//   if (window.pageYOffset > bannerHeight) {
+//     banner.classList.add('sticky');
+//     banner.classList.add('shrunk');
+//   } else {
+//     banner.classList.remove('sticky');
+//     banner.classList.remove('shrunk');
+//   }
+// });
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.auth_view_true').forEach(div => {
     div.addEventListener('click', function() {
-      this.classList.toggle('expanded');
-      if (!this.querySelector('.close-button')) {
-        const closeButton = document.createElement('button');
-        closeButton.textContent = 'X';
-        closeButton.className = 'close-button';
-        this.appendChild(closeButton);
+      if (!this.classList.contains('expanded')) {
+        this.classList.add('expanded');
+        let closeButton = this.querySelector('.close-button');
+        if (!closeButton) {
+          closeButton = document.createElement('button');
+          closeButton.textContent = 'X';
+          closeButton.className = 'close-button';
+          this.appendChild(closeButton);
+        }
+        closeButton.style.display = 'block'; // Ensure the close button is visible
+
         closeButton.addEventListener('click', function(e) {
           e.stopPropagation(); // Prevent click from propagating to the div
           this.parentNode.classList.remove('expanded');
           this.style.display = 'none'; // Hide button after collapsing
         });
-      } else {
-        this.querySelector('.close-button').style.display = 'block'; // Show button if it already exists
       }
     });
   });
-
-
+});
 
           </script>  
           <script src="/javascripts/loader.js"></script>
