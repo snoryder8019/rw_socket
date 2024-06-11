@@ -1,4 +1,90 @@
 <div id="admin">
-see adminRDY whe EP is ready
-<!--test note-->
+    <button class="collapsible">Chat<span class="carrot">&#9654;</span></button>
+    <div class="content">Content for Chat</div>
+
+    <button class="collapsible">Users<span class="carrot">&#9654;</span></button>
+    <div class="content">Content for Users</div>
+
+    <button class="collapsible">Games<span class="carrot">&#9654;</span></button>
+    <div class="content">Content for Games</div>
+
+    <button class="collapsible">videoLead<span class="carrot">&#9654;</span></button>
+    <div class="content">Content for videoLead</div>
+
+    <button class="collapsible">VideoProduction<span class="carrot">&#9654;</span></button>
+    <div class="content">Content for VideoProduction</div>
+
+    <button class="collapsible">BingoLead<span class="carrot">&#9654;</span></button>
+    <div class="content">Content for BingoLead</div>
+
+    <button class="collapsible">Tickets<span class="carrot">&#9654;</span></button>
+    <div class="content">Content for Tickets</div>
+
+    <button class="collapsible">Clubs<span class="carrot">&#9654;</span></button>
+    <div class="content">Content for Clubs</div>
+
+    <button class="collapsible">Blogs<span class="carrot">&#9654;</span></button>
+    <div class="content">Content for Blogs</div>
+
+    <button class="collapsible">WebApp<span class="carrot">&#9654;</span></button>
+    <div class="content">Content for WebApp</div>
+
+    <button class="collapsible">Notifications<span class="carrot">&#9654;</span></button>
+    <div class="content">Content for Notifications</div>
 </div>
+
+<style>
+    .collapsible {
+        background-color: #f9f9f9;
+        color: #333;
+        cursor: pointer;
+        padding: 10px;
+        width: 100%;
+        border: none;
+        text-align: left;
+        outline: none;
+        font-size: 18px;
+        transition: background-color 0.3s;
+    }
+
+    .active, .collapsible:hover {
+        background-color: #ccc;
+    }
+
+    .content {
+        padding: 0 18px;
+        display: none;
+        overflow: hidden;
+        background-color: #f1f1f1;
+    }
+
+    .carrot {
+        float: right;
+        transition: transform 0.3s;
+    }
+
+    .rotate {
+        transform: rotate(90deg);
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const collapsibles = document.getElementsByClassName('collapsible');
+
+        for (let i = 0; i < collapsibles.length; i++) {
+            collapsibles[i].addEventListener('click', function () {
+                this.classList.toggle('active');
+                const content = this.nextElementSibling;
+                const carrot = this.querySelector('.carrot');
+                if (content.style.display === "block") {
+                    content.style.display = "none";
+                    carrot.classList.remove('rotate');
+                } else {
+                    content.style.display = "block";
+                    carrot.classList.add('rotate');
+                }
+            });
+        }
+    });
+</script>

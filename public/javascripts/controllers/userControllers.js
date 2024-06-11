@@ -48,7 +48,7 @@ const userButtonControl = (user) => {
 
 // Example usage: call the function with user object
 const user = {
-  isAdmin: false // Set to true if the user is an admin
+  isAdmin: true // Set to true if the user is an admin
 };
 
 userButtonControl(user);
