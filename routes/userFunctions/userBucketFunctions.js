@@ -55,8 +55,8 @@ console.log(req.file.path)
     });
 
     console.log('MongoDB updated with image and thumbnail URLs.');
-
-    res.send({ success: true, urls: { main: bucketUrl, thumbnail: thumbnailUrl } });
+res.render('/',{success:false,message:"avatar uploaded sucessfully"})
+    //res.send({ success: true, urls: { main: bucketUrl, thumbnail: thumbnailUrl } });
   } catch (error) {
     console.error("Error in userImgUpload endpoint:", error);
    // res.status(500).send({ success: false, message: error.message });

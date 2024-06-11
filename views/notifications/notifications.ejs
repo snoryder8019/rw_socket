@@ -1,4 +1,11 @@
-<div id="notifications"></div>
+<div id="notifications">
+  Your Notifications:
+<div id="notificationsSection"></div>
+
+
+
+
+</div>
 <script>
 document.addEventListener("DOMContentLoaded", function() {
   const observer = new IntersectionObserver((entries) => {
@@ -8,7 +15,7 @@ document.addEventListener("DOMContentLoaded", function() {
           .then(response => response.json())
           .then(data => {
             // Process the data and convert to HTML
-            const notificationsContainer = document.querySelector('#notifications');
+            const notificationsContainer = document.querySelector('#notificationsSection');
             notificationsContainer.innerHTML = ''; // Clear existing notifications (if any)
             data.forEach(notification => {
               const notificationElement = document.createElement('div');

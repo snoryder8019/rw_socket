@@ -1,15 +1,13 @@
 <div class="navGroup" id="userNav">
+
     <%if(typeof user === 'object' && user){%>
     <div class="userNavLink"><img src="/images/icons/notifications.png" id="toggleNotifications" alt="Notifications"></div>
-    <div class="userNavLink"><img src="/images/icons/cart.png" id="toggleCart" alt="Cart"></div>
-    <div class="userNavLink"><img src="/images/icons/rewards.png" id="toggleRewards" alt="Rewards"></div>
     <div class="userNavLink"><img src="/images/icons/settings.png" id="toggleSettings" alt="Settings"></div>
     <div class="userNavLink"><img src="/images/icons/help.png" id="toggleHelp" alt="Help"></div>
-    <div class="userNavLink"><img src="/images/icons/wallet.png" id="toggleWallet" alt="Wallet"></div>
-    <div class="userNavLink"><a href="/logout"><img src="/images/icons/logout.png" alt="Logout"></a></div>
     <%if(user.isAdmin==true){%>
         <div class="userNavLink"><img src="/images/icons/admin.png" id="toggleAdmin" alt="Admin"></div>
-    <%}%>
+        <%}%>
+        <div class="userNavLink"><a href="/logout"><img src="/images/icons/logout.png" alt="Logout"></a></div>   
     <%}%>
 </div>
 <script></script>

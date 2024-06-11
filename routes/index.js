@@ -13,7 +13,8 @@ const { userDataUpload, submitTicket, saveRotation,assignAvatar,deleteAvatar } =
 const {updateBanned}=require('./securityFunctions/updateBanned');
 const upload = require('../plugins/multer/setup');
 const userBucketRouter = require('./userFunctions/userBucketFunctions')
-const {getNotifications} = require('./userFunctions/userNotifications')
+const {getNotifications} = require('./userFunctions/userNotifications');
+const { config } = require('dotenv');
 
 router.get('/getNotifications', getNotifications)
 router.post('/deleteAvatar', deleteAvatar)
@@ -49,6 +50,7 @@ try{
     user: user, 
     tickets:tickets,
     message: req.flash(),
+ 
     
     
   });

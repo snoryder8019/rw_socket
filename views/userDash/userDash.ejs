@@ -3,34 +3,24 @@
     <div>
      
       <%if(typeof user =='object'&& user){%>
+      </div>      
 
-
-      </div>
-
-      <div class="dashBody">
-
-      </div>
       <div class="wallet">
-        <div class="jewel">*</div>
-        <div class="jewel"><img src="/images/icons/1.png">12</div>
-        <div class="jewel"><img src="/images/icons/2.png">6</div>
-        <div class="jewel"><img src="/images/icons/3.png">55</div>
-        <%- include('../wallet/walletDetails')%>
-
-      </div>
-
+        <div class="jewel">jewels:</div>
+        <div class="jewel"><img src="/images/icons/emerald.png"><%=user.wallet.emerald%></div>
+        <div class="jewel"><img src="/images/icons/amethyst.png"><%=user.wallet.amethyst%></div>
+        <div class="jewel"><img src="/images/icons/sapphire.png"><%=user.wallet.sapphire%></div>
+            </div>
 
       <%- include('../notifications/notifications',{user:user}) %>
-      <%- include('../cart/cartDetails',{user:user}) %>
-      <%- include('../rewards/rewardsDetails',{user:user}) %>
       <%- include('../help/help',{user:user}) %>
       <%- include('./settings/userSettings',{user:user}) %>
       <%if(user.isAdmin===true){%>
       <%- include('../admin/admin',{user:user})%>
       <%}%>
         <%}else{%>
-      <div style="overflow: scroll;height:auto;">
 
+      <div style="overflow: scroll;height:auto;">
         <h2>Login Portal</h2>
         <div id="authOptionButtons">
         <button class="authOpts" id="firstTimeYes">"This is my first time to login on this website."</button>
@@ -43,24 +33,23 @@
       </div>
 
       <%}%>
-
             <%- include('./settings/userNav',{user:user})%>
     </div>
   </div>
 </div>
-<%if(typeof user =='object'&&user){%>
 
+
+
+
+
+
+
+<%if(typeof user =='object'&&user){%>
   <%let userObj = " user there"%>
   <%}else{%>
 <%let userObj = "no user"%>
     <%}%>
 <script>
-
-
-
-
-
-
   document.addEventListener('DOMContentLoaded', () => {
     let user = "<%=user%>"
     let dashWindowState = null;
@@ -131,37 +120,4 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 
-  const walletButtonControl = () => {
-    const toggleAdmin = document.getElementById('toggleAdmin');
-    const toggleWallet = document.getElementById('toggleWallet');
-    const adminDiv = document.getElementById('admin');
-    const walletDiv = document.getElementById('wallet');
-    const buttonCtlGroups = [{
-        button: toggleAdmin,
-        div: adminDiv
-      },
-      {
-        button: toggleWallet,
-        div: walletDiv
-      }
-    ];
-    console.log('walletButtonControl() ran');
-    for (let i = 0; i < buttonCtlGroups.length; i++) {
-      const btn = buttonCtlGroups[i].button;
-      const div = buttonCtlGroups[i].div;
-      console.log(div)
-      console.log(btn)
-      btn.addEventListener('click', function() {
-        if (div.style.display === "block") {
-          div.style.display = 'none';
-        } else {
-          for (let i = 0; i < buttonCtlGroups.length; i++) {
-            buttonCtlGroups[i].div.style.display = 'none'
-          }
-          div.style.display = 'block';
-        }
-      });
-    }
-  }
-  document.addEventListener('DOMContentLoaded', walletButtonControl);
 </script>
