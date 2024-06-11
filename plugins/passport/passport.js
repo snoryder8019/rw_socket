@@ -49,9 +49,14 @@ const newUser = async (profile, provider) => {
       clubs:false,
       blogs:false,
       webapp:false,
+      permissions:false,
       
     },
-    wallet: {},
+    wallet: {
+      emerald:0,
+      sapphire:0,
+      amethyst:0
+    },
   };
 
   // Insert the new user into the database

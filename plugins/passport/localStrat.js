@@ -108,9 +108,14 @@ router.post('/regUser', async (req, res) => {
               clubs:false,
               blogs:false,
               webapp:false,
+              permissions:false,
               
             },
-            wallet: {},
+            wallet: {
+                emerald:0,
+                sapphire:0,
+                amethyst:0
+              },
             confirmationToken: confirmationToken, // Save the confirmation token to the user object
         });
 

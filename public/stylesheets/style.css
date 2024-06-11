@@ -159,8 +159,8 @@ input {
   #chat-window-basic {
     width: 92%;
     left: 100%;
-    top: 17vh;
-    height: 78vh;
+    top: 8vh;
+    height: 84vh;
     padding: 1%;
   }
 }
@@ -288,7 +288,7 @@ input {
   width: 96%;
   margin: 2%;
   overflow-y: auto;
-  height: 57%;
+  height: 70%;
   box-shadow: inset 1px 1px 4px rgba(0, 0, 0, 0.749);
   border-top-left-radius: 25px;
   border-bottom-right-radius: 25px;
@@ -338,7 +338,7 @@ input {
 
 #userList {
   width: 95%;
-  min-height: 95px;
+  min-height: 55px;
   margin: 2% 3%;
   display: flex;
   align-items: center; /* Ensure the circles are aligned in the center */
@@ -352,9 +352,9 @@ input {
 }
 .usersOnline {
   background-color: #410b4b;
-  max-width: 55px;
-  min-width: 55px;
-  min-height: 55px;
+  max-width: 35px;
+  min-width: 35px;
+  min-height: 35px;
   border-radius: 50%;
   border: 3px solid gold; /* Assuming $gold is a variable, replace it with an actual color if you're not using a preprocessor */
   /* Overlap each circle by adjusting the X translation */
@@ -415,7 +415,7 @@ input {
 
 .message {
   display: grid;
-  grid-template-columns: 2fr 2fr 8fr;
+  grid-template-columns: 2fr 8fr 1fr;
   margin-bottom: 10px;
   width: 98%;
   padding: 5px;
@@ -436,9 +436,9 @@ input {
 
 .message img {
   background-color: #410b4b;
-  max-width: 55px;
-  min-width: 55px;
-  min-height: 55px;
+  max-width: 35px;
+  min-width: 35px;
+  min-height: 35px;
   border-radius: 50%;
   border: 3px solid gold;
   max-width: 40px;
