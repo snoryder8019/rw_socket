@@ -1,3 +1,4 @@
+// /plugins/socket_io/setup.js
 const socketIo = require('socket.io');
 const sessionMiddleware = require('../../app').sessionMiddleware;
 const passport = require('passport');

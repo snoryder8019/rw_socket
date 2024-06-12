@@ -224,6 +224,10 @@ input {
   }
 }
 
+#header img {
+  max-width: 40px;
+}
+
 .dashHeader {
   display: flex;
   flex-direction: row; /* Align items horizontally */

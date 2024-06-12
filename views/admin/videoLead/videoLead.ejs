@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Lead with Socket.IO</title>
+</head>
+<body>
+    <div id="adminFunctions">
+        <div id="videoLeadCategory" class="category">
+            <h2>Video Lead</h2>
+            <div id="videoLeadContent">
+                <div class="video-lead-section">
+                    <p>Video Lead Content goes here...</p>
+                    <button id="startStreamingButton">Start Streaming</button>
+                    <video id="localVideo" autoplay playsinline></video>
+                    <video id="remoteVideo" autoplay playsinline></video>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const socket = io('/video_lead');
+            const localVideo = document.getElementById('localVideo');
+            const remoteVideo = document.getElementById('remoteVideo');
+            const startStreamingButton = document.getElementById('startStreamingButton');
+
+            let localStream;
+            let peerConnection;
+
+            const iceServers = {
+                iceServers: [
+                    { urls: 'stun:stun.l.google.com:19302' },
+                ],
+            };
+
+            const createPeerConnection = () => {
+                const pc = new RTCPeerConnection(iceServers);
+
+                pc.onicecandidate = (event) => {
+                    if (event.candidate) {
+                        socket.emit('ice-candidate', event.candidate);
+                    }
+                };
+
+                pc.ontrack = (event) => {
+                    remoteVideo.srcObject = event.streams[0];
+                };
+
+                return pc;
+            };
+
+            const startStreaming = async () => {
+                try {
+                    localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+                    localVideo.srcObject = localStream;
+
+                    peerConnection = createPeerConnection();
+
+                    localStream.getTracks().forEach(track => peerConnection.addTrack(track, localStream));
+
+                    const offer = await peerConnection.createOffer();
+                    await peerConnection.setLocalDescription(offer);
+
+                    socket.emit('video', { type: 'offer', sdp: offer });
+                } catch (error) {
+                    console.error('Error accessing media devices.', error);
+                }
+            };
+
+            socket.on('connect', () => {
+                console.log('Connected to /video_lead namespace');
+            });
+
+            socket.on('video', async (message) => {
+                if (message.type === 'offer') {
+                    if (!peerConnection) {
+                        peerConnection = createPeerConnection();
+                    }
+
+                    await peerConnection.setRemoteDescription(new RTCSessionDescription(message.sdp));
+
+                    const answer = await peerConnection.createAnswer();
+                    await peerConnection.setLocalDescription(answer);
+
+                    socket.emit('video', { type: 'answer', sdp: answer });
+                } else if (message.type === 'answer') {
+                    await peerConnection.setRemoteDescription(new RTCSessionDescription(message.sdp));
+                } else if (message.type === 'ice-candidate') {
+                    try {
+                        await peerConnection.addIceCandidate(message.candidate);
+                    } catch (error) {
+                        console.error('Error adding received ice candidate', error);
+                    }
+                }
+            });
+
+            socket.on('disconnect', () => {
+                console.log('Disconnected from /video_lead namespace');
+            });
+
+            startStreamingButton.addEventListener('click', startStreaming);
+        });
+    </script>
+</body>
+</html>

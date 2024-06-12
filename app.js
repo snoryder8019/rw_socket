@@ -59,7 +59,7 @@ async function startApp() {
   app.use(express.static(path.join(__dirname, 'public')));
 
   const cors = require('cors');
-  app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
+  app.use(cors({ origin: 'https://royal.w2marketing.biz', credentials: true }));
 
 
  

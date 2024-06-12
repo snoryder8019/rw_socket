@@ -1,40 +1,40 @@
 <div id="admin">
     <button class="collapsible">Chat<span class="carrot">&#9654;</span></button>
-    <div class="content">Content for Chat</div>
+    <div class="content" data-url="/chat/load"><%-include ("./chat/index")%></div>
 
     <button class="collapsible">Users<span class="carrot">&#9654;</span></button>
-    <div class="content">Content for Users</div>
+    <div class="content" data-url="/users/load"><%-include ('./users/index')%></div>
 
     <button class="collapsible">Games<span class="carrot">&#9654;</span></button>
-    <div class="content">Content for Games</div>
+    <div class="content" data-url="/games/load">Content for Games</div>
 
     <button class="collapsible">videoLead<span class="carrot">&#9654;</span></button>
-    <div class="content">Content for videoLead</div>
+    <div class="content"><%-include("./videoLead/videoLead")%>>
+       </div>
 
     <button class="collapsible">VideoProduction<span class="carrot">&#9654;</span></button>
-    <div class="content">Content for VideoProduction</div>
+    <div class="content" data-url="/videoProduction/load">Content for VideoProduction</div>
 
     <button class="collapsible">BingoLead<span class="carrot">&#9654;</span></button>
-    <div class="content">Content for BingoLead</div>
+    <div class="content" data-url="/bingoLead/load">Content for BingoLead</div>
 
     <button class="collapsible">Tickets<span class="carrot">&#9654;</span></button>
-    <div class="content">Content for Tickets</div>
+    <div class="content" data-url="/tickets/load">Content for Tickets</div>
 
     <button class="collapsible">Clubs<span class="carrot">&#9654;</span></button>
-    <div class="content">Content for Clubs</div>
+    <div class="content" data-url="/clubs/load">Content for Clubs</div>
 
     <button class="collapsible">Blogs<span class="carrot">&#9654;</span></button>
-    <div class="content">Content for Blogs</div>
+    <div class="content" data-url="/blogs/load">Content for Blogs</div>
 
     <button class="collapsible">WebApp<span class="carrot">&#9654;</span></button>
-    <div class="content">Content for WebApp</div>
+    <div class="content" data-url="/webApp/load">Content for WebApp</div>
 
     <button class="collapsible">Notifications<span class="carrot">&#9654;</span></button>
-    <div class="content">Content for Notifications</div>
- 
-    <button class="collapsible">Permissions<span class="carrot">&#9654;</span></button>
-    <div class="content">Content for Permissions</div>
+    <div class="content" data-url="/notifications/load"><%-include('./notifications/index')%></div>
 
+    <button class="collapsible">Permissions<span class="carrot">&#9654;</span></button>
+    <div class="content" data-url="/permissions/load"><%-include('./permissions/index')%></div>
 </div>
 
 <style>
@@ -87,8 +87,43 @@
                 } else {
                     content.style.display = "block";
                     carrot.classList.add('rotate');
+                    observeAndLoadContent(content);
                 }
             });
+        }
+
+        const observer = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const content = entry.target;
+                    if (!content.dataset.loaded) {
+                        loadContent(content);
+                    }
+                }
+            });
+        });
+
+        function observeAndLoadContent(content) {
+            if (content && content.getAttribute('data-url')) {
+                observer.observe(content);
+            }
+        }
+
+        async function loadContent(content) {
+            const url = content.getAttribute('data-url');
+            if (!url || url === 'false') {
+                return; // Skip loading if data-url is false or not provided
+            }
+            try {
+                const response = await fetch(url);
+                const data = await response.text();
+                content.innerHTML = data;
+                content.dataset.loaded = true; // Mark as loaded
+                observer.unobserve(content); // Stop observing once loaded
+            } catch (error) {
+                console.error(`Error loading content from ${url}:`, error);
+                content.innerHTML = '<p>Error loading content</p>';
+            }
         }
     });
 </script>
