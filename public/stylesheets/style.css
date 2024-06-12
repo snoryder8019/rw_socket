@@ -584,4 +584,12 @@ input {
   animation: flashMsg 2.8s ease-in-out 0s 1;
 }
 
+#localVideo {
+  width: 100%;
+}
+
+#remoteVideo {
+  width: 100%;
+}
+
 /*# sourceMappingURL=style.css.map */

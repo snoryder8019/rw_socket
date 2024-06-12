@@ -1,3 +1,5 @@
+<!-- views/admin/videoLead/videoLead.ejs -->
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -14,7 +16,6 @@
                     <p>Video Lead Content goes here...</p>
                     <button id="startStreamingButton">Start Streaming</button>
                     <video id="localVideo" autoplay playsinline></video>
-                    <video id="remoteVideo" autoplay playsinline></video>
                 </div>
             </div>
         </div>
@@ -25,7 +26,6 @@
         document.addEventListener('DOMContentLoaded', () => {
             const socket = io('/video_lead');
             const localVideo = document.getElementById('localVideo');
-            const remoteVideo = document.getElementById('remoteVideo');
             const startStreamingButton = document.getElementById('startStreamingButton');
 
             let localStream;
@@ -47,7 +47,7 @@
                 };
 
                 pc.ontrack = (event) => {
-                    remoteVideo.srcObject = event.streams[0];
+                    // Handle the track event if needed
                 };
 
                 return pc;
@@ -76,18 +76,7 @@
             });
 
             socket.on('video', async (message) => {
-                if (message.type === 'offer') {
-                    if (!peerConnection) {
-                        peerConnection = createPeerConnection();
-                    }
-
-                    await peerConnection.setRemoteDescription(new RTCSessionDescription(message.sdp));
-
-                    const answer = await peerConnection.createAnswer();
-                    await peerConnection.setLocalDescription(answer);
-
-                    socket.emit('video', { type: 'answer', sdp: answer });
-                } else if (message.type === 'answer') {
+                if (message.type === 'answer') {
                     await peerConnection.setRemoteDescription(new RTCSessionDescription(message.sdp));
                 } else if (message.type === 'ice-candidate') {
                     try {

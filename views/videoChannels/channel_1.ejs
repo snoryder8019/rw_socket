@@ -1,0 +1,82 @@
+<!-- views/videoChannels/channel_1.ejs -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Channel 1</title>
+</head>
+<body>
+    <div id="videoChannelContent">
+        <div class="video-channel-section">
+            <p>Video Channel 1 Content goes here...</p>
+            <video id="remoteVideo" autoplay playsinline></video>
+        </div>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const socket = io('/video_channel_1');
+            const remoteVideo = document.getElementById('remoteVideo');
+            let peerConnection;
+
+            const iceServers = {
+                iceServers: [
+                    { urls: 'stun:stun.l.google.com:19302' },
+                ],
+            };
+
+            const createPeerConnection = () => {
+                const pc = new RTCPeerConnection(iceServers);
+
+                pc.onicecandidate = (event) => {
+                    if (event.candidate) {
+                        socket.emit('ice-candidate', event.candidate);
+                    }
+                };
+
+                pc.ontrack = (event) => {
+                    if (remoteVideo.srcObject !== event.streams[0]) {
+                        remoteVideo.srcObject = event.streams[0];
+                    }
+                };
+
+                return pc;
+            };
+
+            socket.on('connect', () => {
+                console.log('Connected to /video_channel_1 namespace');
+            });
+
+            socket.on('video', async (message) => {
+                if (message.type === 'offer') {
+                    if (!peerConnection) {
+                        peerConnection = createPeerConnection();
+                    }
+
+                    await peerConnection.setRemoteDescription(new RTCSessionDescription(message.sdp));
+
+                    const answer = await peerConnection.createAnswer();
+                    await peerConnection.setLocalDescription(answer);
+
+                    socket.emit('video', { type: 'answer', sdp: answer });
+                } else if (message.type === 'answer') {
+                    await peerConnection.setRemoteDescription(new RTCSessionDescription(message.sdp));
+                } else if (message.type === 'ice-candidate') {
+                    try {
+                        await peerConnection.addIceCandidate(message.candidate);
+                    } catch (error) {
+                        console.error('Error adding received ice candidate', error);
+                    }
+                }
+            });
+
+            socket.on('disconnect', () => {
+                console.log('Disconnected from /video_channel_1 namespace');
+            });
+        });
+    </script>
+</body>
+</html>

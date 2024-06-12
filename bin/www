@@ -1,9 +1,12 @@
 #!/usr/bin/env node
 
-const { app } = require('../app');
-const debug = require('debug')('project:server');
+/**
+ * Module dependencies.
+ */
+
+const {app} = require('../app');
+const debug = require('debug')('yourapp:server');
 const http = require('http');
-const socketIo = require('socket.io');
 
 /**
  * Get port from environment and store in Express.
@@ -17,7 +20,6 @@ app.set('port', port);
  */
 
 const server = http.createServer(app);
-const io = socketIo(server);
 
 /**
  * Listen on provided port, on all network interfaces.
@@ -28,8 +30,9 @@ server.on('error', onError);
 server.on('listening', onListening);
 
 /**
- * Configure Socket.io namespaces.
+ * Configure Socket.io.
  */
+const io = require('socket.io')(server);
 
 const mainChat = require('../plugins/socket_io/setup');
 mainChat.setupSocketIO(server);
@@ -37,22 +40,27 @@ mainChat.setupSocketIO(server);
 const videoLead = require('../plugins/socket_io/videoLead');
 videoLead.setupVideoLead(io);
 
+const videoChannel = require('../plugins/socket_io/videoChannels/channel_1');
+videoChannel.setupVideoChannel(io);
+
 /**
  * Normalize a port into a number, string, or false.
  */
 
 function normalizePort(val) {
-    const port = parseInt(val, 10);
+  const port = parseInt(val, 10);
 
-    if (isNaN(port)) {
-        return val;
-    }
+  if (isNaN(port)) {
+    // named pipe
+    return val;
+  }
 
-    if (port >= 0) {
-        return port;
-    }
+  if (port >= 0) {
+    // port number
+    return port;
+  }
 
-    return false;
+  return false;
 }
 
 /**
@@ -60,27 +68,27 @@ function normalizePort(val) {
  */
 
 function onError(error) {
-    if (error.syscall !== 'listen') {
-        throw error;
-    }
+  if (error.syscall !== 'listen') {
+    throw error;
+  }
 
-    const bind = typeof port === 'string'
-        ? 'Pipe ' + port
-        : 'Port ' + port;
+  const bind = typeof port === 'string'
+    ? 'Pipe ' + port
+    : 'Port ' + port;
 
-    // handle specific listen errors with friendly messages
-    switch (error.code) {
-        case 'EACCES':
-            console.error(bind + ' requires elevated privileges');
-            process.exit(1);
-            break;
-        case 'EADDRINUSE':
-            console.error(bind + ' is already in use');
-            process.exit(1);
-            break;
-        default:
-            throw error;
-    }
+  // handle specific listen errors with friendly messages
+  switch (error.code) {
+    case 'EACCES':
+      console.error(bind + ' requires elevated privileges');
+      process.exit(1);
+      break;
+    case 'EADDRINUSE':
+      console.error(bind + ' is already in use');
+      process.exit(1);
+      break;
+    default:
+      throw error;
+  }
 }
 
 /**
@@ -88,9 +96,9 @@ function onError(error) {
  */
 
 function onListening() {
-    const addr = server.address();
-    const bind = typeof addr === 'string'
-        ? 'pipe ' + addr
-        : 'port ' + addr.port;
-    debug('Listening on ' + bind);
+  const addr = server.address();
+  const bind = typeof addr === 'string'
+    ? 'pipe ' + addr
+    : 'port ' + addr.port;
+  debug('Listening on ' + bind);
 }
