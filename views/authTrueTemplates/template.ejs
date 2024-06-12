@@ -1,14 +1,112 @@
 <h1>AUTHORIZED VIEW</h1>
-<div style="background-image: url('./images/span1.png');" class="auth_view_true">
+<div class="auth_view_true" style="background-image: url('./images/span1.png');"></div>
 
+<div class="auth_view_true" style="background-image: url('./images/span2.png');">
+  <div class="games_inner" id="auth-view2"></div>
+  <div id="game-container">
+    <div id="game-div">
+      <h1>Welcome>Welcome to the Game Launcher</h1>
+      <button id="create-game-button">Create Domino Game</button>
+      <div id="game-sessions"></div>
+    </div>
+  </div> <!-- Game content will be loaded here -->
 </div>
 
-<div style="background-image: url('./images/span2.png');" class="auth_view_true">
-    <div class="loaderEmpty">LOADER</div>
-</div>
+<div class="auth_view_true" style="background-image: url('./images/span3.png');"></div>
+<%- include('../videoChannels/channel_1')%>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var socket = io();
+    var userId = 'your-user-id'; // Set this to the logged-in user's ID
 
-<div style="background-image: url('./images/span3.png');" class="auth_view_true">
+    var createGameButton = document.getElementById('create-game-button');
+    createGameButton.addEventListener('click', function() {
+      fetch('/games/create', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'user-id': userId,
+        },
+        body: JSON.stringify({ gameType: 'domino' }),
+      })
+      .then(response => response.json())
+      .then(gameSession => {
+        console.log('Game session created:', gameSession);
+      })
+      .catch(error => console.error('Error creating game session:', error));
+    });
 
-</div>
+    socket.on('newGameSession', function(gameSession) {
+      var gameSessionsDiv = document.getElementById('game-sessions');
+      var newGameDiv = document.createElement('div');
+      newGameDiv.innerHTML = `Game ID: ${gameSession._id} - ${gameSession.gameType} - <button onclick="joinGame('${gameSession._id}')">Join</button>`;
+      gameSessionsDiv.appendChild(newGameDiv);
+    });
 
-    
+    socket.on('updateGameSession', function(gameSession) {
+      // Update game session UI
+      console.log('Game session updated:', gameSession);
+    });
+
+    socket.on('gameStarted', function(gameSession) {
+      // Handle game started event
+      console.log('Game started:', gameSession);
+    });
+
+    socket.on('gameRestarted', function(gameSession) {
+      // Handle game restarted event
+      console.log('Game restarted:', gameSession);
+    });
+
+    var authView2 = document.getElementById('auth-view2');
+   // authView2.style.backgroundImage = 'url(https://games.w2marketing.biz/images/span2.png)';
+
+    // Load game content into the game-container div
+    var gameContainer = document.getElementById('game-container');
+    gameContainer.innerHTML = `
+      <h2>Welcome to the Royal World Games Launcher</h2>      
+      <button onclick="createGame('domino')">Create Domino Game</button>
+      <button onclick="createGame('bingo')">Create Bingo Game</button>
+      <div id="created-game-sessions"></div>
+    `;
+  });
+
+  function createGame(gameType) {
+    var userId = 'your-user-id'; // Ensure this is accessible
+    fetch('https://games.w2marketing.biz/games/create', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'user-id': userId,
+        },
+      credentials:'include',
+      body: JSON.stringify({ gameType: gameType }),
+    })
+    .then(response => response.json())
+    .then(gameSession => {
+      console.log('Game session created:', gameSession);
+      var createdGameSessionsDiv = document.getElementById('created-game-sessions');
+      var newGameDiv = document.createElement('div');
+      newGameDiv.innerHTML = `Game ID: ${gameSession._id} - ${gameSession.gameType}`;
+      createdGameSessionsDiv.appendChild(newGameDiv);
+    })
+    .catch(error => console.error('Error creating game session:', error));
+  }
+
+  function joinGame(gameId) {
+    var userId = 'your-user-id'; // Ensure this is accessible
+    fetch(`https://games.w2marketing.biz/games/join/${gameId}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'user-id': userId,
+      },
+    })
+    .then(response => response.json())
+    .then(gameSession => {
+      console.log('Joined game session:', gameSession);
+    })
+    .catch(error => console.error('Error joining game session:', error));
+  }
+</script>

@@ -59,9 +59,15 @@ async function startApp() {
   app.use(express.static(path.join(__dirname, 'public')));
 
   const cors = require('cors');
-  app.use(cors({ origin: 'https://royal.w2marketing.biz', credentials: true }));
-
-
+  const corsOptions = {
+    origin: 'https://games.w2marketing.biz',
+    methods: ['GET', 'POST'],
+    allowedHeaders: ['Content-Type', 'user-id'],
+    credentials: true 
+  }
+  // Configure CORS to allow requests from your main domain
+  app.options("*",cors(corsOptions))
+  app.use(cors(corsOptions));
  
   app.use('/', indexRouter);
   app.use('/admin', adminRouter);

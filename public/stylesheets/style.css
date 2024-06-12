@@ -476,6 +476,9 @@ input {
 }
 
 .auth_view_true {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -491,6 +494,9 @@ input {
 }
 
 .auth_view_false {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -590,6 +596,16 @@ input {
 
 #remoteVideo {
   width: 100%;
+}
+
+#game-container {
+  color: black;
+  width: 90%;
+  max-width: 800px;
+  background-color: rgba(255, 255, 255, 0.829);
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.442);
 }
 
 /*# sourceMappingURL=style.css.map */
