@@ -25,7 +25,7 @@ const roomIdObj='660834dfe387817ec2612c78'
 
 const savechatMessage = async (userKey, displayName, roomId, messageText, avatarUrl) => {
     try {
-        console.log(`/socket_io/db.js: userKey ${userKey}, displayName: ${displayName},roomId: ${roomId}`)
+        console.log(`/plugins/socket_io/db.js: userKey ${userKey}, displayName: ${displayName},roomId: ${roomId}`)
         const db = getDb();
         const chatMessagesCollection = db.collection("chat_messages_meta");
         const chatRoomCollection = db.collection("chat_room_meta");

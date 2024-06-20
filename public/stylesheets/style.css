@@ -270,6 +270,14 @@ input {
   width: 30px;
 }
 
+.user {
+  min-width: 100px;
+  border: 1px solid #d7b436;
+  overflow: hidden;
+  margin: 1px;
+  padding: 1;
+}
+
 .userNavLink {
   filter: invert(1);
   color: #d7b436;
@@ -354,6 +362,36 @@ input {
   border-bottom-right-radius: 25px;
   background: linear-gradient(to left, rgb(168, 68, 158), rgba(122, 19, 98, 0.923));
 }
+.userInfoBox {
+  position: absolute;
+  background-color: white;
+  border: 1px solid #ccc;
+  padding: 10px;
+  display: none;
+  z-index: 1000;
+}
+
+.userInfoBox img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+}
+
+.userInfoBox .icons {
+  display: flex;
+  gap: 10px;
+}
+
+.userInfoBox .icons img {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+}
+
+.usersOnline {
+  cursor: pointer;
+}
+
 .usersOnline {
   background-color: #410b4b;
   max-width: 35px;
@@ -606,6 +644,54 @@ input {
   border-radius: 10px;
   padding: 20px;
   box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.442);
+}
+
+#chatTabs {
+  overflow-y: scroll;
+  background-color: #c878d7;
+  display: flex;
+  min-width: 100%;
+  border-bottom: 2px solid #333; /* Border to separate tabs from content */
+}
+
+.tab_section {
+  color: #d7b436;
+  background-color: #410b4b;
+  flex: 1; /* Ensures tabs are equally spaced */
+  border: 1px solid #ccc; /* Border around each tab */
+  border-bottom: none; /* Remove bottom border to connect with content area */
+  padding: 10px; /* Padding for better click area */
+  text-align: center; /* Center text within tabs */
+  cursor: pointer; /* Pointer cursor to indicate clickable tabs */
+  transition: background-color 0.3s, color 0.3s; /* Smooth transition for hover effect */
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+  border-top-right-radius: 18px;
+  border-top-left-radius: 8px;
+}
+
+.tab_section:hover {
+  background-color: #f0f0f0; /* Light grey background on hover */
+  color: #410b4b; /* Text color change on hover */
+  border-bottom-right-radius: 3px;
+  border-bottom-left-radius: 3px;
+  border-top-right-radius: 18px;
+  border-top-left-radius: 8px;
+}
+
+.tab_section.join {
+  color: #d7b436;
+  background-color: #8a3898;
+}
+
+.tab_section.active {
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+  border-top-right-radius: 8px;
+  border-top-left-radius: 8px;
+  background-color: #d7b436; /* Active tab background color */
+  color: #711881; /* Active tab text color */
+  border-bottom: 2px solid #410b4b; /* Match the bottom border with background color */
 }
 
 /*# sourceMappingURL=style.css.map */

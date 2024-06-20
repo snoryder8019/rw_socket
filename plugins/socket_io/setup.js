@@ -28,7 +28,7 @@ const configureNamespace = (io, namespace) => {
 
     nsp.on('connection', (socket) => {
         const userName = socket.request.user.firstName;
-        console.log(`${userName} connected to ${namespace}`);
+        console.log(`rw_socket: ${userName} connected to ${namespace}`);
         const avatarImage = socket.request.user.images?.find(img => img.avatarTag === true) || null;
         const avatarThumbnailUrl = avatarImage ? avatarImage.thumbnailUrl : null;
 
@@ -47,6 +47,7 @@ const configureNamespace = (io, namespace) => {
         }));
 
         socket.on('chat message', async (message) => {
+            console.log(`/plugins/socket_io/setup.js: user: ${socket.request.user.email}`)
             const userAvatarImage = socket.request.user.images.find(img => img.avatarTag === true);
             const avatarThumbnailUrl = userAvatarImage ? userAvatarImage.thumbnailUrl : 'defaultThumbnail.png';
             const userId = socket.request.user._id;

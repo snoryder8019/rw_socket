@@ -1,7 +1,6 @@
 <div id="chat-window-basic">
     <%- include('../animations/confetti')%>
 
-
     <% if(typeof user === 'object' && user) { %>
         <script>var firstName = "<%= user.firstName %>";</script>
         
@@ -10,6 +9,13 @@
                 <div class="loaderDiv"><h3>loading chatroom...</h3></div>
                 <div class="loaderDiv"><div class="wheel"></div></div>
             </div>
+        </div>
+        <div id="chatTabs">
+            <div class="tab_section active">main_chat</div>
+            <div class="tab_section">game_parlor_12</div>
+            <div class="tab_section">clubs_wine</div>
+            <div class="tab_section">alaska~offline</div>
+            <div class="tab_section join">join_room_+</div>
         </div>
         <div id="chat">
             <div id="messages"></div>
@@ -23,93 +29,130 @@
 </div>
 <script src="/socket.io/socket.io.js"></script>
 <script>
-document.addEventListener('DOMContentLoaded', () => {
-    var socket = io('/main_chat');
-    let currentPage = 1;
-    const messagesPerPage = 12;
-
-    function requestInitialMessages() {
-        socket.emit('fetch messages', { roomId: 'YourRoomId', page: currentPage, messagesPerPage: messagesPerPage });
-    }
-
-    socket.on('messages fetched', (messages) => {
-        if (messages.length) {
-            const reversedMessages = messages.reverse();
-            reversedMessages.forEach(messageObject => {
-                let isOwnMessage = messageObject.user === "currentUserDisplayName";
-                addMessage(messageObject, isOwnMessage);
-            });
-            currentPage++;
-        }
-    });
-
-    function addMessage(messageObject, isOwnMessage = false) {
-        const messagesContainer = document.getElementById('messages');
-        const messageDiv = document.createElement('div');
-        messageDiv.className = isOwnMessage ? 'message ownMessage' : 'message';
-
-        const messageAvatar = document.createElement('img');
-        messageAvatar.className = 'usersOnline';
-        messageAvatar.src = messageObject.thumbnailUrl || `/images/userHeadshots/defaultThumbnail.png`;
-
-        const messageTextSpan = document.createElement('span');
-        messageTextSpan.className = 'messageText';
-        messageTextSpan.textContent = messageObject.message || 'No message text.';
-
-        messageDiv.appendChild(messageAvatar);
-        messageDiv.appendChild(messageTextSpan);
-        messagesContainer.appendChild(messageDiv);
-
-        // Scroll to the bottom of the chat container
-        messagesContainer.scrollTop = messagesContainer.scrollHeight;
-    }
-
-    const messageContainer = document.getElementById('messages');
-    messageContainer.addEventListener('scroll', () => {
-        if (messageContainer.scrollTop < 50) {
+    document.addEventListener('DOMContentLoaded', () => {
+        var socket = io('/main_chat');
+        let currentPage = 1;
+        const messagesPerPage = 12;
+    
+        function requestInitialMessages() {
             socket.emit('fetch messages', { roomId: 'YourRoomId', page: currentPage, messagesPerPage: messagesPerPage });
         }
-    });
-
-    socket.on('chat message', (msg) => {
-        addMessage(msg, msg.user === 'You');
-    });
-
-    document.getElementById('submitChat').addEventListener('click', () => {
-        const input = document.getElementById('chatInput');
-        const message = input.value.trim();
-        if (message !== '') {
-            socket.emit('chat message', message);
-            input.value = '';
-        }
-    });
-
-    socket.on('user list', (users) => {
-        const userList = document.getElementById('userList');
-        userList.innerHTML = '';
-        users.forEach((user) => {
-            const div = document.createElement('div');
-            div.className = 'usersOnline';
-            const img = document.createElement('img');
-            img.className = 'userImage';
-            img.src = user.avatarThumbnailUrl || '/path/to/default/avatar/image.jpg';
-            div.appendChild(img);
-            userList.appendChild(div);
+    
+        socket.on('messages fetched', (messages) => {
+            if (messages.length) {
+                const reversedMessages = messages.reverse();
+                reversedMessages.forEach(messageObject => {
+                    let isOwnMessage = messageObject.user === "currentUserDisplayName";
+                    addMessage(messageObject, isOwnMessage);
+                });
+                currentPage++;
+            }
         });
+    
+        function addMessage(messageObject, isOwnMessage = false) {
+            const messagesContainer = document.getElementById('messages');
+            const shouldScroll = messagesContainer.scrollTop + messagesContainer.clientHeight + 50 >= messagesContainer.scrollHeight;
+    
+            const messageDiv = document.createElement('div');
+            messageDiv.className = isOwnMessage ? 'message ownMessage' : 'message';
+    
+            const messageAvatar = document.createElement('img');
+            messageAvatar.className = 'usersOnline';
+            messageAvatar.src = messageObject.thumbnailUrl || `/images/userHeadshots/defaultThumbnail.png`;
+    
+            const messageTextSpan = document.createElement('span');
+            messageTextSpan.className = 'messageText';
+            messageTextSpan.textContent = messageObject.message || 'No message text.';
+    
+            const actionsDiv = document.createElement('div');
+            actionsDiv.className = 'messageActions';
+            actionsDiv.id = `${messageObject.id}_actions`;
+    
+            const heartIcon = document.createElement('span');
+            heartIcon.textContent = '❤️';
+            const flagIcon = document.createElement('span');
+            flagIcon.textContent = '🚩';
+            const threeDotsIcon = document.createElement('span');
+            threeDotsIcon.textContent = '⋮';
+    
+            actionsDiv.appendChild(heartIcon);
+            actionsDiv.appendChild(flagIcon);
+            actionsDiv.appendChild(threeDotsIcon);
+    
+            messageDiv.appendChild(messageAvatar);
+            messageDiv.appendChild(messageTextSpan);
+            messageDiv.appendChild(actionsDiv);
+            messagesContainer.appendChild(messageDiv);
+    
+            if (shouldScroll) {
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            }
+        }
+    
+        socket.on('chat message', (msg) => {
+            console.log('chatting...')
+            addMessage(msg, msg.user === 'You');
+        });
+    
+        document.getElementById('submitChat').addEventListener('click', () => {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+            if (message !== '') {
+                socket.emit('chat message', message);
+                input.value = '';
+            }
+        });
+    
+        socket.on('user list', (users) => {
+            const userList = document.getElementById('userList');
+            userList.innerHTML = '';
+            users.forEach((user) => {
+                const div = document.createElement('div');
+                div.className = 'usersOnline';
+                div.dataset.userId = user.id;
+                div.dataset.userName = user.name;
+                div.dataset.userAvatar = user.avatarThumbnailUrl || '/path/to/default/avatar/image.jpg';
+    
+                const img = document.createElement('img');
+                img.className = 'userImage';
+                img.src = div.dataset.userAvatar;
+                div.appendChild(img);
+    
+                userList.appendChild(div);
+            });
+        });
+    
+        socket.on('connect_error', (error) => {
+            console.log('Connection Error:', error);
+        });
+    
+        const chatToggle = document.getElementById('chatToggle');
+        const chatWindow = document.getElementById('chat-window-basic');
+        chatToggle.addEventListener('click', () => {
+            const isOpen = chatWindow.style.transform === "translateX(-106%)";
+            chatWindow.style.transform = isOpen ? "translateX(0%)" : "translateX(-106%)";
+            chatToggle.innerHTML = isOpen ? "chat" : "close";
+        });
+    
+        document.addEventListener('click', (event) => {
+            if (event.target.classList.contains('usersOnline')) {
+                const userId = event.target.parentElement.dataset.userId;
+                const userName = event.target.parentElement.dataset.userName;
+                const userAvatar = event.target.parentElement.dataset.userAvatar;
+    
+                const userInfoBox = document.getElementById('userInfoBox');
+                userInfoBox.querySelector('.userName').textContent = userName;
+                userInfoBox.querySelector('.userAvatar').src = userAvatar;
+    
+                userInfoBox.style.left = `${event.pageX}px`;
+                userInfoBox.style.top = `${event.pageY}px`;
+                userInfoBox.style.display = 'block';
+            } else {
+                const userInfoBox = document.getElementById('userInfoBox');
+                userInfoBox.style.display = 'none';
+            }
+        });
+    
+        requestInitialMessages();
     });
-
-    socket.on('connect_error', (error) => {
-        console.log('Connection Error:', error);
-    });
-
-    const chatToggle = document.getElementById('chatToggle');
-    const chatWindow = document.getElementById('chat-window-basic');
-    chatToggle.addEventListener('click', () => {
-        const isOpen = chatWindow.style.transform === "translateX(-106%)";
-        chatWindow.style.transform = isOpen ? "translateX(0%)" : "translateX(-106%)";
-        chatToggle.innerHTML = isOpen ? "chat" : "close";
-    });
-
-    requestInitialMessages();
-});
 </script>

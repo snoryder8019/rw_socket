@@ -20,12 +20,12 @@ router.get('/load', async (req, res) => {
 
     const userHtml = users.map(user => `
       <div class="user">
-        <p>${user.firstName} ${user.lastName}</p>
+        <p>${user.firstName}</p>
+        <p> ${user.lastName}</p>
         <p>${user.email}</p>
-        <button>permissions</button>
-        <button>edit</button>
-        <button>contact</button>
-      </div>
+        <p><button>contact</button></p>
+        <p> <button>edit</button></p>
+        </div>
     `).join('');
 
     res.send(`

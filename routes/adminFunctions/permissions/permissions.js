@@ -16,7 +16,8 @@ router.get('/load', async (req, res) => {
 
     const userHtml = users.map(user => `
       <div class="user">
-        <p>${user.firstName} ${user.lastName}</p>
+      <p>${user.firstName}</p>
+        <p> ${user.lastName}</p>
         <p>${user.email}</p>
         <button onclick="editPermissions('${user._id}')">Edit Permissions</button>
       </div>
