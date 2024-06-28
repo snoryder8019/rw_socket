@@ -2,7 +2,7 @@ const { MongoClient } = require('mongodb');
 const config = require('../../config/config');
 const env = require('dotenv').config();
 
-const uri = "mongodb+srv://"+process.env.MONUSR+":"+encodeURIComponent(process.env.MONPASS)+config.DB_URL+config.DB_NAME+"?retryWrites=true&w=majority";
+const uri =   "mongodb://"+config.DB_URL+"/"+config.DB_NAME+"?retryWrites=true&w=majority"
 
 let _db;
 

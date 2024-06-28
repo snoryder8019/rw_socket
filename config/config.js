@@ -4,7 +4,7 @@ const config =
     //breaking changes below
     "env":"dev",//test,prod,
     "app_name":"rw_socket",
-    "DB_NAME":"rw_socket", 
+    "DB_NAME":"yourdatabase", 
     "DB_URL":process.env.DB_URL,
     "baseUrl": process.env.BASE_URL,
     'ticketsEmail':"scott@w2marketing.biz",

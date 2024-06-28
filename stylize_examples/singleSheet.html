@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Combined Effects</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            height: 100%;
+            font-family: 'Arial', sans-serif;
+        }
+
+        .parallax-container {
+            perspective: 1px;
+            height: 100vh;
+            overflow-x: hidden;
+            overflow-y: auto;
+            scroll-behavior: smooth;
+        }
+
+        .parallax-item {
+            position: relative;
+            height: 100vh;
+            background: lightgrey;
+            transform-style: preserve-3d;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+        }
+
+        #item1 { background-color: #FF5733; }
+        #item2 { background-color: #33FF57; }
+        #item3 { background-color: #3357FF; }
+        #item4 { background-color: #FF33A8; }
+        #item5 { background-color: #A833FF; }
+
+        .parallax-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-size: cover;
+            background-position: center;
+            z-index: -1;
+            transform: translateZ(-1px) scale(2);
+        }
+
+        @media (max-width: 768px) {
+            .parallax-item {
+                font-size: 1.5rem;
+            }
+        }
+
+        .neon-sign {
+            display: flex;
+            font-size: 5rem;
+            color: #fff;
+            text-transform: uppercase;
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+        }
+
+        .neon-sign span {
+            position: relative;
+            display: inline-block;
+            margin: 0 0.1em;
+            animation: flicker 1.5s infinite alternate;
+        }
+
+        .neon-sign span::before, .neon-sign span::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            opacity: 0.6;
+            filter: blur(10px);
+            z-index: -1;
+        }
+
+        .neon-sign span::before {
+            color: #f00;
+            animation: neon-glow 1.5s infinite alternate;
+        }
+
+        .neon-sign span::after {
+            color: #ff0;
+            animation: neon-glow 1.5s infinite alternate-reverse;
+        }
+
+        @keyframes flicker {
+            0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
+                opacity: 1;
+            }
+            20%, 24%, 55% {
+                opacity: 0.4;
+            }
+        }
+
+        @keyframes neon-glow {
+            from {
+                text-shadow: 
+                    0 0 10px rgb(119, 7, 91),
+                    0 0 20px rgb(119, 7, 91),
+                    0 0 30px rgb(119, 7, 91),
+                    0 0 40px #d7b436,
+                    0 0 70px #d7b436,
+                    0 0 80px #d7b436,
+                    0 0 100px #d7b436,
+                    0 0 150px #d7b436;
+            }
+            to {
+                text-shadow: 
+                    0 0 5px rgb(119, 7, 91),
+                    0 0 10px rgb(119, 7, 91),
+                    0 0 15px rgb(119, 7, 91),
+                    0 0 20px #d7b436,
+                    0 0 35px #d7b436,
+                    0 0 40px #d7b436,
+                    0 0 50px #d7b436,
+                    0 0 75px #d7b436;
+            }
+        }
+
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="parallax-container">
+        <div class="parallax-item" id="item1">Content 1</div>
+        <div class="parallax-item" id="item2">Content 2</div>
+        <div class="parallax-item" id="item3">Content 3</div>
+        <div class="parallax-item" id="item4">Content 4</div>
+        <div class="parallax-item" id="item5">Content 5</div>
+    </div>
+    <div class="neon-sign">
+        <span data-text="L">L</span><span data-text="I">I</span><span data-text="V">V</span><span data-text="E">E</span>
+        <span data-text="N">N</span><span data-text="O">O</span><span data-text="W">W</span><span data-text="!!">!!</span>
+    </div>
+    <canvas id="confettiCanvas"></canvas>
+    <script>
+        // Parabolic Scroll
+        document.addEventListener('scroll', function () {
+            const items = document.querySelectorAll('.parallax-item');
+            let scrollTop = document.documentElement.scrollTop;
+
+            items.forEach((item, index) => {
+                let offset = index * window.innerHeight;
+                let rate = (scrollTop - offset) * 0.5;
+                item.style.transform = `translateY(${rate}px)`;
+            });
+        });
+
+        // Confetti Pop
+        const canvas = document.getElementById('confettiCanvas');
+        const ctx = canvas.getContext('2d');
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const confettiPieces = [];
+        const colors = ['#711881', '#410b4b', '#3357FF', '#FF33A8', '#71188100'];
+
+        class Confetti {
+            constructor() {
+                this.x = canvas.width / 2;
+                this.y = canvas.height / 2;
+                this.w = Math.random() * 10 + 5;
+                this.h = Math.random() * 20 + 10;
+                this.color = colors[Math.floor(Math.random() * colors.length)];
+                this.angle = Math.random() * 360;
+                this.angleSpeed = Math.random() * 0.5 - 0.1;
+                this.speed = Math.random() * 6 + 2;
+                this.gravity = 0.05;
+                this.alpha = 1;
+                this.decay = Math.random() * 0.01 + 0.005;
+                this.vx = Math.random() * 4 - 2;
+                this.vy = Math.random() * 4 - 2;
+            }
+
+            update() {
+                this.vy += this.gravity;
+                this.x += this.vx;
+                this.y += this.vy;
+                this.alpha -= this.decay;
+            }
+
+            draw() {
+                ctx.save();
+                ctx.globalAlpha = this.alpha;
+                ctx.translate(this.x, this.y);
+                ctx.rotate(this.angle * Math.PI / 180);
+                ctx.fillStyle = this.color;
+                ctx.fillRect(-this.w / 2, -this.h / 2, this.w, this.h);
+                ctx.restore();
+            }
+        }
+
+        function initConfetti() {
+            for (let i = 0; i < 100; i++) {
+                confettiPieces.push(new Confetti());
+            }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            confettiPieces.forEach((piece, index) => {
+                piece.update();
+                if (piece.alpha <= 0) {
+                    confettiPieces.splice(index, 1);
+                } else {
+                    piece.draw();
+                }
+            });
+            requestAnimationFrame(animate);
+        }
+
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+
+        initConfetti();
+        animate();
+    </script>
+</body>
+</html>

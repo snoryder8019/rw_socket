@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mongo
+      # - linode
+    environment:
+      DB_URL: mongo:27017
+      DB_NAME: rw_socket
+      # LINODE_ACCESS: 0X64O2OXO8FYU2TH0PK2
+      # LINODE_SEC: rsrjZzDssQ7OoXF0C1OkwsbgDNDwsIdyalbbLeZs
+      # LINODE_URL: https://us-ord-1.linodeobjects.com
+      # LINODE_REGION: us-ord-1
+      # LINODE_BUCKET: royal-bucket
+
+  mongo:
+    image: mongo:latest
+    # env_file:
+    #   - .env
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+
+volumes:
+  mongo-data:

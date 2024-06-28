@@ -20,11 +20,10 @@ const sessionMiddleware = session({
   secret: process.env.SESHID,
   resave: true,
   saveUninitialized: true,
-  store: MongoStore.create({
-      mongoUrl:"mongodb+srv://"+process.env.MONUSR+":"+encodeURIComponent(process.env.MONPASS)+config.DB_URL+config.DB_NAME+"?retryWrites=true&w=majority"
-  })
-});
-
+ store: MongoStore.create({
+    mongoUrl: "mongodb://" + config.DB_URL + "/" + config.DB_NAME + "?retryWrites=true&w=majority"
+})
+})
 // Make sure to use this middleware with your app
 app.use(sessionMiddleware);
 
