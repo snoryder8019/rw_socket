@@ -11,11 +11,7 @@ services:
     environment:
       DB_URL: mongo:27017
       DB_NAME: rw_socket
-      # LINODE_ACCESS: 0X64O2OXO8FYU2TH0PK2
-      # LINODE_SEC: rsrjZzDssQ7OoXF0C1OkwsbgDNDwsIdyalbbLeZs
-      # LINODE_URL: https://us-ord-1.linodeobjects.com
-      # LINODE_REGION: us-ord-1
-      # LINODE_BUCKET: royal-bucket
+   
 
   mongo:
     image: mongo:latest
