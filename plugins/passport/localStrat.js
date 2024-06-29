@@ -119,7 +119,7 @@ router.post('/regUser', async (req, res) => {
             confirmationToken: confirmationToken, // Save the confirmation token to the user object
         });
 
-        const redirectUrl = req.headers.referer || '/default-route';
+        const redirectUrl = req.headers.referer || '/';
 
         if (createUserResult.success) {
 
