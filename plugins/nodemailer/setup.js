@@ -167,7 +167,7 @@ const oauthCallbackHandler = async (req, res) => {
         client_id: process.env.MS_CID,
         client_secret: process.env.MS_SEC_VALUE,
         code: req.query.code,
-        redirect_uri: 'http://localhost:3000/oauth/callback',
+        redirect_uri: `${config.baseUrl}oauth/callback`,
         grant_type: 'authorization_code'
     });
 
@@ -199,13 +199,13 @@ const oauthCallbackHandler = async (req, res) => {
 const emailOutGeneral = async (req, res) => {
     try {
         const { to, emailBody, username } = req.body;
-
+//
         // Read the email template
         const templatePath = path.join(__dirname, 'templates', 'generalBody.html');
         const htmlTemplate = fs.readFileSync(templatePath, 'utf8')
             .replace('{dynamicBody}', emailBody)
-            .replace('{dynamicLink}', 'https://cards.royalsplendor.com')
-            .replace('{unsubscribeLink}', 'https://cards.royalsplendor.com/unsubscribe'); // Assuming you have an unsubscribe link
+            .replace('{dynamicLink}', config.baseUrl)
+            .replace('{unsubscribeLink}', `${config.baseUrl}unsubscribe`); // Assuming you have an unsubscribe link
 
         // Create nodemailer transporter
         const transporter = nodemailer.createTransport({
@@ -220,7 +220,7 @@ const emailOutGeneral = async (req, res) => {
         const mailOptions = {
             from: process.env.GMAIL_USER, // Sender's email address
             to: to, // Recipient's email address
-            subject: 'Message from RHS Trading Cards', // Email subject
+            subject: `Message from: ${config.companyName}`, // Email subject
             html: htmlTemplate // Email content
         };
 
