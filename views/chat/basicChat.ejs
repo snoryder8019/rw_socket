@@ -50,7 +50,7 @@
         });
     
         function addMessage(messageObject, isOwnMessage = false) {
-            const messagesContainer = document.getElementById('messages');
+            const messagesContainer = document.getElementById('chat');
             const shouldScroll = messagesContainer.scrollTop + messagesContainer.clientHeight + 50 >= messagesContainer.scrollHeight;
     
             const messageDiv = document.createElement('div');
@@ -92,16 +92,25 @@
         socket.on('chat message', (msg) => {
             console.log('chatting...')
             addMessage(msg, msg.user === 'You');
+            const messagesContainer = document.getElementById('messages');
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
         });
     
-        document.getElementById('submitChat').addEventListener('click', () => {
+        document.getElementById('submitChat').addEventListener('click', sendMessage);
+        document.getElementById('chatInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+    
+        function sendMessage() {
             const input = document.getElementById('chatInput');
             const message = input.value.trim();
             if (message !== '') {
                 socket.emit('chat message', message);
                 input.value = '';
             }
-        });
+        }
     
         socket.on('user list', (users) => {
             const userList = document.getElementById('userList');
