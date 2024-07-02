@@ -1,5 +1,6 @@
 var express = require('express');
 var path = require('path');
+const cors = require('cors')
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const bodyParser = require('body-parser');
@@ -16,6 +17,19 @@ const expressSession = require('express-session')
 const {exporterRoute} = require('./plugins/puppeteer/setup');
 const noNos = require('./routes/securityFunctions/forbiddens');
 var app = express();
+app.enable("trust proxy")
+app.set("trust proxy", true)
+const corsOptions = {
+  origin: 'https://games.w2marketing.biz',
+  methods: ['GET', 'POST', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true,
+};
+
+app.use(cors(corsOptions));
+
+app.options('*', cors(corsOptions)); // Preflight response
+
 const sessionMiddleware = session({
   secret: process.env.SESHID,
   resave: true,
