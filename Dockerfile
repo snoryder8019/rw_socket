@@ -28,4 +28,4 @@ EXPOSE 3000
 RUN mkdir -p /data/db
 
 # Start MongoDB and the app
-CMD ["sh", "-c", "mongod & run dev"]
+CMD ["sh", "-c", "mongod & npm run dev"]
