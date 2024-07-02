@@ -2,13 +2,11 @@ const { MongoClient } = require('mongodb');
 const config = require('../../config/config');
 const env = require('dotenv').config();
 
-const uri =   "mongodb://"+config.DB_URL+"/"+config.DB_NAME+"?retryWrites=true&w=majority"
-
 let _db;
 
 const connect = async () => {
   if (!_db) {
-    const client = new MongoClient(uri);
+    const client = new MongoClient(config.db_uri);
     await client.connect();
     _db = client.db(config.DB_NAME);
     console.log("Connected to MongoDB");

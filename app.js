@@ -21,7 +21,7 @@ const sessionMiddleware = session({
   resave: true,
   saveUninitialized: true,
  store: MongoStore.create({
-    mongoUrl: "mongodb://" + config.DB_URL + "/" + config.DB_NAME + "?retryWrites=true&w=majority"
+    mongoUrl:config.db_uri
 })
 })
 // Make sure to use this middleware with your app
