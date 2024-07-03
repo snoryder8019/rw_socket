@@ -1,32 +1,98 @@
 <div id="settings">
-    <div class="collapse-section">
-        <h3 class="collapse-trigger" id="collapse_userImages"><span class="collapse_carrot">^</span> Your Images </h3>
-        <div class="collapsible" id="userImages"><%-include('images')%></div>
-    </div>
-    <div class="collapse-section">
-         <h3 class="collapse-trigger" id="collapse_websiteSettings"><span class="collapse_carrot">^</span> Website Settings </h3> 
-          <div class="collapsible" id="websiteSettings"><%-include('websiteSettings')%></div>
-    </div>
+    <button class="collapsible">Your Images<span class="carrot">&#9654;</span></button>
+    <div class="content" data-url="images"><%- include('images') %></div>
+
+    <button class="collapsible">Website Settings<span class="carrot">&#9654;</span></button>
+    <div class="content" data-url="websiteSettings"><%- include('websiteSettings') %></div>
 </div>
+
+<style>
+    .collapsible {
+        background-color: #f9f9f9;
+        color: #333;
+        cursor: pointer;
+        padding: 10px;
+        width: 100%;
+        border: none;
+        text-align: left;
+        outline: none;
+        font-size: 18px;
+        transition: background-color 0.3s;
+    }
+
+    .active, .collapsible:hover {
+        background-color: #ccc;
+    }
+
+    .content {
+        padding: 0 18px;
+        display: none;
+        overflow: hidden;
+        background-color: #f1f1f1;
+    }
+
+    .carrot {
+        float: right;
+        transition: transform 0.3s;
+    }
+
+    .rotate {
+        transform: rotate(90deg);
+    }
+</style>
+
 <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const collapsibles = document.getElementsByClassName('collapsible');
 
-document.addEventListener('DOMContentLoaded', function () {
-    var collapseTriggers = document.querySelectorAll('.collapse-trigger');
-    collapseTriggers.forEach(function(trigger) {
-        trigger.addEventListener('click', function() {
-            var content = this.nextElementSibling; // Targets the .collapsible div
-            content.classList.toggle('collapsed');
-            // Toggle the rotated class on the caret
-            var caret = this.querySelector('.collapse_carrot');
-            if (content.classList.contains('collapsed')) {
-                caret.classList.add('rotated');
-            } else {
-                caret.classList.remove('rotated');
-            }
+        for (let i = 0; i < collapsibles.length; i++) {
+            collapsibles[i].addEventListener('click', function () {
+                this.classList.toggle('active');
+                const content = this.nextElementSibling;
+                const carrot = this.querySelector('.carrot');
+                if (content.style.display === "block") {
+                    content.style.display = "none";
+                    carrot.classList.remove('rotate');
+                } else {
+                    content.style.display = "block";
+                    carrot.classList.add('rotate');
+                    observeAndLoadContent(content);
+                }
+            });
+        }
+
+        const observer = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const content = entry.target;
+                    if (!content.dataset.loaded) {
+                        loadContent(content);
+                    }
+                }
+            });
         });
+
+        function observeAndLoadContent(content) {
+            if (content && content.getAttribute('data-url')) {
+                observer.observe(content);
+            }
+        }
+
+        async function loadContent(content) {
+            const url = content.getAttribute('data-url');
+            if (!url || url === 'false') {
+                return; // Skip loading if data-url is false or not provided
+            }
+            try {
+                const response = await fetch(url);
+                const data = await response.text();
+                content.innerHTML = data;
+                content.dataset.loaded = true; // Mark as loaded
+                observer.unobserve(content); // Stop observing once loaded
+            } catch (error) {
+                console.error(`Error loading content from ${url}:`, error);
+                content.innerHTML = '<p>Error loading content</p>';
+            }
+        }
     });
-});
-
-
-
 </script>
