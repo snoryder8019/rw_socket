@@ -3,7 +3,7 @@
     <div class="content" data-url="/chat/load"><%-include ("./chat/index")%></div>
 
     <button class="collapsible">Users<span class="carrot">&#9654;</span></button>
-    <div class="content" data-url="/users/load"><%-include ('./users/index')%></div>
+    <div class="content"><%-include ('./users/index')%></div>
 
     <button class="collapsible">Games<span class="carrot">&#9654;</span></button>
     <div class="content" data-url="/games/load">Content for Games</div>
@@ -20,19 +20,18 @@
 
     <button class="collapsible">Help and Tickets<span class="carrot">&#9654;</span></button>
     <div class="content" data-url="/tickets/load">Content for Tickets</div>
-
+<!--dataurl for each subscriptiton in  div.adminWindow-->
     <button class="collapsible">Subscriptions<span class="carrot">&#9654;</span></button>
-    <div class="content" data-url="/subscriptions/load">Content for Subscriptions</div>
-
+    <div class="content"><%-include('./subscriptions/index')%></div>
 
     <button class="collapsible">Clubs Admin<span class="carrot">&#9654;</span></button>
-    <div class="content" data-url="/clubs/load">Content for Clubs</div>
+    <div class="content" ><%-include('./clubs/index')%></div>
 
     <button class="collapsible">Blogs Admin<span class="carrot">&#9654;</span></button>
     <div class="content" data-url="/blogs/load">Content for Blogs</div>
 
     <button class="collapsible">WebApp Settings<span class="carrot">&#9654;</span></button>
-    <div class="content" data-url="/webApp/load">Content for WebApp</div>
+    <div class="content" data-url="/webappSettings/load">Content for WebApp</div>
 
     <button class="collapsible">Notifications<span class="carrot">&#9654;</span></button>
     <div class="content" data-url="/notifications/load"><%-include('./notifications/index')%></div>

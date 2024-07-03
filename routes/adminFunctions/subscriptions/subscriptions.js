@@ -30,7 +30,7 @@ router.get('/load', async (req, res) => {
       </div>
 
       <h2>Create New Subscription</h2>
-      <form action="/subscriptions/addSubscription" method="POST">
+      <form class=adminForms action="/subscriptions/addSubscription" method="POST">
         <label for="name">Name:</label>
         <input type="text" name="name" id="name">
         <label for="type">Type:</label>
@@ -39,6 +39,36 @@ router.get('/load', async (req, res) => {
         <input type="number" name="price" id="price">
         <label for="endDate">End Date:</label>
         <input type="date" name="endDate" id="endDate">
+        <label for="mediumIcon">Medium Icon:</label>
+        <input type="file" name="mediumIcon" id="mediumIcon">
+        <label for="squareNonAuthBkgd">Square Non-Auth Background:</label>
+        <input type="file" name="squareNonAuthBkgd" id="squareNonAuthBkgd">
+        <label for="squareAuthBkgd">Square Auth Background:</label>
+        <input type="file" name="squareAuthBkgd" id="squareAuthBkgd">
+        <label for="horizNonAuthBkgd">Horiz Non-Auth Background:</label>
+        <input type="file" name="horizNonAuthBkgd" id="horizNonAuthBkgd">
+        <label for="horizAuthBkgd">Horiz Auth Background:</label>
+        <input type="file" name="horizAuthBkgd" id="horizAuthBkgd">
+        <label for="nonAuthTitle">Non-Auth Title:</label>
+        <input type="text" name="nonAuthTitle" id="nonAuthTitle">
+        <label for="nonAuthDescription">Non-Auth Description:</label>
+        <textarea name="nonAuthDescription" id="nonAuthDescription"></textarea>
+        <label for="authTitle">Auth Title:</label>
+        <input type="text" name="authTitle" id="authTitle">
+        <label for="authDescription">Auth Description:</label>
+        <textarea name="authDescription" id="authDescription"></textarea>
+        <label for="daysSubscribed">Days Subscribed:</label>
+        <input type="number" name="daysSubscribed" id="daysSubscribed">
+        <label for="gemsType">Gems Type:</label>
+        <input type="text" name="gemsType" id="gemsType">
+        <label for="gemsCt">Gems Count:</label>
+        <input type="number" name="gemsCt" id="gemsCt">
+        <label for="items">Items:</label>
+        <input type="text" name="items" id="items">
+        <label for="vendors">Vendors:</label>
+        <input type="text" name="vendors" id="vendors">
+        <label for="gameTokens">Game Tokens:</label>
+        <input type="number" name="gameTokens" id="gameTokens">
         <button type="submit">Add Subscription</button>
       </form>
     `);
@@ -51,8 +81,22 @@ router.get('/load', async (req, res) => {
 // Route to add a new subscription
 router.post('/addSubscription', async (req, res) => {
   try {
-    const { name, type, price, endDate } = req.body;
-    const newSubscription = new Subscription({ name, type, price, endDate });
+    const {
+      name, type, price, endDate,
+      mediumIcon, squareNonAuthBkgd, squareAuthBkgd,
+      horizNonAuthBkgd, horizAuthBkgd, nonAuthTitle,
+      nonAuthDescription, authTitle, authDescription,
+      daysSubscribed, gemsCt, items, vendors, gameTokens
+    } = req.body;
+
+    const newSubscription = new Subscription({
+      name, type, price, endDate,
+      mediumIcon, squareNonAuthBkgd, squareAuthBkgd,
+      horizNonAuthBkgd, horizAuthBkgd, nonAuthTitle,
+      nonAuthDescription, authTitle, authDescription,
+      daysSubscribed, gemsCt, items: items.split(','), vendors: vendors.split(','), gameTokens
+    });
+
     await Subscription.create(newSubscription);
     req.flash('success_msg', 'New subscription created!');
     res.redirect('/subscriptions/load');
@@ -96,8 +140,22 @@ router.post('/editSubscription', async (req, res) => {
 // Route to update a subscription
 router.post('/updateSubscription', async (req, res) => {
   try {
-    const { id, name, type, price, endDate } = req.body;
-    const updatedSubscription = { name, type, price, endDate };
+    const {
+      id, name, type, price, endDate,
+      mediumIcon, squareNonAuthBkgd, squareAuthBkgd,
+      horizNonAuthBkgd, horizAuthBkgd, nonAuthTitle,
+      nonAuthDescription, authTitle, authDescription,
+      daysSubscribed, gemsCt, items, vendors, gameTokens
+    } = req.body;
+
+    const updatedSubscription = {
+      name, type, price, endDate,
+      mediumIcon, squareNonAuthBkgd, squareAuthBkgd,
+      horizNonAuthBkgd, horizAuthBkgd, nonAuthTitle,
+      nonAuthDescription, authTitle, authDescription,
+      daysSubscribed, gemsCt, items: items.split(','), vendors: vendors.split(','), gameTokens
+    };
+
     await Subscription.updateById(id, updatedSubscription);
     req.flash('success_msg', 'Subscription updated successfully');
     res.redirect('/subscriptions/load');

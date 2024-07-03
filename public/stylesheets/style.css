@@ -539,6 +539,24 @@ input {
   display: flex;
 }
 
+.adminWindow {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  min-height: 360px;
+  width: 96%;
+  margin: 2%;
+  background-color: white;
+  box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.719);
+  border-radius: 5px;
+  transition: all 0.3s ease;
+  position: relative;
+  cursor: pointer;
+}
+
 .auth_view_true {
   display: flex;
   justify-content: center;
@@ -730,6 +748,11 @@ input {
   border: 1px dotted #d7b436;
   border-radius: 50px;
   box-shadow: 2px 2px 2px #711881;
+}
+
+.adminForms {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
 }
 
 /*# sourceMappingURL=style.css.map */
