@@ -18,16 +18,16 @@
     <button class="collapsible">BingoLead<span class="carrot">&#9654;</span></button>
     <div class="content" data-url="/bingoLead/load">Content for BingoLead</div>
 
-    <button class="collapsible">Tickets<span class="carrot">&#9654;</span></button>
+    <button class="collapsible">Help and Tickets<span class="carrot">&#9654;</span></button>
     <div class="content" data-url="/tickets/load">Content for Tickets</div>
 
-    <button class="collapsible">Clubs<span class="carrot">&#9654;</span></button>
+    <button class="collapsible">Clubs Admin<span class="carrot">&#9654;</span></button>
     <div class="content" data-url="/clubs/load">Content for Clubs</div>
 
-    <button class="collapsible">Blogs<span class="carrot">&#9654;</span></button>
+    <button class="collapsible">Blogs Admin<span class="carrot">&#9654;</span></button>
     <div class="content" data-url="/blogs/load">Content for Blogs</div>
 
-    <button class="collapsible">WebApp<span class="carrot">&#9654;</span></button>
+    <button class="collapsible">WebApp Settings<span class="carrot">&#9654;</span></button>
     <div class="content" data-url="/webApp/load">Content for WebApp</div>
 
     <button class="collapsible">Notifications<span class="carrot">&#9654;</span></button>
@@ -35,6 +35,11 @@
 
     <button class="collapsible">Permissions<span class="carrot">&#9654;</span></button>
     <div class="content" data-url="/permissions/load"><%-include('./permissions/index')%></div>
+
+    
+    <!--OBSERVER ON CLICK FOR LIGHTER LOAD append data-url for server rendering-->
+    <button class="collapsible">TRYCATCH<span class="carrot">&#9654;</span></button>
+    <div class="content" data-url="/admin/doSomething" ></div>
 </div>
 
 <style>
