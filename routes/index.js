@@ -28,6 +28,12 @@ const permissions = require('./adminFunctions/permissions/permissions');
 router.use('/permissions',permissions);
 const videoLead = require('./adminFunctions/videoLead/videoLead');
 router.use('/videoLead',videoLead);
+const clubs = require('./adminFunctions/clubs/clubs');
+router.use('/clubs',clubs);
+const subscriptions = require('./adminFunctions/subscriptions/subscriptions');
+router.use('/subscriptions',subscriptions);
+const generalEditor = require('./adminFunctions/generalEditor');
+router.use('/generalEditor',generalEditor);
 //ADMIN FUNCITONS
 
 
