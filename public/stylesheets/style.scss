@@ -197,9 +197,9 @@ display: flex;
 }
 @mixin toggleOpt(){
   //  position: absolute;
-    width:100px;
+    width:40px;
     margin:2%;
-     border-radius: 5px;
+     border-radius: 40px;
  border: 5px solid $purple;
  background-color: $gold;
  color: $purple;

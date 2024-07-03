@@ -196,9 +196,9 @@ input {
 }
 
 #chatToggle {
-  width: 100px;
+  width: 40px;
   margin: 2%;
-  border-radius: 5px;
+  border-radius: 40px;
   border: 5px solid #711881;
   background-color: #d7b436;
   color: #711881;
@@ -214,9 +214,9 @@ input {
 }
 
 #dashToggle {
-  width: 100px;
+  width: 40px;
   margin: 2%;
-  border-radius: 5px;
+  border-radius: 40px;
   border: 5px solid #711881;
   background-color: #d7b436;
   color: #711881;
