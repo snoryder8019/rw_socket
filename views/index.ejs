@@ -18,29 +18,24 @@
   
   <div id="main">
     <div id="mainBanner" class="banner">
-      <%if(typeof user ==='object'&& user){%>
-      <button id="dashToggle">dashboard</button>
-      <button id="chatToggle">chat</button>
-      <%}else{%>
-        <button id="dashToggle">sign in</button>
-        <%}%>
-      <img class="banner" src="/images/MainBanner.png" alt="">
 
-
-      <%if(typeof user === 'object' && user){%>
-      <div class="dashHeader">
-        <div class="userGreeting">
-       
-            <h3>Welcome <%=user.firstName%>!</h3>
-            <h3>Logged in as: <%=user.email%></h3>
-        </div>
-        </div>
+        <div id="bannerControls">
+          <%if(typeof user ==='object'&& user){%>
+              <button id="dashToggle">dashboard</button>
+              <button id="chatToggle">chat</button>
+          <%}else{%>
+              <button id="dashToggle">sign in</button>
             <%}%>
+        </div>
+
+
+
+   
 
 
 
     </div>
-    <h1><%=config.headline%></h1>
+ 
 
     <%if(typeof user === 'object' && user){%>
 
@@ -66,19 +61,24 @@
           
             <script>
 
-// window.addEventListener('scroll', function() {
-//   var banner = document.getElementById('mainBanner');
-//   var bannerHeight = banner.offsetHeight;
+window.addEventListener('scroll', function() {
+  var banner = document.getElementById('mainBanner');
+  var bannerControls = document.getElementById('bannerControls');
+  var bannerHeight = banner.offsetHeight;
   
-//   if (window.pageYOffset > bannerHeight) {
-//     banner.classList.add('sticky');
-//     banner.classList.add('shrunk');
-//   } else {
-//     banner.classList.remove('sticky');
-//     banner.classList.remove('shrunk');
-//   }
-// });
+  if (window.pageYOffset > bannerHeight) {
+    banner.classList.add('sticky');
+    banner.classList.add('shrunk');
+  } else {
+    banner.classList.remove('sticky');
+    banner.classList.remove('shrunk');
+  }
+});
 document.addEventListener('DOMContentLoaded', () => {
+
+
+
+
   document.querySelectorAll('.auth_view_true').forEach(div => {
     div.addEventListener('click', function() {
       if (!this.classList.contains('expanded')) {

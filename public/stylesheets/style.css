@@ -153,14 +153,14 @@ input {
   background-color: #711881;
   left: 100%;
   top: 0%;
-  z-index: 5;
+  z-index: 1001;
 }
 @media (max-width: 768px) {
   #chat-window-basic {
     width: 92%;
     left: 100%;
-    top: 8vh;
-    height: 84vh;
+    top: 16vh;
+    height: 79vh;
     padding: 1%;
   }
 }
@@ -180,12 +180,13 @@ input {
   background-color: #711881;
   right: 100%;
   top: 0%;
+  z-index: 1001;
 }
 @media (max-width: 768px) {
   #userDash {
     width: 92%;
-    height: 80%;
-    margin-top: 20%;
+    height: 75%;
+    margin-top: 41%;
   }
 }
 
@@ -195,10 +196,13 @@ input {
 }
 
 #chatToggle {
+  width: 100px;
+  margin: 2%;
   border-radius: 5px;
   border: 5px solid #711881;
   background-color: #d7b436;
   color: #711881;
+  font-size: 0.8rem;
   box-shadow: 3px 3px 3px #1a0a1b;
   left: -25%;
   top: 56%;
@@ -210,10 +214,13 @@ input {
 }
 
 #dashToggle {
+  width: 100px;
+  margin: 2%;
   border-radius: 5px;
   border: 5px solid #711881;
   background-color: #d7b436;
   color: #711881;
+  font-size: 0.8rem;
   box-shadow: 3px 3px 3px #1a0a1b;
   right: -25%;
   top: 40%;
@@ -314,7 +321,19 @@ input {
   }
 }
 
+#mainBanner {
+  background-image: url("/images/MainBanner.png");
+  background-size: 380px;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-color: #410b4b;
+  box-shadow: 0px 0px 20px rgba(217, 239, 24, 0.2745098039);
+  border: 5px solid #1a0a1b;
+}
+
 .banner {
+  display: grid;
+  grid-template-columns: 1fr 10fr;
   width: 98%; /* Full width */
   padding: 0%;
   transition: all 0.3s ease; /* Smooth transition for shrinking */
@@ -341,19 +360,32 @@ input {
 }
 
 .shrunk {
-  height: 50px; /* Adjusted height when scrolled */
-  padding: 4%;
-  width: 88%;
+  display: grid;
+  grid-template-columns: 1fr 10fr;
+  height: 103px; /* Adjusted height when scrolled */
+  padding: 1%;
+  width: 87%;
+  margin: 1% 2%;
 }
 
 .shrunk img {
-  height: 50px; /* Adjust the image height to match the banner's new height */
-  width: auto;
+  width: 100%;
 }
 
 .shrunk #dashToggle, .shrunk #chatToggle {
   padding: 5px 10px; /* Reduced padding for buttons */
   font-size: 0.8rem; /* Smaller text size */
+}
+
+#bannerControls {
+  margin: 0;
+  padding: 0;
+}
+
+#userGreeting {
+  font-size: 0.8rem;
+  margin: 0;
+  padding: 0;
 }
 
 #userList {
