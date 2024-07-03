@@ -19,8 +19,8 @@ router.get('/getNotifications', getNotifications)
 router.post('/deleteAvatar', deleteAvatar)
 router.post('/assignAvatar', assignAvatar)
 router.use(userBucketRouter);
-
-
+const gamesRouter = require('./gamesFunctions/gamesFunctions')
+router.use('/games',gamesRouter)
 //ADMIN FUNCTIONS
 const users = require('./adminFunctions/users/users');
 router.use('/users',users);
