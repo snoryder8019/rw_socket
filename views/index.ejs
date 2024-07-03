@@ -18,7 +18,6 @@
   
   <div id="main">
     <div id="mainBanner" class="banner">
-
         <div id="bannerControls">
           <%if(typeof user ==='object'&& user){%>
               <button id="dashToggle">D</button>
@@ -30,12 +29,7 @@
 
 
 
-   
-
-
-
     </div>
- 
 
     <%if(typeof user === 'object' && user){%>
 
@@ -60,8 +54,8 @@
             <div id="footer"><%- include('./partials/footer')%></div>      
           
             <script>
-
-window.addEventListener('scroll', function() {
+              
+              window.addEventListener('scroll', function() {
   var banner = document.getElementById('mainBanner');
   var bannerControls = document.getElementById('bannerControls');
   var bannerHeight = banner.offsetHeight;
@@ -75,10 +69,10 @@ window.addEventListener('scroll', function() {
   }
 });
 document.addEventListener('DOMContentLoaded', () => {
-
-
-
-
+  
+  
+  
+  
   document.querySelectorAll('.auth_view_true').forEach(div => {
     div.addEventListener('click', function() {
       if (!this.classList.contains('expanded')) {
@@ -91,7 +85,7 @@ document.addEventListener('DOMContentLoaded', () => {
           this.appendChild(closeButton);
         }
         closeButton.style.display = 'block'; // Ensure the close button is visible
-
+        
         closeButton.addEventListener('click', function(e) {
           e.stopPropagation(); // Prevent click from propagating to the div
           this.parentNode.classList.remove('expanded');
@@ -102,9 +96,19 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 
-          </script>  
-          <script src="/javascripts/loader.js"></script>
-          
+</script>  
+<script src="/javascripts/loader.js"></script>
+
+
+<script src="http://173.255.196.155:8080/shopify-component.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue@3"></script>
+<!-- Include built Vue component -->
+          <!-- Initialize Vue component -->
+          <script>
+            const app = Vue.createApp({});
+            app.component('shopify-component', ShopifyComponent);
+            app.mount('#shopify-component');
+          </script>
         </body>
         
         </html>

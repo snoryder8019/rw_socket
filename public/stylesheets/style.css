@@ -662,7 +662,7 @@ input {
   width: 100%;
 }
 
-#game-container {
+#game-container, .index-container {
   color: black;
   width: 90%;
   max-width: 800px;

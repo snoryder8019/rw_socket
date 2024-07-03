@@ -9,6 +9,7 @@
   "dependencies": {
     "@aws-sdk/client-s3": "^3.529.1",
     "@aws-sdk/lib-storage": "^3.532.0",
+    "@shopify/shopify-api": "^11.1.0",
     "aws-sdk": "^2.1577.0",
     "axios": "^1.6.7",
     "bcrypt": "^5.1.1",
@@ -40,7 +41,7 @@
     "passport-google-oauth20": "^2.0.0",
     "passport-local": "^1.0.0",
     "passport-yahoo-oauth": "^0.2.0",
-    "puppeteer": "^20.3.0",
+    "puppeteer": "^22.12.1",
     "session": "^0.1.0",
     "sharp": "^0.33.4",
     "socket.io": "^4.7.4",
