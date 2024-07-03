@@ -1,9 +1,12 @@
 <div id="settings">
-    <button class="collapsible">Your Images<span class="carrot">&#9654;</span></button>
+    <button class="collapsible">Avatar Settings<span class="carrot">&#9654;</span></button>
     <div class="content" ><%- include('images') %></div>
 
     <button class="collapsible">Website Settings<span class="carrot">&#9654;</span></button>
     <div class="content" ><%- include('websiteSettings') %></div>
+
+    <button class="collapsible">Custom Settings<span class="carrot">&#9654;</span></button>
+    <div class="content" ><%- include('customSettings') %></div>
 </div>
 
 <style>
@@ -27,7 +30,7 @@
     .content {
         padding: 0 18px;
         display: none;
-        overflow: hidden;
+        overflow: visible;
         background-color: #f1f1f1;
     }
 

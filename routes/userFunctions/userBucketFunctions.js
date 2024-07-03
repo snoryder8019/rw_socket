@@ -1,4 +1,3 @@
-
 const express = require('express');
 const router = express.Router();
 const path = require('path');
@@ -6,7 +5,7 @@ const { ObjectId } = require('mongodb');
 const { getDb } = require('../../plugins/mongo/mongo');
 const { upload, processImage } = require('../../plugins/multer/setup');
 const { resizeAndCropImage } = require('../../plugins/sharp/sharp');
-const { uploadToLinode } = require('../../plugins/aws_sdk/setup');
+const { uploadToLinode, deleteFromLinode } = require('../../plugins/aws_sdk/setup');
 
 router.post('/userImgUpload', upload, processImage, async (req, res) => {
   try {
@@ -14,9 +13,9 @@ router.post('/userImgUpload', upload, processImage, async (req, res) => {
     const db = getDb();
     const user = req.user;
     const collection = db.collection('users');
-console.log(req.file.filename)
-console.log(req.file.path)
-    // Assuming processImage middleware has set req.file.path to the processed image
+    console.log(req.file.filename);
+    console.log(req.file.path);
+
     const imagePath = req.file.path;
     const fileKey = `rw_users_/${user._id}/${req.file.filename}`;
     const fileBuffer = req.file.buffer;
@@ -25,19 +24,16 @@ console.log(req.file.path)
 
     console.log('Uploaded to Linode:', bucketUrl);
 
-    // Generate thumbnail - modify resizeAndCropImage or create a separate function for thumbnail
     const thumbnailPath = await resizeAndCropImage(fileBuffer, path.dirname(imagePath), `thumb-${req.file.filename}`, 'thumbnail');
 
     console.log('Thumbnail created:', thumbnailPath);
 
-    // Optionally, upload thumbnail to Linode and get its URL
     const thumbFileKey = `rw_users/${user._id}/thumb-${req.file.filename}`;
     const thumbnailUrl = await uploadToLinode(thumbnailPath, thumbFileKey);
-    const refUserId =new ObjectId(user._id)
+    const refUserId = new ObjectId(user._id);
     console.log('Thumbnail uploaded to Linode:', thumbnailUrl);
 
-    // Update MongoDB with main image and thumbnail URLs
-    await collection.updateOne({ "_id":refUserId }, {
+    await collection.updateOne({ "_id": refUserId }, {
       $push: {
         images: {
           bucketUrl: bucketUrl,
@@ -55,19 +51,13 @@ console.log(req.file.path)
     });
 
     console.log('MongoDB updated with image and thumbnail URLs.');
-res.render('/',{success:false,message:"avatar uploaded sucessfully"})
-    //res.send({ success: true, urls: { main: bucketUrl, thumbnail: thumbnailUrl } });
+    res.render('index', { success: false, message: "avatar uploaded successfully" });
   } catch (error) {
     console.error("Error in userImgUpload endpoint:", error);
-   // res.status(500).send({ success: false, message: error.message });
-   res.render('error',{error:error})
+    res.render('error', { error: error });
   }
 });
 
-
-
-
-// IMAGE RETRIEVE
 router.get('/GETUSERIMAGES', async (req, res) => {
   try {
     const db = getDb();
@@ -80,27 +70,38 @@ router.get('/GETUSERIMAGES', async (req, res) => {
   }
 });
 
-// IMAGE DELETE
 router.post('/DELETEIMAGE', async (req, res) => {
   try {
     const db = getDb();
     const { imageId } = req.body; // Assuming you pass the imageId to delete
     const user = req.user;
     const collection = db.collection('users');
-    // Delete logic for Linode object bucket here
+
+    // Find the image to delete
+    const userData = await collection.findOne({ _id: ObjectId(user._id) });
+    const imageToDelete = userData.images.find(img => img.bucketUrl === imageId);
+
+    if (!imageToDelete) {
+      return res.status(404).send({ success: false, message: 'Image not found.' });
+    }
+
+    // Delete image and thumbnail from Linode
+    await deleteFromLinode(imageToDelete.bucketUrl);
+    await deleteFromLinode(imageToDelete.thumbnailUrl);
+
     // Update user.images in MongoDB
     await collection.updateOne({ _id: ObjectId(user._id) }, {
       $pull: {
         images: { bucketUrl: imageId }
       }
     });
+
     res.send({ success: true, message: 'Image deleted successfully.' });
   } catch (error) {
     res.status(500).send({ success: false, message: error.message });
   }
 });
 
-// IMAGE EDIT
 router.post('/EDITIMAGE', async (req, res) => {
   // Implement edit logic, similar to DELETEIMAGE and USERIMGUPLOAD combined
 });

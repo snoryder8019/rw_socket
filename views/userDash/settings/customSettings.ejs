@@ -1,0 +1,41 @@
+<h3>Custom Settings</h3>
+
+<div>
+    <h3>Chat Appearance</h3>
+    <form action="/user/settings/chatAppearance" method="POST">
+        <label>Theme:</label>
+        <div>
+            <input type="radio" id="theme1" name="theme" value="theme1" required>
+            <label for="theme1"><img src="/path/to/theme1-thumbnail.jpg" alt="Theme 1" width="50" height="50"></label>
+        </div>
+        <div>
+            <input type="radio" id="theme2" name="theme" value="theme2" required>
+            <label for="theme2"><img src="/path/to/theme2-thumbnail.jpg" alt="Theme 2" width="50" height="50"></label>
+        </div>
+        <div>
+            <input type="radio" id="theme3" name="theme" value="theme3" required>
+            <label for="theme3"><img src="/path/to/theme3-thumbnail.jpg" alt="Theme 3" width="50" height="50"></label>
+        </div>
+        
+        <label for="fontSize">Font Size:</label>
+        <input type="number" id="fontSize" name="fontSize" min="10" max="30" required>
+        
+        <button type="submit">Save</button>
+    </form>
+</div>
+
+<div>
+    <h3>Bio</h3>
+    <form action="/user/settings/bio" method="POST">
+        <label for="bio">Bio:</label>
+        <textarea id="bio" name="bio" rows="4" cols="50" required></textarea>
+        
+        <label for="localeInterests">Locale Interests:</label>
+        <input type="text" id="localeInterests" name="localeInterests" required>
+        
+        <label for="travelInterests">Travel Interests:</label>
+        <input type="text" id="travelInterests" name="travelInterests" required>
+        
+        <button type="submit">Save</button>
+    </form>
+</div>

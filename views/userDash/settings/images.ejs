@@ -1,9 +1,9 @@
 <%if(typeof user.images === 'object' && user.images){%>
-  <h2>Your Profile Uploads</h2>
+  <h2>Avatar Settings</h2>
   <%for (let i = 0; i < user.images.length; i++){%>
     <div class="imageThumbs">
       <div class="thumb">
-        <img src="<%=user.images[i].thumbnailUrl%>" alt="">
+        <img class="usersOnline" style="transform: scale(150%);" src="<%=user.images[i].thumbnailUrl%>" alt="">
         <%if(user.images[i].avatarTag){%>
           &#x1F464; assigned avatar
         <%}else{%>

@@ -1,7 +1,63 @@
 <div id="help">
-  FAQS
+  <button class="collapsible">FAQs<span class="carrot">&#9654;</span></button>
+  <div class="content">
+      <h4>Question 1: How do I reset my password?</h4>
+      <p>Answer: To reset your password, go to the settings page and click on "Reset Password". Follow the instructions provided.</p>
+      
+      <h4>Question 2: How can I update my profile information?</h4>
+      <p>Answer: Navigate to the profile settings and make the necessary changes. Click save to update your information.</p>
+  </div>
 
-  HOW TO DIRECTIONS 
+  <button class="collapsible">How To Directions<span class="carrot">&#9654;</span></button>
+  <div class="content">
+      <h4>Step 1: Log in to your account</h4>
+      <p>Use your username and password to log in to your account. If you have forgotten your password, use the "Forgot Password" link.</p>
+      
+      <h4>Step 2: Access the Dashboard</h4>
+      <p>Once logged in, navigate to the dashboard from the main menu. Here, you will find all the tools you need to manage your account.</p>
+  </div>
 
-  HOW TO VIDEO
+  <button class="collapsible">How To Video<span class="carrot">&#9654;</span></button>
+  <div class="content">
+      <h4>Watch this video to learn how to use the main features of our platform:</h4>
+      <video width="320" height="240" controls>
+          <source src="/path/to/how-to-video.mp4" type="video/mp4">
+          Your browser does not support the video tag.
+      </video>
+  </div>
 </div>
+
+<style>
+  .collapsible {
+      background-color: #f9f9f9;
+      color: #333;
+      cursor: pointer;
+      padding: 10px;
+      width: 100%;
+      border: none;
+      text-align: left;
+      outline: none;
+      font-size: 18px;
+      transition: background-color 0.3s;
+  }
+
+  .active, .collapsible:hover {
+      background-color: #ccc;
+  }
+
+  .content {
+      padding: 0 18px;
+      display: none;
+      overflow: visible;
+      background-color: #f1f1f1;
+  }
+
+  .carrot {
+      float: right;
+      transition: transform 0.3s;
+  }
+
+  .rotate {
+      transform: rotate(90deg);
+  }
+</style>

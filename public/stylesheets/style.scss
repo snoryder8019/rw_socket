@@ -87,7 +87,7 @@ text-align: center;
 
   .thumb {
     display: block;
-    flex: 0 1 auto; /* Allows the item to grow and shrink, but not beyond its content size */
+    flex: 1; /* Allows the item to grow and shrink, but not beyond its content size */
     /* Additional styling for your .userSetting elements */
     padding: 10px;
     border: 1px solid #ccc; /* Example border, adjust as needed */
@@ -717,3 +717,14 @@ animation:flashMsg 2.8s ease-in-out 0s 1 ;
       border-bottom: 2px solid #410b4b; /* Match the bottom border with background color */
       }
       
+
+      .userStats{
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+      }
+      .statContainer{
+        margin: 3%;
+        border:1px dotted $gold;
+        border-radius: 50px;
+        box-shadow: 2px 2px 2px $purple;
+      }

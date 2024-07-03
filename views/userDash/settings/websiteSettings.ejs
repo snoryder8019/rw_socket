@@ -1,7 +1,73 @@
-web settings.ejs
-<h3>toggle -</h3>
-<h3>toggle -</h3>
-<h3>toggle -</h3>
-<h3>toggle -</h3>
-<h3>toggle -</h3>
-<h3>toggle -</h3>
+<h3>You can update your basic settings here</h3>
+
+<div>
+    <h3>Display Name</h3>
+    <form action="/user/settings/displayName" method="POST">
+        <label for="username"><%user.displayName%></label>
+        <input type="text" id="username" name="username" required>
+        <button type="submit">Save</button>
+    </form>
+</div>
+<div>
+    <h3>Short Id</h3>
+    <form action="/user/settings/displayName" method="POST">
+        <label for="username"><%user.key%></label>
+        <input type="text" id="username" name="username" required>
+        <button type="submit">Save</button>
+    </form>
+</div>
+
+<div>
+    <h3>Password</h3>
+    <form action="/user/settings/password" method="POST">
+        <label for="newPassword">New Password:</label>
+        <input type="password" id="newPassword" name="newPassword" required>
+        
+        <label for="confirmPassword">Confirm New Password:</label>
+        <input type="password" id="confirmPassword" name="confirmPassword" required>
+        
+        <label for="currentPassword">Current Password:</label>
+        <input type="password" id="currentPassword" name="currentPassword" required>
+        
+        <button type="submit">Save</button>
+    </form>
+</div>
+
+<div>
+    <h3>Notification Settings</h3>
+    <form action="/user/settings/notifications" method="POST">
+        <div></div>
+        <label for="emailNotifications">Email Notifications:</label>
+        <select id="emailNotifications" name="emailNotifications">
+            <option value="enabled">Enabled</option>
+            <option value="disabled">Disabled</option>
+        </select>
+        
+        <label for="smsNotifications">SMS Notifications:</label>
+        <select id="smsNotifications" name="smsNotifications">
+            <option value="enabled">Enabled</option>
+            <option value="disabled">Disabled</option>
+        </select>
+        
+        <button type="submit">Save</button>
+    </form>
+</div>
+
+<div>
+    <h3>Privacy Settings</h3>
+    <form action="/user/settings/privacy" method="POST">
+        <label for="profileVisibility">Profile Visibility:</label>
+        <select id="profileVisibility" name="profileVisibility">
+            <option value="public">Public</option>
+            <option value="private">Private</option>
+        </select>
+        
+        <label for="searchVisibility">Search Visibility:</label>
+        <select id="searchVisibility" name="searchVisibility">
+            <option value="visible">Visible</option>
+            <option value="hidden">Hidden</option>
+        </select>
+        
+        <button type="submit">Save</button>
+    </form>
+</div>
