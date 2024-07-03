@@ -1,7 +1,68 @@
-web settings.ejs
-<h3>toggle -</h3>
-<h3>toggle -</h3>
-<h3>toggle -</h3>
-<h3>toggle -</h3>
-<h3>toggle -</h3>
-<h3>toggle -</h3>
+<h3>You can toggle most of your basic settings here</h3>
+
+<div>
+    <h3>Profile Settings</h3>
+    <form action="/settings/profile" method="POST">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required>
+        
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
+        
+        <button type="submit">Save</button>
+    </form>
+</div>
+
+<div>
+    <h3>Password Settings</h3>
+    <form action="/settings/password" method="POST">
+        <label for="currentPassword">Current Password:</label>
+        <input type="password" id="currentPassword" name="currentPassword" required>
+        
+        <label for="newPassword">New Password:</label>
+        <input type="password" id="newPassword" name="newPassword" required>
+        
+        <label for="confirmPassword">Confirm New Password:</label>
+        <input type="password" id="confirmPassword" name="confirmPassword" required>
+        
+        <button type="submit">Save</button>
+    </form>
+</div>
+
+<div>
+    <h3>Notification Settings</h3>
+    <form action="/settings/notifications" method="POST">
+        <label for="emailNotifications">Email Notifications:</label>
+        <select id="emailNotifications" name="emailNotifications">
+            <option value="enabled">Enabled</option>
+            <option value="disabled">Disabled</option>
+        </select>
+        
+        <label for="smsNotifications">SMS Notifications:</label>
+        <select id="smsNotifications" name="smsNotifications">
+            <option value="enabled">Enabled</option>
+            <option value="disabled">Disabled</option>
+        </select>
+        
+        <button type="submit">Save</button>
+    </form>
+</div>
+
+<div>
+    <h3>Privacy Settings</h3>
+    <form action="/settings/privacy" method="POST">
+        <label for="profileVisibility">Profile Visibility:</label>
+        <select id="profileVisibility" name="profileVisibility">
+            <option value="public">Public</option>
+            <option value="private">Private</option>
+        </select>
+        
+        <label for="searchVisibility">Search Visibility:</label>
+        <select id="searchVisibility" name="searchVisibility">
+            <option value="visible">Visible</option>
+            <option value="hidden">Hidden</option>
+        </select>
+        
+        <button type="submit">Save</button>
+    </form>
+</div>

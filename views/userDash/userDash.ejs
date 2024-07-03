@@ -4,14 +4,15 @@
      
       <%if(typeof user =='object'&& user){%>
       </div>      
+      <h3>User Dashboard</h3>
 
       <div class="wallet">
-        <div class="jewel">jewels:</div>
-        <div class="jewel"><img src="/images/icons/emerald.png"><%=user.wallet.emerald%></div>
-        <div class="jewel"><img src="/images/icons/amethyst.png"><%=user.wallet.amethyst%></div>
-        <div class="jewel"><img src="/images/icons/sapphire.png"><%=user.wallet.sapphire%></div>
+        <div class="jewel"><img class="usersOnline"src="<%=user.images[0].thumbnailUrl%>"></div>
+        <div class="jewel"><div><%=user.displayName%></div><div> <%=user.email%></div></div>
+ 
+        <div class="jewel"><img src="/images/icons/emerald.png"> <div><%=user.wallet.emerald%></div></div>
+    
             </div>
-
       <%- include('../notifications/notifications',{user:user}) %>
       <%- include('../help/help',{user:user}) %>
       <%- include('./settings/userSettings',{user:user}) %>
@@ -62,17 +63,17 @@
       if (dashWindow.style.transform != "translateX(106%)") {
         dashWindow.style.transform = "translateX(106%)";
 
-        dashToggle.innerHTML = "close";
+        dashToggle.innerHTML = "Close";
         dashWindowState = "open"
       } else {
 if(!user==true){
-  dashToggle.innerHTML = "sign in";
+  dashToggle.innerHTML = "Sign in";
   dashWindow.style.transform = "translateX(0%)";
   dashWindowState = "hidden";
   
 }else{
   
-  dashToggle.innerHTML = "dashboard";
+  dashToggle.innerHTML = "Dashboard";
   dashWindow.style.transform = "translateX(0%)";
   dashWindowState = "hidden";
 }

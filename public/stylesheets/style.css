@@ -82,7 +82,7 @@
 
 .thumb {
   display: block;
-  flex: 0 1 auto; /* Allows the item to grow and shrink, but not beyond its content size */
+  flex: 1; /* Allows the item to grow and shrink, but not beyond its content size */
   /* Additional styling for your .userSetting elements */
   padding: 10px;
   border: 1px solid #ccc; /* Example border, adjust as needed */
