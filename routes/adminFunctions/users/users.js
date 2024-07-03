@@ -24,7 +24,7 @@ router.get('/load', async (req, res) => {
         <p> ${user.lastName}</p>
         <p>${user.email}</p>
         <p><button>contact</button></p>
-        <p> <button>edit</button></p>
+        <p> <button data-url="/users/edit">edit</button></p>
         </div>
     `).join('');
 

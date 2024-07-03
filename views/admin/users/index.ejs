@@ -1,9 +1,7 @@
-users for admins
-<%if(typeof data ==='object'&& data){%>
 
-<div>
-    you have <%data.length%> users
+<div class="adminWindow">
+    <div>User Data for the App</div>
 </div>
-<%}else{%>
-    no user data
-    <%}%>
+<div class="main"></div>
+    <button class="collapsible">Get Users<span class="carrot">&#9654;</span></button>
+    <div class="content" data-url="/users/load"></div>
