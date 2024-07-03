@@ -2,12 +2,48 @@ const { getDb } = require('../mongo');
 const { ObjectId } = require('mongodb');
 
 class Subscription {
-  constructor({ name, type, price, startDate = new Date(), endDate }) {
+  constructor({
+    name,
+    type,
+    price,
+    startDate = new Date(),
+    endDate,
+    mediumIcon,
+    squareNonAuthBkgd,
+    squareAuthBkgd,
+    horizNonAuthBkgd,
+    horizAuthBkgd,
+    nonAuthTitle,
+    nonAuthDescription,
+    authTitle,
+    authDescription,
+    daysSubscribed,
+    gemsType,
+    gemsCt,
+    items = [],
+    vendors = [],
+    gameTokens
+  }) {
     this.name = name;
     this.type = type;
     this.price = price;
     this.startDate = startDate;
     this.endDate = endDate;
+    this.mediumIcon = mediumIcon;
+    this.squareNonAuthBkgd = squareNonAuthBkgd;
+    this.squareAuthBkgd = squareAuthBkgd;
+    this.horizNonAuthBkgd = horizNonAuthBkgd;
+    this.horizAuthBkgd = horizAuthBkgd;
+    this.nonAuthTitle = nonAuthTitle;
+    this.nonAuthDescription = nonAuthDescription;
+    this.authTitle = authTitle;
+    this.authDescription = authDescription;
+    this.daysSubscribed = daysSubscribed;
+    this.gemsType = gemsType;
+    this.gemsType = gemsType;
+    this.items = items;
+    this.vendors = vendors;
+    this.gameTokens = gameTokens;
   }
 
   static async create(subscription) {
