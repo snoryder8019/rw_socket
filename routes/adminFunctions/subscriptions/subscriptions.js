@@ -4,7 +4,7 @@ const Subscription = require('../../../plugins/mongo/models/Subscription');
 const { ObjectId } = require('mongodb');
 
 // Route to get all subscriptions with action buttons
-router.get('/load', async (req, res) => {
+router.get('/renderAddForm', async (req, res) => {
   try {
     const subscriptions = await Subscription.getAll();
     const subscriptionHtml = subscriptions.map(subscription => `
@@ -12,10 +12,7 @@ router.get('/load', async (req, res) => {
         <p>${subscription.name}</p>
         <p>Type: ${subscription.type}</p>
         <p>Price: $${subscription.price}</p>
-        <form action="/subscriptions/editSubscription" method="POST">
-          <input type="hidden" name="id" value="${subscription._id}">
-          <button type="submit">Edit Subscription</button>
-        </form>
+  
         <form action="/subscriptions/deleteSubscription" method="POST">
           <input type="hidden" name="id" value="${subscription._id}">
           <button type="submit">Delete Subscription</button>
@@ -74,7 +71,7 @@ router.get('/load', async (req, res) => {
     `);
   } catch (error) {
     console.error(error);
-    res.status(500).send({ error: 'An error occurred while fetching subscription data' });
+    res.render('error',{ error: 'An error occurred while fetching subscription data' });
   }
 });
 
@@ -98,12 +95,12 @@ router.post('/addSubscription', async (req, res) => {
     });
 
     await Subscription.create(newSubscription);
-    req.flash('success_msg', 'New subscription created!');
-    res.redirect('/subscriptions/load');
+    req.flash('success', 'New subscription created!');
+    res.re('index');
   } catch (error) {
     console.error(error);
     req.flash('error_msg', 'An error occurred while adding the subscription');
-    res.status(500).send({ error: 'An error occurred while adding the subscription' });
+    res.render('error').send({ error: 'An error occurred while adding the subscription' });
   }
 });
 
