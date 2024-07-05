@@ -6,6 +6,9 @@ $purple:#711881;
 $purpleFade0:#71188100;
 
 $gradientEdge: #410b4b;
+
+
+
 :root{
     font-size: 1rem;
     text-align: center;
@@ -293,6 +296,10 @@ align-content: center;
   }
   .userNavLink img{
     width: 100%;
+    @media (min-width:768px) {
+      width: 50%;
+      
+    }
   }
   
   a{
@@ -451,7 +458,7 @@ $headshotPx:35px;
 .usersOnline:hover{
     transform-style: preserve-3d;
     transition-duration: .4s;
-    z-index: 5;
+    z-index: 5000;
     transform: scale(1.4);
     
 }
@@ -523,6 +530,7 @@ background:linear-gradient(to right,rgba(128, 0, 128, 0.56),rgba(255, 217, 0, 0.
     border-radius: 50%;
     border: 3px solid gold;
     max-width: 40px;
+    margin-left:10%;
 }
 .messageText {
     text-align: left;
@@ -661,7 +669,7 @@ animation:flashMsg 2.8s ease-in-out 0s 1 ;
 //  // padding:50%;
 //   background-color: white;
 // }
-#game-container {
+#game-container, .index-container {
   color: black;
   width: 90%;
   max-width: 800px;
@@ -730,7 +738,70 @@ animation:flashMsg 2.8s ease-in-out 0s 1 ;
         border-radius: 50px;
         box-shadow: 2px 2px 2px $purple;
       }
+
+      
+      .shopifyStorefront {
+        font-family: Arial, sans-serif;
+        padding: 20px;
+        background-color: #f9f9f9;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        overflow: hidden;
+        position: relative;
+    }
+    
+    .shopifyStorefront h1 {
+        font-size: 24px;
+        color: $purple;
+        text-align: center;
+    }
+    
+    .shopifyStorefront ul {
+        display: flex;
+        overflow-x: scroll;
+        scroll-snap-type: x mandatory;
+        padding: 0;
+        margin: 0;
+        list-style-type: none;
+    }
+    
+    .shopifyStorefront li {
+      max-width: 100%;
+        scroll-snap-align: center;
+        background-color: #fff;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        margin: 10px;
+        padding: 10px;
+        min-width: 300px;
+        flex: 0 0 auto;
+        text-align: center;
+    }
+    
+    .shopifyStorefront li h2 {
+        margin: 0 0 10px 0;
+        font-size: 20px;
+        color: $purple;
+    }
+    
+    .shopifyStorefront li p {
+        margin: 0;
+        color: $purple;
+    }
+    
+    .shopifyStorefront li img {
+        max-width: 50%;
+        height: auto;
+        border-radius: 4px;
+    }
+    
+    .centerHighlight {
+        border: 2px solid #007bff;
+    }
+    
+
       .adminForms{
         display: grid;
         grid-template-columns: 1fr 1fr;
       }
+

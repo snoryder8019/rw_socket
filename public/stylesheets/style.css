@@ -302,6 +302,11 @@ input {
 .userNavLink img {
   width: 100%;
 }
+@media (min-width: 768px) {
+  .userNavLink img {
+    width: 50%;
+  }
+}
 
 #chat {
   width: 96%;
@@ -451,7 +456,7 @@ input {
 .usersOnline:hover {
   transform-style: preserve-3d;
   transition-duration: 0.4s;
-  z-index: 5;
+  z-index: 5000;
   transform: scale(1.4);
 }
 
@@ -510,6 +515,7 @@ input {
   border-radius: 50%;
   border: 3px solid gold;
   max-width: 40px;
+  margin-left: 10%;
 }
 
 .messageText {
@@ -680,7 +686,7 @@ input {
   width: 100%;
 }
 
-#game-container {
+#game-container, .index-container {
   color: black;
   width: 90%;
   max-width: 800px;
@@ -750,9 +756,69 @@ input {
   box-shadow: 2px 2px 2px #711881;
 }
 
+
+.shopifyStorefront {
+  font-family: Arial, sans-serif;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative;
+}
+
+.shopifyStorefront h1 {
+  font-size: 24px;
+  color: #711881;
+  text-align: center;
+}
+
+.shopifyStorefront ul {
+  display: flex;
+  overflow-x: scroll;
+  scroll-snap-type: x mandatory;
+  padding: 0;
+  margin: 0;
+  list-style-type: none;
+}
+
+.shopifyStorefront li {
+  max-width: 100%;
+  scroll-snap-align: center;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  margin: 10px;
+  padding: 10px;
+  min-width: 300px;
+  flex: 0 0 auto;
+  text-align: center;
+}
+
+.shopifyStorefront li h2 {
+  margin: 0 0 10px 0;
+  font-size: 20px;
+  color: #711881;
+}
+
+.shopifyStorefront li p {
+  margin: 0;
+  color: #711881;
+}
+
+.shopifyStorefront li img {
+  max-width: 50%;
+  height: auto;
+  border-radius: 4px;
+}
+
+.centerHighlight {
+  border: 2px solid #007bff;
+
 .adminForms {
   display: grid;
   grid-template-columns: 1fr 1fr;
+
 }
 
 /*# sourceMappingURL=style.css.map */

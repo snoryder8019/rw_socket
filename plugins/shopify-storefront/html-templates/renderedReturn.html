@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Shopify Storefront</title>
+    <link rel="stylesheet" type="text/css" href="/styles/shopifyStorefront.css">
+</head>
+<body>
+    <div class="shopifyStorefront">
+    
+        <ul>
+            <!--PRODUCTS-->
+        </ul>
+    </div>
+    <script>
+        window.addEventListener('load', () => {
+            const list = document.querySelector('.shopifyStorefront ul');
+            const listItems = document.querySelectorAll('.shopifyStorefront li');
+
+            function highlightCenterItem() {
+                const center = list.scrollLeft + list.offsetWidth / 2;
+                listItems.forEach(item => {
+                    const itemCenter = item.offsetLeft + item.offsetWidth / 2;
+                    if (Math.abs(center - itemCenter) < item.offsetWidth / 2) {
+                        item.classList.add('centerHighlight');
+                    } else {
+                        item.classList.remove('centerHighlight');
+                    }
+                });
+            }
+
+            list.addEventListener('scroll', highlightCenterItem);
+            highlightCenterItem();
+        });
+    </script>
+</body>
+</html>
