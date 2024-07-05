@@ -296,6 +296,10 @@ align-content: center;
   }
   .userNavLink img{
     width: 100%;
+    @media (min-width:768px) {
+      width: 50%;
+      
+    }
   }
   
   a{
@@ -454,7 +458,7 @@ $headshotPx:35px;
 .usersOnline:hover{
     transform-style: preserve-3d;
     transition-duration: .4s;
-    z-index: 5;
+    z-index: 5000;
     transform: scale(1.4);
     
 }
@@ -526,6 +530,7 @@ background:linear-gradient(to right,rgba(128, 0, 128, 0.56),rgba(255, 217, 0, 0.
     border-radius: 50%;
     border: 3px solid gold;
     max-width: 40px;
+    margin-left:10%;
 }
 .messageText {
     text-align: left;
@@ -569,7 +574,9 @@ background:linear-gradient(to right,rgba(128, 0, 128, 0.56),rgba(255, 217, 0, 0.
     position: relative;
     cursor: pointer;
   }
-  
+  .adminWindow{
+    @include authViewSetup()
+  }
   .auth_view_true {
     @include authViewSetup();
   }
@@ -731,6 +738,7 @@ animation:flashMsg 2.8s ease-in-out 0s 1 ;
         border-radius: 50px;
         box-shadow: 2px 2px 2px $purple;
       }
+
       
       .shopifyStorefront {
         font-family: Arial, sans-serif;
@@ -791,3 +799,9 @@ animation:flashMsg 2.8s ease-in-out 0s 1 ;
         border: 2px solid #007bff;
     }
     
+
+      .adminForms{
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+      }
+

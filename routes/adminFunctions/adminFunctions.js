@@ -9,7 +9,7 @@ const lib = require('../logFunctions/logFunctions')
 const fs = require('fs')
 
 // hmm isAdmin Middleware
-function isAdmin(req, res, next) {
+ function isAdmin(req, res, next) {
   let user = req.user;
   console.log('ADMIN ACCESS: accessing admin routes: ' + user.displayName);
 

@@ -302,6 +302,11 @@ input {
 .userNavLink img {
   width: 100%;
 }
+@media (min-width: 768px) {
+  .userNavLink img {
+    width: 50%;
+  }
+}
 
 #chat {
   width: 96%;
@@ -451,7 +456,7 @@ input {
 .usersOnline:hover {
   transform-style: preserve-3d;
   transition-duration: 0.4s;
-  z-index: 5;
+  z-index: 5000;
   transform: scale(1.4);
 }
 
@@ -510,6 +515,7 @@ input {
   border-radius: 50%;
   border: 3px solid gold;
   max-width: 40px;
+  margin-left: 10%;
 }
 
 .messageText {
@@ -537,6 +543,24 @@ input {
 
 .imageThumbs {
   display: flex;
+}
+
+.adminWindow {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  min-height: 360px;
+  width: 96%;
+  margin: 2%;
+  background-color: white;
+  box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.719);
+  border-radius: 5px;
+  transition: all 0.3s ease;
+  position: relative;
+  cursor: pointer;
 }
 
 .auth_view_true {
@@ -732,6 +756,7 @@ input {
   box-shadow: 2px 2px 2px #711881;
 }
 
+
 .shopifyStorefront {
   font-family: Arial, sans-serif;
   padding: 20px;
@@ -789,6 +814,11 @@ input {
 
 .centerHighlight {
   border: 2px solid #007bff;
+
+.adminForms {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+
 }
 
 /*# sourceMappingURL=style.css.map */
