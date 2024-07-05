@@ -13,7 +13,6 @@ const { connect } = require('./plugins/mongo/mongo');
 const createError = require('http-errors');
 const MongoStore = require('connect-mongo');
 const expressSession = require('express-session')
-const {exporterRoute} = require('./plugins/puppeteer/setup');
 const noNos = require('./routes/securityFunctions/forbiddens');
 var app = express();
 const sessionMiddleware = session({
@@ -70,7 +69,7 @@ async function startApp() {
  
   app.use('/', indexRouter);
   app.use('/admin', adminRouter);
-  app.use('/', exporterRoute);
+
   // catch 404 and forward to error handler
   app.use(function(req, res, next) {
     next(createError(404));
