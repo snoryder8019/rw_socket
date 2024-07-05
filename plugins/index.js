@@ -3,18 +3,16 @@ const router = express.Router();
 const { connect } = require('./mongo/mongo');  // MongoDB connection logic
 const {exporter} = require('./puppeteer/setup')
 const {oauthCallbackHandler, emailOutGeneral} = require('./nodemailer/setup')
-
-connect().catch(err => console.error("Failed to connect to MongoDB:", err));
-//const checkouts = require('./paypal/webhooks/orders')
-router.post('/emailOutGeneral', emailOutGeneral)
-router.get('/oauth/callback',oauthCallbackHandler)
+const setupShopifyRoutes = require('./shopify-storefront/setup');
 const stripeRoutes = require('./stripe');
-//router.post('/checkouts', checkouts);
+connect().catch(err => console.error("Failed to connect to MongoDB:", err));
+
+router.post('/emailOutGeneral', emailOutGeneral)
+
 router.use('/stripe', stripeRoutes);
-
-
 router.get('/exporter', exporter);
-
+router.get('/oauth/callback',oauthCallbackHandler)
+router.use('/shopify-storefront',setupShopifyRoutes);
 
 
 
