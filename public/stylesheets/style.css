@@ -1,9 +1,74 @@
+@font-face {
+  font-family: "mayphylla";
+  src: url("/fonts/maphylla.otf");
+}
+@font-face {
+  font-family: "sunday";
+  src: url("/fonts/weatherSunday.otf");
+}
+@font-face {
+  font-family: "aquarelle";
+  src: url("/fonts/aquarelle.ttf");
+}
+@font-face {
+  font-family: "backlash";
+  src: url("/fonts/backslash.otf");
+}
+@font-face {
+  font-family: "minonPro";
+  src: url("/fonts/minionPro-Semibold.otf");
+}
+@font-face {
+  font-family: "montserrat";
+  src: url("/fonts/montserrat-SemiBold.ttf");
+}
+@font-face {
+  font-family: "satisfy";
+  src: url("/fonts/satisfy-Regular.ttf");
+}
+@font-face {
+  font-family: "times";
+  src: url("/fonts/times New Roman.ttf");
+}
+@font-face {
+  font-family: "darker";
+  src: url("/fonts/darkerGrotesque-Light.ttf");
+}
+.font_aqua {
+  font-family: "aquarelle";
+}
+.font_weat {
+  font-family: "sunday";
+}
+.font_maph {
+  font-family: "mayphylla";
+}
+.font_back {
+  font-family: "backlash";
+}
+.font_mini {
+  font-family: "minonPro";
+}
+.font_mont {
+  font-family: "montserrat";
+}
+.font_sati {
+  font-family: "satisfy";
+}
+
+/* Define accent font family variable in CSS */
 :root {
+  color: #711881;
+  font-family: "backlash";
   font-size: 1rem;
   text-align: center;
   background: linear-gradient(to right, #410b4b, #711881, #711881, #410b4b);
   color: #d7b436;
   padding: 1%;
+}
+
+:root h1 {
+  font-family: "sunday";
 }
 
 #notifications, #cart, #rewards, #help, #settings, #admin, #wallet {
@@ -124,6 +189,39 @@
   cursor: pointer;
   font-size: 14px;
   margin-top: 5px;
+}
+
+.collapsible {
+  background-color: #f9f9f9;
+  color: #333;
+  cursor: pointer;
+  padding: 10px;
+  width: 100%;
+  border: none;
+  text-align: left;
+  outline: none;
+  font-size: 18px;
+  transition: background-color 0.3s;
+}
+
+.active, .collapsible:hover {
+  background-color: #711881;
+}
+
+.content {
+  padding: 0 18px;
+  display: none;
+  overflow: hidden;
+  background-color: #f1f1f1;
+}
+
+.carrot {
+  float: right;
+  transition: transform 0.3s;
+}
+
+.rotate {
+  transform: rotate(90deg);
 }
 
 .collapsable {

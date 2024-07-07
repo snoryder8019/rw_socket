@@ -1,6 +1,6 @@
 $gold : #d7b436;
 $goldDim : #695f38;
-
+$white:white;
 $black:#1a0a1b;
 $purple:#711881;
 $purpleFade0:#71188100;
@@ -9,25 +9,124 @@ $gradientEdge: #410b4b;
 
 
 
-:root{
-    font-size: 1rem;
-    text-align: center;
-    background:linear-gradient(to right,$gradientEdge,$purple,$purple, $gradientEdge);
-    color:$gold;
-    padding: 1%;
-}
 // #div0, #login_div, #register_div,#tickets, #users, #ticketsAdmin, #logs{
-//     display: none;
-// }
-#notifications, #cart, #rewards, #help, #settings, #admin, #wallet{
+  //     display: none;
+  // }
+  
+  $maph: "mayphylla";
+  $weat: "sunday";
+  $aqua: "aquarelle";
+  $back: "backlash";
+  $mini: "minonPro";
+  $mont:"montserrat";
+  $sati:"satisfy";
+  $time:"times";
+  $dark:"darker";
+  //TYPEFACES
+  $primaryFontColor:$black;
+  $secondaryFontColor:$white;
+  $linkFontColor:blue;
+  $accentFontColor:red;
+  @font-face {
+    font-family: $maph;
+    src: url('/fonts/maphylla.otf');
+  }
+  @font-face {
+    font-family: $weat;
+    src: url('/fonts/weatherSunday.otf');
+  }
+  @font-face {
+    font-family: $aqua;
+    src: url('/fonts/aquarelle.ttf');
+  }
+  @font-face {
+    font-family: $back;
+    src: url('/fonts/backslash.otf');
+  }
+  @font-face {
+    font-family: $mini;
+    src: url('/fonts/minionPro-Semibold.otf');
+  }
+  @font-face {
+    font-family: $mont;
+    src: url('/fonts/montserrat-SemiBold.ttf');
+  }
+  @font-face {
+    font-family: $sati;
+    src: url('/fonts/satisfy-Regular.ttf');
+  }
+  @font-face {
+    font-family: $time;
+    src: url('/fonts/times New Roman.ttf');
+  }
+  @font-face {
+    font-family: $dark;
+    src: url('/fonts/darkerGrotesque-Light.ttf');
+  }
+  
+  
+  $primaryFontFamily:$mini;
+  $smallFontSize:1.2rem;
+  $smallerFontSize:1.0rem;
+  $regularFontSize:1.8rem;
+  $buttonFontSize:1.4rem;
+  $mediumFontSize:2rem;
+  $largeFontSize:3rem;
+  $avatarFontSize:1.5rem;
+  $menuInitialsFontSize:2.8rem;
+  $menuInitialsWeight:800;
+  $accentFontFamily:$weat;
+  $inputLabelFontSize:2.5rem;
+  $inputSubmitFontSize:0.9rem;
+  $inputFontSize:1.3rem;
+  $labelFontSize:1.2rem;
+  
+  //font DIVs
+  .font{
+    &_aqua{font-family: $aqua;}
+    &_weat{font-family:$weat}
+    &_maph{font-family:$maph}
+    &_back{font-family:$back;}
+    &_mini{font-family:$mini;}
+    &_mont{font-family:$mont;}
+    &_sati{font-family:$sati;}
+  }
+  
+  /* Define accent font family variable in CSS */
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  :root{
+    color: $purple;
+    font-family: $back;
+      font-size: 1rem;
+      text-align: center;
+      background:linear-gradient(to right,$gradientEdge,$purple,$purple, $gradientEdge);
+      color:$gold;
+      padding: 1%;
+  }
+  :root h1{
+    font-family: $weat;
+  }
+  #notifications, #cart, #rewards, #help, #settings, #admin, #wallet{
     display: none;
-}
-#footer{
+  }
+  #footer{
     padding: 2%;
     background-color: $purple;
     color: $gold;
-width: 90%;
-margin-left: 3%;
+    width: 90%;
+    margin-left: 3%;
     box-shadow: inset 5px 5px 12px $black;
 }
 .footerContainer{
@@ -144,7 +243,38 @@ text-align: center;
   font-size: 14px;
   margin-top: 5px;
 }
+.collapsible {
+  background-color: #f9f9f9;
+  color: #333;
+  cursor: pointer;
+  padding: 10px;
+  width: 100%;
+  border: none;
+  text-align: left;
+  outline: none;
+  font-size: 18px;
+  transition: background-color 0.3s;
+}
 
+.active, .collapsible:hover {
+  background-color: $purple;
+}
+
+.content {
+  padding: 0 18px;
+  display: none;
+  overflow: hidden;
+  background-color: #f1f1f1;
+}
+
+.carrot {
+  float: right;
+  transition: transform 0.3s;
+}
+
+.rotate {
+  transform: rotate(90deg);
+}
 .collapsable{
 box-shadow:inset 2px 2px 2px $black;
 }
