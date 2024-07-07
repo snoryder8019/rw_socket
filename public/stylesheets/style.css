@@ -33,15 +33,101 @@
   width: 33%;
 }
 
-.collapse_carrot {
-  margin: 0 12px;
-  font-size: 3rem;
-  transform: rotate(180deg);
+.shopifyStorefront {
+  font-family: Arial, sans-serif;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative;
 }
 
-.collapse_carrot {
-  display: inline-block;
-  transition: transform 0.3s ease;
+.shopifyStorefront h1 {
+  font-size: 24px;
+  color: #333;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.shopifyStorefront ul {
+  display: flex;
+  overflow-x: scroll;
+  scroll-snap-type: x mandatory;
+  padding: 0;
+  margin: 0;
+  list-style-type: none;
+}
+
+.shopifyStorefront li {
+  scroll-snap-align: center;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  margin: 0 10px;
+  padding: 20px;
+  min-width: 300px;
+  flex: 0 0 auto;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+}
+
+.shopifyStorefront li h2 {
+  margin: 10px 0;
+  font-size: 20px;
+  color: #555;
+}
+
+.shopifyStorefront li p {
+  margin: 10px 0;
+  color: #777;
+}
+
+.productImgContainer {
+  flex-grow: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.productImgContainer img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 4px;
+}
+
+.centerHighlight {
+  border: 2px solid #711881;
+}
+
+.priceContainer {
+  position: absolute;
+  bottom: 0%;
+  right: 0%;
+  background-color: #711881;
+  color: #d7b436;
+  padding: 10px;
+  border-radius: 4px;
+  font-size: 24px;
+}
+
+.buyNowButton {
+  background-color: #d7b436;
+  color: #1a0a1b;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  margin-top: 5px;
+}
+
+.collapsable {
+  box-shadow: inset 2px 2px 2px #1a0a1b;
 }
 
 .rotated {
@@ -181,6 +267,14 @@ input {
   right: 100%;
   top: 0%;
   z-index: 1001;
+}
+@media (min-width: 768px) {
+  #userDash {
+    height: 71vh;
+    width: 50%;
+    top: 21%;
+    z-index: 1005;
+  }
 }
 @media (max-width: 768px) {
   #userDash {
@@ -328,7 +422,7 @@ input {
 
 #mainBanner {
   background-image: url("/images/MainBanner.png");
-  background-size: 380px;
+  background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
   background-color: #410b4b;
@@ -343,6 +437,11 @@ input {
   padding: 0%;
   transition: all 0.3s ease; /* Smooth transition for shrinking */
   background-color: rgba(113, 24, 129, 0);
+}
+@media (min-width: 768px) {
+  .banner {
+    min-height: 400px;
+  }
 }
 
 .banner img {
@@ -372,6 +471,13 @@ input {
   width: 87%;
   margin: 1% 2%;
 }
+@media (min-width: 768px) {
+  .shrunk {
+    min-height: 0;
+    width: 94%;
+    margin: 1% 0%;
+  }
+}
 
 .shrunk img {
   width: 100%;
@@ -385,6 +491,7 @@ input {
 #bannerControls {
   margin: 0;
   padding: 0;
+  z-index: 1005;
 }
 
 #userGreeting {
@@ -608,6 +715,12 @@ input {
   z-index: 5;
   margin-top: 12vh;
 }
+@media (min-width: 768px) {
+  .expanded {
+    min-height: 73vh;
+    top: 12%;
+  }
+}
 
 .close-button {
   position: absolute;
@@ -698,8 +811,10 @@ input {
 
 .index-container {
   background-repeat: no-repeat;
+  background-size: 50%;
+  background-position: left;
+  background-blend-mode: hue;
 }
-
 #chatTabs {
   overflow-y: scroll;
   background-color: #c878d7;
@@ -797,6 +912,11 @@ input {
   flex: 0 0 auto;
   text-align: center;
 }
+@media (min-width: 768px) {
+  .shopifyStorefront li {
+    max-width: 12%;
+  }
+}
 
 .shopifyStorefront li h2 {
   margin: 0 0 10px 0;
@@ -806,7 +926,7 @@ input {
 
 .shopifyStorefront li p {
   margin: 0;
-  color: #711881;
+  color: #d7b436;
 }
 
 .shopifyStorefront li img {
@@ -816,7 +936,7 @@ input {
 }
 
 .centerHighlight {
-  border: 2px solid #007bff;
+  border: 2px solid #711881;
 }
 
 .adminForms {

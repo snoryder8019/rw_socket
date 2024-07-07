@@ -1,6 +1,5 @@
 {
-    "watch": ["app.js","bin/www","views/", "routes/", "models/"],
-    "ext": "js,json",
-    "ignore": ["node_modules/", "public/","logs/"]
-  }
+  "ignore": ["node_modules/", "public/","logs/"]
+}
+
   

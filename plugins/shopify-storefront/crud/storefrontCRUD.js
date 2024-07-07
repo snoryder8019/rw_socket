@@ -36,6 +36,16 @@ const getProducts = async () => {
                                             }
                                         }
                                     }
+                                    variants(first: 1) {
+                                        edges {
+                                            node {
+                                                price {
+                                                    amount
+                                                    currencyCode
+                                                }
+                                            }
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -48,9 +58,9 @@ const getProducts = async () => {
         const text = await response.text();
 
         // Log the response details for debugging
-        // console.log('Response Status:', response.status);
-        // console.log('Response Headers:', response.headers.raw());
-        // console.log('Response Text:', text);
+        console.log('Response Status:', response.status);
+        console.log('Response Headers:', response.headers.raw());
+        console.log('Response Text:', text);
 
         if (response.status !== 200) {
             throw new Error(`Server responded with status ${response.status}: ${text}`);
@@ -78,13 +88,19 @@ const renderHtml = (templateName, products) => {
     let productsHtml = '';
 
     products.forEach(product => {
+        const variant = product.node.variants.edges[0].node;
+        const price = parseFloat(variant.price.amount).toFixed(2);  // Ensure two decimal places
         productsHtml += `<li>
                             <h2>${product.node.title}</h2>
                             <p>${product.node.description}</p>`;
         if (product.node.images.edges.length > 0) {
-            productsHtml += `<div class=productImgContainer><img src="${product.node.images.edges[0].node.originalSrc}" alt="${product.node.images.edges[0].node.altText}" /></div>`;
+            productsHtml += `<div class="productImgContainer"><img src="${product.node.images.edges[0].node.originalSrc}" alt="${product.node.images.edges[0].node.altText}" /></div>`;
         }
-        productsHtml += `</li>`;
+        productsHtml += `<div class="priceContainer">
+                            <p>$${price}</p>
+                            <button class="buyNowButton">Buy Now</button>
+                         </div>
+                         </li>`;
     });
 
     return html.replace('<!--PRODUCTS-->', productsHtml);

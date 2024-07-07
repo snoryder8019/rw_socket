@@ -43,16 +43,111 @@ text-align: center;
     flex-shrink: 0;
     width:33%;
 }
-.collapse_carrot{
-    margin: 0 12px;
-    font-size: 3rem;
-    transform: rotate(180deg);
-}
-.collapse_carrot {
-    display: inline-block;
-    transition: transform 0.3s ease;
+// .collapse_carrot{
+//     margin: 0 12px;
+//     font-size: 3rem;
+//     transform: rotate(180deg);
+// }
+// .collapse_carrot {
+//     display: inline-block;
+//     transition: transform 0.3s ease;
+// }
+.shopifyStorefront {
+  font-family: Arial, sans-serif;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative;
 }
 
+.shopifyStorefront h1 {
+  font-size: 24px;
+  color: #333;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.shopifyStorefront ul {
+  display: flex;
+  overflow-x: scroll;
+  scroll-snap-type: x mandatory;
+  padding: 0;
+  margin: 0;
+  list-style-type: none;
+}
+
+.shopifyStorefront li {
+  scroll-snap-align: center;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  margin: 0 10px;
+  padding: 20px;
+  min-width: 300px;
+  flex: 0 0 auto;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+}
+
+.shopifyStorefront li h2 {
+  margin: 10px 0;
+  font-size: 20px;
+  color: #555;
+}
+
+.shopifyStorefront li p {
+  margin: 10px 0;
+  color: #777;
+}
+
+.productImgContainer {
+  flex-grow: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.productImgContainer img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 4px;
+}
+
+.centerHighlight {
+  border: 2px solid $purple;
+}
+
+.priceContainer {
+  position: absolute;
+  bottom: 0%;
+  right: 0%;
+  background-color: $purple;
+  color: $gold;
+  padding: 10px;
+  border-radius: 4px;
+  font-size: 24px;
+}
+
+.buyNowButton {
+  background-color: $gold;
+  color: $black;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  margin-top: 5px;
+}
+
+.collapsable{
+box-shadow:inset 2px 2px 2px $black;
+}
 .rotated {
     transform: rotate(180deg);
 }
@@ -183,7 +278,12 @@ display: flex;
     right:100%;
     top:0%;
     z-index: 1001;
-
+@media (min-width:768px) {
+  height: 71vh;
+  width: 50%;
+  top:21%;
+  z-index: 1005;
+}
     @media (max-width:768px) {
         width: 92%;
         height:75%;
@@ -324,15 +424,17 @@ transition-duration: .6s;
 }
 #mainBanner{
   background-image: url('/images/MainBanner.png');
-  background-size: 380px;
+  background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
   background-color: #410b4b;
   box-shadow: 0px 0px 20px #d9ef1846;
   border:5px solid #1a0a1b;
+
 }
 .banner {
 display:grid;
+
 grid-template-columns: 1fr 10fr;
     width: 98%; /* Full width */
     padding: 0%;
@@ -341,7 +443,9 @@ grid-template-columns: 1fr 10fr;
    // justify-content: space-between; /* Space items appropriately */
    // align-items: center; /* Center items vertically */
     background-color:$purpleFade0;
-    
+    @media (min-width:768px) {
+      min-height: 400px;
+    }
 }
 
 .banner img {
@@ -370,6 +474,11 @@ grid-template-columns: 1fr 10fr;
     padding: 1%;
     width: 87%;
     margin:1% 2%;
+    @media (min-width:768px) {
+      min-height: 0;
+      width: 94%;
+      margin: 1% 0%;;
+    }
   }
   
   .shrunk img {
@@ -385,6 +494,7 @@ grid-template-columns: 1fr 10fr;
   #bannerControls{
     margin: 0;
     padding: 0;
+    z-index: 1005;
   }
 #userGreeting{
   font-size: .8rem;
@@ -593,6 +703,10 @@ background:linear-gradient(to right,rgba(128, 0, 128, 0.56),rgba(255, 217, 0, 0.
     width: 94%;
     z-index:5;
     margin-top: 12vh;
+    @media (min-width:768px) {
+      min-height: 73vh;
+      top:12%
+    }
   }
   
   .close-button {
@@ -680,7 +794,12 @@ animation:flashMsg 2.8s ease-in-out 0s 1 ;
 }
 .index-container{
   background-repeat: no-repeat;
-  
+  background-size: 50%;
+background-position: left;
+background-blend-mode: hue;
+  @media (min-width:768px) {
+   // height: 100%;
+  }
 }
 #chatTabs {
   overflow-y: scroll;
@@ -780,6 +899,9 @@ animation:flashMsg 2.8s ease-in-out 0s 1 ;
         min-width: 300px;
         flex: 0 0 auto;
         text-align: center;
+        @media (min-width:768px) {
+          max-width: 12%;
+        }
     }
     
     .shopifyStorefront li h2 {
@@ -790,7 +912,7 @@ animation:flashMsg 2.8s ease-in-out 0s 1 ;
     
     .shopifyStorefront li p {
         margin: 0;
-        color: $purple;
+        color:$gold;
     }
     
     .shopifyStorefront li img {
@@ -800,7 +922,7 @@ animation:flashMsg 2.8s ease-in-out 0s 1 ;
     }
     
     .centerHighlight {
-        border: 2px solid #007bff;
+        border: 2px solid $purple;
     }
     
 
