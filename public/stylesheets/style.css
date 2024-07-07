@@ -696,6 +696,10 @@ input {
   box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.442);
 }
 
+.index-container {
+  background-repeat: no-repeat;
+}
+
 #chatTabs {
   overflow-y: scroll;
   background-color: #c878d7;
@@ -756,7 +760,6 @@ input {
   box-shadow: 2px 2px 2px #711881;
 }
 
-
 .shopifyStorefront {
   font-family: Arial, sans-serif;
   padding: 20px;
@@ -814,11 +817,11 @@ input {
 
 .centerHighlight {
   border: 2px solid #007bff;
+}
 
 .adminForms {
   display: grid;
   grid-template-columns: 1fr 1fr;
-
 }
 
 /*# sourceMappingURL=style.css.map */
