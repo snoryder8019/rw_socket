@@ -142,6 +142,7 @@ text-align: center;
     flex-shrink: 0;
     width:33%;
 }
+//
 // .collapse_carrot{
 //     margin: 0 12px;
 //     font-size: 3rem;
@@ -154,8 +155,8 @@ text-align: center;
 .shopifyStorefront {
   font-family: Arial, sans-serif;
   padding: 20px;
-  background-color: #f9f9f9;
-  border: 1px solid #ddd;
+  background-color: $purple;
+  border: 1px solid $gold;
   border-radius: 8px;
   overflow: hidden;
   position: relative;
@@ -224,13 +225,16 @@ text-align: center;
 
 .priceContainer {
   position: absolute;
-  bottom: 0%;
-  right: 0%;
+  bottom: 1%;
+  right: 5%;
   background-color: $purple;
   color: $gold;
   padding: 10px;
-  border-radius: 4px;
+  border-top-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+ // border-radius: 4px;
   font-size: 24px;
+  box-shadow: inset 5px 5px 5px #1a0a1b83;
 }
 
 .buyNowButton {
@@ -323,9 +327,7 @@ box-shadow:inset 2px 2px 2px $black;
     background-color: #f9f9f9; /* Light background color */
     overflow-y: scroll;
   }
-  .collapse-section{
 
-  }
 
 
 
@@ -996,7 +998,7 @@ background-blend-mode: hue;
       .shopifyStorefront {
         font-family: Arial, sans-serif;
         padding: 20px;
-        background-color: #f9f9f9;
+       // background-color: #f9f9f9;
         border: 1px solid #ddd;
         border-radius: 8px;
         overflow: hidden;
@@ -1020,15 +1022,18 @@ background-blend-mode: hue;
     
     .shopifyStorefront li {
       max-width: 100%;
-        scroll-snap-align: center;
-        background-color: #fff;
-        border: 1px solid #ddd;
-        border-radius: 4px;
-        margin: 10px;
-        padding: 10px;
-        min-width: 300px;
-        flex: 0 0 auto;
-        text-align: center;
+    scroll-snap-align: center;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin: 10px;
+    padding: 10px;
+    min-width: 300px;
+    flex: 0 0 auto;
+    text-align: center;
+    position: relative;
+    box-shadow: inset 1px 1px 5px rgba(255, 255, 255, 0.8), inset -1px -1px 5px rgba(0, 0, 0, 0.1), 1px 1px 5px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease-in-out;
         @media (min-width:768px) {
           max-width: 12%;
         }
