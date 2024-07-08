@@ -17,11 +17,11 @@
   <div id="flashErrors"><%- include('./partials/flashErrors',{message:message})%></div>  
   
   <div id="main">
-    <div id="mainBanner" class="banner">
+    <div id="mainBanner" style="background-image: url(<%=webappSettings[0].mainBannerDesktop%>);" class="banner">
         <div id="bannerControls">
           <%if(typeof user ==='object'&& user){%>
-              <button id="dashToggle">D</button>
-              <button id="chatToggle">C</button>
+              <button id="dashToggle"></button>
+              <button id="chatToggle"></button>
           <%}else{%>
               <button id="dashToggle">Sign In</button>
             <%}%>
@@ -80,7 +80,6 @@ document.addEventListener('DOMContentLoaded', () => {
         let closeButton = this.querySelector('.close-button');
         if (!closeButton) {
           closeButton = document.createElement('button');
-          closeButton.textContent = 'X';
           closeButton.className = 'close-button';
           this.appendChild(closeButton);
         }
@@ -100,17 +99,24 @@ document.addEventListener('DOMContentLoaded', () => {
 <script src="/javascripts/loader.js"></script>
 
 
-<script src="http://173.255.196.155:8080/shopify-component.umd.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/vue@3"></script>
-<!-- Include built Vue component -->
-          <!-- Initialize Vue component -->
-          <script>
-            const app = Vue.createApp({});
-            app.component('shopify-component', ShopifyComponent);
-            app.mount('#shopify-component');
-          </script>
+
         </body>
-        
+        <style>
+          @font-face {
+          font-family: 'backslash';
+          src: url('/fonts/backslash.otf');
+        }
+        :root h1{
+          font-family:<%= webappSettings[0].mainFont%>;
+          color:<%= webappSettings[0].mainFontColor%>
+        }
+        #dashToggle{
+          background-image: url(<%=webappSettings[0].dashboardIcon%>);
+        }
+        #chatToggle{
+          background-image: url(<%=webappSettings[0].chatIcon%>);
+        }
+      </style>
         </html>
         
         
