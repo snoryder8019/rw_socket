@@ -58,17 +58,11 @@
 
 /* Define accent font family variable in CSS */
 :root {
-  color: #711881;
-  font-family: "backlash";
   font-size: 1rem;
   text-align: center;
   background: linear-gradient(to right, #410b4b, #711881, #711881, #410b4b);
   color: #d7b436;
   padding: 1%;
-}
-
-:root h1 {
-  font-family: "sunday";
 }
 
 #notifications, #cart, #rewards, #help, #settings, #admin, #wallet {
@@ -208,6 +202,7 @@
 
 .active, .collapsible:hover {
   background-color: #711881;
+  color: #d7b436;
 }
 
 .content {
@@ -391,10 +386,11 @@ input {
 
 #chatToggle {
   width: 40px;
+  height: 40px;
   margin: 2%;
   border-radius: 40px;
-  border: 5px solid #711881;
-  background-color: #d7b436;
+  background-size: 90%;
+  background-position: center;
   color: #711881;
   font-size: 0.8rem;
   box-shadow: 3px 3px 3px #1a0a1b;
@@ -409,10 +405,11 @@ input {
 
 #dashToggle {
   width: 40px;
+  height: 40px;
   margin: 2%;
   border-radius: 40px;
-  border: 5px solid #711881;
-  background-color: #d7b436;
+  background-size: 90%;
+  background-position: center;
   color: #711881;
   font-size: 0.8rem;
   box-shadow: 3px 3px 3px #1a0a1b;
@@ -494,7 +491,7 @@ input {
 }
 
 .userNavLink img {
-  width: 100%;
+  width: 68%;
 }
 @media (min-width: 768px) {
   .userNavLink img {
@@ -521,7 +518,6 @@ input {
 }
 
 #mainBanner {
-  background-image: url("/images/MainBanner.png");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -529,12 +525,16 @@ input {
   box-shadow: 0px 0px 20px rgba(217, 239, 24, 0.2745098039);
   border: 5px solid #1a0a1b;
 }
+@media (min-width: 768px) {
+  #mainBanner {
+    width: 100%;
+    background-size: contain;
+  }
+}
 
 .banner {
   display: grid;
   grid-template-columns: 1fr 10fr;
-  width: 98%; /* Full width */
-  padding: 0%;
   transition: all 0.3s ease; /* Smooth transition for shrinking */
   background-color: rgba(113, 24, 129, 0);
 }
@@ -558,6 +558,7 @@ input {
 .sticky {
   position: fixed;
   top: 0;
+  left: 0;
   width: 100%;
   z-index: 1000; /* Ensure it stays on top */
   background-color: #711881;
@@ -567,15 +568,10 @@ input {
   display: grid;
   grid-template-columns: 1fr 10fr;
   height: 103px; /* Adjusted height when scrolled */
-  padding: 1%;
-  width: 87%;
-  margin: 1% 2%;
 }
 @media (min-width: 768px) {
   .shrunk {
     min-height: 0;
-    width: 94%;
-    margin: 1% 0%;
   }
 }
 
@@ -589,14 +585,14 @@ input {
 }
 
 #bannerControls {
-  margin: 0;
-  padding: 0;
+  margin: 2%;
+  padding: 2%;
   z-index: 1005;
+  align-self: center;
 }
 
 #userGreeting {
   font-size: 0.8rem;
-  margin: 0;
   padding: 0;
 }
 
@@ -1044,6 +1040,23 @@ input {
 .adminForms {
   display: grid;
   grid-template-columns: 1fr 1fr;
+}
+
+.adminStatsRow {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.adminStat {
+  width: 98%;
+  margin: 1%;
+  border: 1px solid grey;
+  border-radius: 5px;
+}
+
+.adminStatsRow img {
+  max-width: 75px;
 }
 
 /*# sourceMappingURL=style.css.map */

@@ -32,6 +32,8 @@ const clubs = require('./adminFunctions/clubs/clubs');
 router.use('/clubs',clubs);
 const webappSettings = require('./adminFunctions/webappSettings/webappSettings');
 router.use('/webappSettings',webappSettings);
+const sectionSettings = require('./adminFunctions/webappSettings/sectionSettings');
+router.use('/sectionSettings',sectionSettings);
 const subscriptions = require('./adminFunctions/subscriptions/subscriptions');
 router.use('/subscriptions',subscriptions);
 const generalEditor = require('./adminFunctions/generalEditor');
@@ -63,12 +65,13 @@ router.get('/',noNos, async (req, res) => {
   let user = req.user;
 
  const db = getDb();
-const collection = db.collection('tickets');
+const collection = db.collection('webappSettings');
 try{
-  const tickets = await collection.find().toArray()
+  const webappSettings = await collection.find().toArray()
+  console.log(webappSettings)
   res.render('index', { 
     user: user, 
-    tickets:tickets,
+    webappSettings:webappSettings,
     message: req.flash(),
  
     
