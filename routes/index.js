@@ -66,12 +66,15 @@ router.get('/',noNos, async (req, res) => {
 
  const db = getDb();
 const collection = db.collection('webappSettings');
+const collection1 = db.collection('sectionSettings');
 try{
   const webappSettings = await collection.find().toArray()
+  const sectionSettings = await collection1.find().toArray()
   console.log(webappSettings)
   res.render('index', { 
     user: user, 
     webappSettings:webappSettings,
+    sectionSettings:sectionSettings,
     message: req.flash(),
  
     

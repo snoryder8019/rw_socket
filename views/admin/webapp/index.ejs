@@ -1,31 +1,41 @@
 
-<div class="adminWindow">
-    
+<h4>Webapp Settings</h4>
+<div class="adminWindow">    
+    <div class="adminStatsRow">
+        <% if (typeof webappSettings === 'object' && webappSettings && webappSettings.length > 0) { %>
+            <% Object.keys(webappSettings[0]).forEach(function(key) { %>
+                <% if (typeof webappSettings[0][key] === 'string' && webappSettings[0][key].match(/^https?:\/\/.+\.(jpg|jpeg|png|gif|bmp)$/i)) { %>
+                    <div class="adminStat">
+                        <p><%= key %></p>
+                        <img alt="Add image to webapp." src="<%= webappSettings[0][key] %>">
+                    </div>
+                    <% } %>
+                    <% }); %>
+                    <% } %>
+                </div>
+            </div>
+            <h4>Your Main Sections</h4>
+            <div class="adminWindow">
+                <div class="adminStatsRow">
+                    <% if (typeof sectionSettings === 'object' && sectionSettings && sectionSettings.length > 0) { %>
+                        <% sectionSettings.forEach(function(setting) { %>
+                        <% if (typeof setting.backgroundImg === 'string' && setting.backgroundImg.match(/^https?:\/\/.+\.(jpg|jpeg|png|gif|bmp)$/i)) { %>
+                          <div  class="adminStat">
+                         
+                            <p><%=setting.subtitle%></p>
+                            <img alt="Add image to webapp." src="<%= setting.backgroundImg %>">
+                            <button class="collapsible" >edit: <%=setting.title%><span class="carrot">&#9654;</span></button>
+                            <div data-url="/sectionSettings/load/edit/<%=setting._id%>" class="content"></div>
+                          </div>
+                        <% } %>
+                      <% }); %>
+                    <% } %>
+                  </div>
+           </div>
 
-<div class="adminStatsRow">
-<%if(typeof webappSettings ==='object'&& webappSettings){%>
- 
- <div class="adminStat"> <p>"mainBannerDesktop" </p> <img alt="Add image to webapp." src="<%= webappSettings[0].mainBannerDesktop%>"></div>
- <div class="adminStat"> <p>mainBannerCell</p>  <img alt="Add image to webapp." src="<%= webappSettings[0].mainBannerCell%>"></div>
- <div class="adminStat"> <p>mainLogo</p>   <img alt="Add image to webapp." src="<%= webappSettings[0].mainLogo%>"></div>
- <div class="adminStat">  <p>thubnailLogo</p>  <img alt="Add image to webapp." src="<%= webappSettings[0].thumbnailLogo%>"></div>
- <div class="adminStat">   <p>signInIcon</p> <img alt="Add image to webapp." src="<%= webappSettings[0].signInIcon%>"></div>
- <div class="adminStat">   <p>dashboardIcon</p> <img alt="Add image to webapp." src="<%= webappSettings[0].dashboardIcon%>"></div>
- <div class="adminStat">   <p>chatIcon</p> <img alt="Add image to webapp." src="<%= webappSettings[0].chatIcon%>"></div>
-      <%}%>
-</div>
-
-
-
-
-
-
-
-
-    
-</div>
 <div class="main"></div>
     <button class="collapsible">Add Sections<span class="carrot">&#9654;</span></button>
     <div class="content" data-url="/sectionSettings/loadSectionsForm"></div>
     <button class="collapsible">Update Settings<span class="carrot">&#9654;</span></button>
     <div class="content" data-url="/webappSettings/loadSettingsForm"></div>
+
