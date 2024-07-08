@@ -70,7 +70,7 @@ const collection1 = db.collection('sectionSettings');
 try{
   const webappSettings = await collection.find().toArray()
   const sectionSettings = await collection1.find().toArray()
-  console.log(webappSettings)
+ // console.log(webappSettings)
   res.render('index', { 
     user: user, 
     webappSettings:webappSettings,

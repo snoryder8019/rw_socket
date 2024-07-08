@@ -23,7 +23,7 @@
               <button id="dashToggle"></button>
               <button id="chatToggle"></button>
           <%}else{%>
-              <button id="dashToggle">Sign In</button>
+              <button style="background-image: url('<%=webappSettings[0].signInIcon%>');" id="dashToggle"></button>
             <%}%>
         </div>
 
@@ -81,6 +81,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!closeButton) {
           closeButton = document.createElement('button');
           closeButton.className = 'close-button';
+          closeButton.innerHTML='X'
           this.appendChild(closeButton);
         }
         closeButton.style.display = 'block'; // Ensure the close button is visible

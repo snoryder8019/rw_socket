@@ -10,8 +10,8 @@ const getProducts = async () => {
         const fetch = (await import('node-fetch')).default;
 
         // Log the request URL and headers
-        console.log(`Fetching from: https://${STORE_DOMAIN}/api/2023-10/graphql.json`);
-        console.log(`Using API Key: ${API_KEY}`);
+      //  console.log(`Fetching from: https://${STORE_DOMAIN}/api/2023-10/graphql.json`);
+      //  console.log(`Using API Key: ${API_KEY}`);
 
         const response = await fetch(`https://${STORE_DOMAIN}/api/2023-10/graphql.json`, {
             method: 'POST',
@@ -58,9 +58,9 @@ const getProducts = async () => {
         const text = await response.text();
 
         // Log the response details for debugging
-        console.log('Response Status:', response.status);
-        console.log('Response Headers:', response.headers.raw());
-        console.log('Response Text:', text);
+        // console.log('Response Status:', response.status);
+        // console.log('Response Headers:', response.headers.raw());
+        // console.log('Response Text:', text);
 
         if (response.status !== 200) {
             throw new Error(`Server responded with status ${response.status}: ${text}`);

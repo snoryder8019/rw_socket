@@ -7,23 +7,23 @@
   </div>
 </div>
 
+<% if (typeof sectionSettings === 'object' && sectionSettings && sectionSettings.length > 0) { %>
+  <% sectionSettings.forEach(function(setting) { %>
+    <% if (setting.visible && setting.auth_view) { %>
+      <div class="auth_view_true" style="background-image: url('<%= setting.backgroundImg %>');">
+        <div style="background-image: url('/images/hugeIcon.png');" class="index-container">
+          <h1><%= setting.title %></h1>
+          <h1><%= setting.subtitle %></h1>
+          <h1><%= setting.description %></h1>
+          <button class="collapsible"><%= setting.entryButton.text %><span class="carrot"></span></button>
+          <div class="content" data-url="<%=setting.entryButton.url%>"></div>
+        </div>
+      </div>
+    <% } %>
+  <% }); %>
+<% } %>
 
-<div class="auth_view_true" style="background-image: url('./images/span3.png');">
-  <div style="background-image: url('/images/hugeIcon.png');" class="index-container">
-    <h1>CUSTOM SECTION</h1>
-    <h1>CUSTOM SECTION</h1>
-    <h1>CUSTOM SECTION</h1>
-    <h1>CUSTOM SECTION</h1>
-  </div>
-</div>
-<div class="auth_view_true" style="background-image: url('./images/span1.png');">
-  <div style="background-image: url('/images/hugeIcon.png');" class="index-container">
-    <h1>CUSTOM SECTION</h1>
-    <h1>CUSTOM SECTION</h1>
-    <h1>CUSTOM SECTION</h1>
-    <h1>CUSTOM SECTION</h1>
-  </div>
-</div>
+
 
 
 
