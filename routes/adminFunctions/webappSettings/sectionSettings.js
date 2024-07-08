@@ -19,9 +19,9 @@ const upload = multer({ storage: storage });
 // Route to load section settings form
 router.get('/loadSectionsForm', async (req, res) => {
   try {
-   // const settings = await SectionSettings.find();
-   // const setting = settings.length > 0 ? settings[0] : {};
-const setting = {}
+    const settings = await SectionSettings.getAll();
+    const setting = settings.length > 0 ? settings[0] : {};
+
     res.send(`
       <h1>Section Settings</h1>
       <div id="settingsList">
@@ -104,20 +104,29 @@ router.post('/addOrUpdateSettings', upload.fields([
 
     await Promise.all(uploadPromises);
 
-    const existingSettings = await SectionSettings.find();
-    if (existingSettings.length > 0) {
-      await SectionSettings.findByIdAndUpdate(existingSettings[0]._id, settingsData);
-      req.flash('success', 'Settings updated successfully!');
-    } else {
-      await SectionSettings.create(settingsData);
-      req.flash('success', 'New settings created!');
-    }
-    res.redirect('/sectionSettings/loadSettingsForm');
+    await SectionSettings.create(settingsData);
+    req.flash('success', 'New settings created!');
+    res.redirect('/');
   } catch (error) {
     console.error(error);
     req.flash('error', 'An error occurred while adding/updating the settings');
     res.status(500).send({ error: 'An error occurred while adding/updating the settings' });
   }
 });
+router.get('/load/edit/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const setting = await SectionSettings.getById(id);
 
+    if (!setting) {
+      return res.status(404).send({ error: 'Section settings not found' });
+    }
+
+    const htmlFilePath = path.join(__dirname, '../../html', 'editSectionSettings.html');
+    res.sendFile(htmlFilePath);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ error: 'An error occurred while loading section settings for editing' });
+  }
+});
 module.exports = router;
