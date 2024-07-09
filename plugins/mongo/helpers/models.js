@@ -10,7 +10,11 @@ class ModelHelper {
     const db = getDb();
     const collection = db.collection(this.collectionName);
     const result = await collection.insertOne(document);
-    return result;
+    if (result.insertedId) {
+      return await collection.findOne({ _id: result.insertedId });
+    } else {
+      throw new Error('Failed to insert document');
+    }
   }
 
   async getAll() {
@@ -40,7 +44,10 @@ class ModelHelper {
       { _id: new ObjectId(id) },
       { $set: updatedDocument }
     );
-    return result;
+    if (result.matchedCount === 0) {
+      throw new Error('No document found with that ID');
+    }
+    return await collection.findOne({ _id: new ObjectId(id) });
   }
 
   async deleteById(id) {
@@ -50,6 +57,9 @@ class ModelHelper {
     const db = getDb();
     const collection = db.collection(this.collectionName);
     const result = await collection.deleteOne({ _id: new ObjectId(id) });
+    if (result.deletedCount === 0) {
+      throw new Error('No document found with that ID');
+    }
     return result;
   }
 }

@@ -1,12 +1,12 @@
 const multer = require('multer');
-const sharp = require('sharp');
 const path = require('path');
-const { resizeAndCropImage } = require('../sharp/sharp'); // Adjust path as necessary
+const sharp = require('sharp');
+const fs = require('fs');
+const { resizeAndCropImage } = require('../sharp/sharp');
 
-// Use memory storage to process the image before saving
 const storage = multer.memoryStorage();
 
-const subscriptionUpload = multer({
+const upload = multer({
   storage: storage,
   fileFilter: (req, file, cb) => {
     if (file.mimetype.startsWith('image/')) {
@@ -17,22 +17,28 @@ const subscriptionUpload = multer({
   }
 });
 
-const processSubscriptionImage = async (req, res, next) => {
+const processImages = async (req, res, next) => {
   if (!req.files) {
     return next();
   }
 
   try {
-    const type = req.body.type || 'general';
-    const outputDirectory = path.join(__dirname, '../../uploads'); // Adjust the path as necessary
+    const outputDirectory = path.join(__dirname, '../../uploads');
 
     for (const [key, files] of Object.entries(req.files)) {
-      const file = files[0]; // Only handling one file per field for now
-      const originalFilePath = file.buffer;
+      const file = files[0];
       const filename = `${Date.now()}-${file.originalname}`;
+      const outputPath = path.join(outputDirectory, filename);
 
-      const outputPath = await resizeAndCropImage(originalFilePath, outputDirectory, filename, type, req.body.options || {});
-      req.body[key] = outputPath;
+      if (!fs.existsSync(outputDirectory)) {
+        fs.mkdirSync(outputDirectory, { recursive: true });
+      }
+
+      await sharp(file.buffer)
+        .resize(500)
+        .toFile(outputPath);
+
+      file.path = outputPath;
     }
 
     next();
@@ -41,4 +47,4 @@ const processSubscriptionImage = async (req, res, next) => {
   }
 };
 
-module.exports = { subscriptionUpload, processSubscriptionImage };
+module.exports = { upload, processImages };

@@ -2,11 +2,12 @@ const express = require('express');
 const { ObjectId } = require('mongodb');
 const Subscription = require('../../../plugins/mongo/models/Subscription');
 const { generateFormFields } = require('../../../plugins/helpers/formHelper');
-const { subscriptionUpload, processSubscriptionImage } = require('../../../plugins/multer/subscriptionSetup');const router = express.Router();
+const { upload, processImages } = require('../../../plugins/multer/subscriptionSetup');
+const { uploadToLinode } = require('../../../plugins/aws_sdk/setup');
 
+const router = express.Router();
 
-
-// Define file fields for multer
+// Define file fields for multer based on model configuration
 const fileFields = [
   { name: 'mediumIcon', maxCount: 1 },
   { name: 'squareNonAuthBkgd', maxCount: 1 },
@@ -15,41 +16,39 @@ const fileFields = [
   { name: 'horizAuthBkgd', maxCount: 1 }
 ];
 
-// Array of file field names for form generation
-const fileFieldNames = fileFields.map(field => field.name);
-
 // Route to render the form to add a new subscription
 router.get('/renderAddForm', (req, res) => {
   try {
-    const model = {
-      name: '',
-      type: '',
-      price: '',
-      startDate: '',
-      endDate: '',
-      mediumIcon: '',
-      squareNonAuthBkgd: '',
-      squareAuthBkgd: '',
-      horizNonAuthBkgd: '',
-      horizAuthBkgd: '',
-      nonAuthTitle: '',
-      nonAuthDescription: '',
-      authTitle: '',
-      authDescription: '',
-      daysSubscribed: '',
-      gemsType: '',
-      gemsCt: '',
-      items: '',
-      vendors: '',
-      gameTokens: ''
-    }; // Empty model for new subscription
+    const model = [
+      { name: 'name', type: 'text' },
+      { name: 'type', type: 'dropdown', options: ['Basic', 'Premium'] },
+      { name: 'price', type: 'number' },
+      { name: 'startDate', type: 'date' },
+      { name: 'endDate', type: 'date' },
+      { name: 'mediumIcon', type: 'file' },
+      { name: 'squareNonAuthBkgd', type: 'file' },
+      { name: 'squareAuthBkgd', type: 'file' },
+      { name: 'horizNonAuthBkgd', type: 'file' },
+      { name: 'horizAuthBkgd', type: 'file' },
+      { name: 'nonAuthTitle', type: 'text' },
+      { name: 'nonAuthDescription', type: 'textarea' },
+      { name: 'authTitle', type: 'text' },
+      { name: 'authDescription', type: 'textarea' },
+      { name: 'daysSubscribed', type: 'number' },
+      { name: 'gemsType', type: 'text' },
+      { name: 'gemsCt', type: 'number' },
+      { name: 'items', type: 'text' },  // Assuming comma-separated string for simplicity
+      { name: 'vendors', type: 'text' },  // Assuming comma-separated string for simplicity
+      { name: 'gameTokens', type: 'number' },
+    ]; // Empty model for new subscription
+
+    const formFields = generateFormFields(model);
 
     res.render('forms/generalForm', {
       title: 'Add New Subscription',
       action: '/subscriptions/create',
-      model: model,
-      generateFormFields: generateFormFields,
-      fileFields: fileFieldNames
+      formFields: formFields,
+      generateFormFields: generateFormFields // Pass the function to the template
     });
   } catch (error) {
     console.error(error);
@@ -57,8 +56,26 @@ router.get('/renderAddForm', (req, res) => {
   }
 });
 
+// Middleware to upload images to Linode
+const uploadImagesToLinode = async (req, res, next) => {
+  try {
+    if (req.files) {
+      for (const key in req.files) {
+        const file = req.files[key][0];
+        const fileKey = `subscriptions/${Date.now()}-${file.originalname}`;
+        const url = await uploadToLinode(file.path, fileKey);
+        req.body[key] = url; // Save the URL in the request body
+      }
+    }
+    next();
+  } catch (error) {
+    console.error("Error in uploadImagesToLinode middleware:", error);
+    next(error);
+  }
+};
+
 // Route to create a subscription
-router.post('/create', subscriptionUpload.fields(fileFields), processSubscriptionImage, async (req, res) => {
+router.post('/create', upload.fields(fileFields), processImages, uploadImagesToLinode, async (req, res) => {
   try {
     const subscriptionData = req.body;
     const subscription = new Subscription(subscriptionData);
@@ -97,7 +114,7 @@ router.get('/:id', async (req, res) => {
 });
 
 // Route to update a subscription by ID
-router.put('/:id', async (req, res) => {
+router.put('/:id', upload.fields(fileFields), processImages, uploadImagesToLinode, async (req, res) => {
   try {
     const { id } = req.params;
     if (!ObjectId.isValid(id)) {

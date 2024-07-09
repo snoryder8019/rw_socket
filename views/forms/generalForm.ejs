@@ -7,9 +7,9 @@
 </head>
 <body>
   <h1><%= title %></h1>
-  <!--DYNAMICALLY BRING THE MODEL KEYS AS INPUTS if we must-->
+  <!-- Dynamically bring the model keys as inputs if we must -->
   <form action="<%= action %>" method="post" enctype="multipart/form-data">
-    <%- generateFormFields(model, fileFields) %> 
+    <%- formFields %>
     <button type="submit">Submit</button>
   </form>
 </body>
