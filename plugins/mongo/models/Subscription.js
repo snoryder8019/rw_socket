@@ -28,4 +28,4 @@ class Subscription extends ModelHelper {
   }
 }
 
-module.exports = Subscription;
+module.exports = new Subscription();

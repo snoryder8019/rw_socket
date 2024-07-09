@@ -91,7 +91,7 @@ router.post('/create', upload.fields(fileFields), processImages, uploadImagesToL
 router.get('/all', async (req, res) => {
   try {
     const subscriptions = await Subscription.getAll();
-    res.status(200).send(subscriptions);
+    res.status(200).render('admin/subscriptions/template', { subscriptions });
   } catch (error) {
     console.error(error);
     res.status(500).send({ error: error.message });
@@ -105,13 +105,19 @@ router.get('/:id', async (req, res) => {
     if (!ObjectId.isValid(id)) {
       return res.status(400).send({ error: 'Invalid ID format' });
     }
+    // Ensure the subscription exists
     const subscription = await Subscription.getById(id);
-    res.status(200).send(subscription);
+    if (!subscription) {
+      return res.status(404).send({ error: 'Subscription not found' });
+    }
+    // Serve the HTML file
+    res.sendFile(path.join(__dirname, '../html/viewer.html'));
   } catch (error) {
     console.error(error);
     res.status(500).send({ error: error.message });
   }
 });
+
 
 // Route to update a subscription by ID
 router.put('/:id', upload.fields(fileFields), processImages, uploadImagesToLinode, async (req, res) => {
