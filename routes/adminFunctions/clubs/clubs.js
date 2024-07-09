@@ -1,99 +1,154 @@
 const express = require('express');
-const router = express.Router();
-const Club = require('../../../plugins/mongo/models/Club');
 const { ObjectId } = require('mongodb');
+const Club = require('../../../plugins/mongo/models/Club');
+const { generateFormFields } = require('../../../plugins/helpers/formHelper');
+const { upload, processImages } = require('../../../plugins/multer/subscriptionSetup'); // Adjust the import as necessary
+const { uploadToLinode } = require('../../../plugins/aws_sdk/setup');
 
-// Route to get a small subset of clubs with action buttons
-router.get('/load', async (req, res) => {
+const router = express.Router();
+
+// Define file fields for multer based on model configuration
+const fileFields = [
+  { name: 'mediumIcon', maxCount: 1 },
+  { name: 'squareNonAuthBkgd', maxCount: 1 },
+  { name: 'squareAuthBkgd', maxCount: 1 },
+  { name: 'horizNonAuthBkgd', maxCount: 1 },
+  { name: 'horizAuthBkgd', maxCount: 1 }
+];
+
+// Route to render the form to add a new club
+router.get('/renderAddForm', (req, res) => {
   try {
-    const clubs = await Club.getAll();
-    const clubHtml = clubs.map(club => `
-      <div class="user">
-        <p>${club.name}</p>
-        <p>members: 25</p>
-        <button>notify club</button>
-        <form action="/clubs/editClub" method="POST">
-          <input type="hidden" name="id" value="${club._id}">
-          <button type="submit">Edit Club</button>
-        </form>
-        <form action="/clubs/deleteClub" method="POST">
-          <input type="hidden" name="id" value="${club._id}">
-          <button type="submit">Delete Club</button>
-        </form>
-      </div>
-    `).join('');
+    const model = [
+      { name: 'name', type: 'text' },
+      { name: 'authTitle', type: 'text' },
+      { name: 'nonAuthTitle', type: 'text' },
+      { name: 'authSubtitle', type: 'text' },
+      { name: 'nonAuthSubtitle', type: 'text' },
+      { name: 'authDescription', type: 'textarea' },
+      { name: 'nonAuthDescription', type: 'textarea' },
+      { name: 'price', type: 'number' },
+      { name: 'subLength', type: 'number' },
+      { name: 'creationDate', type: 'date' },
+      { name: 'mediumIcon', type: 'file' },
+      { name: 'squareNonAuthBkgd', type: 'file' },
+      { name: 'squareAuthBkgd', type: 'file' },
+      { name: 'horizNonAuthBkgd', type: 'file' },
+      { name: 'horizAuthBkgd', type: 'file' },
+      { name: 'entryUrl', type: 'text' },
+      { name: 'entryText', type: 'text' },
+      { name: 'updatedDate', type: 'date' },
+      { name: 'status', type: 'text' },
+      { name: 'visible', type: 'boolean' },
+      { name: 'tags', type: 'text' },  // Assuming comma-separated string for simplicity
+      { name: 'links', type: 'text' },  // Assuming comma-separated string for simplicity
+      { name: 'blogs', type: 'text' },  // Assuming comma-separated string for simplicity
+      { name: 'vendors', type: 'text' },  // Assuming comma-separated string for simplicity
+      { name: 'members', type: 'text' }  // Assuming comma-separated string for simplicity
+    ];
 
-    res.send(`
-      <h1>Clubs</h1>
-      <div id="userList">
-        ${clubHtml}
-      </div>
+    const formFields = generateFormFields(model);
 
-      <h2>Create New Club</h2>
-      <h6>Club Name</h6>
-      <form action="/clubs/addClub" method="POST">
-        <input type="text" name="name">
-        <button type="submit">Add Club</button>
-      </form>
-    `);
+    res.render('forms/generalForm', {
+      title: 'Add New Club',
+      action: '/clubs/create',
+      formFields: formFields
+    });
   } catch (error) {
     console.error(error);
-    res.status(500).send({ error: 'An error occurred while fetching club data' });
+    res.status(500).send({ error: error.message });
   }
 });
 
-// Route to add a new club
-router.post('/addClub', async (req, res) => {
+// Middleware to upload images to Linode
+const uploadImagesToLinode = async (req, res, next) => {
   try {
-    const { name } = req.body;
-    const newClub = new Club(name);
-    await Club.create(newClub);
-    res.render('index', { message: 'New club created!' });
-  } catch (error) {
-    console.error(error);
-    res.status(500).send({ error: 'An error occurred while adding the club' });
-  }
-});
-
-// Route to delete a club
-router.post('/deleteClub', async (req, res) => {
-  try {
-    const { id } = req.body;
-    await Club.deleteById(id);
-    res.send('Club deleted!');
-  } catch (error) {
-    console.error(error);
-    res.status(500).send({ error: 'An error occurred while deleting the club' });
-  }
-});
-
-// Route to edit a club and render the generalEditor view
-router.post('/editClub', async (req, res) => {
-  try {
-    const { id } = req.body;
-    const club = await Club.getById(id);
-    if (!club) {
-      return res.status(404).send({ error: 'Club not found' });
+    if (req.files) {
+      for (const key in req.files) {
+        const file = req.files[key][0];
+        const fileKey = `clubs/${Date.now()}-${file.originalname}`;
+        const url = await uploadToLinode(file.path, fileKey);
+        req.body[key] = url; // Save the URL in the request body
+      }
     }
-    res.render('generalEditor', { model: 'Club', data: club });
+    next();
+  } catch (error) {
+    console.error("Error in uploadImagesToLinode middleware:", error);
+    next(error);
+  }
+};
+
+// Route to create a club
+router.post('/create', upload.fields(fileFields), processImages, uploadImagesToLinode, async (req, res) => {
+  try {
+    const clubData = req.body;
+    const club = new Club(clubData);
+    const result = await club.create(clubData);
+    res.status(201).send(result);
   } catch (error) {
     console.error(error);
-    res.status(500).send({ error: 'An error occurred while fetching the club data' });
+    res.status(500).send({ error: error.message });
   }
 });
-// Route to update a club
-router.post('/updateClub', async (req, res) => {
-    try {
-      const { id, name, description } = req.body;
-      const updatedClub = { name, description };
-      await Club.updateById(id, updatedClub);
-      req.flash('success_msg', 'Club updated successfully');
-      res.redirect('/clubs/load');
-    } catch (error) {
-      console.error(error);
-      req.flash('error_msg', 'An error occurred while updating the club');
-      res.redirect('/clubs/load');
+
+// Route to get all clubs
+router.get('/all', async (req, res) => {
+  try {
+    const clubs = await new Club().getAll();
+    res.render('admin/clubs/template', {
+      title: 'All Clubs',
+      clubs: clubs
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ error: error.message });
+  }
+});
+
+// Route to get a club by ID
+router.get('/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    if (!ObjectId.isValid(id)) {
+      return res.status(400).send({ error: 'Invalid ID format' });
     }
-  });
-  
+    const club = await new Club().getById(id);
+    res.status(200).send(club);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ error: error.message });
+  }
+});
+
+// Route to update a club by ID
+router.put('/:id', upload.fields(fileFields), processImages, uploadImagesToLinode, async (req, res) => {
+  try {
+    const { id } = req.params;
+    if (!ObjectId.isValid(id)) {
+      return res.status(400).send({ error: 'Invalid ID format' });
+    }
+    const updatedClub = req.body;
+    const result = await new Club().updateById(id, updatedClub);
+    res.status(200).send(result);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ error: error.message });
+  }
+});
+
+// Route to delete a club by ID
+router.delete('/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    if (!ObjectId.isValid(id)) {
+      return res.status(400).send({ error: 'Invalid ID format' });
+    }
+    const result = await new Club().deleteById(id);
+    res.status(200).send(result);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ error: error.message });
+  }
+});
+
 module.exports = router;

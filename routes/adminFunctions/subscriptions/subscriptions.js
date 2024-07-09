@@ -47,8 +47,7 @@ router.get('/renderAddForm', (req, res) => {
     res.render('forms/generalForm', {
       title: 'Add New Subscription',
       action: '/subscriptions/create',
-      formFields: formFields,
-      generateFormFields: generateFormFields // Pass the function to the template
+      formFields: formFields
     });
   } catch (error) {
     console.error(error);
@@ -90,8 +89,11 @@ router.post('/create', upload.fields(fileFields), processImages, uploadImagesToL
 // Route to get all subscriptions
 router.get('/all', async (req, res) => {
   try {
-    const subscriptions = await Subscription.getAll();
-    res.status(200).render('admin/subscriptions/template', { subscriptions });
+    const subscriptions = await new Subscription().getAll();
+    res.render('admin/subscriptions/template', {
+      title: 'All Subscriptions',
+      subscriptions: subscriptions
+    });
   } catch (error) {
     console.error(error);
     res.status(500).send({ error: error.message });
@@ -105,19 +107,13 @@ router.get('/:id', async (req, res) => {
     if (!ObjectId.isValid(id)) {
       return res.status(400).send({ error: 'Invalid ID format' });
     }
-    // Ensure the subscription exists
-    const subscription = await Subscription.getById(id);
-    if (!subscription) {
-      return res.status(404).send({ error: 'Subscription not found' });
-    }
-    // Serve the HTML file
-    res.sendFile(path.join(__dirname, '../html/viewer.html'));
+    const subscription = await new Subscription().getById(id);
+    res.status(200).send(subscription);
   } catch (error) {
     console.error(error);
     res.status(500).send({ error: error.message });
   }
 });
-
 
 // Route to update a subscription by ID
 router.put('/:id', upload.fields(fileFields), processImages, uploadImagesToLinode, async (req, res) => {
@@ -127,7 +123,7 @@ router.put('/:id', upload.fields(fileFields), processImages, uploadImagesToLinod
       return res.status(400).send({ error: 'Invalid ID format' });
     }
     const updatedSubscription = req.body;
-    const result = await Subscription.updateById(id, updatedSubscription);
+    const result = await new Subscription().updateById(id, updatedSubscription);
     res.status(200).send(result);
   } catch (error) {
     console.error(error);
@@ -142,7 +138,7 @@ router.delete('/:id', async (req, res) => {
     if (!ObjectId.isValid(id)) {
       return res.status(400).send({ error: 'Invalid ID format' });
     }
-    const result = await Subscription.deleteById(id);
+    const result = await new Subscription().deleteById(id);
     res.status(200).send(result);
   } catch (error) {
     console.error(error);
