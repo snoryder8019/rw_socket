@@ -1,13 +1,9 @@
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+const ModelHelper = require('../helpers/models');
 
-const VideoSchema = new Schema({
-  name: { type: String, required: true },
-  url: { type: String, required: true },
-  thumbnail: { type: String, required: true },
-}, {
-  timestamps: true
-});
+class Video extends ModelHelper {
+  constructor() {
+    super('videos');
+  }
+}
 
-const Video = mongoose.model('Video', VideoSchema);
-module.exports = Video;
+module.exports = new Video();

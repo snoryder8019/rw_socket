@@ -36,14 +36,6 @@ const io = require('socket.io')(server);
 
 const mainChat = require('../plugins/socket_io/setup');
 mainChat.setupSocketIO(server);
-
-const videoLead = require('../plugins/socket_io/videoLead');
-videoLead.setupVideoLead(io);
-
-const videoChannel = require('../plugins/socket_io/videoChannels/channel_1');
-videoChannel.setupVideoChannel(io);
-const videoProductionSocket = require('../plugins/socket_io/videoChannels/videoProduction'); // Adjust the path as needed
-videoProductionSocket.setupVideoChannel(io);
 /**
  * Normalize a port into a number, string, or false.
  */

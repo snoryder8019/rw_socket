@@ -9,11 +9,12 @@
   <h1>Video Production</h1>
 
   <!-- Form to upload videos -->
-  <form id="uploadForm" enctype="multipart/form-data">
-    <label for="video">Upload Video:</label>
-    <input type="file" id="video" name="video">
+  <form action="/videoProduction/upload" method="post" enctype="multipart/form-data">
+    <input type="file" name="video" />
+  
     <button type="submit">Upload</button>
   </form>
+  
 
   <!-- Display uploaded videos -->
   <h2>Uploaded Videos</h2>
