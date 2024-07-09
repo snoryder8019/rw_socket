@@ -1,30 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Section Settings</title>
+  <style>
+    .auth_view_true {
+      transition: all 0.3s ease-in-out;
+    }
+    .auth_view_true.expanded {
+      transform: scale(1.05);
+      z-index: 1;
+    }
+    .close-button {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <% if (typeof sectionSettings === 'object' && sectionSettings && sectionSettings.length > 0) { %>
 
-<div class="auth_view_true" style="background-image: url('./images/span1.png');">
-  <div style="background-image: url('/images/hugeIcon.png');" class="index-container">
-    <h1>Shop Now!!</h1>
+  <div class="auth_view_true" style="background-image: url('./images/span1.png');">
+    <div style="background-image: url('/images/hugeIcon.png');" class="index-container">
+      <h1>Shop Now!!</h1>
       <button class="collapsible">View Products<span class="carrot">&#9654;</span></button>
-    <div class="content" data-url="/shopify-storefront/products"></div>
+      <div class="content" data-url="/shopify-storefront/products"></div>
+    </div>
   </div>
-</div>
 
-<% if (typeof sectionSettings === 'object' && sectionSettings && sectionSettings.length > 0) { %>
-  <% sectionSettings.forEach(function(setting) { %>
-    <% if (setting.visible && setting.auth_view) { %>
-      <div class="auth_view_true" style="background-image: url('<%= setting.backgroundImg %>');">
-        <div style="background-image: url('/images/hugeIcon.png');" class="index-container">
-          <h1><%= setting.title %></h1>
-          <h1><%= setting.subtitle %></h1>
-          <h1><%= setting.description %></h1>
-          <button class="collapsible"><%= setting.entryButton.text %><span class="carrot"></span></button>
-          <div class="content" data-url="<%=setting.entryButton.url%>"></div>
+    <% sectionSettings.forEach(function(setting) { %>
+      <% if (setting.visible && setting.auth_view) { %>
+        <div class="auth_view_true" style="background-image: url('<%= setting.backgroundImg %>');">
+          <div style="background-image: url('/images/hugeIcon.png');" class="index-container">
+            <h1><%= setting.title %></h1>
+            <h1><%= setting.subtitle %></h1>
+            <h1><%= setting.description %></h1>
+            <button class="collapsible"><%= setting.entryButton.text %><span class="carrot"></span></button>
+            <div class="content" data-url="<%= setting.entryButton.url %>"></div>
+          </div>
         </div>
-      </div>
-    <% } %>
-  <% }); %>
-<% } %>
+      <% } %>
+    <% }); %>
 
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('.auth_view_true').forEach(div => {
+          div.addEventListener('click', function () {
+            if (!this.classList.contains('expanded')) {
+              this.classList.add('expanded');
+              let closeButton = this.querySelector('.close-button');
+              if (!closeButton) {
+                closeButton = document.createElement('button');
+                closeButton.className = 'close-button';
+                closeButton.innerHTML = 'X';
+                this.appendChild(closeButton);
+              }
+              closeButton.style.display = 'block'; // Ensure the close button is visible
 
+              closeButton.addEventListener('click', function (e) {
+                e.stopPropagation(); // Prevent click from propagating to the div
+                this.parentNode.classList.remove('expanded');
+                this.style.display = 'none'; // Hide button after collapsing
+              });
+            }
+          });
+        });
+      });
+    </script>
 
-
-
-<script src="/socket.io/socket.io.js"></script>
+  <% } %>
+  <script src="/socket.io/socket.io.js"></script>
+</body>
+</html>
