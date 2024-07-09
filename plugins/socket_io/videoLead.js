@@ -1,19 +1,26 @@
-// /plugins/socket_io/videoLead.js
-const { configureNamespace } = require('./socketUtils');
-
-const onVideoLeadConnection = (socket, nsp) => {
-    console.log(`${socket.request.user.firstName} connected to /video_lead`);
-
-    socket.on('video', (data) => {
-        // Broadcast the video data to all connected clients
-        socket.broadcast.emit('video', data);
+module.exports.setupVideoLead = function(io) {
+    const videoLead = io.of('/videoLead');
+  
+    videoLead.on('connection', (socket) => {
+      console.log('A user connected to videoLead');
+  
+      socket.on('newVideo', (video) => {
+        // Broadcast new video to all connected clients
+        videoLead.emit('newVideo', video);
+      });
+  
+      socket.on('scheduleVideoPush', () => {
+        // Get all videos for the scheduled push
+        // Assuming you have a Video model set up
+        const Video = require('../../mongo/models/Video');
+        Video.find().then((videos) => {
+          videoLead.emit('scheduledVideos', videos);
+        });
+      });
+  
+      socket.on('disconnect', () => {
+        console.log('A user disconnected from videoLead');
+      });
     });
-
-    socket.on('disconnect', () => {
-        console.log(`${socket.request.user.firstName} disconnected from /video_lead`);
-    });
-};
-
-module.exports.setupVideoLead = (io) => {
-    configureNamespace(io, '/video_lead', onVideoLeadConnection);
-};
+  };
+  

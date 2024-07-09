@@ -1,6 +1,6 @@
 <div id="admin">
     <button class="collapsible">Chat<span class="carrot">&#9654;</span></button>
-    <div class="content" data-url="/chat/load"><%-include ("./chat/index")%></div>
+    <div class="content" ><%-include ("./chat/index")%></div>
 
     <button class="collapsible">Users<span class="carrot">&#9654;</span></button>
     <div class="content"><%-include ('./users/index')%></div>
@@ -13,7 +13,7 @@
        </div>
 
     <button class="collapsible">VideoProduction<span class="carrot">&#9654;</span></button>
-    <div class="content" data-url="/videoProduction/load">Content for VideoProduction</div>
+    <div class="content"><%-include('./videoLead/videoProduction')%></div>
 
     <button class="collapsible">BingoLead<span class="carrot">&#9654;</span></button>
     <div class="content" data-url="/bingoLead/load">Content for BingoLead</div>
