@@ -51,7 +51,8 @@ router.post('/userImgUpload', upload, processImage, async (req, res) => {
     });
 
     console.log('MongoDB updated with image and thumbnail URLs.');
-    res.render('index', { success: false, message: "avatar uploaded successfully" });
+   req.flash('success','Avatar saved to profile.')
+    res.redirect('/');
   } catch (error) {
     console.error("Error in userImgUpload endpoint:", error);
     res.render('error', { error: error });

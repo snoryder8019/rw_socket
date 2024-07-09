@@ -42,7 +42,8 @@ videoLead.setupVideoLead(io);
 
 const videoChannel = require('../plugins/socket_io/videoChannels/channel_1');
 videoChannel.setupVideoChannel(io);
-
+const videoProductionSocket = require('../plugins/socket_io/videoChannels/videoProduction'); // Adjust the path as needed
+videoProductionSocket.setupVideoChannel(io);
 /**
  * Normalize a port into a number, string, or false.
  */

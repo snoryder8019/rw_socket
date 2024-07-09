@@ -1,4 +1,3 @@
-// /plugins/aws_sdk/setup.js
 const AWS = require('aws-sdk');
 const fs = require('fs');
 
@@ -11,11 +10,10 @@ const s3 = new AWS.S3({
     signatureVersion: 'v4',
     region: process.env.LINODE_REGION,
     httpOptions: {
-      connectTimeout: 10000, // 10 seconds
-      timeout: 30000 // 30 seconds
+        connectTimeout: 10000, // 10 seconds
+        timeout: 30000 // 30 seconds
     }
-  });
-  
+});
 
 /**
  * Uploads a file to Linode Object Storage
@@ -24,24 +22,50 @@ const s3 = new AWS.S3({
  * @returns {Promise<String>} URL of the uploaded file
  */
 const uploadToLinode = async (filePath, fileKey) => {
-  const fileContent = fs.readFileSync(filePath);
+    const fileContent = fs.readFileSync(filePath);
 
-  const params = {
-    Bucket: process.env.LINODE_BUCKET,
-    Key: fileKey,
-    Body: fileContent,
-    ACL: 'public-read', // Adjust according to your privacy requirements
-  };
+    const params = {
+        Bucket: process.env.LINODE_BUCKET,
+        Key: fileKey,
+        Body: fileContent,
+        ACL: 'public-read', // Adjust according to your privacy requirements
+    };
 
-  try {
-    const uploadResult = await s3.upload(params).promise();
-    return uploadResult.Location; // URL of the uploaded file
-  } catch (error) {
-    console.error("Error uploading to Linode Object Storage:", error);
-    throw error; // Rethrow to handle it in the calling function
-  }
+    try {
+        const uploadResult = await s3.upload(params).promise();
+        return uploadResult.Location; // URL of the uploaded file
+    } catch (error) {
+        console.error("Error uploading to Linode Object Storage:", error);
+        throw error; // Rethrow to handle it in the calling function
+    }
+};
+
+/**
+ * Retrieves a list of videos from Linode Object Storage
+ * @param {String} prefix (optional) Prefix to filter the videos (e.g., folder path)
+ * @returns {Promise<Array>} List of video objects
+ */
+const getVideos = async (prefix = '') => {
+    const params = {
+        Bucket: process.env.LINODE_BUCKET,
+        Prefix: prefix
+    };
+
+    try {
+        const data = await s3.listObjectsV2(params).promise();
+        return data.Contents.map(item => ({
+            key: item.Key,
+            lastModified: item.LastModified,
+            size: item.Size,
+            url: `${process.env.LINODE_URL}/${process.env.LINODE_BUCKET}/${item.Key}`
+        }));
+    } catch (error) {
+        console.error("Error retrieving videos from Linode Object Storage:", error);
+        throw error; // Rethrow to handle it in the calling function
+    }
 };
 
 module.exports = {
-  uploadToLinode,
+    uploadToLinode,
+    getVideos,
 };

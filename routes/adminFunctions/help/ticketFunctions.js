@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const { getDb } = require('../../plugins/mongo/mongo');
+const { getDb } = require('../../../plugins/mongo/mongo');
 const { ObjectId } = require('mongodb');
-const config = require('../../config/config');
-const lib = require('../logFunctions/logFunctions');
+const config = require('../../../config/config');
+const lib = require('../../logFunctions/logFunctions');
 const fs = require('fs');
 
 function isAdmin(req, res, next) {

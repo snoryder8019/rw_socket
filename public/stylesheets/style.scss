@@ -1073,7 +1073,7 @@ background-blend-mode: hue;
 
       .adminForms{
         display: grid;
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: 1fr 1fr auto;
       }
 
       .adminStatsRow{
