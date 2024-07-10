@@ -1,82 +1,80 @@
-<!-- views/videoChannels/channel_1.ejs -->
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Video Channel 1</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Video Overlay</title>
+  <style>
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    #videoOverlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      justify-content: center;
+      align-items: center;
+    }
+    #overlayVideo {
+      max-width: 80%;
+      max-height: 80%;
+    }
+    #closeBtn {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: #ff0000;
+      color: #fff;
+      border: none;
+      padding: 10px;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+  </style>
 </head>
 <body>
-    <div id="videoChannelContent">
-        <div class="video-channel-section">
-            <p>Video Channel 1 Content goes here...</p>
-            <video id="remoteVideo" autoplay playsinline></video>
-        </div>
-    </div>
+  <div class="container">
+    <h1>Awaiting Video...</h1>
+  </div>
 
-    <script src="/socket.io/socket.io.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const socket = io('/video_channel_1');
-            const remoteVideo = document.getElementById('remoteVideo');
-            let peerConnection;
+  <div id="videoOverlay" style="display: none;">
+    <video id="overlayVideo" controls style="max-width: 80%; max-height: 80%;"></video>
+    <button id="closeBtn">Close</button>
+  </div>
 
-            const iceServers = {
-                iceServers: [
-                    { urls: 'stun:stun.l.google.com:19302' },
-                ],
-            };
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      console.log('DOM fully loaded and parsed.');
 
-            const createPeerConnection = () => {
-                const pc = new RTCPeerConnection(iceServers);
+      const socket = io('/video_production');
+      const videoOverlay = document.getElementById('videoOverlay');
+      const overlayVideo = document.getElementById('overlayVideo');
+      const closeBtn = document.getElementById('closeBtn');
 
-                pc.onicecandidate = (event) => {
-                    if (event.candidate) {
-                        socket.emit('ice-candidate', event.candidate);
-                    }
-                };
+      closeBtn.addEventListener('click', () => {
+        console.log('Close button clicked. Hiding overlay.');
+        videoOverlay.style.display = 'none';
+        overlayVideo.pause();
+      });
 
-                pc.ontrack = (event) => {
-                    if (remoteVideo.srcObject !== event.streams[0]) {
-                        remoteVideo.srcObject = event.streams[0];
-                    }
-                };
+      socket.on('connect', () => {
+        console.log('ConnectedD to video_production namespace.');
+      });
 
-                return pc;
-            };
-
-            socket.on('connect', () => {
-                console.log('Connected to /video_channel_1 namespace');
-            });
-
-            socket.on('video', async (message) => {
-                if (message.type === 'offer') {
-                    if (!peerConnection) {
-                        peerConnection = createPeerConnection();
-                    }
-
-                    await peerConnection.setRemoteDescription(new RTCSessionDescription(message.sdp));
-
-                    const answer = await peerConnection.createAnswer();
-                    await peerConnection.setLocalDescription(answer);
-
-                    socket.emit('video', { type: 'answer', sdp: answer });
-                } else if (message.type === 'answer') {
-                    await peerConnection.setRemoteDescription(new RTCSessionDescription(message.sdp));
-                } else if (message.type === 'ice-candidate') {
-                    try {
-                        await peerConnection.addIceCandidate(message.candidate);
-                    } catch (error) {
-                        console.error('Error adding received ice candidate', error);
-                    }
-                }
-            });
-
-            socket.on('disconnect', () => {
-                console.log('Disconnected from /video_channel_1 namespace');
-            });
-        });
-    </script>
+      socket.on('overlay update', (data) => {
+        console.log('Received overlay update:', data);
+        overlayVideo.src = data.videoUrl;
+        videoOverlay.style.display = 'flex';
+        overlayVideo.play();
+      });
+    });
+  </script>
 </body>
 </html>
