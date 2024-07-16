@@ -1,79 +1,58 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Video Production</title>
-  <script src="/socket.io/socket.io.js"></script>
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-</head>
-<body>
-  <h1>Video Production</h1>
+<!--ejs partial no head or body here-->
+ <!--/views/admin/videoLead/videoProduction-->
+ <h1>Video Production</h1>
 
   <!-- Form to upload videos -->
-  <form action="/videoProduction/upload" method="post" enctype="multipart/form-data">
-    <input type="file" name="video" />
-  
+  <form id="uploadForm" action="/videoProduction/upload" method="post" enctype="multipart/form-data">
+    <input id="video" type="file" name="video" />
     <button type="submit">Upload</button>
   </form>
   
-
   <!-- Display uploaded videos -->
   <h2>Uploaded Videos</h2>
   <button class="collapsible">Get Videos<span class="carrot"></span></button>
   <div class="content" data-url="/videoProduction/getVideos"></div>
   <div id="videoList"></div>
 
-  <!-- Schedule video push -->
-  <h2>Schedule Video Push</h2>
-  <button id="schedulePush">Schedule Video Push</button>
-
-  <!-- View scheduled videos -->
-  <h2>Scheduled Videos</h2>
-  <div id="scheduledVideos"></div>
-
+  <script src="/socket.io/socket.io.js"></script>
   <script>
-    $(document).ready(function() {
-      var socket = io('/videoProduction');
+    document.addEventListener('DOMContentLoaded', function() {
+      var socket = io('/video_production');
 
       // Handle video upload
-      $('#uploadForm').on('submit', function(e) {
+      var uploadForm = document.getElementById('uploadForm');
+      uploadForm.addEventListener('submit', function(e) {
         e.preventDefault();
-        var formData = new FormData();
-        formData.append('video', $('#video')[0].files[0]);
+        var formData = new FormData(uploadForm);
 
-        $.ajax({
-          url: '/videoProduction/upload',
-          type: 'POST',
-          data: formData,
-          processData: false,
-          contentType: false,
-          success: function(response) {
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', '/videoProduction/upload', true);
+        xhr.onload = function() {
+          if (xhr.status === 200) {
             alert('Video uploaded successfully!');
-            socket.emit('newVideo', response.video);
-          },
-          error: function(err) {
+            socket.emit('newVideo', JSON.parse(xhr.responseText).video);
+          } else {
             alert('Error uploading video');
           }
-        });
+        };
+        xhr.send(formData);
       });
 
-      // Listen for new videos
-      socket.on('newVideo', function(video) {
-        $('#videoList').append(`<div><img src="${video.thumbnail}" alt="Video Thumbnail"><p>${video.name}</p></div>`);
-      });
-
-      // Schedule video push
-      $('#schedulePush').on('click', function() {
-        socket.emit('scheduleVideoPush');
-      });
-
-      // Listen for scheduled videos
-      socket.on('scheduledVideos', function(videos) {
-        $('#scheduledVideos').empty();
-        videos.forEach(function(video) {
-          $('#scheduledVideos').append(`<div><img src="${video.thumbnail}" alt="Video Thumbnail"><p>${video.name}</p></div>`);
-        });
+      // Get videos
+      var getVideosButton = document.querySelector('.collapsible');
+      console.log(`VIDEOPRODUCTION.EJS ~ get vids`)
+      getVideosButton.addEventListener('click', function() {
+        var contentDiv = document.querySelector('.content');
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', contentDiv.getAttribute('data-url'), true);
+        xhr.onload = function() {
+          if (xhr.status === 200) {
+            contentDiv.innerHTML = xhr.responseText;
+          } else {
+            alert('Error fetching videos');
+          }
+        };
+        xhr.send();
       });
     });
   </script>
-</body>
-</html>

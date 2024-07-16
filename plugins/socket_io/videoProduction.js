@@ -1,11 +1,11 @@
-// videoProduction.js
+// /plugins/socket_io/videoProduction.js
 const { sessionMiddleware, passportMiddleware, authenticate } = require('./socket_middleware');
 
 const videoProductionHandlers = {
     onConnection: (nsp, socket, users) => {
         const user = socket.request.user;
         const userName = user.firstName;
-        console.log(`User: ${userName} connected to video_production`);
+        console.log(`VIDEOPRODUCTION.JS ~User: ${userName} connected to video_production`);
 
         users[socket.id] = { userName };
 

@@ -1,11 +1,11 @@
-// mainChat.js
+// /plugins/socket_io/mainChat.js
 const { savechatMessage, fetchLatestMessages } = require('./db');
 
 const mainChatHandlers = {
     onConnection: (nsp, socket, users) => {
         const user = socket.request.user;
         const userName = user.firstName;
-        console.log(`User: ${userName} connected to main_chat`);
+        console.log(`MAINCHAT.JS ~ User: ${userName} connected to main_chat`);
 
         const avatarImage = user.images?.find(img => img.avatarTag) || {};
         const avatarThumbnailUrl = avatarImage.thumbnailUrl || 'defaultThumbnail.png';

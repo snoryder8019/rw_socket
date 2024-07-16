@@ -1,4 +1,4 @@
-// namespace.js
+// /plugins/socket_ionamespace.js
 const { sessionMiddleware, passportMiddleware, authenticate } = require('./socket_middleware');
 
 const configureNamespace = (io, namespace, namespaceHandlers) => {
