@@ -11,13 +11,17 @@
   <div id="flashErrors"><%- include('./partials/flashErrors',{message:message})%></div>  
   
   <div id="main">
+    <%if(typeof webappSettings === 'object'&& webappSettings){%>
     <div id="mainBanner" style="background-image: url(<%=webappSettings[0].mainBannerDesktop%>);" class="banner">
+      <%}%>
       <div id="bannerControls">
         <% if (typeof user === 'object' && user) { %>
           <button id="dashToggle"></button>
           <button id="chatToggle"></button>
-        <% } else { %>
-          <button style="background-image: url('<%=webappSettings[0].signInIcon%>');" id="dashToggle"></button>
+          <% } else { %>
+            <%if(typeof webappSettings === 'object'&& webappSettings){%>
+              <button style="background-image: url('<%=webappSettings[0].signInIcon%>');" id="dashToggle"></button>
+              <%}%>
         <% } %>
       </div>
       <div id="videoPlayerContainer">
@@ -109,6 +113,7 @@
   </script>
   <script src="/javascripts/loader.js"></script>
 </body>
+<%if(typeof webappSettings === 'object'&& webappSettings){%>
 <style>
   @font-face {
     font-family: 'backslash';
@@ -125,4 +130,5 @@
     background-image: url(<%=webappSettings[0].chatIcon%>);
   }
 </style>
+  <%}%>
 </html>

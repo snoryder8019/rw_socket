@@ -17,6 +17,34 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 // Route to load webapp settings
+router.get('/loadAddModelForm', async (req,res)=>{
+  try{
+
+res.send(`<h1>Create Model</h1>
+    <form action="/webappSettings/createModel" method="post">
+        <label for="modelName">Model Name:</label>
+        <input type="text" id="modelName" name="modelName" required><br><br>
+
+        <label for="attribute1">Attribute 1:</label>
+        <input type="text" id="attribute1" name="attribute1" required><br><br>
+
+        <label for="attribute2">Attribute 2:</label>
+        <input type="text" id="attribute2" name="attribute2" required><br><br>
+
+        <label for="attribute3">Attribute 3:</label>
+        <input type="text" id="attribute3" name="attribute3" required><br><br>
+
+        <input type="submit" value="Create Model">
+    </form>`);
+
+
+  }
+  catch(error){console.error(error)}
+  
+  res.render('error',{error:error})
+})
+
+
 router.get('/loadSettingsForm', async (req, res) => {
   try {
     const settings = await WebAppSettings.getAll();
@@ -200,19 +228,5 @@ router.post('/addOrUpdateSettings', upload.fields([
 });
 
 // Route to edit settings and render the generalEditor view
-router.post('/editSettings', async (req, res) => {
-  try {
-    const { id } = req.body;
-    const setting = await WebAppSettings.getById(id);
-    if (!setting) {
-      return res.status(404).send({ error: 'Settings not found' });
-    }
-    res.render('generalEditor', { model: 'WebAppSettings', data: setting });
-  } catch (error) {
-    console.error(error);
-    req.flash('error_msg', 'An error occurred while fetching the settings data');
-    res.status(500).send({ error: 'An error occurred while fetching the settings data' });
-  }
-});
 
 module.exports = router;
