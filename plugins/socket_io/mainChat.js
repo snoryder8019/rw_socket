@@ -17,15 +17,17 @@ const mainChatHandlers = {
 
         nsp.to('General').emit('user list', Object.values(users));
 
-        socket.on('chat message', async (message) => {
-            const roomId = '660834dfe387817ec2612c78';
+        socket.on('chat message', async (message,roomId) => {
+   
             try {
                 await savechatMessage(user.key, user.displayName, roomId, message, avatarThumbnailUrl);
                 nsp.to('General').emit('chat message', {
+                    roomId:roomId,
                     message,
                     user: user.displayName,
                     thumbnailUrl: avatarThumbnailUrl
                 });
+
             } catch (error) {
                 console.error('Error sending message:', error);
             }

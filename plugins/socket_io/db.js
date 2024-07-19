@@ -7,9 +7,9 @@ const fetchLatestMessages = async (roomId, page = 1, limit = 12) => {
         const chatMessagesCollection = db.collection("chat_messages_meta");
 
         const skip = (page - 1) * limit; // Calculate the number of documents to skip
-const roomIdObj='660834dfe387817ec2612c78'
+
         // Fetch the latest 12 messages for the specified room
-        const messages = await chatMessagesCollection.find({ roomId:roomIdObj })
+        const messages = await chatMessagesCollection.find({ roomId:roomId })
                             .sort({ messageDate: -1 }) // Sort by messageDate in descending order
                             .skip(skip)
                             .limit(limit)
