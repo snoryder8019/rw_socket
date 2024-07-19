@@ -11,10 +11,12 @@
             </div>
         </div>
         <div id="chatTabs">
-            <div class="tab_section active">main_chat</div>
-            <div class="tab_section">game_parlor_12</div>
-            <div class="tab_section">clubs_wine</div>
-            <div class="tab_section">alaska~offline</div>
+           <%if (typeof chatRooms == 'object' && chatRooms){%>
+         <%for(let i=0; i<chatRooms.length;i++){%>
+            <div class="tab_section"><%=chatRooms[i].roomName%></div>
+            <%}%>
+            <%}%>
+         <!--this will ultimately pull up a list of rooms you have permission to join-->
             <div class="tab_section join">join_room_+</div>
         </div>
         <div id="chat">
