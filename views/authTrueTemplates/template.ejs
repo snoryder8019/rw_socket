@@ -1,9 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Section Settings</title>
+
   <style>
     .auth_view_true {
       transition: all 0.3s ease-in-out;
@@ -19,8 +14,7 @@
       display: none;
     }
   </style>
-</head>
-<body>
+
   <% if (typeof sectionSettings === 'object' && sectionSettings && sectionSettings.length > 0) { %>
 
   <div class="auth_view_true" style="background-image: url('./images/span1.png');">
@@ -73,5 +67,4 @@
 
   <% } %>
   <script src="/socket.io/socket.io.js"></script>
-</body>
-</html>
+
