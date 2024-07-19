@@ -17,7 +17,7 @@ const scriptsToLoad = [
   '/javascripts/controllers/buttonControl.js',
   '/javascripts/controllers/backendControllers.js',
   '/javascripts/controllers/userControllers.js',
- 
+
 ];
 document.addEventListener('DOMContentLoaded', function() {
 Promise.all(scriptsToLoad.map(loadScript))
@@ -31,7 +31,7 @@ Promise.all(scriptsToLoad.map(loadScript))
     }
     if (typeof warningLoader === 'function') {
       warningLoader();
-     
+
   ;  // Call your function here
   if(typeof mainButtonControl ===  'function'){
     mainButtonControl();
@@ -47,7 +47,7 @@ Promise.all(scriptsToLoad.map(loadScript))
 
     // if(typeof closeControl ===  'function'){
     //   closeControl();
-    
+
     // }else{
     //   console.log(`closeControl did not load`)
     // };
@@ -62,6 +62,6 @@ Promise.all(scriptsToLoad.map(loadScript))
   })
   .catch((error) => {
     console.error('Error loading scripts:', error);
-  
+
   });
   });

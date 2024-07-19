@@ -53,14 +53,11 @@ try{
   const webappSettings = await collection.find().toArray()
   const sectionSettings = await collection1.find().toArray()
  // console.log(webappSettings)
-  res.render('index', { 
-    user: user, 
+  res.render('index', {
+    user: user,
     webappSettings:webappSettings,
     sectionSettings:sectionSettings,
     message: req.flash(),
- 
-    
-    
   });
 }
 catch(error){console.error(error);res.send(`error:${error}`)}
