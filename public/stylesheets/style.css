@@ -65,6 +65,14 @@
   padding: 1%;
 }
 
+:root p {
+  font-family: "backlash";
+  color: #410b4b;
+  font-weight: 500;
+  font-size: 1.3rem;
+  padding: 1%;
+}
+
 #notifications, #cart, #rewards, #help, #settings, #admin, #wallet {
   display: none;
 }

@@ -98,7 +98,7 @@ const renderHtml = (templateName, products) => {
         }
         productsHtml += `<div class="priceContainer">
                             <p>$${price}</p>
-                            <button class="buyNowButton">Buy Now</button>
+                            <button class="buyNowButton">Add to Cart</button>
                          </div>
                          </li>`;
     });
