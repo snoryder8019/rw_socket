@@ -18,7 +18,7 @@
   <% if (typeof sectionSettings === 'object' && sectionSettings && sectionSettings.length > 0) { %>
 
   <div class="auth_view_true" style="background-image: url('./images/span1.png');">
-    <div style="background-image: url('/images/hugeIcon.png');" class="index-container">
+    <div class="index-container">
       <h1>Shop Now!!</h1>
       <button class="collapsible">View Products<span class="carrot">&#9654;</span></button>
       <div class="content" data-url="/shopify-storefront/products"></div>
@@ -28,7 +28,7 @@
     <% sectionSettings.forEach(function(setting) { %>
       <% if (setting.visible && setting.auth_view) { %>
         <div class="auth_view_true" style="background-image: url('<%= setting.backgroundImg %>');">
-          <div style="background-image: url('/images/hugeIcon.png');" class="index-container">
+          <div class="index-container">
             <h1><%= setting.title %></h1>
             <h1><%= setting.subtitle %></h1>
             <p><%= setting.description %></p>
