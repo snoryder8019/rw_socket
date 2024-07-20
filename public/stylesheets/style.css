@@ -695,13 +695,18 @@ input {
   padding: 1%;
 }
 
-.message {
+.message, .message_green {
   display: grid;
   grid-template-columns: 2fr 8fr 1fr;
   margin-bottom: 10px;
   width: 98%;
   border-radius: 5px;
-  background: linear-gradient(to right, rgba(128, 0, 128, 0.56), rgba(255, 217, 0, 0.229), #711881, #711881, #711881, #711881, #711881, #711881, #711881, #711881, #711881);
+  background: linear-gradient(to right, rgba(128, 0, 128, 0.56), rgba(255, 217, 0, 0.229), #711881, #711881, #711881, #711881, #711881, #711881, #711881, #711881, #711881); /* Light grey background */
+  animation: fadeIn 0.3s ease-IN 0s 1;
+}
+
+.message_green {
+  background: linear-gradient(to left, rgba(128, 0, 128, 0.56), rgba(255, 217, 0, 0.229), #711881, #711881, #711881, #711881, #711881, #711881, #711881, #711881, #711881); /* Light grey background */
 }
 
 .messageUser {
@@ -710,7 +715,7 @@ input {
   margin-right: 5px;
 }
 
-.message img {
+.message img, .message_green img {
   background-color: #410b4b;
   max-width: 35px;
   min-width: 35px;
@@ -898,7 +903,6 @@ input {
 #game-container, .index-container {
   color: black;
   width: 90%;
-  max-width: 800px;
   background-color: rgba(255, 255, 255, 0.829);
   border-radius: 10px;
   padding: 20px;
@@ -973,7 +977,7 @@ input {
 
 .shopifyStorefront {
   font-family: Arial, sans-serif;
-  padding: 20px;
+  padding: 0;
   border: 1px solid #ddd;
   border-radius: 8px;
   overflow: hidden;

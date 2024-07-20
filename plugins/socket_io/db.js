@@ -23,7 +23,7 @@ const fetchLatestMessages = async (roomId, page = 1, limit = 12) => {
 };
 
 
-const savechatMessage = async (userKey, displayName, roomId, messageText, avatarUrl) => {
+const savechatMessage = async (userKey, displayName, roomId, messageText, avatarUrl, avatarStyle,chatStyle) => {
     try {
         console.log(`/plugins/socket_io/db.js: userKey ${userKey}, displayName: ${displayName},roomId: ${roomId}`)
         const db = getDb();
@@ -34,9 +34,11 @@ const roomObj =new ObjectId(roomId)
         const newMessageDoc = {
             roomId:roomId, // Use the roomId argument dynamically
             avatarType: "standard",
+            chatType: "standard",
+            chatStyle:chatStyle,
+            avatarStyle:avatarStyle,
             emojis: [],
             flagged: false,
-            frameType: "standard",
             likes: 0,
             message: messageText,
             messageDate: createdAt,

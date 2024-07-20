@@ -2,9 +2,11 @@
     <%- include('../animations/confetti')%>
 
     <% if(typeof user === 'object' && user) { %>
-        <script>var firstName = "<%= user.firstName %>";</script>
-        <script id="updatedRoomId">var roomId = "<%=chatRooms[0]._id%>"</script>
-        <div id="userList">
+        <script>var firstName = "<%= user.firstName %>"</script>
+        <script>var chatStyle = "<%=user.chatStyle%>"</script>
+       <script>var avatarStyle = "<%=user.avatarStyle%>"</script>
+       <script id="updatedRoomId">var roomId = "<%=chatRooms[0]._id%>"</script>
+       <div id="userList">
             <div class="loaderWheel">
                 <div class="loaderDiv"><h3>loading chatroom...</h3></div>
                 <div class="loaderDiv"><div class="wheel"></div></div>
@@ -29,7 +31,15 @@
         <p>Please log in to join the chat.</p>
     <% } %>
 </div>
-
+<script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const elements = document.querySelectorAll('.message');
+            elements.forEach((element, index) => {
+                const delay = index * 0.2; // Adjust the multiplier for different delays
+                element.style.animationDelay = `${delay}s`;
+            });
+        });
+    </script>
 <script>
     document.addEventListener('DOMContentLoaded', () => {
         var socket = io('/main_chat');
@@ -110,7 +120,8 @@
                 function sendMessage() {
                     const input = document.getElementById('chatInput');
                     const message = input.value.trim();  
-                         console.log(`send messagefunction~ room: ${roomId}`)
+                       
+                    console.log(`send messagefunction~ room: ${roomId}`)
                     if (message !== '') {
                         socket.emit('chat message', message, roomId);
                         input.value = '';

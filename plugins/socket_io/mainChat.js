@@ -25,7 +25,8 @@ const mainChatHandlers = {
                     roomId:roomId,
                     message,
                     user: user.displayName,
-                    thumbnailUrl: avatarThumbnailUrl
+                    thumbnailUrl: avatarThumbnailUrl,
+               
                 });
 
             } catch (error) {
