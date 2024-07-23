@@ -10,11 +10,13 @@ router.use((req,res,socketIo,next)=>{
     req.io = io
     next()
 })
+
+//setupSocketIO is mounted to the app > /bin/www
+//Configure new namespaces here
 const setupSocketIO = (server) => {
-    const io = socketIo(server);
- 
+    const io = socketIo(server); 
     configureNamespace(io, '/main_chat', mainChatHandlers);
-    configureVideoNamespace(io,'/video_production'); // Ensure this line sets up the video production namespace
+   // configureVideoNamespace(io,'/video_production'); // Ensure this line sets up the video production namespace
 };
 
 module.exports = {
