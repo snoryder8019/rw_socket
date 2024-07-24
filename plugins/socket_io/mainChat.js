@@ -17,8 +17,7 @@ const mainChatHandlers = {
 
         nsp.to('General').emit('user list', Object.values(users));
         
-        socket.on('chat message', async (message,roomId) => {
-   
+        socket.on('chat message', async (message,roomId) => {   
             try {
                 await savechatMessage(user.key, user.displayName, roomId, message, avatarThumbnailUrl);
                 nsp.to('General').emit('chat message', {

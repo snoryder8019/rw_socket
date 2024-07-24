@@ -16,8 +16,6 @@
     </style>
 
 <% if (typeof sectionSettings === 'object' && sectionSettings && sectionSettings.length > 0) { %>
-  <%- include('../videoChannels/userStream')%>
-  <%- include('../videoChannels/channel_1')%>
   <div class="auth_view_true" style="background-image: url('./images/span1.png');">
     <div class="index-container">
       <h1>Shop Now!!</h1>
@@ -25,27 +23,29 @@
       <div class="content" data-url="/shopify-storefront/products"></div>
     </div>
   </div>
+  <%- include('../videoChannels/userStream')%>
+  <%- include('../videoChannels/channel_1')%>
   
   <% sectionSettings.forEach(function(setting) { %>
     <% if (setting.visible && setting.auth_view) { %>
-        <div class="auth_view_true" style="background-image: url('<%= setting.backgroundImg %>');">
-          <div class="index-container">
-            <h1><%= setting.title %></h1>
-            <h1><%= setting.subtitle %></h1>
-            <p><%= setting.description %></p>
-            <button class="collapsible"><%= setting.entryButton.text %><span class="carrot"></span></button>
-            <div class="content" data-url="<%= setting.entryButton.url %>"></div>
-          </div>
+      <div class="auth_view_true" style="background-image: url('<%= setting.backgroundImg %>');">
+        <div class="index-container">
+          <h1><%= setting.title %></h1>
+          <h1><%= setting.subtitle %></h1>
+          <p><%= setting.description %></p>
+          <button class="collapsible"><%= setting.entryButton.text %><span class="carrot"></span></button>
+          <div class="content" data-url="<%= setting.entryButton.url %>"></div>
         </div>
+      </div>
       <% } %>
-    <% }); %>
-    <script>
-      document.addEventListener('DOMContentLoaded', () => {
-        document.querySelectorAll('.auth_view_true').forEach(div => {
-          div.addEventListener('click', function () {
-            if (!this.classList.contains('expanded')) {
-              this.classList.add('expanded');
-              let closeButton = this.querySelector('.close-button');
+      <% }); %>
+      <script>
+        document.addEventListener('DOMContentLoaded', () => {
+          document.querySelectorAll('.auth_view_true').forEach(div => {
+            div.addEventListener('click', function () {
+              if (!this.classList.contains('expanded')) {
+                this.classList.add('expanded');
+                let closeButton = this.querySelector('.close-button');
               if (!closeButton) {
                 closeButton = document.createElement('button');
                 closeButton.className = 'close-button';
@@ -53,7 +53,7 @@
                 this.appendChild(closeButton);
               }
               closeButton.style.display = 'block'; // Ensure the close button is visible
-
+              
               closeButton.addEventListener('click', function (e) {
                 e.stopPropagation(); // Prevent click from propagating to the div
                 this.parentNode.classList.remove('expanded');
@@ -63,8 +63,9 @@
           });
         });
       });
-    </script>
+      </script>
 
-  <% } %>
+<% } %>
   <script src="/socket.io/socket.io.js"></script>
-
+  
+  

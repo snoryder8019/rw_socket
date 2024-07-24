@@ -1,33 +1,184 @@
-<!--views/videoChannels/videoStream.ejs-->
 <div id="p2pChat_DYNAMICID" class="p2pChat">
-<div class="clientWindow">
-    <div class="client_camera"></div>
-    <div class="p2pControls">
-        <div class="p2pControl"></div>
-        <div class="p2pControl"></div>
-        <div class="p2pControl"></div>
-        <div class="p2pControl"></div>
+    <div class="clientWindow">
+        <video id="localVideo" class="client_camera" autoplay playsinline muted></video>
+        <div class="p2pControls">
+            <button class="p2pControl" id="startCameraButton">Start Camera</button>
+            <button class="p2pControl" id="stopCameraButton" style="display:none;">Stop Camera</button>
+            <button class="p2pControl" id="inviteButton" style="display:none;">Invite</button>
+            <button class="p2pControl" id="answerButton" style="display:none;">Answer</button>
+        </div>
     </div>
-</div>
-<div class="perrs">
-    <div class="peer"></div>
-    <div class="peer"></div>
-    <div class="peer"></div>
+    <div class="peers" id="peersContainer"></div>
 </div>
 
-
-</div>
 <script src="/socket.io/socket.io.js"></script>
-
 <script>
-    document.addEventListener('DOMContentLoaded', ()=>{
-        const socket = io('/p2p')
-        socket.on('connect', ()=>{
-            console.log('connected to video Stream client')
-            })
-            socket.on('p2pInit',(args)=>{
-                const arg = ""
-                console.log('p2p Init executed')
-            })
-    })
+    document.addEventListener('DOMContentLoaded', async () => {
+        const socket = io('/p2p');
+        const localVideo = document.getElementById('localVideo');
+        const peersContainer = document.getElementById('peersContainer');
+        const startCameraButton = document.getElementById('startCameraButton');
+        const stopCameraButton = document.getElementById('stopCameraButton');
+        const inviteButton = document.getElementById('inviteButton');
+        const answerButton = document.getElementById('answerButton');
+
+        let localStream;
+        let peerConnections = {};
+        let isAdmin = false;
+        let incomingOffer = null;
+        let userId = null;
+
+        const iceServers = [
+            { urls: 'stun:stun.l.google.com:19302' },
+            { urls: 'stun:stun1.l.google.com:19302' },
+            { urls: 'stun:stun2.l.google.com:19302' },
+            { urls: 'stun:stun3.l.google.com:19302' },
+            { urls: 'stun:stun4.l.google.com:19302' },
+        ];
+
+        async function startLocalStream() {
+            try {
+                localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+                localVideo.srcObject = localStream;
+                startCameraButton.style.display = 'none';
+                stopCameraButton.style.display = 'inline-block';
+                inviteButton.style.display = 'inline-block';
+                console.log('Local stream started');
+            } catch (error) {
+                console.error('Error accessing media devices:', error);
+                alert('Error accessing media devices: ' + error.message);
+            }
+        }
+
+        function stopLocalStream() {
+            if (localStream) {
+                localStream.getTracks().forEach(track => track.stop());
+                localVideo.srcObject = null;
+                startCameraButton.style.display = 'inline-block';
+                stopCameraButton.style.display = 'none';
+                inviteButton.style.display = 'none';
+                console.log('Local stream stopped');
+            }
+        }
+
+        function createPeerConnection(peerId) {
+            const pc = new RTCPeerConnection({ iceServers });
+            console.log(`Creating peer connection for ${peerId}`);
+
+            pc.onicecandidate = (event) => {
+                if (event.candidate) {
+                    console.log(`Sending ICE candidate to ${peerId}`);
+                    socket.emit('ice', { candidate: event.candidate, to: peerId });
+                }
+            };
+
+            pc.ontrack = (event) => {
+                let remoteVideo = document.getElementById(peerId);
+                if (!remoteVideo) {
+                    remoteVideo = document.createElement('video');
+                    remoteVideo.id = peerId;
+                    remoteVideo.className = 'peer';
+                    remoteVideo.autoplay = true;
+                    remoteVideo.playsinline = true;
+                    peersContainer.appendChild(remoteVideo);
+                }
+                console.log(`Setting remote stream for ${peerId}`);
+                remoteVideo.srcObject = event.streams[0];
+            };
+
+            if (localStream) {
+                localStream.getTracks().forEach(track => pc.addTrack(track, localStream));
+                console.log('Local tracks added to peer connection');
+            }
+
+            return pc;
+        }
+
+        async function handleInvite() {
+            if (!isAdmin) return;
+
+            const pc = createPeerConnection(userId);
+            peerConnections[userId] = pc;
+
+            try {
+                const offer = await pc.createOffer();
+                await pc.setLocalDescription(offer);
+                console.log('Sending offer', { offer, from: userId });
+                socket.emit('p2pInit', { offer, from: userId });
+            } catch (error) {
+                console.error('Error creating offer', error);
+            }
+        }
+
+        async function handleAnswer() {
+            if (!incomingOffer) return;
+
+            const pc = createPeerConnection(incomingOffer.from);
+            peerConnections[incomingOffer.from] = pc;
+
+            try {
+                await pc.setRemoteDescription(new RTCSessionDescription(incomingOffer.offer));
+                console.log('Remote description set', { from: incomingOffer.from });
+                const answer = await pc.createAnswer();
+                await pc.setLocalDescription(answer);
+                console.log('Sending answer', { answer, to: incomingOffer.from, from: userId });
+                socket.emit('p2pAnswer', { answer, to: incomingOffer.from, from: userId });
+            } catch (error) {
+                console.error('Error creating answer', error);
+            }
+        }
+
+        socket.on('connect', () => {
+            userId = socket.id;
+            console.log('Connected to video Stream client', { userId });
+
+            socket.emit('getUserData', (response) => {
+                isAdmin = response.isAdmin;
+                if (!isAdmin) {
+                    inviteButton.style.display = 'none';
+                }
+                console.log('User data received', { response });
+            });
+        });
+
+        socket.on('p2pInit', async (data) => {
+            if (!isAdmin && data.offer) {
+                incomingOffer = data;
+                answerButton.style.display = 'block';
+                console.log('Offer received', { data });
+            }
+        });
+
+        socket.on('p2pAnswer', async (data) => {
+            const pc = peerConnections[data.from];
+            if (pc) {
+                try {
+                    await pc.setRemoteDescription(new RTCSessionDescription(data.answer));
+                    console.log('Remote description set for answer', { data });
+                } catch (error) {
+                    console.error('Error setting remote description', { error, data });
+                }
+            }
+        });
+
+        socket.on('ice', async (data) => {
+            console.log('Received ICE candidate', { from: data.from });
+            const pc = peerConnections[data.from];
+            if (pc && data.candidate) {
+                try {
+                    await pc.addIceCandidate(new RTCIceCandidate(data.candidate));
+                    console.log('ICE candidate added', { from: data.from });
+                } catch (error) {
+                    console.error('Error adding received ICE candidate', { error, data });
+                }
+            } else {
+                console.log('PeerConnection not found for', { from: data.from });
+            }
+        });
+
+        startCameraButton.addEventListener('click', startLocalStream);
+        stopCameraButton.addEventListener('click', stopLocalStream);
+        inviteButton.addEventListener('click', handleInvite);
+        answerButton.addEventListener('click', handleAnswer);
+    });
 </script>

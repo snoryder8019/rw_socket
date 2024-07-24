@@ -10,18 +10,11 @@
   <marquee id="marqueeText" behavior="scroll" direction="left" style="display: none;"></marquee>
 </div>
 
-<script src="/socket.io/socket.io.js"></script>
 <script>
   document.addEventListener('DOMContentLoaded', function() {
-    const socket = io('/main_chat');
 
-    socket.on('connect', () => {
-      console.log('Connected to channel_1 client');
-    });
 
-    socket.on('connect_error', (err) => {
-      console.error('Connection error:', err);
-    });
+  
     socket.on('broadcast', (videoUrl) => {
       const finUrl = videoUrl.videoUrl.videoUrl;
       console.log(`CHANNEL ONE BROADCAST NOTICED url: ${finUrl}`);
