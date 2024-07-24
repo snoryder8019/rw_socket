@@ -1,6 +1,6 @@
 
-  <style>
-    .auth_view_true {
+<style>
+  .auth_view_true {
       transition: all 0.3s ease-in-out;
     }
     .auth_view_true.expanded {
@@ -13,10 +13,11 @@
       right: 10px;
       display: none;
     }
-  </style>
+    </style>
 
-  <% if (typeof sectionSettings === 'object' && sectionSettings && sectionSettings.length > 0) { %>
-
+<% if (typeof sectionSettings === 'object' && sectionSettings && sectionSettings.length > 0) { %>
+  
+  <%- include('../videoChannels/channel_1')%>
   <div class="auth_view_true" style="background-image: url('./images/span1.png');">
     <div class="index-container">
       <h1>Shop Now!!</h1>
@@ -24,9 +25,9 @@
       <div class="content" data-url="/shopify-storefront/products"></div>
     </div>
   </div>
-
-    <% sectionSettings.forEach(function(setting) { %>
-      <% if (setting.visible && setting.auth_view) { %>
+  
+  <% sectionSettings.forEach(function(setting) { %>
+    <% if (setting.visible && setting.auth_view) { %>
         <div class="auth_view_true" style="background-image: url('<%= setting.backgroundImg %>');">
           <div class="index-container">
             <h1><%= setting.title %></h1>
@@ -38,7 +39,6 @@
         </div>
       <% } %>
     <% }); %>
-<%- include('../videoChannels/channel_1')%>
     <script>
       document.addEventListener('DOMContentLoaded', () => {
         document.querySelectorAll('.auth_view_true').forEach(div => {

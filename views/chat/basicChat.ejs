@@ -1,6 +1,6 @@
 <div id="chat-window-basic">
     <%- include('../animations/confetti')%>
-
+<div id="marquee"></div>
     <% if(typeof user === 'object' && user) { %>
         <script>var firstName = "<%= user.firstName %>"</script>
         <script>var chatStyle = "<%=user.chatStyle%>"</script>
@@ -176,26 +176,29 @@ console.log(`changing rooms ${messagesContainer}`)
           //  chatToggle.innerHTML = isOpen ? "C" : "X";
         });
     
-        document.addEventListener('click', (event) => {
-            if (event.target.classList.contains('usersOnline')) {
-                const userId = event.target.parentElement.dataset.userId;
-                const userName = event.target.parentElement.dataset.userName;
-                const userAvatar = event.target.parentElement.dataset.userAvatar;
+        // document.addEventListener('click', (event) => {
+        //     if (event.target.classList.contains('usersOnline')) {
+        //         const userId = event.target.parentElement.dataset.userId;
+        //         const userName = event.target.parentElement.dataset.userName;
+        //         const userAvatar = event.target.parentElement.dataset.userAvatar;
     
-                const userInfoBox = document.getElementById('userInfoBox');
-                userInfoBox.querySelector('.userName').textContent = userName;
-                userInfoBox.querySelector('.userAvatar').src = userAvatar;
+        //         const userInfoBox = document.getElementById('userInfoBox');
+        //         userInfoBox.querySelector('.userName').textContent = userName;
+        //         userInfoBox.querySelector('.userAvatar').src = userAvatar;
     
-                userInfoBox.style.left = `${event.pageX}px`;
-                userInfoBox.style.top = `${event.pageY}px`;
-                userInfoBox.style.display = 'block';
-            } else {
-                const userInfoBox = document.getElementById('userInfoBox');
-                userInfoBox.style.display = 'none';
-            };
+        //         userInfoBox.style.left = `${event.pageX}px`;
+        //         userInfoBox.style.top = `${event.pageY}px`;
+        //         userInfoBox.style.display = 'block';
+        //     } else {
+        //         const userInfoBox = document.getElementById('userInfoBox');
+        //         userInfoBox.style.display = 'none';
+        //     };
        
-        });
+        // });
     
+
+
+
         requestInitialMessages();
     });
 </script>
