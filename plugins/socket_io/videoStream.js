@@ -9,7 +9,8 @@ const socketP2PHandlers = {
     onConnection:(nsp, socket,users)=>{
         const user =socket.request.user
         const userName = user.firstName;
-        console.log(`VIDEOSTREAR.JS ~ User: ${userName} connected to videoStream`)
+        console.log(`VIDEOSTREAM.JS ~ User: ${userName} connected to videoStream`)
+        
     }
 }
 module.exports = socketP2PHandlers;

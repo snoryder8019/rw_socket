@@ -17,9 +17,11 @@
 
 
 </div>
+<script src="/socket.io/socket.io.js"></script>
+
 <script>
     document.addEventListener('DOMContentLoaded', ()=>{
-        const socket = io('/p2pInit')
+        const socket = io('/p2p')
         socket.on('connect', ()=>{
             console.log('connected to video Stream client')
             })
