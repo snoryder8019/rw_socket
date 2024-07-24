@@ -1,41 +1,71 @@
 <!--ejs partial no head or body here-->
 
-  <!--views/videoChannels/channel_1.ejs-->
-  <!--This is where the overlay goes, the connected client should automatically receive the played video here-->
-  <div class="container">
-    <h1>Awaiting Video...</h1>
-</div>
+<!--views/videoChannels/channel_1.ejs-->
+<!--This is where the overlay goes, the connected client should automatically receive the played video here-->
+<div class="containerVid">
+  <h6 id="statusText">New Videos Every Day!</h6>
 
-<div id="videoOverlay" style="display: none;">
-<video id="overlayVideo" controls style="max-width: 80%; max-height: 80%;"></video>
-<button id="closeBtn">Close</button>
+</div>
+<div style="color:red" id="marqueeContainer">
+  <marquee id="marqueeText" behavior="scroll" direction="left" style="display: none;"></marquee>
 </div>
 
 <script src="/socket.io/socket.io.js"></script>
 <script>
-document.addEventListener('DOMContentLoaded', () => {
-  console.log('CHANNEL_1.EJS ~ DOM fully loaded and parsed.');
+  document.addEventListener('DOMContentLoaded', function() {
+    const socket = io('/main_chat');
 
-  const socket = io('/video_production');
-  const videoOverlay = document.getElementById('videoOverlay');
-  const overlayVideo = document.getElementById('overlayVideo');
-  const closeBtn = document.getElementById('closeBtn');
+    socket.on('connect', () => {
+      console.log('Connected to channel_1 client');
+    });
 
-  closeBtn.addEventListener('click', () => {
-    console.log('Close button clicked. Hiding overlay.');
-    videoOverlay.style.display = 'none';
-    overlayVideo.pause();
+    socket.on('connect_error', (err) => {
+      console.error('Connection error:', err);
+    });
+    socket.on('broadcast', (videoUrl) => {
+      const finUrl = videoUrl.videoUrl.videoUrl;
+      console.log(`CHANNEL ONE BROADCAST NOTICED url: ${finUrl}`);
+      const containerVid = document.querySelector('.containerVid');
+      const statusText = document.getElementById('statusText');
+      statusText.style.display = 'none'; // Hide the "Awaiting Update..." text
+     
+      containerVid.innerHTML += `
+        <video autoplay id="videoPlayer" repeat autoplay style="max-height:200px;width: 100%;">
+          <source src="https://${finUrl}" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+      `;
+    });
+    socket.on('broadcast',(videoUrl)=>{
+      const finUrl = videoUrl.videoUrl.videoUrl
+      console.log(`CHANNEL ONE BROADCAST NOTICED url:${finUrl}`)
+    
+    })
+    
+    socket.on('marquee', (data) => {
+      console.log('Received marquee message:', data.message);
+      const marqueeText = document.getElementById('marqueeText');
+      marqueeText.innerText = data.message;
+      marqueeText.style.display = 'block'; // Show the marquee
+    });
+    
+    document.addEventListener('click', (event) => {
+      if(event.target.classList.contains('play-video')){
+        const videoUrl=event.target.getAttribute('data-video')
+        console.log(`playVIDDDSS!!k ${videoUrl}`)
+        socket.emit('broadcast',{videoUrl:videoUrl})
+      }
+    });
+    document.addEventListener('click', (event) => {
+      if (event.target.classList.contains('marqueeButton')) {
+        const marqueeMessage = document.getElementById('marqueeMessage').value;
+        console.log('Button clicked', marqueeMessage);
+        socket.emit('marquee', { message: marqueeMessage });
+        console.log('Marquee event emitted');
+ 
+      
+      }
+    });
   });
 
-  socket.on('connect', () => {
-    console.log('CHANNEL_1.EJS~ Connected to video_production namespace.');
-  });
-
-  socket.on('overlay update', (data) => {
-    console.log('Received overlay update:', data);
-    overlayVideo.src = data.videoUrl;
-    videoOverlay.style.display = 'flex';
-    overlayVideo.play();
-  });
-});
 </script>

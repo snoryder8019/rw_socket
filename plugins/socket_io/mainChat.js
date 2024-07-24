@@ -16,7 +16,7 @@ const mainChatHandlers = {
         socket.emit('user avatar', { thumbnailUrl: avatarThumbnailUrl });
 
         nsp.to('General').emit('user list', Object.values(users));
-
+        
         socket.on('chat message', async (message,roomId) => {
    
             try {
@@ -25,10 +25,8 @@ const mainChatHandlers = {
                     roomId:roomId,
                     message,
                     user: user.displayName,
-                    thumbnailUrl: avatarThumbnailUrl,
-               
+                    thumbnailUrl: avatarThumbnailUrl,               
                 });
-
             } catch (error) {
                 console.error('Error sending message:', error);
             }
@@ -51,7 +49,14 @@ const mainChatHandlers = {
         socket.on('chat message in room', ({ room, msg }) => {
             nsp.to(room).emit('chat message', { text: msg, user });
         });
-
+        socket.on('marquee',(data)=>{
+            console.log(`mainchat marquee data: ${data.message}`);
+            nsp.to('General').emit('marquee',data)
+        });
+        socket.on('broadcast',(videoUrl)=>{
+            console.log(`broadcasting to 1 video url: ${videoUrl}`);
+            nsp.to('General').emit('broadcast',{videoUrl});
+        });
         socket.on('disconnect', () => {
             delete users[socket.id];
             nsp.to('General').emit('user list', Object.values(users));

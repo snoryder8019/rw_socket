@@ -2,7 +2,7 @@
 const socketIo = require('socket.io');
 const configureNamespace = require('./namespace');
 const mainChatHandlers = require('./mainChat');
-const { configureVideoNamespace } = require('./videoProduction');
+const socketAdminHandlers = require('./socketAdmin');
 const express = require('express')
 const router = express.Router();
 router.use((req,res,socketIo,next)=>{
@@ -16,7 +16,7 @@ router.use((req,res,socketIo,next)=>{
 const setupSocketIO = (server) => {
     const io = socketIo(server); 
     configureNamespace(io, '/main_chat', mainChatHandlers);
-   // configureVideoNamespace(io,'/video_production'); // Ensure this line sets up the video production namespace
+configureNamespace(io,'/socketAdmin',socketAdminHandlers);
 };
 
 module.exports = {
