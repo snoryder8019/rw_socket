@@ -3,6 +3,9 @@ const socketIo = require('socket.io');
 const configureNamespace = require('./namespace');
 const mainChatHandlers = require('./mainChat');
 const socketAdminHandlers = require('./socketAdmin');
+const socketP2PHandlers = require('./videoStream');
+
+
 const express = require('express')
 const router = express.Router();
 router.use((req,res,socketIo,next)=>{
@@ -17,6 +20,7 @@ const setupSocketIO = (server) => {
     const io = socketIo(server); 
     configureNamespace(io, '/main_chat', mainChatHandlers);
 configureNamespace(io,'/socketAdmin',socketAdminHandlers);
+configureNamespace(io,'p2p',socketP2PHandlers);
 };
 
 module.exports = {

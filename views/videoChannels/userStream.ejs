@@ -1,0 +1,31 @@
+<!--views/videoChannels/videoStream.ejs-->
+<div id="p2pChat_DYNAMICID" class="p2pChat">
+<div class="clientWindow">
+    <div class="client_camera"></div>
+    <div class="p2pControls">
+        <div class="p2pControl"></div>
+        <div class="p2pControl"></div>
+        <div class="p2pControl"></div>
+        <div class="p2pControl"></div>
+    </div>
+</div>
+<div class="perrs">
+    <div class="peer"></div>
+    <div class="peer"></div>
+    <div class="peer"></div>
+</div>
+
+
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', ()=>{
+        const socket = io('/p2pInit')
+        socket.on('connect', ()=>{
+            console.log('connected to video Stream client')
+            })
+            socket.on('p2pInit',(args)=>{
+                const arg = ""
+                console.log('p2p Init executed')
+            })
+    })
+</script>
