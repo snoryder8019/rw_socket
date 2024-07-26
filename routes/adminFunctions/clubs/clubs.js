@@ -49,6 +49,19 @@ router.get('/renderAddForm', (req, res) => {
   }
 });
 
+router.get('/section', async (req, res) => {
+  try {
+    const clubs = await new Club().getAll();
+    res.render('admin/clubs/section', {
+      title: 'Section View',
+      clubs: clubs
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ error: error.message });
+  }
+});
+
 buildRoutes(new Club(), router);
 
 module.exports = router;

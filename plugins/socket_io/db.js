@@ -1,6 +1,6 @@
 const {getDb}=require('../mongo/mongo')
 const { ObjectId } = require('mongodb');
-
+const ChatMessage = require('../../plugins/mongo/models/ChatMessage')
 const fetchLatestMessages = async (roomId, page = 1, limit = 12) => {
     try {
         const db = getDb();
