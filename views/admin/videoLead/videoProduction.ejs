@@ -1,58 +1,84 @@
 <!--ejs partial no head or body here-->
- <!--/views/admin/videoLead/videoProduction-->
- <h1>Video Production</h1>
+<!--/views/admin/videoLead/videoProduction-->
+<h1>Video Production</h1>
 
-  <!-- Form to upload videos -->
-  <form id="uploadForm" action="/videoProduction/upload" method="post" enctype="multipart/form-data">
-    <input id="video" type="file" name="video" />
-    <button type="submit">Upload</button>
-  </form>
-  
-  <!-- Display uploaded videos -->
-  <h2>Uploaded Videos</h2>
-  <button class="collapsible">Get Videos<span class="carrot"></span></button>
-  <div class="content" data-url="/videoProduction/getVideos"></div>
-  <div id="videoList"></div>
+<!-- Form to upload videos -->
+<form id="uploadForm" action="/videoProduction/upload" method="post" enctype="multipart/form-data">
+  <input id="video" type="file" name="video" />
+  <button type="submit">Upload</button>
+</form>
 
-  <script src="/socket.io/socket.io.js"></script>
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      var socket = io('/video_production');
+<% if (typeof videos == 'object' && videos) { %>
+  <style>
+    .video_container { margin: 20px; }
+    .video-card { margin-bottom: 20px; padding: 10px; border: 1px solid #ccc; }
+    .btn { padding: 10px 20px; background-color: #007bff; color: #fff; border: none; cursor: pointer; }
+  </style>
+  <div class="video_container">
+    <h1>Uploaded Videos</h1>
+    <% videos.forEach(video => { %>
+      <div class="video-card">
+        <div class="videoTitle"><%= video.name %></div>
+        <div data-video="<%= video.url %>" class="btn play-video">Play</div>
+      </div>
+    <% }); %>
+  </div>
+<% } %>
 
-      // Handle video upload
-      var uploadForm = document.getElementById('uploadForm');
-      uploadForm.addEventListener('submit', function(e) {
-        e.preventDefault();
-        var formData = new FormData(uploadForm);
+<button class="collapsible">Get Videos<span class="carrot">&#9654;</span></button>
+<div class="content" data-url="/videoProduction/getVideos"></div>
 
-        var xhr = new XMLHttpRequest();
-        xhr.open('POST', '/videoProduction/upload', true);
-        xhr.onload = function() {
-          if (xhr.status === 200) {
-            alert('Video uploaded successfully!');
-            socket.emit('newVideo', JSON.parse(xhr.responseText).video);
-          } else {
-            alert('Error uploading video');
-          }
-        };
-        xhr.send(formData);
-      });
+<div id="sendMarquee">
+  <h1>Send a Marquee</h1>
+  <select name="marqueeMessage" id="marqueeMessage">
+    <option value="hi from the marquee">Hi from the marquee</option>
+    <option value="new video just dropped">New video just dropped</option>
+  </select>
+  <button class="marqueeButton">Send Marquee</button>
+</div>
 
-      // Get videos
-      var getVideosButton = document.querySelector('.collapsible');
-      console.log(`VIDEOPRODUCTION.EJS ~ get vids`)
-      getVideosButton.addEventListener('click', function() {
-        var contentDiv = document.querySelector('.content');
-        var xhr = new XMLHttpRequest();
-        xhr.open('GET', contentDiv.getAttribute('data-url'), true);
-        xhr.onload = function() {
-          if (xhr.status === 200) {
-            contentDiv.innerHTML = xhr.responseText;
-          } else {
-            alert('Error fetching videos');
-          }
-        };
-        xhr.send();
-      });
+<script src="/socket.io/socket.io.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var socket = io('/socketAdmin');
+
+    // Handle video upload
+    var uploadForm = document.getElementById('uploadForm');
+    uploadForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      var formData = new FormData(uploadForm);
+
+      var xhr = new XMLHttpRequest();
+      xhr.open('POST', '/videoProduction/upload', true);
+      xhr.onload = function() {
+        if (xhr.status === 200) {
+          alert('Video uploaded successfully!');
+          socket.emit('newVideo', JSON.parse(xhr.responseText).video);
+        } else {
+          alert('Error uploading video');
+        }
+      };
+      xhr.send(formData);
     });
-  </script>
+
+    socket.on('connect', () => {
+      console.log('Connected to videoProduction Client');
+    });
+
+    document.addEventListener('click', (event) => {
+      if (event.target.classList.contains('play-video')) {
+        const videoUrl = event.target.getAttribute('data-video');
+        console.log('Playing video', videoUrl);
+        // Emit socket event to play video
+        socket.emit('broadcast',  {videoUrl});
+      }
+      
+      if (event.target.classList.contains('marqueeButton')) {
+        const marqueeMessage = document.getElementById('marqueeMessage').value;
+        console.log('Button clicked', marqueeMessage);
+        socket.emit('marquee', { message: marqueeMessage });
+        console.log('Marquee event emitted');
+      }
+    });
+  });
+</script>

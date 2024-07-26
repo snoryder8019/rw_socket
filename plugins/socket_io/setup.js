@@ -2,7 +2,10 @@
 const socketIo = require('socket.io');
 const configureNamespace = require('./namespace');
 const mainChatHandlers = require('./mainChat');
-const { configureVideoNamespace } = require('./videoProduction');
+const socketAdminHandlers = require('./socketAdmin');
+const socketP2PHandlers = require('./videoStream');
+
+
 const express = require('express')
 const router = express.Router();
 router.use((req,res,socketIo,next)=>{
@@ -10,11 +13,14 @@ router.use((req,res,socketIo,next)=>{
     req.io = io
     next()
 })
+
+//setupSocketIO is mounted to the app > /bin/www
+//Configure new namespaces here
 const setupSocketIO = (server) => {
-    const io = socketIo(server);
- 
+    const io = socketIo(server); 
     configureNamespace(io, '/main_chat', mainChatHandlers);
-    configureVideoNamespace(io,'/video_production'); // Ensure this line sets up the video production namespace
+configureNamespace(io,'/socketAdmin',socketAdminHandlers);
+configureNamespace(io,'p2p',socketP2PHandlers);
 };
 
 module.exports = {

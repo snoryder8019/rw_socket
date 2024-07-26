@@ -13,11 +13,9 @@ const loadScript = (src) => {
 };
 
 const scriptsToLoad = [
-
   '/javascripts/controllers/buttonControl.js',
-  '/javascripts/controllers/backendControllers.js',
   '/javascripts/controllers/userControllers.js',
-
+  '/javascripts/controllers/backendControllers.js',
 ];
 document.addEventListener('DOMContentLoaded', function() {
 Promise.all(scriptsToLoad.map(loadScript))
