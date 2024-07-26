@@ -68,6 +68,10 @@ class Club extends ModelHelper {
       next(error);
     }
   };
+
+  pathForGetRouteView() {
+    return 'admin/clubs/template';
+  }
 }
 
 module.exports = Club;

@@ -79,6 +79,10 @@ class ModelHelper {
   middlewareForGetRoute() {
     return [];
   }
+
+  pathForGetRouteView() {
+    return '';
+  }
 }
 
 module.exports = ModelHelper;
