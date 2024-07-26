@@ -1,0 +1,44 @@
+
+    <h1>Create Chat Room</h1>
+    <form action="/chat/createChatRoom" method="post" id="chatRoomForm">
+        <label for="roomName">Room Name:</label><br>
+        <input type="text" id="roomName" name="roomName" required><br><br>
+
+        <label for="active">Active:</label><br>
+        <select id="active" name="active" required>
+            <option value="true">Yes</option>
+            <option value="false">No</option>
+        </select><br><br>
+
+        <label for="createdBy">Created By:</label><br>
+        <input type="hidden" id="createdBy" name="createdBy" value="{user._id}"><br><br>
+      
+
+
+        <label for="restrictions">Permissions (comma separated):</label><br>
+        <input type="text" id="restrictions" name="permissions"><br><br>
+
+        <label for="tags">Tags (comma separated):</label><br>
+        <input type="text" id="tags" name="tags"><br><br>
+
+        <label for="testMode">Test Mode:</label><br>
+        <select id="testMode" name="testMode" required>
+            <option value="true">Yes</option>
+            <option value="false">No</option>
+        </select><br><br>
+
+        <label for="clubName">Club Name:</label><br>
+   
+
+        <button type="submit">Create Chat Room</button>
+    </form>
+
+    <%chatRooms.forEach(chatRoom =>{%>
+        <div style="background-image: url(<%=chatRoom.image%>);" class="adminStat">
+            <%=chatRoom.roomName%>
+        </div>
+        <%})%>
+
+
+
+   

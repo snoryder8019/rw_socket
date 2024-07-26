@@ -104,6 +104,18 @@ router.get('/all', async (req, res) => {
     res.status(500).send({ error: error.message });
   }
 });
+router.get('/section', async (req, res) => {
+  try {
+    const clubs = await new Club().getAll();
+    res.render('admin/clubs/section', {
+      title: 'Section View',
+      clubs: clubs
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ error: error.message });
+  }
+});
 
 // Route to get a club by ID
 router.get('/:id', async (req, res) => {
@@ -151,4 +163,17 @@ router.delete('/:id', async (req, res) => {
   }
 });
 
+router.get('/section', async (req,res) => {
+  try{  
+   res.send('hi')
+  //   const clubs = await new Club().getAll();
+  // res.render('admin/clubs/clubs',{
+  //  title:'all clubs',
+  //   clubs:clubs
+  //});
+  } catch(error){
+    console.error(error);
+   // res.status(500).send({ error: error.message });
+  }
+});
 module.exports = router;
