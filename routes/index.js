@@ -57,16 +57,13 @@ try{
   const chatRooms = await collection2.find().toArray()
   const videos = await collection3.find().toArray()
  // console.log(webappSettings)
-  res.render('index', { 
-    user: user, 
+  res.render('index', {
+    user: user,
     webappSettings:webappSettings,
     sectionSettings:sectionSettings,
     chatRooms:chatRooms,
     videos:videos,
     message: req.flash(),
- 
-    
-    
   });
 }
 catch(error){console.error(error);res.send(`error:${error}`)}

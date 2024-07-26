@@ -8,10 +8,10 @@
 <body>
   <div class="adminWindow">
     <div class="adminStatsRow">
-      <% clubs.forEach(club => { %>
+      <% documents.forEach(club => { %>
         <div class="adminStat">
           <p><%= club.name %></p>
-          <img alt="Club image" src="<%= club.mediumIcon %>">  
+          <img alt="Club image" src="<%= club.mediumIcon %>">
           <button class="collapsible">view: <span class="carrot">&#9654;</span></button>
           <div class="content" data-url="/clubs/<%= club._id %>"></div>
         </div>

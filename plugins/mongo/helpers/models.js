@@ -62,6 +62,27 @@ class ModelHelper {
     }
     return result;
   }
+
+  // CRUD routes may require middleware to run when the route is called. Implement these methods in the child class to provide middleware for each route.
+  middlewareForCreateRoute() {
+    return [];
+  }
+
+  middlewareForEditRoute() {
+    return [];
+  }
+
+  middlewareForDeleteRoute() {
+    return [];
+  }
+
+  middlewareForGetRoute() {
+    return [];
+  }
+
+  pathForGetRouteView() {
+    return '';
+  }
 }
 
 module.exports = ModelHelper;
