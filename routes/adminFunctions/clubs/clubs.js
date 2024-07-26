@@ -151,4 +151,17 @@ router.delete('/:id', async (req, res) => {
   }
 });
 
+router.get('/section', async (req,res) => {
+  try{  
+   res.send('hi')
+  //   const clubs = await new Club().getAll();
+  // res.render('admin/clubs/clubs',{
+  //  title:'all clubs',
+  //   clubs:clubs
+  //});
+  } catch(error){
+    console.error(error);
+   // res.status(500).send({ error: error.message });
+  }
+});
 module.exports = router;

@@ -6,6 +6,9 @@ const {isAdmin,gatherIp} = require('./adminFunctions')
 const {getUserEditor,postUserEdit} = require('./users/userControl')
 
 
+const chat = require('./chat/chat');
+router.use('/chat',chat);
+
 const users = require('./users/users');
 router.use('/users',users);
 const permissions = require('./permissions/permissions');
