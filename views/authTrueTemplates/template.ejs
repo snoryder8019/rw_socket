@@ -25,7 +25,7 @@
       <div class="content" data-url="/shopify-storefront/products"></div>
     </div>
   </div>
-  
+  <%-include('../videoChannels/userStream')%>
   <% sectionSettings.forEach(function(setting) { %>
     <% if (setting.visible && setting.auth_view) { %>
         <div class="auth_view_true" style="background-image: url('<%= setting.backgroundImg %>');">

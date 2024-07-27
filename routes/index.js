@@ -50,18 +50,21 @@ router.get('/',noNos, async (req, res) => {
 const collection = db.collection('webappSettings');
 const collection1 = db.collection('sectionSettings');
 const collection2 = db.collection('chat_rooms_meta');
-const collection3 = db.collection('videos')
+const collection3 = db.collection('videos');
+const collection4 = db.collection('p2p_rooms');
 try{
   const webappSettings = await collection.find().toArray()
   const sectionSettings = await collection1.find().toArray()
   const chatRooms = await collection2.find().toArray()
   const videos = await collection3.find().toArray()
+  const p2p_rooms = await collection4.find().toArray()
  // console.log(webappSettings)
   res.render('index', {
     user: user,
     webappSettings:webappSettings,
     sectionSettings:sectionSettings,
     chatRooms:chatRooms,
+    rooms:p2p_rooms,
     videos:videos,
     message: req.flash(),
   });

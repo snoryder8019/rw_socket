@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-
+const videoStream = require('./chat/videoStream')
 const {ticketUpdate,ticketDelete, ticketData} = require('./help/ticketFunctions')
 const {isAdmin,gatherIp} = require('./adminFunctions')
 const {getUserEditor,postUserEdit} = require('./users/userControl')
@@ -30,6 +30,15 @@ router.use('/generalEditor',generalEditor);
 router.get('/ticketData',ticketData)
 router.post('/ticketUpdate', ticketUpdate);
 router.post('/ticketDelete', ticketDelete);
+
+
+/////P2P routes
+router.use('/videoStream', videoStream)
+////
+
+
+
+
 
 router.post('/postUserEdit',postUserEdit)
 router.get('/userEditor',getUserEditor)
