@@ -2,14 +2,15 @@
 
 <!--views/videoChannels/channel_1.ejs-->
 <!--This is where the overlay goes, the connected client should automatically receive the played video here-->
-<div class="containerVid">
-  <h6 id="statusText">New Videos Every Day!</h6>
-
+<div class="client_window">
+  <div class="myVideo">
+  <h2 id="statusText">📺  New videos here daily!</h2>
+</div>
 </div>
 <div style="color:red" id="marqueeContainer">
   <marquee id="marqueeText" behavior="scroll" direction="left" style="display: none;"></marquee>
 </div>
-
+ <div><p>Set up your parlor space below.</p></div>
 <script src="/socket.io/socket.io.js"></script>
 <script>
   document.addEventListener('DOMContentLoaded', function() {
@@ -25,7 +26,7 @@
     socket.on('broadcast', (videoUrl) => {
       const finUrl = videoUrl.videoUrl.videoUrl;
       console.log(`CHANNEL ONE BROADCAST NOTICED url: ${finUrl}`);
-      const containerVid = document.querySelector('.containerVid');
+      const containerVid = document.querySelector('.myVideo');
       const statusText = document.getElementById('statusText');
       statusText.style.display = 'none'; // Hide the "Awaiting Update..." text
      

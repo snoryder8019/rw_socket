@@ -839,6 +839,7 @@ animation:fadeIn .3s ease-IN 0s 1;
     transition: all 0.3s ease;
     position: relative;
     cursor: pointer;
+    overflow-y: scroll
   }
   .adminWindow{
     @include authViewSetup()
@@ -853,18 +854,23 @@ animation:fadeIn .3s ease-IN 0s 1;
   
   .expanded {
     position: fixed;
-    top:6%;
+    top:4%;
     left: 1%;
-    min-height: 79vh;
+    min-height: 76vh;
     width: 94%;
     z-index:5;
     margin-top: 12vh;
+    overflow-y: scroll;
+margin-bottom: 50px;
     @media (min-width:768px) {
       min-height: 73vh;
       top:12%
     }
   }
-  
+  .scrollBox{
+    min-height: 100%;
+    overflow-y: scroll;
+  }
   .close-button {
     position: absolute;
     top: 10px;
@@ -946,6 +952,7 @@ animation:flashMsg 2.8s ease-in-out 0s 1 ;
   background-color: rgba(255, 255, 255, 0.829);
   border-radius: 10px;
   padding: 20px;
+  overflow-y: scroll;
   box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.442);
 }
 .index-container{
@@ -953,7 +960,9 @@ animation:flashMsg 2.8s ease-in-out 0s 1 ;
   background-size: 50%;
 background-position: left;
 background-blend-mode: hue;
-  @media (min-width:768px) {
+overflow-y: scroll;
+@media (min-width:768px) {
+    overflow-y: scroll;
    // height: 100%;
   }
 }
@@ -1116,28 +1125,21 @@ background-blend-mode: hue;
 max-width: 75px;
       }
 
-      #myVideo {
-        width: clamp(250px, 250px, 250px);
-      }
       .peers {
   
         background-color: blueviolet;
         display: grid;
         grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr ;
       }
-      .peer {
-          width: 92%;
-          background-size: fill;
-          margin: 2%;
-          padding:2%;
-          border-radius: 20px;
-          animation: fadeIn .5s ease-out 1 0s;
-      }
+      // .peer {
+      //     width: 92%;
+      //     background-size: fill;
+      //     margin: 2%;
+      //     padding:2%;
+      //     border-radius: 20px;
+      //     animation: fadeIn .5s ease-out 1 0s;
+      // }
       .peer video{}
-      .videoControls{
-          padding:2%;
-          margin:1%
-      }
       .marquee {
         width: 100%;   
         overflow: hidden;
@@ -1158,3 +1160,54 @@ max-width: 75px;
           transform: translate(-100%, 0);
         }
       }
+      .videoControls{
+    width: 100%;
+            padding:2%;
+            margin:1%;
+        
+        background-color: blue;
+        color: white;
+        &.stop{
+          background-color: red;
+          color: white;
+        }
+        &.start{
+          background-color: green;
+          color: white;
+        }
+      }
+      button good{
+        background-color: rgba(81, 47, 81, 0.687);
+        color: white;
+      }
+      .client_window{
+        border: 4px solid $gold;
+        background-color: rgba(113, 73, 111, 0.666);
+        box-shadow: inset 2px 2px 2px rgba(128, 128, 128, 0.878);
+     color:white;
+     text-shadow:$purpleFade0
+      }
+      /* Add this CSS to your stylesheet */
+      #myVideo, .myVideo {
+  width: 100%;
+  height: auto;
+  object-fit: cover; /* Ensures the video covers the container, maintaining aspect ratio */
+  max-height: 200px; /* Ensures the video doesn't overflow its container */
+}
+
+/* Optional: Ensure the parent container has a fixed aspect ratio (e.g., 16:9) */
+.peer {
+  position: relative;
+  width: 100%;
+  max-height: 200px;
+ // padding-top: 56.25%; /* 16:9 aspect ratio (100% / (16/9)) */
+}
+
+.peer video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
