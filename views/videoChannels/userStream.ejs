@@ -1,5 +1,5 @@
 
-<div class="scrollBox">
+<div class="parlorDiv">
 <div class="client_window">
   <button class="videoControls start" onclick="startCamera()">Start Camera</button>
   <button class="videoControls stop" onclick="stopCamera()">Stop Camera</button>
@@ -7,8 +7,11 @@
     <video  id="myVideo" autoplay muted></video>
   </div>
 </div>
+
+<div>
 <div class="peers"></div>
 <div class="P2Pcontrols"></div>
+</div>
 
 <div class="p2pRoomsList">
   <h3>Join a Parlor Room:</h3>
@@ -23,12 +26,13 @@
         <% }) %>
         <% } %>
       </div>
+    </div>
       
       
       
-      <div class="marquee">
-        <span id="marquee-text"></span>
-      </div>
+  
+    <div class="marquee">
+      <span id="marquee-text"></span>
     </div>
       <script src="/socket.io/socket.io.js"></script>
       <script>
