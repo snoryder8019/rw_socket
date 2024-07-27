@@ -3,39 +3,7 @@
 <head>
   <title>Video Stream</title>
   <style>
-    #myVideo {
-      width: clamp(250px, 250px, 250px);
-    }
-    .peers {
-
-      background-color: blueviolet;
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr ;
-    }
-    .peer{
-        width: 100%;
-    }
-    .marquee {
-      width: 100%;
    
-      overflow: hidden;
-      white-space: nowrap;
-      box-sizing: border-box;
-      padding: 10px 0;
-    }
-    .marquee span {
-      display: inline-block;
-      padding-left: 100%;
-      animation: marquee 15s linear infinite;
-    }
-    @keyframes marquee {
-      0% {
-        transform: translate(0, 0);
-      }
-      100% {
-        transform: translate(-100%, 0);
-      }
-    }
   </style>
   <script src="/socket.io/socket.io.js"></script>
 </head>
@@ -49,16 +17,16 @@
     <% if (typeof rooms == 'object' && rooms) { %>
       <% rooms.forEach(room => { %>
         <div>
-          <button button-data="<%= room._id %>" onclick="joinRoom('<%= room._id %>')">Join Room: <%= room.name || room._id %></button>
-          <button button-data="<%= room._id %>" onclick="deleteRoom('<%= room._id %>')">Delete</button>
+          <button class="videoControls" button-data="<%= room._id %>" onclick="joinRoom('<%= room._id %>')">Join Room: <%= room.name || room._id %></button>
+          <button class="videoControls" button-data="<%= room._id %>" onclick="deleteRoom('<%= room._id %>')">Delete</button>
         </div>
       <% }) %>
     <% } %>
   </div>
 
   <div class="client_window">
-    <button onclick="startCamera()">Start Camera</button>
-    <button onclick="stopCamera()">Stop Camera</button>
+    <button class="videoControls" onclick="startCamera()">Start Camera</button>
+    <button class="videoControls" onclick="stopCamera()">Stop Camera</button>
     <div class="client_camera">
       <video id="myVideo" autoplay muted></video>
     </div>
