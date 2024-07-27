@@ -1,55 +1,47 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Video Stream</title>
-  <style>
-   
-  </style>
-  <script src="/socket.io/socket.io.js"></script>
-</head>
-<body>
-  <% if (user.isAdmin) { %>
-    <input id="roomName" name="name" type="text" placeholder="Room Name">
-    <button onclick="createRoom()">Create Room</button>
-  <% } %>
 
-  <div class="p2pRoomsList">
-    <% if (typeof rooms == 'object' && rooms) { %>
-      <% rooms.forEach(room => { %>
-        <div>
-          <button class="videoControls" button-data="<%= room._id %>" onclick="joinRoom('<%= room._id %>')">Join Room: <%= room.name || room._id %></button>
-          <button class="videoControls" button-data="<%= room._id %>" onclick="deleteRoom('<%= room._id %>')">Delete</button>
+<div class="scrollBox">
+<div class="client_window">
+  <button class="videoControls start" onclick="startCamera()">Start Camera</button>
+  <button class="videoControls stop" onclick="stopCamera()">Stop Camera</button>
+  <div class="client_camera">
+    <video  id="myVideo" autoplay muted></video>
+  </div>
+</div>
+<div class="peers"></div>
+<div class="P2Pcontrols"></div>
+
+<div class="p2pRoomsList">
+  <h3>Join a Parlor Room:</h3>
+  <% if (typeof rooms == 'object' && rooms) { %>
+    <% rooms.forEach(room => { %>
+      <div>
+        <button class="videoControls" button-data="<%= room._id %>" onclick="joinRoom('<%= room._id %>')"><h4> <%= room.name || room._id %></h4></button>
+        <% if (user.isAdmin) { %>
+          <button class="videoControls stop" button-data="<%= room._id %>" onclick="deleteRoom('<%= room._id %>')">Delete</button>
+          <% } %>
         </div>
-      <% }) %>
-    <% } %>
-  </div>
-
-  <div class="client_window">
-    <button class="videoControls" onclick="startCamera()">Start Camera</button>
-    <button class="videoControls" onclick="stopCamera()">Stop Camera</button>
-    <div class="client_camera">
-      <video id="myVideo" autoplay muted></video>
+        <% }) %>
+        <% } %>
+      </div>
+      
+      
+      
+      <div class="marquee">
+        <span id="marquee-text"></span>
+      </div>
     </div>
-  </div>
-
-  <div class="peers"></div>
-  <div class="P2Pcontrols"></div>
-
-  <div class="marquee">
-    <span id="marquee-text"></span>
-  </div>
-
-  <script>
-    const socket = io('/videoStream');
-    let localStream;
-    let peers = {};
-
-    async function getMedia() {
-      try {
-        localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
-        const videoElement = document.getElementById('myVideo');
-        videoElement.srcObject = localStream;
-      } catch (err) {
+      <script src="/socket.io/socket.io.js"></script>
+      <script>
+        const socket = io('/videoStream');
+        let localStream;
+        let peers = {};
+        
+        async function getMedia() {
+          try {
+            localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+            const videoElement = document.getElementById('myVideo');
+            videoElement.srcObject = localStream;
+          } catch (err) {
         console.error(err);
       }
     }
@@ -210,5 +202,4 @@
     });
 
   </script>
-</body>
-</html>
+

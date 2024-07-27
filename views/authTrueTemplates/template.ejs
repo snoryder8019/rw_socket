@@ -17,7 +17,6 @@
 
 <% if (typeof sectionSettings === 'object' && sectionSettings && sectionSettings.length > 0) { %>
   
-  <%- include('../videoChannels/channel_1')%>
   <div class="auth_view_true" style="background-image: url('./images/span1.png');">
     <div class="index-container">
       <h1>Shop Now!!</h1>
@@ -25,7 +24,14 @@
       <div class="content" data-url="/shopify-storefront/products"></div>
     </div>
   </div>
-  <%-include('../videoChannels/userStream')%>
+  
+  <div class="auth_view_true" style="background-image: url('./images/span1.png');">
+    <div class="index-container">
+      <h1>The Parlor</h1>
+      <%- include('../videoChannels/channel_1')%>
+      <%-include('../videoChannels/userStream')%>
+    </div>
+  </div>
   <% sectionSettings.forEach(function(setting) { %>
     <% if (setting.visible && setting.auth_view) { %>
         <div class="auth_view_true" style="background-image: url('<%= setting.backgroundImg %>');">
