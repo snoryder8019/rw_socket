@@ -11,12 +11,12 @@ const mainButtonControl= ()=> {
     { button: login_ctrl, div: login_div },
     { button: reg_ctrl, div: reg_div },   
   ];
-  console.log('mainButtonControl() ran');
+ // console.log('mainButtonControl() ran');
   for (let i = 0; i < buttonCtlGroups.length; i++) {
     const btn = buttonCtlGroups[i].button;
     const div = buttonCtlGroups[i].div;
-    console.log(div)
-    console.log(btn)
+    //console.log(div)
+    //console.log(btn)
     btn.addEventListener('click', function () {
       if (div.style.display === "block") {
         div.style.display = 'none';
@@ -36,7 +36,7 @@ const closeControl= ()=> {
   const tickets_ctrl = document.getElementById('tickets_ctrl');
   const regClose = document.getElementById('regClose');
   const loginClose = document.getElementById('loginClose');
-  console.log('closeControl() ran');
+ // console.log('closeControl() ran');
   const closeCtlGroups = [
     { button: loginClose, div: login_div },
     { button: regClose, div: reg_div },
@@ -46,8 +46,8 @@ const closeControl= ()=> {
   for (let i = 0; i < closeCtlGroups.length; i++) {
     const btn = closeCtlGroups[i].button;
     const div = closeCtlGroups[i].div;
-    console.log(div)
-    console.log(btn)
+    //console.log(div)
+    //console.log(btn)
     btn.addEventListener('click', function () {
       
       div.style.display = 'none';

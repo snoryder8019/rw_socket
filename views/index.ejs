@@ -10,7 +10,14 @@
   <!--ALL FIXED PARTIALS OUTSIDE THE MAIN DIV-->
   <div id="flashErrors"><%- include('./partials/flashErrors',{message:message})%></div>  
   
-  <div id="main">
+  <d
+  
+  
+  iv id="main">
+<!--includeLIGHT BOXES HERE-->
+  <div class="client_camera">
+    <video  id="myVideo" autoplay></video>
+  </div>
     <%if(typeof webappSettings === 'object'&& webappSettings){%>
     <div id="mainBanner" style="background-image: url(<%=webappSettings[0].mainBannerDesktop%>);" class="banner">
       <%}%>

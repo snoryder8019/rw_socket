@@ -19,12 +19,12 @@ const backendButtonControl= ()=> {
     { button: toggleLogs, div:logs  },
   
   ];
-  console.log('backendButtonControl() ran');
+ // console.log('backendButtonControl() ran');
   for (let i = 0; i < buttonCtlGroups.length; i++) {
     const btn = buttonCtlGroups[i].button;
     const div = buttonCtlGroups[i].div;
-    console.log(div)
-    console.log(btn)
+   // console.log(div)
+   // console.log(btn)
     btn.addEventListener('click', function () {
       if (div.style.display === "block") {
         div.style.display = 'none';

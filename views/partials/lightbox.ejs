@@ -1,0 +1,60 @@
+<% if (cookieData.visitCount < 3) { %>
+    <div id="lightbox" class="lightbox">
+        <video class="lightbox_window" src="<%=webappSettings.firstVisit%>"></video>
+        <span class="lightbox_close" onclick="closeLightbox()">&times;</span>
+        <div class="lightbox_content">
+            <h2>Hooray! Welcome to Royal Splendor</h2>
+            <p>This is your first visit with Cookies!</p>
+            <p>We will include your dynamic lightboxes with updated videos here.</p>
+            <canvas></canvas>
+        </div>
+    </div>
+<% } %>
+
+<% if (cookieData.visitCount >= 3 && cookieData.visitCount < 7) { %>
+    <div id="lightbox" class="lightbox">
+        <div class="lightbox_content">
+            <img src="" alt="">
+            <h2>Hooray! You Returned to Royal Splendor</h2>
+            <p>This is your first few visits with Cookies!</p>
+            <p>We will include your dynamic lightboxes with updated videos here.</p>
+
+<canvas></canvas>
+            <video class="lightbox_window" src="<%=webappSettings.secondVisit%>"></video>
+            <span class="lightbox_close" onclick="closeLightbox()">&times;</span>
+        </div>
+    </div>
+<% } %>
+
+<% if (cookieData.visitCount >= 7) { %>
+    <div id="lightbox" class="lightbox">
+        <div class="lightbox_content">
+            <h2>Well well well</h2>
+            <p>You have made many visit with Cookies!</p>
+            <p>We will include your dynamic lightboxes with updated videos here.</p>
+
+<canvas></canvas>
+            <video class="lightbox_window" src="<%=webappSettings.extraVisit%>"></video>
+            <span class="lightbox_close" onclick="closeLightbox()">&times;</span>
+        </div>
+    </div>
+<% } %>
+<script src="/javascripts/canvas/lightbox.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var lightbox = document.getElementById('lightbox');
+        if (lightbox) {
+            lightbox.style.display = 'flex';
+            setTimeout(function() {
+                document.querySelector('.lightbox_close').style.opacity = 1;
+            }, 1000); // Delay in milliseconds before the close button appears
+        }
+    });
+
+    function closeLightbox() {
+        var lightbox = document.getElementById('lightbox');
+        if (lightbox) {
+            lightbox.style.display = 'none';
+        }
+    }
+</script>

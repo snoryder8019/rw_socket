@@ -28,8 +28,15 @@
   <div class="auth_view_true" style="background-image: url('./images/span1.png');">
     <div class="index-container">
       <h1>The Parlor</h1>
+      <div><p>Set up your parlor space below.</p></div>
+
+      <div class="container-scrollbox-x">
+        <%-include('../videoChannels/userStream')%>
       <%- include('../videoChannels/channel_1')%>
-      <%-include('../videoChannels/userStream')%>
+    </div>
+    <div class="marquee">
+      <span id="marquee-text"></span>
+    </div>
     </div>
   </div>
   <% sectionSettings.forEach(function(setting) { %>
@@ -73,4 +80,13 @@
 
   <% } %>
   <script src="/socket.io/socket.io.js"></script>
+  <script>
+    window.onload = () => {
+      const scrollContainerX = document.querySelector('.container-scrollbox-x');
+      if (scrollContainerX) {
+        scrollContainerX.scrollLeft = (scrollContainerX.scrollWidth - scrollContainerX.clientWidth) / 2;
+      }
+    };
+  </script>
+  
 

@@ -20,7 +20,7 @@ const userButtonControl = (user) => {
     buttonCtlGroups.push({ button: toggleAdmin, div: adminDiv });
   }
 
-  console.log('userButtonControl() ran');
+  //console.log('userButtonControl() ran');
 
   for (let i = 0; i < buttonCtlGroups.length; i++) {
     const btn = buttonCtlGroups[i].button;
@@ -28,8 +28,8 @@ const userButtonControl = (user) => {
 
     // Check if both button and div are not null
     if (btn && div) {
-      console.log(div);
-      console.log(btn);
+     // console.log(div);
+     // console.log(btn);
       btn.addEventListener('click', function () {
         if (div.style.display === "block") {
           div.style.display = 'none';

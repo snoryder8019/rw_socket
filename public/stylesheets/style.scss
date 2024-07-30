@@ -566,6 +566,7 @@ transition-duration: .6s;
 }
 }
 #mainBanner{
+  height: 16vh;
  // background-image: url('/images/MainBanner.png');
   background-size: cover;
   background-position: center;
@@ -573,9 +574,11 @@ transition-duration: .6s;
   background-color: #410b4b;
   box-shadow: 0px 0px 20px #d9ef1846;
   border:5px solid #1a0a1b;
+  z-index: 8001;
   @media (min-width:768px) {
     width: 100%;
     background-size: contain;
+    z-index: 8001;
 }
 }
 .banner {
@@ -618,7 +621,7 @@ grid-template-columns: 1fr 10fr;
   .shrunk {
     display: grid;
     grid-template-columns: 1fr 10fr;
-    height: 103px; /* Adjusted height when scrolled */
+    height: 16vh; /* Adjusted height when scrolled */
    // padding: 1%;
    // width: 87%;
    // margin:1% 2%;
@@ -854,14 +857,15 @@ animation:fadeIn .3s ease-IN 0s 1;
   
   .expanded {
     position: fixed;
-    top:4%;
-    left: 1%;
-    min-height: 76vh;
-    width: 94%;
-    z-index:5;
-    margin-top: 12vh;
+    top:18vh;
+    left: 0;
+    min-height: 79vh;
+   // width: 94%;
+  
+    z-index:8000;
+   // margin-top: 16vh;
     overflow-y: scroll;
-margin-bottom: 50px;
+//margin-bottom: 50px;
     @media (min-width:768px) {
       min-height: 73vh;
       top:12%
@@ -873,8 +877,8 @@ margin-bottom: 50px;
   }
   .close-button {
     position: absolute;
-    top: 10px;
-    right: 10px;
+    top: 5%;
+    right: 3%;
     background-color: #ff0000;
     color: white;
     border: none;
@@ -929,43 +933,52 @@ animation:flashMsg 2.8s ease-in-out 0s 1 ;
 #remoteVideo{
   width:100%;
 }
-// .games_inner{
-// display: flex;
-// align-items: center;
-// justify-items: center;
-// align-content: space-around;
-// }
-// #game-container{
-//   align-self: center;
-//  // position: absolute;
-//   //top:20%;
-//   width: 100%;
-//  // margin: 5%;
-//  // min-height: 90%;
-//  // padding:50%;
-//   background-color: white;
-// }
+
 #game-container, .index-container {
   color: black;
   width: 90%;
- // max-width: 800px;
+  height: auto;
   background-color: rgba(255, 255, 255, 0.829);
   border-radius: 10px;
   padding: 20px;
-  overflow-y: scroll;
   box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.442);
 }
-.index-container{
+.index-container {
+  overflow-y: scroll;
   background-repeat: no-repeat;
   background-size: 50%;
-background-position: left;
-background-blend-mode: hue;
-overflow-y: scroll;
-@media (min-width:768px) {
+  background-position: left;
+  background-blend-mode: hue;
+}
+@media (min-width: 768px) {
+  .index-container {
     overflow-y: scroll;
-   // height: 100%;
   }
 }
+.container-scrollbox-x {
+  display: flex;
+  width: auto;
+  overflow-x: scroll;
+}
+.index-card {
+  width: 90%;
+  margin: 5%;
+  flex-shrink: 0;
+  display: none; /* Hide all index cards initially */
+}
+.index-card.active {
+  display: block; /* Show active index card */
+}
+.go-back {
+  margin-top: 20px;
+  padding: 10px 20px;
+  background-color: #007BFF;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
 #chatTabs {
   overflow-y: scroll;
   background-color: #c878d7;
@@ -1202,16 +1215,71 @@ max-width: 75px;
 }
 
 /* Example of video styling */
-#myVideo, .myVideo {
+#myVideo {
+  width: 30%;
+  position: fixed;
+bottom:2%;
+left:2%;
+  height: auto;
+  object-fit: cover; /* Ensures the video covers the container, maintaining aspect ratio */
+  z-index: 9000;
+}
+ .myVideo {
   width: 100%;
   height: auto;
   object-fit: cover; /* Ensures the video covers the container, maintaining aspect ratio */
+//z-index: 9000;
 }
 
-.parlorDiv{
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  @media (max-width:768px) {
-    display: block;
+// .parlorDiv{
+//   display: grid;
+//   grid-template-columns: 1fr 1fr 1fr;
+//   @media (max-width:768px) {
+//     display: block;
+//   }
+// }
+.lightbox {
+  display: none;
+  position: fixed;
+  z-index: 9000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.8);
+  justify-content: center;
+  align-items: center;
+}
+
+.lightbox_content {
+  position: absolute;
+  top:0;
+  left: 0;
+  width: 100vw;
+  p{color:$gold}
+ // max-width: 1200px; /* Adjust as needed */
+  //margin: auto;
+  canvas{
+    position: absolute;
+    top:0;
+    left: 0;
   }
+}
+
+.lightbox_window {
+  width: 100%;
+  height: auto;
+}
+
+.lightbox_close {
+  position: absolute;
+  top: 10px;
+  right: 25px;
+  font-size: 35px;
+  font-weight: bold;
+  color: white;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.5s ease;
 }

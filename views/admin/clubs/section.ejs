@@ -17,34 +17,3 @@
     </div>
   </div>
 
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      document.querySelectorAll('.collapsible').forEach(button => {
-        button.addEventListener('click', async () => {
-          const contentDiv = button.nextElementSibling;
-          const url = contentDiv.getAttribute('data-url');
-
-          if (contentDiv.innerHTML === "") {
-            try {
-              const response = await fetch(url);
-              if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-              }
-              const data = await response.text();
-              contentDiv.innerHTML = data;
-            } catch (error) {
-              console.error('Error fetching club details:', error);
-              contentDiv.innerHTML = '<p>Error loading details.</p>';
-            }
-          }
-
-          button.classList.toggle('active');
-          const carrot = button.querySelector('.carrot');
-          carrot.innerHTML = button.classList.contains('active') ? '&#9660;' : '&#9654;';
-          contentDiv.style.display = contentDiv.style.display === 'block' ? 'none' : 'block';
-        });
-      });
-    });
-  </script>
-</body>
-</html>
