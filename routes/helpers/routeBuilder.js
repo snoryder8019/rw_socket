@@ -8,7 +8,9 @@ const buildRoutes = (model, router) => {
       const documentData = req.body;
       const document = new model.constructor(documentData);
       const result = await document.create(documentData);
-      res.status(201).send(result);
+      req.flash("message","Success!, added new document")
+     res.redirect('/')
+     // res.status(201).send(result);
     } catch (error) {
       console.error(error);
       res.status(500).send({ error: error.message });

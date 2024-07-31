@@ -1,3 +1,4 @@
+//THIS IS A GREAT EXAMPLE TO REFACTOR
 const express = require('express');
 const Club = require('../../../plugins/mongo/models/Club');
 const { generateFormFields } = require('../../../plugins/helpers/formHelper');
@@ -37,15 +38,17 @@ router.get('/renderEditForm/:id', async (req, res) => {
     res.render('forms/generalEditForm', {
       title: 'Edit Club',
       action: `clubs/update/${id}`,
+      routeSub: 'clubs',
       method: 'post',
       formFields: formFields,
-      club: club
+      data: club
     });
   } catch (error) {
     console.error(error);
     res.status(500).send({ error: error.message });
   }
 });
+/////////////////
 router.get('/section', async (req, res) => {
   try {
     const clubs = await new Club().getAll();

@@ -39,7 +39,7 @@
   </form>
 
   <!-- Delete button -->
-  <form action="/clubs/delete/<%= club._id %>" method="POST" style="margin-top: 20px;">
+  <form action="/<%=routeSub%>/delete/<%= data._id %>" method="POST" style="margin-top: 20px;">
     <input type="hidden" name="_method" value="DELETE">
     <button type="submit" style="background-color: red; color: white;">Delete</button>
   </form>

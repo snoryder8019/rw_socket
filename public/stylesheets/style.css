@@ -73,6 +73,10 @@
   padding: 1%;
 }
 
+#main {
+  max-width: 50vw;
+}
+
 #notifications, #cart, #rewards, #help, #settings, #admin, #wallet {
   display: none;
 }
@@ -340,8 +344,9 @@ input {
   transition-duration: 0.4s;
   transform: translateX(0%);
   background-color: #711881;
-  left: 100%;
-  top: 0%;
+  left: 55%;
+  top: 20%;
+  height: 65vh;
   z-index: 1001;
 }
 @media (max-width: 768px) {
@@ -373,10 +378,12 @@ input {
 }
 @media (min-width: 768px) {
   #userDash {
-    height: 71vh;
-    width: 50%;
-    top: 21%;
-    z-index: 1005;
+    font-size: smaller;
+    width: 91%;
+    top: 19%;
+    height: 74vh;
+    z-index: 1001;
+    box-shadow: 0px 0px 120px rgba(53, 0, 52, 0.865);
   }
 }
 @media (max-width: 768px) {
@@ -404,9 +411,11 @@ input {
   box-shadow: 3px 3px 3px #1a0a1b;
   left: -25%;
   top: 56%;
+  display: none;
 }
 @media (max-width: 768px) {
   #chatToggle {
+    display: block;
     left: -33%;
   }
 }
@@ -503,7 +512,7 @@ input {
 }
 @media (min-width: 768px) {
   .userNavLink img {
-    width: 50%;
+    width: 18%;
   }
 }
 
@@ -551,7 +560,7 @@ input {
 }
 @media (min-width: 768px) {
   .banner {
-    min-height: 400px;
+    min-height: 14vh;
   }
 }
 
@@ -782,6 +791,12 @@ input {
   cursor: pointer;
   overflow-y: scroll;
 }
+@media (min-width: 768px) {
+  .adminWindow {
+    display: block;
+    width: 50vw;
+  }
+}
 
 .auth_view_true {
   display: flex;
@@ -800,6 +815,12 @@ input {
   position: relative;
   cursor: pointer;
   overflow-y: scroll;
+}
+@media (min-width: 768px) {
+  .auth_view_true {
+    display: block;
+    width: 50vw;
+  }
 }
 
 .auth_view_false {
@@ -820,6 +841,12 @@ input {
   cursor: pointer;
   overflow-y: scroll;
 }
+@media (min-width: 768px) {
+  .auth_view_false {
+    display: block;
+    width: 50vw;
+  }
+}
 
 .expanded {
   position: fixed;
@@ -832,7 +859,7 @@ input {
 @media (min-width: 768px) {
   .expanded {
     min-height: 73vh;
-    top: 12%;
+    top: 17%;
   }
 }
 
@@ -1210,6 +1237,11 @@ button good {
   height: auto;
   object-fit: cover; /* Ensures the video covers the container, maintaining aspect ratio */
   z-index: 9000;
+}
+@media (min-width: 768px) {
+  #myVideo {
+    width: 12%;
+  }
 }
 
 .myVideo {

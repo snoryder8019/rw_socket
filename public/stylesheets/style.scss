@@ -125,6 +125,14 @@ padding: 1%;
   // :root h1{
   //   font-family: $weat;
   // }
+
+#main{
+  max-width: 50vw;
+}
+
+
+
+
   #notifications, #cart, #rewards, #help, #settings, #admin, #wallet{
     display: none;
   }
@@ -401,8 +409,9 @@ display: flex;
 }
 #chat-window-basic {
     @include sliderWindows();
-    left:100%;
-    top:0%;
+    left:55%;
+    top:20%;
+    height:65vh;
     z-index: 1001;
     @media (max-width:768px) {
         width: 92%;
@@ -419,10 +428,12 @@ display: flex;
     top:0%;
     z-index: 1001;
 @media (min-width:768px) {
-  height: 71vh;
-  width: 50%;
-  top:21%;
-  z-index: 1005;
+  font-size: smaller;
+  width: 91%;
+  top:19%;
+  height:74vh;
+  z-index: 1001;
+  box-shadow: 0px 0px 120px rgba(53, 0, 52, 0.865);
 }
     @media (max-width:768px) {
         width: 92%;
@@ -457,8 +468,10 @@ display: flex;
       //  transform: rotate(90deg);      
         left: -25%;
         top:56%;
+        display:none;
 
 @media (max-width:768px) {
+  display: block;
  left: -33%;
 }
   }
@@ -540,8 +553,7 @@ align-content: center;
   .userNavLink img{
     width: 68%;
     @media (min-width:768px) {
-      width: 50%;
-      
+      width: 18%;
     }
   }
   
@@ -594,7 +606,7 @@ grid-template-columns: 1fr 10fr;
    // align-items: center; /* Center items vertically */
     background-color:$purpleFade0;
     @media (min-width:768px) {
-      min-height: 400px;
+      min-height: 14vh;
     }
 }
 
@@ -842,7 +854,11 @@ animation:fadeIn .3s ease-IN 0s 1;
     transition: all 0.3s ease;
     position: relative;
     cursor: pointer;
-    overflow-y: scroll
+    overflow-y: scroll;
+    @media (min-width:768px) {
+      display: block;
+      width: 50vw;
+    }
   }
   .adminWindow{
     @include authViewSetup()
@@ -868,7 +884,7 @@ animation:fadeIn .3s ease-IN 0s 1;
 //margin-bottom: 50px;
     @media (min-width:768px) {
       min-height: 73vh;
-      top:12%
+      top:17%
     }
   }
   .scrollBox{
@@ -1223,6 +1239,9 @@ left:2%;
   height: auto;
   object-fit: cover; /* Ensures the video covers the container, maintaining aspect ratio */
   z-index: 9000;
+  @media(min-width:768px){
+    width:12%
+  }
 }
  .myVideo {
   width: 100%;
