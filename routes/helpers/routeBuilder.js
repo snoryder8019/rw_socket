@@ -8,9 +8,8 @@ const buildRoutes = (model, router) => {
       const documentData = req.body;
       const document = new model.constructor(documentData);
       const result = await document.create(documentData);
-      req.flash("message","Success!, added new document")
-     res.redirect('/')
-     // res.status(201).send(result);
+      req.flash("message",`Success!, Created document: ${result}`)
+      res.redirect('/')
     } catch (error) {
       console.error(error);
       res.status(500).send({ error: error.message });
@@ -50,7 +49,8 @@ const buildRoutes = (model, router) => {
       }
       const updatedDocument = req.body;
       const result = await model.updateById(id, updatedDocument);
-      res.status(200).send(result);
+      req.flash("message",`Success!, Updated document: ${result}`)
+      res.redirect('/')
     } catch (error) {
       console.error(error);
       res.status(500).send({ error: error.message });
@@ -64,7 +64,8 @@ const buildRoutes = (model, router) => {
         return res.status(400).send({ error: 'Invalid ID format' });
       }
       const result = await model.deleteById(id);
-      res.status(200).send(result);
+      req.flash("message",`Success!, Deleted document: ${result}`)
+     res.redirect('/')
     } catch (error) {
       console.error(error);
       res.status(500).send({ error: error.message });
