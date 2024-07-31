@@ -1228,6 +1228,10 @@ max-width: 75px;
   flex: 1 1 calc(25% - 10px); /* Adjust the percentage (25%) to control max number of items per row */
   max-width: calc(25% - 10px); /* Adjust the percentage (25%) to control max number of items per row */
   box-sizing: border-box; /* Ensures padding and border are included in the width calculation */
+  @media (max-width:768px) {
+  max-width: calc(50% - 10px); /* Adjust the percentage (25%) to control max number of items per row */
+  
+}
 }
 
 /* Example of video styling */

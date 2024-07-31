@@ -1,59 +1,61 @@
 <div id="settings">
-    <button class="collapsible">Avatar Settings<span class="carrot">&#9654;</span></button>
-    <div class="content" ><%- include('images') %></div>
+  <button class="collapsible">Avatar Settings<span class="carrot">&#9654;</span></button>
+  <div class="content"><%- include('images') %></div>
 
-    <button class="collapsible">Website Settings<span class="carrot">&#9654;</span></button>
-    <div class="content" ><%- include('websiteSettings') %></div>
+  <button class="collapsible">Website Settings<span class="carrot">&#9654;</span></button>
+  <div class="content"><%- include('websiteSettings') %></div>
 
-    <button class="collapsible">Custom Settings<span class="carrot">&#9654;</span></button>
-    <div class="content" ><%- include('customSettings') %></div>
+  <button class="collapsible">Custom Settings<span class="carrot">&#9654;</span></button>
+  <div class="content"><%- include('customSettings') %></div>
 
-    <!--OBSERVER ON CLICK FOR LIGHTER LOAD-->
-    <button class="collapsible">TRYCATCH<span class="carrot">&#9654;</span></button>
-    <div class="content" data-url="/admin/doSomething" ></div>
-
+  <!--OBSERVER ON CLICK FOR LIGHTER LOAD-->
+  <button class="collapsible">TRYCATCH<span class="carrot">&#9654;</span></button>
+  <div class="content" data-url="/admin/doSomething"></div>
 </div>
 
 <style>
-    .collapsible {
-        background-color: #f9f9f9;
-        color: #333;
-        cursor: pointer;
-        padding: 10px;
-        width: 100%;
-        border: none;
-        text-align: left;
-        outline: none;
-        font-size: 18px;
-        transition: background-color 0.3s;
-    }
+  .collapsible {
+    background-color: #f9f9f9;
+    color: #333;
+    cursor: pointer;
+    padding: 10px;
+    width: 100%;
+    border: none;
+    text-align: left;
+    outline: none;
+    font-size: 18px;
+    transition: background-color 0.3s;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
 
-    .active, .collapsible:hover {
-        background-color: #ccc;
-    }
+  .active, .collapsible:hover {
+    background-color: #ccc;
+  }
 
-    .content {
-        padding: 0 18px;
-        display: none;
-        overflow: visible;
-        background-color: #f1f1f1;
-    }
+  .content {
+    padding: 0 18px;
+    display: none;
+    overflow: visible;
+    background-color: #f1f1f1;
+  }
 
-    .carrot {
-        float: right;
-        transition: transform 0.3s;
-    }
+  .carrot {
+    transition: transform 0.3s;
+  }
 
-    .rotate {
-        transform: rotate(90deg);
-    }
+  .rotate {
+    transform: rotate(90deg);
+  }
 </style>
+
 <script>
   document.addEventListener('DOMContentLoaded', () => {
-    const collapsibles = document.getElementsByClassName('collapsible');
+    const collapsibles = document.querySelectorAll('.collapsible');
 
-    for (let i = 0; i < collapsibles.length; i++) {
-      collapsibles[i].addEventListener('click', function () {
+    collapsibles.forEach(collapsible => {
+      collapsible.addEventListener('click', function () {
         this.classList.toggle('active');
         const content = this.nextElementSibling;
         const carrot = this.querySelector('.carrot');
@@ -66,7 +68,7 @@
           observeAndLoadContent(content);
         }
       });
-    }
+    });
 
     const observer = new IntersectionObserver(entries => {
       entries.forEach(entry => {
@@ -105,10 +107,10 @@
 
     // Function to initialize event listeners for dynamically loaded content
     function initializeDynamicContent(parent) {
-      const newCollapsibles = parent.getElementsByClassName('collapsible');
+      const newCollapsibles = parent.querySelectorAll('.collapsible');
 
-      for (let i = 0; i < newCollapsibles.length; i++) {
-        newCollapsibles[i].addEventListener('click', function () {
+      newCollapsibles.forEach(collapsible => {
+        collapsible.addEventListener('click', function () {
           this.classList.toggle('active');
           const content = this.nextElementSibling;
           const carrot = this.querySelector('.carrot');
@@ -121,26 +123,7 @@
             observeAndLoadContent(content);
           }
         });
-      }
+      });
     }
-
-    // Initialize any content that might be loaded later
-    document.body.addEventListener('click', function(event) {
-      const target = event.target;
-      if (target.classList.contains('collapsible')) {
-        const button = target;
-        button.classList.toggle('active');
-        const content = button.nextElementSibling;
-        const carrot = button.querySelector('.carrot');
-        if (content.style.display === "block") {
-          content.style.display = "none";
-          carrot.classList.remove('rotate');
-        } else {
-          content.style.display = "block";
-          carrot.classList.add('rotate');
-          observeAndLoadContent(content);
-        }
-      }
-    });
   });
 </script>
