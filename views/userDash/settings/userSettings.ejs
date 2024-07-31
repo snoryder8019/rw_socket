@@ -49,58 +49,98 @@
     }
 </style>
 <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const collapsibles = document.getElementsByClassName('collapsible');
+  document.addEventListener('DOMContentLoaded', () => {
+    const collapsibles = document.getElementsByClassName('collapsible');
 
-        for (let i = 0; i < collapsibles.length; i++) {
-            collapsibles[i].addEventListener('click', function () {
-                this.classList.toggle('active');
-                const content = this.nextElementSibling;
-                const carrot = this.querySelector('.carrot');
-                if (content.style.display === "block") {
-                    content.style.display = "none";
-                    carrot.classList.remove('rotate');
-                } else {
-                    content.style.display = "block";
-                    carrot.classList.add('rotate');
-                    observeAndLoadContent(content);
-                }
-            });
+    for (let i = 0; i < collapsibles.length; i++) {
+      collapsibles[i].addEventListener('click', function () {
+        this.classList.toggle('active');
+        const content = this.nextElementSibling;
+        const carrot = this.querySelector('.carrot');
+        if (content.style.display === "block") {
+          content.style.display = "none";
+          carrot.classList.remove('rotate');
+        } else {
+          content.style.display = "block";
+          carrot.classList.add('rotate');
+          observeAndLoadContent(content);
         }
+      });
+    }
 
-        const observer = new IntersectionObserver(entries => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    const content = entry.target;
-                    if (!content.dataset.loaded) {
-                        loadContent(content);
-                    }
-                }
-            });
-        });
-
-        function observeAndLoadContent(content) {
-            if (content && content.getAttribute('data-url')) {
-                observer.observe(content);
-            }
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const content = entry.target;
+          if (!content.dataset.loaded) {
+            loadContent(content);
+          }
         }
-
-        async function loadContent(content) {
-            const url = content.getAttribute('data-url');
-            if (!url || url === 'false') {
-                return; // Skip loading if data-url is false or not provided
-            }
-            try {
-                const response = await fetch(url);
-                const data = await response.text();
-                content.innerHTML = data;
-                content.dataset.loaded = true; // Mark as loaded
-                observer.unobserve(content); // Stop observing once loaded
-            } catch (error) {
-                console.error(`Error loading content from ${url}:`, error);
-                content.innerHTML = '<p>Error loading content</p>';
-            }
-        }
+      });
     });
-</script>
 
+    function observeAndLoadContent(content) {
+      if (content && content.getAttribute('data-url')) {
+        observer.observe(content);
+      }
+    }
+
+    async function loadContent(content) {
+      const url = content.getAttribute('data-url');
+      if (!url || url === 'false') {
+        return; // Skip loading if data-url is false or not provided
+      }
+      try {
+        const response = await fetch(url);
+        const data = await response.text();
+        content.innerHTML = data;
+        content.dataset.loaded = true; // Mark as loaded
+        observer.unobserve(content); // Stop observing once loaded
+        initializeDynamicContent(content); // Initialize JS for newly loaded content
+      } catch (error) {
+        console.error(`Error loading content from ${url}:`, error);
+        content.innerHTML = '<p>Error loading content</p>';
+      }
+    }
+
+    // Function to initialize event listeners for dynamically loaded content
+    function initializeDynamicContent(parent) {
+      const newCollapsibles = parent.getElementsByClassName('collapsible');
+
+      for (let i = 0; i < newCollapsibles.length; i++) {
+        newCollapsibles[i].addEventListener('click', function () {
+          this.classList.toggle('active');
+          const content = this.nextElementSibling;
+          const carrot = this.querySelector('.carrot');
+          if (content.style.display === "block") {
+            content.style.display = "none";
+            carrot.classList.remove('rotate');
+          } else {
+            content.style.display = "block";
+            carrot.classList.add('rotate');
+            observeAndLoadContent(content);
+          }
+        });
+      }
+    }
+
+    // Initialize any content that might be loaded later
+    document.body.addEventListener('click', function(event) {
+      const target = event.target;
+      if (target.classList.contains('collapsible')) {
+        const button = target;
+        button.classList.toggle('active');
+        const content = button.nextElementSibling;
+        const carrot = button.querySelector('.carrot');
+        if (content.style.display === "block") {
+          content.style.display = "none";
+          carrot.classList.remove('rotate');
+        } else {
+          content.style.display = "block";
+          carrot.classList.add('rotate');
+          observeAndLoadContent(content);
+        }
+      }
+    });
+  });
+</script>

@@ -40,7 +40,7 @@ const buildRoutes = (model, router) => {
     }
   });
 
-  router.put('/:id', [...model.middlewareForEditRoute()], async (req, res) => {
+  router.post('/update/:id', [...model.middlewareForEditRoute()], async (req, res) => {
     try {
       const { id } = req.params;
       if (!ObjectId.isValid(id)) {
@@ -55,7 +55,7 @@ const buildRoutes = (model, router) => {
     }
   });
 
-  router.delete('/:id', [...model.middlewareForDeleteRoute()], async (req, res) => {
+  router.post('/delete/:id', [...model.middlewareForDeleteRoute()], async (req, res) => {
     try {
       const { id } = req.params;
       if (!ObjectId.isValid(id)) {

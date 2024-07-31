@@ -5,52 +5,67 @@ const { uploadToLinode } = require('../../aws_sdk/setup');
 class Club extends ModelHelper {
   constructor(clubData) {
     super('clubs');
-    if (clubData) {
-      this.name = clubData.name;
-      this.authTitle = clubData.authTitle;
-      this.nonAuthTitle = clubData.nonAuthTitle;
-      this.authSubtitle = clubData.authSubtitle;
-      this.nonAuthSubtitle = clubData.nonAuthSubtitle;
-      this.authDescription = clubData.authDescription;
-      this.nonAuthDescription = clubData.nonAuthDescription;
-      this.price = clubData.price;
-      this.subLength = clubData.subLength;
-      this.creationDate = clubData.creationDate;
-      this.mediumIcon = clubData.mediumIcon;
-      this.squareNonAuthBkgd = clubData.squareNonAuthBkgd;
-      this.squareAuthBkgd = clubData.squareAuthBkgd;
-      this.horizNonAuthBkgd = clubData.horizNonAuthBkgd;
-      this.horizAuthBkgd = clubData.horizAuthBkgd;
-      this.entryUrl = clubData.entryUrl;
-      this.entryText = clubData.entryText;
-      this.updatedDate = clubData.updatedDate;
-      this.status = clubData.status;
-      this.visible = clubData.visible;
-      this.tags = clubData.tags || [];
-      this.links = clubData.links || [];
-      this.blogs = clubData.blogs || [];
-      this.vendors =clubData.vendors || [];
-      this.members = clubData.members || [];
+    this.modelFields = {
+      name: { type: 'text', value: null },
+      authTitle: { type: 'text', value: null },
+      nonAuthTitle: { type: 'text', value: null },
+      authSubtitle: { type: 'text', value: null },
+      nonAuthSubtitle: { type: 'text', value: null },
+      authDescription: { type: 'textarea', value: null },
+      nonAuthDescription: { type: 'textarea', value: null },
+      price: { type: 'number', value: null },
+      subLength: { type: 'number', value: null },
+      creationDate: { type: 'date', value: null },
+      mediumIcon: { type: 'file', value: null },
+      squareNonAuthBkgd: { type: 'file', value: null },
+      squareAuthBkgd: { type: 'file', value: null },
+      horizNonAuthBkgd: { type: 'file', value: null },
+      horizAuthBkgd: { type: 'file', value: null },
+      entryUrl: { type: 'text', value: null },
+      entryText: { type: 'text', value: null },
+      updatedDate: { type: 'date', value: null },
+      status: { type: 'text', value: null },
+      visible: { type: 'boolean', value: null },
+      tags: { type: 'text', value: null },  // Assuming comma-separated string for simplicity
+      links: { type: 'text', value: null },  // Assuming comma-separated string for simplicity
+      blogs: { type: 'text', value: null },  // Assuming comma-separated string for simplicity
+      vendors: { type: 'text', value: null },  // Assuming comma-separated string for simplicity
+      members: { type: 'text', value: null }  // Assuming comma-separated string for simplicity
+    };
 
+    if (clubData) {
+      for (let key in this.modelFields) {
+        if (clubData[key] !== undefined) {
+          this.modelFields[key].value = clubData[key];
+        }
+      }
     }
   }
 
-  // Right now this model is not using the route builder, but if it was this would be what the function would need to look like in order for it to work.
-  middlewareForEditRoute() {
-    return [upload.fields(this.fileFields), processImages, uploadToLinode];
+  static getModelFields() {
+    return Object.keys(new Club().modelFields).map(key => {
+      const field = new Club().modelFields[key];
+      return { name: key, type: field.type };
+    });
   }
 
   middlewareForCreateRoute() {
-    return [upload.fields(this.fileFields), processImages, this.uploadImagesToLinode];
+    return [upload.fields(this.fileFields), processImages, this.uploadImagesToLinode.bind(this)];
   }
 
-  fileFields = [
-    { name: 'mediumIcon', maxCount: 1 },
-    { name: 'squareNonAuthBkgd', maxCount: 1 },
-    { name: 'squareAuthBkgd', maxCount: 1 },
-    { name: 'horizNonAuthBkgd', maxCount: 1 },
-    { name: 'horizAuthBkgd', maxCount: 1 }
-  ];
+  middlewareForEditRoute() {
+    return [upload.fields(this.fileFields), processImages, this.uploadImagesToLinode.bind(this)];
+  }
+
+  get fileFields() {
+    return [
+      { name: 'mediumIcon', maxCount: 1 },
+      { name: 'squareNonAuthBkgd', maxCount: 1 },
+      { name: 'squareAuthBkgd', maxCount: 1 },
+      { name: 'horizNonAuthBkgd', maxCount: 1 },
+      { name: 'horizAuthBkgd', maxCount: 1 }
+    ];
+  }
 
   async uploadImagesToLinode(req, res, next) {
     try {
@@ -67,7 +82,7 @@ class Club extends ModelHelper {
       console.error("Error in uploadImagesToLinode middleware:", error);
       next(error);
     }
-  };
+  }
 
   pathForGetRouteView() {
     return 'admin/clubs/template';

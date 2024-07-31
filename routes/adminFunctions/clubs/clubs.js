@@ -4,39 +4,13 @@ const { generateFormFields } = require('../../../plugins/helpers/formHelper');
 const buildRoutes = require('../../helpers/routeBuilder');
 
 const router = express.Router();
-
+const modelName = "club";
 // Route to render the form to add a new club
 router.get('/renderAddForm', (req, res) => {
   try {
-    const model = [
-      { name: 'name', type: 'text' },
-      { name: 'authTitle', type: 'text' },
-      { name: 'nonAuthTitle', type: 'text' },
-      { name: 'authSubtitle', type: 'text' },
-      { name: 'nonAuthSubtitle', type: 'text' },
-      { name: 'authDescription', type: 'textarea' },
-      { name: 'nonAuthDescription', type: 'textarea' },
-      { name: 'price', type: 'number' },
-      { name: 'subLength', type: 'number' },
-      { name: 'creationDate', type: 'date' },
-      { name: 'mediumIcon', type: 'file' },
-      { name: 'squareNonAuthBkgd', type: 'file' },
-      { name: 'squareAuthBkgd', type: 'file' },
-      { name: 'horizNonAuthBkgd', type: 'file' },
-      { name: 'horizAuthBkgd', type: 'file' },
-      { name: 'entryUrl', type: 'text' },
-      { name: 'entryText', type: 'text' },
-      { name: 'updatedDate', type: 'date' },
-      { name: 'status', type: 'text' },
-      { name: 'visible', type: 'boolean' },
-      { name: 'tags', type: 'text' },  // Assuming comma-separated string for simplicity
-      { name: 'links', type: 'text' },  // Assuming comma-separated string for simplicity
-      { name: 'blogs', type: 'text' },  // Assuming comma-separated string for simplicity
-      { name: 'vendors', type: 'text' },  // Assuming comma-separated string for simplicity
-      { name: 'members', type: 'text' }  // Assuming comma-separated string for simplicity
-    ];
-
+    const model = Club.getModelFields();
     const formFields = generateFormFields(model);
+    console.log('renderAddForm');
 
     res.render('forms/generalForm', {
       title: 'Add New Club',
@@ -49,6 +23,29 @@ router.get('/renderAddForm', (req, res) => {
   }
 });
 
+// Route to render the form to edit an existing club
+router.get('/renderEditForm/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const club = await new Club().getById(id);
+    if (!club) {
+      return res.status(404).send({ error: 'Club not found' });
+    }
+    const model = Club.getModelFields();
+    const formFields = generateFormFields(model, club); // Generate form fields as an array
+
+    res.render('forms/generalEditForm', {
+      title: 'Edit Club',
+      action: `clubs/update/${id}`,
+      method: 'post',
+      formFields: formFields,
+      club: club
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ error: error.message });
+  }
+});
 router.get('/section', async (req, res) => {
   try {
     const clubs = await new Club().getAll();

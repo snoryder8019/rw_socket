@@ -8,7 +8,7 @@
 <body>
   <h1><%= title %></h1>
   <!-- Dynamically bring the model keys as inputs if we must -->
-  <form action="<%= action %>" method="post" enctype="multipart/form-data">
+  <form action="<%= action %>" method="<%=method%>" enctype="multipart/form-data">
     <%- formFields %>
     <button type="submit">Submit</button>
   </form>
