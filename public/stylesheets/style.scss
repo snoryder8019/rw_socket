@@ -962,7 +962,7 @@ animation:flashMsg 2.8s ease-in-out 0s 1 ;
 .index-container {
   overflow-y: scroll;
   background-repeat: no-repeat;
-  background-size: 50%;
+  background-size: 69%;
   background-position: left;
   background-blend-mode: hue;
 }
@@ -994,6 +994,60 @@ animation:flashMsg 2.8s ease-in-out 0s 1 ;
   border-radius: 5px;
   cursor: pointer;
 }
+.sectionWindow {
+  display: flex;
+  width: 100%;
+  min-height: 280px;
+  overflow-x: auto; /* Allow horizontal scrolling */
+}
+
+.sectionIndexNo {
+  min-width: 100%;
+  font-size: 4rem;
+  text-align: center;
+  padding-left: 8%;
+  font-family: $maph;
+}
+.sectionGraphic{
+  position: absolute;
+  top:0;
+  right: 0;
+  z-index: -1;
+  background-color: #711881;
+  min-height: 100%;
+  min-width: 33%;
+}
+.callToAction{
+  margin: -20%;
+  padding: 2% 24%;
+  background-color: #bcab65;
+  color: white;
+}
+.sectionName {
+  text-align: center;
+  font-family: $back;
+  font-size: 1rem;
+}
+
+.sectionContainer {
+  flex-shrink: 0;
+  margin: 7% 48% 0% 37%;
+  min-height: 99%;
+  width: 57%; /* Adjust the width to be larger than .sectionWindow */
+  background-color: #f3edd6;
+  overflow: visible;
+}
+
+.sectionView {
+  min-width: 98%;
+  margin: 1%;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position-x:-68px;
+  background-color: #711881;
+}
+
+
 
 #chatTabs {
   overflow-y: scroll;
@@ -1001,7 +1055,7 @@ animation:flashMsg 2.8s ease-in-out 0s 1 ;
   display: flex;
   min-width: 100%;
   border-bottom: 2px solid #333; /* Border to separate tabs from content */
-  }
+}
   
   .tab_section {
     color: $gold;

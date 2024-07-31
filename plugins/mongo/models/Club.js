@@ -13,6 +13,7 @@ class Club extends ModelHelper {
       nonAuthSubtitle: { type: 'text', value: null },
       authDescription: { type: 'textarea', value: null },
       nonAuthDescription: { type: 'textarea', value: null },
+      callToAction: { type: 'text', value: null },
       price: { type: 'number', value: null },
       subLength: { type: 'number', value: null },
       creationDate: { type: 'date', value: null },

@@ -1,0 +1,19 @@
+
+  <div  class="sectionWindow">
+      <% clubs.forEach(club => { %>
+        <div style="background-image: url('<%=club.mediumIcon%>');" class="sectionView">
+          <div class="sectionContainer">          
+            <span class="sectionIndexNo">3</span>
+            <br>
+            <span class="sectionName"><%= club.name %></span>
+            <br>
+            <span class="sectionSubtitle"><%=club.authSubtitle%></span>
+            <br>
+            <span class="callToAction"><%=club.callToAction%></span>
+          </div>
+          <div class="sectionGraphic"></div>
+        </div>
+        <% }) %>
+ 
+  </div>
+

@@ -52,7 +52,7 @@ router.get('/renderEditForm/:id', async (req, res) => {
 router.get('/section', async (req, res) => {
   try {
     const clubs = await new Club().getAll();
-    res.render('admin/clubs/section', {
+    res.render('./layouts/section', {
       title: 'Section View',
       clubs: clubs
     });
