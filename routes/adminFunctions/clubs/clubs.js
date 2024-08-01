@@ -1,4 +1,3 @@
-//THIS IS A GREAT EXAMPLE TO REFACTOR
 const express = require('express');
 const Club = require('../../../plugins/mongo/models/Club');
 const { generateFormFields } = require('../../../plugins/helpers/formHelper');
@@ -51,10 +50,10 @@ router.get('/renderEditForm/:id', async (req, res) => {
 /////////////////
 router.get('/section', async (req, res) => {
   try {
-    const clubs = await new Club().getAll();
+    const data = await new Club().getAll();
     res.render('./layouts/section', {
       title: 'Section View',
-      clubs: clubs
+      data: data
     });
   } catch (error) {
     console.error(error);

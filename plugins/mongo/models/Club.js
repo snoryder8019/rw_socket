@@ -7,21 +7,16 @@ class Club extends ModelHelper {
     super('clubs');
     this.modelFields = {
       name: { type: 'text', value: null },
-      authTitle: { type: 'text', value: null },
-      nonAuthTitle: { type: 'text', value: null },
-      authSubtitle: { type: 'text', value: null },
-      nonAuthSubtitle: { type: 'text', value: null },
-      authDescription: { type: 'textarea', value: null },
-      nonAuthDescription: { type: 'textarea', value: null },
+      title: { type: 'text', value: null },
+      subtitle: { type: 'text', value: null },
+      description: { type: 'textarea', value: null },
       callToAction: { type: 'text', value: null },
       price: { type: 'number', value: null },
       subLength: { type: 'number', value: null },
       creationDate: { type: 'date', value: null },
       mediumIcon: { type: 'file', value: null },
-      squareNonAuthBkgd: { type: 'file', value: null },
-      squareAuthBkgd: { type: 'file', value: null },
-      horizNonAuthBkgd: { type: 'file', value: null },
-      horizAuthBkgd: { type: 'file', value: null },
+      backgroundImg: { type: 'file', value: null },
+      horizBkgd: { type: 'file', value: null },
       entryUrl: { type: 'text', value: null },
       entryText: { type: 'text', value: null },
       updatedDate: { type: 'date', value: null },
@@ -61,10 +56,8 @@ class Club extends ModelHelper {
   get fileFields() {
     return [
       { name: 'mediumIcon', maxCount: 1 },
-      { name: 'squareNonAuthBkgd', maxCount: 1 },
-      { name: 'squareAuthBkgd', maxCount: 1 },
-      { name: 'horizNonAuthBkgd', maxCount: 1 },
-      { name: 'horizAuthBkgd', maxCount: 1 }
+      { name: 'backgroundImg', maxCount: 1 },
+      { name: 'horizBkgd', maxCount: 1 }
     ];
   }
 

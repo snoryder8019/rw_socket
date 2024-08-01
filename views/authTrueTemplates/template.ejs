@@ -17,7 +17,7 @@
 
 <% if (typeof sectionSettings === 'object' && sectionSettings && sectionSettings.length > 0) { %>
   
-  <div class="auth_view_true" style="background-image: url('./images/span1.png');">
+  <div class="auth_view_true" style="background-image: url('./images/shoppingBag.png');">
     <div class="index-container">
       <h1>Shop Now!!</h1>
       <button class="collapsible">View Products<span class="carrot">&#9654;</span></button>
@@ -31,14 +31,14 @@
           <h1><%= setting.title %></h1>
           <h1><%= setting.subtitle %></h1>
           <p><%= setting.description %></p>
-          <button style="background-image: url('<%=setting.entryBackground%>');" class="collapsible"><%= setting.entryButton.text %><span class="carrot"></span></button>
+          <button style="background-image: url('<%=setting.entryBackground%>');" class="collapsible"><%= setting.entryText %><span class="carrot">||</span></button>
           <div class="content" data-url="<%= setting.entryButton.url %>"></div>
         </div>
       </div>
       <% } %>
       <% }); %>
       
-      <div class="auth_view_true" style="background-image: url('./images/span1.png');">
+      <div class="auth_view_true" style="background-image: url('./images/hugeIcon.png');">
         <div class="index-container">
           <h1>The Parlor</h1>
           <div><p>Set up your parlor space below.</p></div>

@@ -1,0 +1,15 @@
+<div class="adminWindow">
+    <div class="adminStatsRow">
+      <% documents.forEach(sectionSetting => { %>
+        <div class="adminStat">
+          <p><%= sectionSetting.name %></p>
+          <img alt="SectionSetting image" src="<%= sectionSetting.mediumIcon %>">
+          <button class="collapsible">view: <span class="carrot">&#9654;</span></button>
+          <div class="content" data-url="/sectionSettings/renderEditForm/<%= sectionSetting._id %>"></div>
+        </div>
+      <% }) %>
+    </div>
+  </div>
+  
+  
+  
