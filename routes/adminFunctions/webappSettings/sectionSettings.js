@@ -13,8 +13,8 @@ router.get('/renderAddForm', (req, res) => {
     console.log('renderAddForm');
 
     res.render('forms/generalForm', {
-      title: 'Add New SectionSetting',
-      action: '/sectionSettings/create',
+      title: `Add New ${modelName}`,
+      action: `/${modelName}s/create`,
       formFields: formFields
     });
   } catch (error) {
@@ -34,9 +34,9 @@ router.get('/renderEditForm/:id', async (req, res) => {
     const model = SectionSetting.getModelFields();
     const formFields = generateFormFields(model, sectionSetting); // Generate form fields as an array
     res.render('forms/generalEditForm', {
-      title: 'Edit Section Setting',
-      action: `sectionSettings/update/${id}`,
-      routeSub: 'sectionSettings',
+      title: `Edit ${modelName}`,
+      action: `${modelName}s/update/${id}`,
+      routeSub: `${modelName}s`,
       method: 'post',
       formFields: formFields,
       data: sectionSetting
@@ -50,7 +50,7 @@ router.get('/renderEditForm/:id', async (req, res) => {
 router.get('/section', async (req, res) => {
   try {
     const data = await new SectionSetting().getAll();
-    res.render('./layouts/sectionSetting', {
+    res.render(`./layouts/${modelName}`, {
       title: 'Section View',
       data:data
     });

@@ -1,10 +1,11 @@
 const ModelHelper = require('../helpers/models');
 const { upload, processImages } = require('../../multer/subscriptionSetup');
 const { uploadToLinode } = require('../../aws_sdk/setup');
+const modelName = 'sectionSetting';
 
 class SectionSetting extends ModelHelper {
   constructor(sectionSettingData) {
-    super('sectionSettings');
+    super(`${modelName}s`);
     this.modelFields = {
       name:{type:'text',value:null},
       title:{type:'text',value:null},
@@ -63,7 +64,7 @@ class SectionSetting extends ModelHelper {
         if (req.files) {
           for (const key in req.files) {
             const file = req.files[key][0];
-            const fileKey = `sectionSettings/${Date.now()}-${file.originalname}`;
+            const fileKey = `${modelName}s/${Date.now()}-${file.originalname}`;
             const url = await uploadToLinode(file.path, fileKey);
             req.body[key] = url; // Save the URL in the request body
           }
@@ -76,7 +77,7 @@ class SectionSetting extends ModelHelper {
     }
   
     pathForGetRouteView() {
-      return 'admin/sectionSettings/template';
+      return `admin/${modelName}s/template`;
     }
   }
   
