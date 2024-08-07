@@ -1,5 +1,150 @@
+<style>
+    .auth_view_true {
+      transition: all 0.3s ease-in-out;
+    }
+    .auth_view_true.expanded {
+      transform: scale(1.05);
+      z-index: 1;
+    }
+    .close-button {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      display: none;
+    }
+  </style>
+  
+  <% if (typeof sectionSettings === 'object' && sectionSettings && sectionSettings.length > 0) { %>
+    <% sectionSettings.forEach(function(setting) { %>
+      <% if (setting.visible && setting.nonAuthView == "true") { %>
+        <div class="auth_view_true" style="background-image: url('<%= setting.backgroundImg %>');">
+          <div class="index-container">
+            <h1><%= setting.title %></h1>
+            <h1><%= setting.subtitle %></h1>
+            <p><%= setting.description %></p>
+            <button style="background-image: url('<%= setting.entryBackground %>');" class="collapsible">
+              <%= setting.entryText %><span class="carrot">||</span>
+            </button>
+            <div class="content" data-url="<%= setting.entryUrl %>"></div>
+          </div>
+        </div>
+      <% } %>
+    <% }); %>
+  
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('.auth_view_true').forEach(div => {
+          div.addEventListener('click', function () {
+            if (!this.classList.contains('expanded')) {
+              this.classList.add('expanded');
+              let closeButton = this.querySelector('.close-button');
+              if (!closeButton) {
+                closeButton = document.createElement('button');
+                closeButton.className = 'close-button';
+                closeButton.innerHTML = 'X';
+                this.appendChild(closeButton);
+              }
+              closeButton.style.display = 'block'; // Ensure the close button is visible
+  
+              closeButton.addEventListener('click', function (e) {
+                e.stopPropagation(); // Prevent click from propagating to the div
+                this.parentNode.classList.remove('expanded');
+                this.style.display = 'none'; // Hide button after collapsing
+              });
+            }
+          });
+        });
+      });
+    </script>
+  
+  <% } %>
+  
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    window.onload = () => {
+      const scrollContainerX = document.querySelector('.container-scrollbox-x');
+      if (scrollContainerX) {
+        scrollContainerX.scrollLeft = (scrollContainerX.scrollWidth - scrollContainerX.clientWidth) / 2;
+      }
+    };
+  </script>
+  
 
-<div style="background-image: url('./images/span1.png');" class="auth_view_false"></div>
-<div style="background-image: url('./images/span2.png');" class="auth_view_false"></div>
-<div style="background-image: url('./images/span3.png');" class="auth_view_false"></div>
-
+  
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const collapsibles = document.querySelectorAll('.collapsible');
+  
+      collapsibles.forEach(collapsible => {
+        collapsible.addEventListener('click', function () {
+          this.classList.toggle('active');
+          const content = this.nextElementSibling;
+          const carrot = this.querySelector('.carrot');
+          if (content.style.display === "block") {
+            content.style.display = "none";
+            carrot.classList.remove('rotate');
+          } else {
+            content.style.display = "block";
+            carrot.classList.add('rotate');
+            observeAndLoadContent(content);
+          }
+        });
+      });
+  
+      const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const content = entry.target;
+            if (!content.dataset.loaded) {
+              loadContent(content);
+            }
+          }
+        });
+      });
+  
+      function observeAndLoadContent(content) {
+        if (content && content.getAttribute('data-url')) {
+          observer.observe(content);
+        }
+      }
+  
+      async function loadContent(content) {
+        const url = content.getAttribute('data-url');
+        if (!url || url === 'false') {
+          return; // Skip loading if data-url is false or not provided
+        }
+        try {
+          const response = await fetch(url);
+          const data = await response.text();
+          content.innerHTML = data;
+          content.dataset.loaded = true; // Mark as loaded
+          observer.unobserve(content); // Stop observing once loaded
+          initializeDynamicContent(content); // Initialize JS for newly loaded content
+        } catch (error) {
+          console.error(`Error loading content from ${url}:`, error);
+          content.innerHTML = '<p>Error loading content</p>';
+        }
+      }
+  
+      // Function to initialize event listeners for dynamically loaded content
+      function initializeDynamicContent(parent) {
+        const newCollapsibles = parent.querySelectorAll('.collapsible');
+  
+        newCollapsibles.forEach(collapsible => {
+          collapsible.addEventListener('click', function () {
+            this.classList.toggle('active');
+            const content = this.nextElementSibling;
+            const carrot = this.querySelector('.carrot');
+            if (content.style.display === "block") {
+              content.style.display = "none";
+              carrot.classList.remove('rotate');
+            } else {
+              content.style.display = "block";
+              carrot.classList.add('rotate');
+              observeAndLoadContent(content);
+            }
+          });
+        });
+      }
+    });
+  </script>
