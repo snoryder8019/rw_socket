@@ -21,6 +21,8 @@ const clubs = require('./clubs/clubs');
 router.use('/clubs',clubs);
 const webappSettings = require('./webappSettings/webappSettings');
 router.use('/webappSettings',webappSettings);
+const notifications = require('./notifications/notifications');
+router.use('/notifications',notifications);
 const sectionSettings = require('./webappSettings/sectionSettings');
 router.use('/sectionSettings',sectionSettings);
 const subscriptions = require('./subscriptions/subscriptions');

@@ -15,5 +15,7 @@ this.restrictions = chatRoomData.restrictions || [];
 this.tags = chatRoomData.tags || [];
 this.testMode = chatRoomData.testMode;
 this.clubName = chatRoomData.clubName || []; 
+this.mainChat = chatRoomData.mainChat;
+
     }}}
     module.exports=ChatRoom;
