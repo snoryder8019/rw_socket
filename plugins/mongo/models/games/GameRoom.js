@@ -1,29 +1,28 @@
 const ModelHelper = require('../../helpers/models');
-const modelName = 'gameSession';
+const modelName = 'gameRoom';
 
-class GameSession extends ModelHelper {
-  constructor(gameSessionData) {
+class GameRoom extends ModelHelper {
+  constructor(gameRoomData) {
     super(`${modelName}s`);
     this.modelFields = {
-      sessionId: { type: 'text', value: null },
+      roomId: { type: 'text', value: null },
       gameId: { type: 'text', value: null },
       playerIds: { type: 'array', value: [] },
-      startTime: { type: 'date', value: null },
-      endTime: { type: 'date', value: null },
-      status: { type: 'text', value: null }
+      status: { type: 'text', value: null },
+      maxPlayers: { type: 'number', value: null }
     };
-    if (gameSessionData) {
+    if (gameRoomData) {
       for (let key in this.modelFields) {
-        if (gameSessionData[key] !== undefined) {
-          this.modelFields[key].value = gameSessionData[key];
+        if (gameRoomData[key] !== undefined) {
+          this.modelFields[key].value = gameRoomData[key];
         }
       }
     }
   }
 
   static getModelFields() {
-    return Object.keys(new GameSession().modelFields).map(key => {
-      const field = new GameSession().modelFields[key];
+    return Object.keys(new GameRoom().modelFields).map(key => {
+      const field = new GameRoom().modelFields[key];
       return { name: key, type: field.type };
     });
   }
@@ -49,4 +48,4 @@ class GameSession extends ModelHelper {
   }
 }
 
-module.exports = GameSession;
+module.exports = GameRoom;

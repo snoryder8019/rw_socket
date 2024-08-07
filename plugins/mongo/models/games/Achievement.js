@@ -1,32 +1,30 @@
 const ModelHelper = require('../../helpers/models');
 const { upload, processImages } = require('../../../multer/subscriptionSetup');
 const { uploadToLinode } = require('../../../aws_sdk/setup');
-const modelName = 'game';
+const modelName = 'achievement';
 
-class Game extends ModelHelper {
-  constructor(gameData) {
+class Achievement extends ModelHelper {
+  constructor(achievementData) {
     super(`${modelName}s`);
     this.modelFields = {
-      title: { type: 'text', value: null },
+      name: { type: 'text', value: null },
       description: { type: 'text', value: null },
-      genre: { type: 'text', value: null },
-      developer: { type: 'text', value: null },
-      releaseDate: { type: 'date', value: null },
       iconImage: { type: 'file', value: null },
-      backgroundImg: { type: 'file', value: null }
+      points: { type: 'number', value: null },
+      criteria: { type: 'text', value: null }
     };
-    if (gameData) {
+    if (achievementData) {
       for (let key in this.modelFields) {
-        if (gameData[key] !== undefined) {
-          this.modelFields[key].value = gameData[key];
+        if (achievementData[key] !== undefined) {
+          this.modelFields[key].value = achievementData[key];
         }
       }
     }
   }
 
   static getModelFields() {
-    return Object.keys(new Game().modelFields).map(key => {
-      const field = new Game().modelFields[key];
+    return Object.keys(new Achievement().modelFields).map(key => {
+      const field = new Achievement().modelFields[key];
       return { name: key, type: field.type };
     });
   }
@@ -41,8 +39,7 @@ class Game extends ModelHelper {
 
   get fileFields() {
     return [
-      { name: 'iconImage', maxCount: 1 },
-      { name: 'backgroundImg', maxCount: 1 }
+      { name: 'iconImage', maxCount: 1 }
     ];
   }
 
@@ -68,4 +65,4 @@ class Game extends ModelHelper {
   }
 }
 
-module.exports = Game;
+module.exports = Achievement;

@@ -1,38 +1,59 @@
-const ModelHelper = require('../helpers/models');
-const { upload, processImages } = require('../../multer/subscriptionSetup');
-const { uploadToLinode } = require('../../aws_sdk/setup');
+const ModelHelper = require('../../helpers/models');
+const { upload, processImages } = require('../../../multer/subscriptionSetup');
+const { uploadToLinode } = require('../../../aws_sdk/setup');
+const modelName = 'playerCard';
 
 class PlayerCard extends ModelHelper {
-    constructor(playerCardData){
-        super('playerCards');
-        if(playerCardData){
-            this.name = playerCardData.name;
-   //player logs histtory linked to user._id
+  constructor(playerCardData) {
+    super(`${modelName}s`);
+    this.modelFields = {
+      playerId: { type: 'text', value: null },
+      playerName: { type: 'text', value: null },
+      avatarImage: { type: 'file', value: null },
+      level: { type: 'number', value: null },
+      experiencePoints: { type: 'number', value: null },
+      achievements: { type: 'array', value: [] },
+      games: { type: 'array', value: [] },
+      wins: { type: 'number', value: null },
+      losses: { type: 'number', value: null },
 
+    };
+    if (playerCardData) {
+      for (let key in this.modelFields) {
+        if (playerCardData[key] !== undefined) {
+          this.modelFields[key].value = playerCardData[key];
         }
+      }
     }
+  }
 
-  // Right now this model is not using the route builder, but if it was this would be what the function would need to look like in order for it to work.
-  middlewareForEditRoute() {
-    return [upload.fields(this.fileFields), processImages, uploadToLinode];
+  static getModelFields() {
+    return Object.keys(new PlayerCard().modelFields).map(key => {
+      const field = new PlayerCard().modelFields[key];
+      return { name: key, type: field.type };
+    });
   }
 
   middlewareForCreateRoute() {
-    return [upload.fields(this.fileFields), processImages, this.uploadImagesToLinode];
+    return [upload.fields(this.fileFields), processImages, this.uploadImagesToLinode.bind(this)];
   }
 
-  fileFields = [
-    { name: 'bkgrdImage', maxCount: 1 },
-    { name: 'iconImage', maxCount: 1 },
+  middlewareForEditRoute() {
+    return [upload.fields(this.fileFields), processImages, this.uploadImagesToLinode.bind(this)];
+  }
 
-  ];
+  get fileFields() {
+    return [
+      { name: 'avatarImage', maxCount: 1 }
+    ];
+  }
 
   async uploadImagesToLinode(req, res, next) {
     try {
       if (req.files) {
         for (const key in req.files) {
           const file = req.files[key][0];
-          const fileKey = `playerCards/${Date.now()}-${file.originalname}`;
+          const fileKey = `${modelName}s/${Date.now()}-${file.originalname}`;
           const url = await uploadToLinode(file.path, fileKey);
           req.body[key] = url; // Save the URL in the request body
         }
@@ -42,10 +63,10 @@ class PlayerCard extends ModelHelper {
       console.error("Error in uploadImagesToLinode middleware:", error);
       next(error);
     }
-  };
+  }
 
   pathForGetRouteView() {
-    return 'admin/playerCard/template';
+    return `admin/${modelName}s/template`;
   }
 }
 

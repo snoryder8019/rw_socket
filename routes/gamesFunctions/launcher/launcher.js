@@ -1,15 +1,15 @@
 const express = require('express');
-const Subscription = require('../../../plugins/mongo/models/Subscription');
+const Launcher = require('../../../plugins/mongo/models/games/Launcher');
 const { generateFormFields } = require('../../../plugins/helpers/formHelper');
 const buildRoutes = require('../../helpers/routeBuilder');
 
 const router = express.Router();
-const modelName = "subscription";
+const modelName = "launcher";
 
-// Route to render the form to add a new subscription
+// Route to render the form to add a new launcher
 router.get('/renderAddForm', (req, res) => {
   try {
-    const model = Subscription.getModelFields();
+    const model = Launcher.getModelFields();
     const formFields = generateFormFields(model);
     console.log('renderAddForm');
 
@@ -24,23 +24,23 @@ router.get('/renderAddForm', (req, res) => {
   }
 });
 
-// Route to render the form to edit an existing subscription
+// Route to render the form to edit an existing launcher
 router.get('/renderEditForm/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    const subscription = await new Subscription().getById(id);
-    if (!subscription) {
-      return res.status(404).send({ error: 'Subscription not found' });
+    const launcher = await new Launcher().getById(id);
+    if (!launcher) {
+      return res.status(404).send({ error: 'Launcher not found' });
     }
-    const model = Subscription.getModelFields();
-    const formFields = generateFormFields(model, subscription); // Generate form fields as an array
+    const model = Launcher.getModelFields();
+    const formFields = generateFormFields(model, launcher); // Generate form fields as an array
     res.render('forms/generalEditForm', {
       title: `Edit ${modelName}`,
       action: `${modelName}s/update/${id}`,
       routeSub: `${modelName}s`,
       method: 'post',
       formFields: formFields,
-      data: subscription
+      data: launcher
     });
   } catch (error) {
     console.error(error);
@@ -48,12 +48,12 @@ router.get('/renderEditForm/:id', async (req, res) => {
   }
 });
 
-// Route to load subscriptions
+// Route to load launchers
 router.get('/section', async (req, res) => {
   try {
-    const data = await new Subscription().getAll();
+    const data = await new Launcher().getAll();
     res.render(`./layouts/${modelName}`, {
-      title: 'Subscription View',
+      title: 'Launcher View',
       data: data
     });
   } catch (error) {
@@ -62,6 +62,6 @@ router.get('/section', async (req, res) => {
   }
 });
 
-buildRoutes(new Subscription(), router);
+buildRoutes(new Launcher(), router);
 
 module.exports = router;

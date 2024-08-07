@@ -1,29 +1,30 @@
 const ModelHelper = require('../../helpers/models');
-const modelName = 'gameLog';
+const modelName = 'scoreLog';
 
-class GameLog extends ModelHelper {
-  constructor(gameLogData) {
+class ScoreLog extends ModelHelper {
+  constructor(scoreLogData) {
     super(`${modelName}s`);
     this.modelFields = {
       logId: { type: 'text', value: null },
+      playerId: { type: 'text', value: null },
+      victory: { type: 'boolean', value: null },
       gameId: { type: 'text', value: null },
       sessionId: { type: 'text', value: null },
-      playerId: { type: 'text', value: null },
-      action: { type: 'text', value: null },
+      score: { type: 'number', value: null },
       timestamp: { type: 'date', value: null }
     };
-    if (gameLogData) {
+    if (scoreLogData) {
       for (let key in this.modelFields) {
-        if (gameLogData[key] !== undefined) {
-          this.modelFields[key].value = gameLogData[key];
+        if (scoreLogData[key] !== undefined) {
+          this.modelFields[key].value = scoreLogData[key];
         }
       }
     }
   }
 
   static getModelFields() {
-    return Object.keys(new GameLog().modelFields).map(key => {
-      const field = new GameLog().modelFields[key];
+    return Object.keys(new ScoreLog().modelFields).map(key => {
+      const field = new ScoreLog().modelFields[key];
       return { name: key, type: field.type };
     });
   }
@@ -49,4 +50,4 @@ class GameLog extends ModelHelper {
   }
 }
 
-module.exports = GameLog;
+module.exports = ScoreLog;

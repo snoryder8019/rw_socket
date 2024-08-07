@@ -1,15 +1,15 @@
 const express = require('express');
-const Subscription = require('../../../plugins/mongo/models/Subscription');
+const GameLog = require('../../../plugins/mongo/models/games/GameLog');
 const { generateFormFields } = require('../../../plugins/helpers/formHelper');
 const buildRoutes = require('../../helpers/routeBuilder');
 
 const router = express.Router();
-const modelName = "subscription";
+const modelName = "gameLog";
 
-// Route to render the form to add a new subscription
+// Route to render the form to add a new game log
 router.get('/renderAddForm', (req, res) => {
   try {
-    const model = Subscription.getModelFields();
+    const model = GameLog.getModelFields();
     const formFields = generateFormFields(model);
     console.log('renderAddForm');
 
@@ -24,23 +24,23 @@ router.get('/renderAddForm', (req, res) => {
   }
 });
 
-// Route to render the form to edit an existing subscription
+// Route to render the form to edit an existing game log
 router.get('/renderEditForm/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    const subscription = await new Subscription().getById(id);
-    if (!subscription) {
-      return res.status(404).send({ error: 'Subscription not found' });
+    const gameLog = await new GameLog().getById(id);
+    if (!gameLog) {
+      return res.status(404).send({ error: 'Game log not found' });
     }
-    const model = Subscription.getModelFields();
-    const formFields = generateFormFields(model, subscription); // Generate form fields as an array
+    const model = GameLog.getModelFields();
+    const formFields = generateFormFields(model, gameLog); // Generate form fields as an array
     res.render('forms/generalEditForm', {
       title: `Edit ${modelName}`,
       action: `${modelName}s/update/${id}`,
       routeSub: `${modelName}s`,
       method: 'post',
       formFields: formFields,
-      data: subscription
+      data: gameLog
     });
   } catch (error) {
     console.error(error);
@@ -48,12 +48,12 @@ router.get('/renderEditForm/:id', async (req, res) => {
   }
 });
 
-// Route to load subscriptions
+// Route to load game logs
 router.get('/section', async (req, res) => {
   try {
-    const data = await new Subscription().getAll();
+    const data = await new GameLog().getAll();
     res.render(`./layouts/${modelName}`, {
-      title: 'Subscription View',
+      title: 'Game Log View',
       data: data
     });
   } catch (error) {
@@ -62,6 +62,6 @@ router.get('/section', async (req, res) => {
   }
 });
 
-buildRoutes(new Subscription(), router);
+buildRoutes(new GameLog(), router);
 
 module.exports = router;

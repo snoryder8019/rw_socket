@@ -18,10 +18,12 @@ class Notification extends ModelHelper {
       originalMessage: { type: 'text', value: null },
       subtitle: { type: 'text', value: null },
       title: { type: 'text', value: null },
+      links: { type: 'text', value: [] },
       intervalSent: { type: 'text', value: null },
       seenBy: { type: 'array', value: [] },
       actionBy: { type: 'array', value: [] },
       actionHookBy: { type: 'array', value: [] },
+      unsubscribedBy: { type: 'array', value: [] },
       recycle: { type: 'boolean', value: null }
     };
     if (notificationData) {

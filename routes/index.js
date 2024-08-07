@@ -12,7 +12,7 @@ const { updateBanned } = require('./securityFunctions/updateBanned');
 const upload = require('../plugins/multer/setup');
 const userBucketRouter = require('./userFunctions/userBucketFunctions');
 const { getNotifications } = require('./userFunctions/userNotifications');
-const gamesRouter = require('./gamesFunctions/gamesFunctions');
+const gamesRouter = require('./gamesFunctions/index');
 
 // Middleware to use cookieParser
 router.use(cookieParser());
