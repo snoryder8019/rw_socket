@@ -1,15 +1,15 @@
 const express = require('express');
-const GameRoom = require('../../../plugins/mongo/models/GameRoom');
+const GameSession = require('../../../plugins/mongo/models/GameSession');
 const { generateFormFields } = require('../../../plugins/helpers/formHelper');
 const buildRoutes = require('../../helpers/routeBuilder');
 
 const router = express.Router();
-const modelName = "gameRoom";
+const modelName = "gameSession";
 
-// Route to render the form to add a new game room
+// Route to render the form to add a new game session
 router.get('/renderAddForm', (req, res) => {
   try {
-    const model = GameRoom.getModelFields();
+    const model = GameSession.getModelFields();
     const formFields = generateFormFields(model);
     console.log('renderAddForm');
 
@@ -24,23 +24,23 @@ router.get('/renderAddForm', (req, res) => {
   }
 });
 
-// Route to render the form to edit an existing game room
+// Route to render the form to edit an existing game session
 router.get('/renderEditForm/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    const gameRoom = await new GameRoom().getById(id);
-    if (!gameRoom) {
-      return res.status(404).send({ error: 'Game room not found' });
+    const gameSession = await new GameSession().getById(id);
+    if (!gameSession) {
+      return res.status(404).send({ error: 'Game session not found' });
     }
-    const model = GameRoom.getModelFields();
-    const formFields = generateFormFields(model, gameRoom); // Generate form fields as an array
+    const model = GameSession.getModelFields();
+    const formFields = generateFormFields(model, gameSession); // Generate form fields as an array
     res.render('forms/generalEditForm', {
       title: `Edit ${modelName}`,
       action: `${modelName}s/update/${id}`,
       routeSub: `${modelName}s`,
       method: 'post',
       formFields: formFields,
-      data: gameRoom
+      data: gameSession
     });
   } catch (error) {
     console.error(error);
@@ -48,12 +48,12 @@ router.get('/renderEditForm/:id', async (req, res) => {
   }
 });
 
-// Route to load game rooms
+// Route to load game sessions
 router.get('/section', async (req, res) => {
   try {
-    const data = await new GameRoom().getAll();
+    const data = await new GameSession().getAll();
     res.render(`./layouts/${modelName}`, {
-      title: 'Game Room View',
+      title: 'Game Session View',
       data: data
     });
   } catch (error) {
@@ -62,6 +62,6 @@ router.get('/section', async (req, res) => {
   }
 });
 
-buildRoutes(new GameRoom(), router);
+buildRoutes(new GameSession(), router);
 
 module.exports = router;
