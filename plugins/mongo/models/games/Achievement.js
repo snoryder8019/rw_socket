@@ -11,7 +11,8 @@ class Achievement extends ModelHelper {
       description: { type: 'text', value: null },
       iconImage: { type: 'file', value: null },
       points: { type: 'number', value: null },
-      criteria: { type: 'text', value: null }
+      criteria: { type: 'object', value: {} },
+      condition: { type: 'object', value: {} },
     };
     if (achievementData) {
       for (let key in this.modelFields) {

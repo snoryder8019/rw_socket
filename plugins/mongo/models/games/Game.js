@@ -8,6 +8,7 @@ class Game extends ModelHelper {
     super(`${modelName}s`);
     this.modelFields = {
       title: { type: 'text', value: null },
+      entryUrl: { type: 'text', value: null },
       description: { type: 'text', value: null },
       genre: { type: 'text', value: null },
       developer: { type: 'text', value: null },

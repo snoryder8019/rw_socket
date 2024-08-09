@@ -62,6 +62,20 @@ router.get('/section', async (req, res) => {
   }
 });
 
+// Entry point to the launcher
+router.get('/getLauncher', async (req, res) => {
+  try {
+    const data = await new Launcher().getAll(); // Assuming this fetches the necessary launcher data
+    res.render(`./layouts/games/launcher`, {
+      title: 'Game Launcher',
+      launchers: data
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ error: error.message });
+  }
+});
+
 buildRoutes(new Launcher(), router);
 
 module.exports = router;

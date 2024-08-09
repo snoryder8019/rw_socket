@@ -2,11 +2,11 @@ const express = require('express')
 const router = express.Router();
 
 const launcherRouter = require('./launcher/launcher')
-router.use('/launcher',launcherRouter)
+router.use('/',launcherRouter)
 const playerRouter = require('./player/playerCard')
-router.use('/player',playerRouter)
+router.use('/',playerRouter)
 const logsRouter = require('./logs/gameLogs');
-router.use('/logs',logsRouter)
+router.use('/',logsRouter)
 
 
 
