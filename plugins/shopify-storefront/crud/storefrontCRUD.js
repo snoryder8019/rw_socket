@@ -9,10 +9,6 @@ const getProducts = async () => {
     try {
         const fetch = (await import('node-fetch')).default;
 
-        // Log the request URL and headers
-      //  console.log(`Fetching from: https://${STORE_DOMAIN}/api/2023-10/graphql.json`);
-      //  console.log(`Using API Key: ${API_KEY}`);
-
         const response = await fetch(`https://${STORE_DOMAIN}/api/2023-10/graphql.json`, {
             method: 'POST',
             headers: {
@@ -28,6 +24,7 @@ const getProducts = async () => {
                                     id
                                     title
                                     description
+                                    productType
                                     images(first: 1) {
                                         edges {
                                             node {
@@ -57,11 +54,6 @@ const getProducts = async () => {
         const contentType = response.headers.get('content-type');
         const text = await response.text();
 
-        // Log the response details for debugging
-        // console.log('Response Status:', response.status);
-        // console.log('Response Headers:', response.headers.raw());
-        // console.log('Response Text:', text);
-
         if (response.status !== 200) {
             throw new Error(`Server responded with status ${response.status}: ${text}`);
         }
@@ -74,7 +66,7 @@ const getProducts = async () => {
         return data.data.products.edges;
     } catch (error) {
         console.error('Error fetching products:', error.message);
-        throw new Error(error.message);  // Re-throw the error to be caught by the route
+        throw new Error(error.message);
     }
 };
 
@@ -86,24 +78,36 @@ const getHtmlTemplate = (templateName) => {
 const renderHtml = (templateName, products) => {
     let html = getHtmlTemplate(templateName);
     let productsHtml = '';
+    let categories = new Set();
 
     products.forEach(product => {
         const variant = product.node.variants.edges[0].node;
         const price = parseFloat(variant.price.amount).toFixed(2);  // Ensure two decimal places
-        productsHtml += `<li>
-                            <h2>${product.node.title}</h2>
+        const category = product.node.productType;
+        categories.add(category);
+
+        productsHtml += `<li data-category="${category}">
+                            <h2 class="productTitle">${product.node.title}</h2>
                             <p>${product.node.description}</p>`;
         if (product.node.images.edges.length > 0) {
             productsHtml += `<div class="productImgContainer"><img src="${product.node.images.edges[0].node.originalSrc}" alt="${product.node.images.edges[0].node.altText}" /></div>`;
         }
         productsHtml += `<div class="priceContainer">
-                            <p>$${price}</p>
+                            <p class="productPrice">$${price}</p>
                             <button class="buyNowButton">Add to Cart</button>
                          </div>
                          </li>`;
     });
 
-    return html.replace('<!--PRODUCTS-->', productsHtml);
+    let categoriesHtml = '<button data-category="all">All</button>';
+    categories.forEach(category => {
+        categoriesHtml += `<button data-category="${category}">${category}</button>`;
+    });
+
+    html = html.replace('<!--PRODUCTS-->', productsHtml);
+    html = html.replace('<!--CATEGORIES-->', categoriesHtml);
+
+    return html;
 };
 
 module.exports = {

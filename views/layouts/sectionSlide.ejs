@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Section Slide</title>
+  <style>
+    /* Basic Styles */
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    .sectionWindow {
+      display: flex;
+      overflow-x: scroll;
+      scroll-snap-type: x mandatory;
+    }
+
+    .sectionView {
+      min-width: 300px;
+      height: 300px;
+      margin: 10px;
+      border-radius: 10px;
+      background-size: cover;
+      background-position: center;
+      scroll-snap-align: start;
+      transition: transform 0.3s, box-shadow 0.3s;
+      animation: fadeIn 1s forwards;
+      opacity: 0;
+    }
+
+    .sectionView:hover {
+      transform: scale(1.05);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .sectionContainer {
+      padding: 20px;
+      background: rgba(255, 255, 255, 0.8);
+      border-radius: 10px;
+    }
+
+    .sectionIndexNo, .sectionName, .sectionSubtitle, .callToAction {
+      display: block;
+      margin-bottom: 10px;
+      font-size: 18px;
+    }
+
+    .sectionIndexNo {
+      font-weight: bold;
+    }
+
+    .callToAction {
+      color: #007BFF;
+      cursor: pointer;
+    }
+
+    /* Keyframes for animations */
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="sectionWindow">
+    <% data.forEach((data, index) => { %>
+      <div style="background-image: url('<%= data.backgroundImg %>'); animation-delay: <%= index * 0.2 %>s;" class="sectionView">
+        <div class="sectionContainer">
+          <span class="sectionIndexNo"><%= index + 1 %></span>
+          <br>
+          <% if (data.name) { %>
+            <span class="sectionName"><%= data.name %></span>
+          <% } %>
+          <br>
+          <% if (data.authSubtitle) { %>
+            <span class="sectionSubtitle"><%= data.authSubtitle %></span>
+          <% } %>
+          <br>
+          <% if (data.callToAction) { %>
+            <span class="callToAction"><%= data.callToAction %></span>
+          <% } %>
+        </div>
+        <div class="sectionGraphic"></div>
+      </div>
+    <% }) %>
+  </div>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const sections = document.querySelectorAll('.sectionView');
+
+      sections.forEach((section, index) => {
+        section.style.animationDelay = `${index * 0.2}s`;
+      });
+    });
+  </script>
+</body>
+</html>

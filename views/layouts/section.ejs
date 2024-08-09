@@ -1,9 +1,9 @@
 <!--THIS IS THE STANDARD SWIPE SIDEWAYS VIEW IN THE MAIN SECTIONS-->
   <div  class="sectionWindow">
-      <% data.forEach(data => { %>
+      <% data.forEach((data,index) => { %>
         <div style="background-image: url('<%=data.backgroundImg%>');" class="sectionView">
           <div class="sectionContainer">          
-            <span class="sectionIndexNo">3</span>
+            <span class="sectionIndexNo"><%=index + 1%></span>
             <br>
             <span class="sectionName"><%= data.name %></span>
             <br>

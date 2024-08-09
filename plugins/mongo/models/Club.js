@@ -21,12 +21,12 @@ class Club extends ModelHelper {
       entryText: { type: 'text', value: null },
       updatedDate: { type: 'date', value: null },
       status: { type: 'text', value: null },
-      visible: { type: 'boolean', value: null },
-      tags: { type: 'text', value: null },  // Assuming comma-separated string for simplicity
-      links: { type: 'text', value: null },  // Assuming comma-separated string for simplicity
-      blogs: { type: 'text', value: null },  // Assuming comma-separated string for simplicity
-      vendors: { type: 'text', value: null },  // Assuming comma-separated string for simplicity
-      members: { type: 'text', value: null }  // Assuming comma-separated string for simplicity
+      visible: { type: 'boolean', value: false },
+      tags: { type: 'array', value: [] },  // Assuming comma-separated string for simplicity
+      links: { type: 'array', value: [] },  // Assuming comma-separated string for simplicity
+      blogs: { type: 'array', value: [] },  // Assuming comma-separated string for simplicity
+      vendors: { type: 'array', value: [] },  // Assuming comma-separated string for simplicity
+      members: { type: 'array', value: [] }  // Assuming comma-separated string for simplicity
     };
 
     if (clubData) {

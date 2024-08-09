@@ -52,7 +52,19 @@ router.get('/renderEditForm/:id', async (req, res) => {
 router.get('/section', async (req, res) => {
   try {
     const data = await new Subscription().getAll();
-    res.render(`./layouts/${modelName}`, {
+    res.render(`./layouts/section`, {
+      title: 'Subscription View',
+      data: data
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ error: error.message });
+  }
+});
+router.get('/sectionSlide', async (req, res) => {
+  try {
+    const data = await new Subscription().getAll();
+    res.render(`./layouts/sectionSlide`, {
       title: 'Subscription View',
       data: data
     });

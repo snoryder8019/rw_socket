@@ -1,0 +1,79 @@
+/* shopifyStorefront.css */
+.shopifyStorefront {
+    width: 100%;
+    padding: 20px;
+}
+
+.shopifyStorefront header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+#productCategories {
+    display: flex;
+    gap: 10px;
+}
+
+#productCategories button {
+    padding: 5px 10px;
+    border: none;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+}
+
+#productCategories button:hover {
+    background-color: #0056b3;
+}
+
+#productList {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    gap: 20px;
+    overflow-x: auto;
+}
+
+#productList li {
+    min-width: 200px;
+    flex: 0 0 auto;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    text-align: center;
+}
+
+.centerHighlight {
+    background-color: #e0ffe0;
+}
+
+.productImgContainer {
+    height: 150px;
+    overflow: hidden;
+    margin-bottom: 10px;
+}
+
+.productImgContainer img {
+    max-height: 100%;
+    object-fit: cover;
+}
+
+.priceContainer {
+    margin-top: 10px;
+}
+
+.buyNowButton {
+    margin-top: 10px;
+    padding: 5px 10px;
+    border: none;
+    background-color: #28a745;
+    color: white;
+    cursor: pointer;
+}
+
+.buyNowButton:hover {
+    background-color: #218838;
+}

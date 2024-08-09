@@ -6,32 +6,54 @@
 <body>
   <h1><%= title %></h1>
   <form action="<%= action %>" method="POST" enctype="multipart/form-data">
-    <input type="hidden" name="_method" value="PUT">
     <% formFields.forEach(field => { %>
       <div>
         <label for="<%= field.name %>"><%= field.label %>:</label>
+        
         <% if (field.type === 'textarea') { %>
           <textarea name="<%= field.name %>" id="<%= field.name %>"><%= field.value %></textarea>
+        
         <% } else if (field.type === 'file') { %>
           <input type="file" name="<%= field.name %>" id="<%= field.name %>">
+        
         <% } else if (field.type === 'dropdown') { %>
           <select name="<%= field.name %>" id="<%= field.name %>">
             <% field.options.forEach(option => { %>
               <option value="<%= option %>" <%= field.value === option ? 'selected' : '' %>><%= option %></option>
             <% }) %>
           </select>
+        
         <% } else if (field.type === 'radio') { %>
           <% field.options.forEach(option => { %>
             <input type="radio" name="<%= field.name %>" id="<%= field.name %>-<%= option %>" value="<%= option %>" <%= field.value === option ? 'checked' : '' %>>
             <label for="<%= field.name %>-<%= option %>"><%= option %></label>
           <% }) %>
+        
         <% } else if (field.type === 'boolean') { %>
-          <input type="radio" name="<%= field.name %>" id="<%= field.name %>-true" value="true" <%= field.value === 'true' ? 'checked' : '' %>>
+          <input type="radio" name="<%= field.name %>" id="<%= field.name %>-true" value="true" <%= field.value === true ? 'checked' : '' %>>
           <label for="<%= field.name %>-true">True</label>
-          <input type="radio" name="<%= field.name %>" id="<%= field.name %>-false" value="false" <%= field.value === 'false' ? 'checked' : '' %>>
+          <input type="radio" name="<%= field.name %>" id="<%= field.name %>-false" value="false" <%= field.value === false ? 'checked' : '' %>>
           <label for="<%= field.name %>-false">False</label>
+        
+        <% } else if (field.type === 'array') { %>
+          <% if (Array.isArray(field.value)) { %>
+            <% field.value.forEach((item, index) => { %>
+              <input type="text" name="<%= field.name %>[]" id="<%= field.name %>-<%= index %>" value="<%= item %>">
+            <% }); %>
+          <% } else { %>
+            <input type="text" name="<%= field.name %>[]" id="<%= field.name %>-0" value="<%= field.value %>">
+          <% } %>
+          <button type="button" onclick="addField('<%= field.name %>')">Add more</button>
+        
+        <% } else if (field.type === 'object') { %>
+          <% for (const key in field.value) { %>
+            <label for="<%= field.name %>_<%= key %>"><%= key %>:</label>
+            <input type="text" name="<%= field.name %>[<%= key %>]" id="<%= field.name %>_<%= key %>" value="<%= field.value[key] %>">
+          <% } %>
+        
         <% } else { %>
           <input type="<%= field.type %>" name="<%= field.name %>" id="<%= field.name %>" value="<%= field.value %>">
+        
         <% } %>
       </div>
     <% }) %>
@@ -43,5 +65,17 @@
     <input type="hidden" name="_method" value="DELETE">
     <button type="submit" style="background-color: red; color: white;">Delete</button>
   </form>
+
+  <script>
+    function addField(name) {
+      const container = document.querySelectorAll(`input[name="${name}[]"]`)[0].parentElement;
+      const index = container.querySelectorAll(`input[name="${name}[]"]`).length;
+      const newField = document.createElement('input');
+      newField.type = 'text';
+      newField.name = `${name}[]`;
+      newField.id = `${name}-${index}`;
+      container.insertBefore(newField, container.querySelector('button'));
+    }
+  </script>
 </body>
 </html>

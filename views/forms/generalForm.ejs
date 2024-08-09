@@ -4,6 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title><%= title %></title>
+  <style>
+    .array-field, .object-field {
+      margin-bottom: 10px;
+    }
+  </style>
 </head>
 <body>
   <h1><%= title %></h1>
@@ -32,6 +37,32 @@
           <label for="<%= field.name %>-true">True</label>
           <input type="radio" name="<%= field.name %>" id="<%= field.name %>-false" value="false" <%= field.value === 'false' ? 'checked' : '' %>>
           <label for="<%= field.name %>-false">False</label>
+        <% } else if (field.type === 'array') { %>
+          <% if (Array.isArray(field.value)) { %>
+            <% field.value.forEach((item, index) => { %>
+              <div class="array-field">
+                <input type="text" name="<%= field.name %>[]"
+                       id="<%= field.name %>-<%= index %>"
+                       value="<%= item %>">
+              </div>
+            <% }); %>
+          <% } else { %>
+            <div class="array-field">
+              <input type="text" name="<%= field.name %>[]"
+                     id="<%= field.name %>-0"
+                     value="<%= field.value %>">
+            </div>
+          <% } %>
+          <button type="button" onclick="addArrayField('<%= field.name %>')">Add more</button>
+        <% } else if (field.type === 'object') { %>
+          <% for (const key in field.value) { %>
+            <div class="object-field">
+              <label for="<%= field.name %>_<%= key %>"><%= key %>:</label>
+              <input type="text" name="<%= field.name %>[<%= key %>]"
+                     id="<%= field.name %>_<%= key %>"
+                     value="<%= field.value[key] %>">
+            </div>
+          <% } %>
         <% } else { %>
           <input type="<%= field.type %>" name="<%= field.name %>" id="<%= field.name %>" value="<%= field.value %>">
         <% } %>
@@ -39,5 +70,16 @@
     <% }) %>
     <button type="submit">Submit</button>
   </form>
+
+  <script>
+    function addArrayField(name) {
+      const container = document.querySelectorAll(`input[name="${name}[]"]`)[0].parentElement;
+      const index = container.querySelectorAll(`input[name="${name}[]"]`).length;
+      const newField = document.createElement('div');
+      newField.className = 'array-field';
+      newField.innerHTML = `<input type="text" name="${name}[]" id="${name}-${index}">`;
+      container.appendChild(newField);
+    }
+  </script>
 </body>
 </html>

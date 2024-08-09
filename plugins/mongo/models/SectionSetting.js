@@ -10,12 +10,12 @@ class SectionSetting extends ModelHelper {
       name:{type:'text',value:null},
       title:{type:'text',value:null},
       subTitle:{type:'text',value:null},
-      descripton:{type:'text',value:null},
+      description:{type:'text',value:null},
       entryUrl:{type:'text',value:null},
       entryText:{type:'text',value:null},
-      visible:{type:'boolean',value:null},
-      authView:{type:'boolean',value:null},
-      nonAuthView:{type:'boolean',value:null},
+      visible:{type:'boolean',value:false},
+      authView:{type:'boolean',value:false},
+      nonAuthView:{type:'boolean',value:false},
       premium:{type:'text',value:null},
       nonAuthTitle:{type:'text',value:null},
       nonAuthSubTitle:{type:'text',value:null},
@@ -23,8 +23,8 @@ class SectionSetting extends ModelHelper {
       backgroundImg:{type:'file',value:null},
       secondaryBackgroundImg:{type:'file',value:null},
       mediumIcon:{type:'file',value:null},
-      links:{type:'text',value:null},
-      tags:{type:'text',value:null},
+      links:{type:'array',value:[]},
+      tags:{type:'array',value:[]},
       
     };
     if(sectionSettingData){
