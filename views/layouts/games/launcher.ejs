@@ -3,10 +3,12 @@
     <div id="playerListLauncher"></div> <!-- Player list in the launcher -->
     <div id="gameSelection">
         <ul>
-            <li><a href="#" class="gameSelection" data-game="bingo">Bingo</a></li>
-            <li><a href="#" class="gameSelection" data-game="66b69192d0af5031d8ffdcae">Dominoes</a></li>
-            <li><a href="#" class="gameSelection" data-game="ginrummy">Gin Rummy</a></li>
-            <li><a href="#" class="gameSelection" data-game="gemGrinderGame">Gems</a></li>
+            <%if(typeof gameRooms == 'object' && gameRooms){%>
+                <%gameRooms.forEach(gameRoom =>{%>
+                    <li><a href="#" class="gameSelection" data-game="<%=gameRoom._id%>"><%=gameRoom.name%></a></li>
+                <%})%>
+                <%}%>
+          
         </ul>
     </div>
 </div>

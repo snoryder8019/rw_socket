@@ -5,7 +5,6 @@ class GameSession extends ModelHelper {
   constructor(gameSessionData) {
     super(`${modelName}s`);
     this.modelFields = {
-      sessionId: { type: 'text', value: null },
       gameId: { type: 'text', value: null },
       playerIds: { type: 'array', value: [] },
       startTime: { type: 'date', value: null },

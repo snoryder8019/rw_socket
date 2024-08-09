@@ -2,6 +2,7 @@ const express = require('express');
 const Launcher = require('../../../plugins/mongo/models/games/Launcher');
 const { generateFormFields } = require('../../../plugins/helpers/formHelper');
 const buildRoutes = require('../../helpers/routeBuilder');
+const GameRoom = require('../../../plugins/mongo/models/games/GameRoom');
 
 const router = express.Router();
 const modelName = "launcher";
@@ -65,10 +66,14 @@ router.get('/section', async (req, res) => {
 // Entry point to the launcher
 router.get('/getLauncher', async (req, res) => {
   try {
+    
     const data = await new Launcher().getAll(); // Assuming this fetches the necessary launcher data
+    const data2 = await new GameRoom().getAll();
     res.render(`./layouts/games/launcher`, {
       title: 'Game Launcher',
-      launchers: data
+      launchers: data,
+      gameRooms:data2
+      
     });
   } catch (error) {
     console.error(error);
