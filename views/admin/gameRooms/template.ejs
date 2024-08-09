@@ -1,0 +1,14 @@
+
+<div class="adminWindow">
+    <div class="adminStatsRow">
+  <% documents.forEach(gameRoom => { %>
+      <div class="adminStat">
+        <p>  <%= gameRoom.gameName %></p>
+        <button class="collapsible" >view: <span class="carrot">&#9654;</span></button>
+        <div class="content" data-url="/games/gameRooms/renderEditForm/<%=gameRoom._id%>"></div>
+      </div>
+
+      <!-- Add more fields as needed -->
+      <% }) %>
+  </div>
+</div>

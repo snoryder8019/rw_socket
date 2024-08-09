@@ -6,6 +6,7 @@ const buildRoutes = (model, router) => {
   router.post('/create', [...model.middlewareForCreateRoute()], async (req, res) => {
     try {
       const documentData = req.body;
+      console.log(req.body.name)
       const document = new model.constructor(documentData);
       const result = await document.create(documentData);
       req.flash("message",`Success!, Created document: ${result}`)

@@ -1,16 +1,21 @@
 const ModelHelper = require('../../helpers/models');
+const { upload, processImages } = require('../../../multer/subscriptionSetup');
+const { uploadToLinode } = require('../../../aws_sdk/setup');
 const modelName = 'gameRoom';
 
 class GameRoom extends ModelHelper {
   constructor(gameRoomData) {
     super(`${modelName}s`);
     this.modelFields = {
-      roomId: { type: 'text', value: null },
-      gameId: { type: 'text', value: null },
+      name: { type: 'text', value: null },
+      description: { type: 'text', value: null },
+      backgroundImg: { type: 'file', value: null },
+      mediumIcon: { type: 'file', value: null },
       playerIds: { type: 'array', value: [] },
       status: { type: 'text', value: null },
-      maxPlayers: { type: 'number', value: null }
+      maxPlayers: { type: 'number', value: null },
     };
+
     if (gameRoomData) {
       for (let key in this.modelFields) {
         if (gameRoomData[key] !== undefined) {
@@ -28,19 +33,35 @@ class GameRoom extends ModelHelper {
   }
 
   middlewareForCreateRoute() {
-    return [];
+    return [upload.fields(this.fileFields), processImages, this.uploadImagesToLinode.bind(this)];
   }
 
   middlewareForEditRoute() {
-    return [];
+    return [upload.fields(this.fileFields), processImages, this.uploadImagesToLinode.bind(this)];
   }
 
   get fileFields() {
-    return [];
+    return [
+      { name: 'backgroundImg', maxCount: 1 },
+      { name: 'mediumIcon', maxCount: 1 },
+    ];
   }
 
   async uploadImagesToLinode(req, res, next) {
-    next();
+    try {
+      if (req.files) {
+        for (const key in req.files) {
+          const file = req.files[key][0];
+          const fileKey = `${modelName}s/${Date.now()}-${file.originalname}`;
+          const url = await uploadToLinode(file.path, fileKey);
+          req.body[key] = url; // Save the URL in the request body
+        }
+      }
+      next();
+    } catch (error) {
+      console.error("Error in uploadImagesToLinode middleware:", error);
+      next(error);
+    }
   }
 
   pathForGetRouteView() {

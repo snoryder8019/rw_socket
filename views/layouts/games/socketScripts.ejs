@@ -8,30 +8,41 @@
             console.log('Connected to /games namespace with ID:', socket.id);
         });
 
-        // Handle game selection
-        document.querySelectorAll('#gameSelection a').forEach(link => {
-            link.addEventListener('click', (event) => {
-                event.preventDefault();
-                console.log(`games!!!`)
-                const gameType = link.getAttribute('data-game');
-                joinGameRoom(gameType);
-            });
-        });
-
-        function joinGameRoom(gameType) {
-            socket.emit('joinGameRoom', gameType);
+        // Function to initialize event listeners for game selection
+        function initializeGameSelection() {
+            const gameLinks = document.querySelectorAll('.gameSelection');
+            if (gameLinks.length > 0) {
+                gameLinks.forEach(link => {
+                    link.addEventListener('click', (event) => {
+                        event.preventDefault();
+                        console.log('Game selected!');
+                        const gameType = link.getAttribute('data-game');
+                        joinMatchmaking(gameType);
+                    });
+                });
+            }
         }
 
-        // Update player list in launcher when a new player connects
-        socket.on('updateLauncherPlayerList', (players) => {
-            const playerListLauncherDiv = document.getElementById('playerListLauncher');
-            playerListLauncherDiv.innerHTML = players.map(p => `<p>${p.username}</p>`).join('');
+        // Observe for the launcher element to be added to the DOM
+        const observer = new MutationObserver((mutations, observer) => {
+            const launcherElement = document.getElementById('launcher');
+            if (launcherElement) {
+                initializeGameSelection();
+                observer.disconnect(); // Stop observing once the launcher is found
+            }
         });
 
-        // When server assigns a room
+        observer.observe(document.body, { childList: true, subtree: true });
+
+        function joinMatchmaking(gameType) {
+            console.log(`Joining matchmaking for game: ${gameType}`);
+            socket.emit('joinMatchmaking', gameType);
+        }
+
+        // When the server assigns a room after matchmaking
         socket.on('assignedRoom', (roomId) => {
             currentRoomId = roomId;
-            console.log(`Joined room: ${roomId}`);
+            console.log(`Assigned to room: ${roomId}`);
             switchToGameRoom();
         });
 
@@ -61,15 +72,48 @@
             switchToGameSession();
         });
 
+        // Button to exit from game room to launcher
+        document.getElementById('exitGameRoomButton').addEventListener('click', () => {
+            switchToLauncher();
+        });
+
+        // Button to exit from game session to launcher
+        document.getElementById('exitGameSessionButton').addEventListener('click', () => {
+            switchToLauncher();
+        });
+
+        // Button to exit from card table to launcher
+        document.getElementById('exitCardTableButton').addEventListener('click', () => {
+            switchToLauncher();
+        });
+
+        // Function to switch to game room
         function switchToGameRoom() {
             document.getElementById('launcher').style.display = 'none';
             document.getElementById('gameRoom').style.display = 'block';
         }
 
+        // Function to switch to game session
         function switchToGameSession() {
             document.getElementById('gameRoom').style.display = 'none';
             document.getElementById('gameSession').style.display = 'block';
             // Initialize the game canvas and start the game logic
+        }
+
+        // Function to switch to card table
+        function switchToCardTable() {
+            document.getElementById('launcher').style.display = 'none';
+            document.getElementById('cardTable').style.display = 'block';
+            // Initialize the card table canvas and start the game logic
+        }
+
+        // Function to switch back to the launcher
+        function switchToLauncher() {
+            document.getElementById('gameRoom').style.display = 'none';
+            document.getElementById('gameSession').style.display = 'none';
+            document.getElementById('cardTable').style.display = 'none';
+            document.getElementById('launcher').style.display = 'block';
+            currentRoomId = null;
         }
     });
 </script>

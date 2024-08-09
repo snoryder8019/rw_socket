@@ -15,7 +15,7 @@ router.get('/renderAddForm', (req, res) => {
 
     res.render('forms/generalForm', {
       title: `Add New ${modelName}`,
-      action: `/${modelName}s/create`,
+      action: `/games/${modelName}s/create`,
       formFields: formFields
     });
   } catch (error) {
@@ -36,8 +36,8 @@ router.get('/renderEditForm/:id', async (req, res) => {
     const formFields = generateFormFields(model, gameRoom); // Generate form fields as an array
     res.render('forms/generalEditForm', {
       title: `Edit ${modelName}`,
-      action: `${modelName}s/update/${id}`,
-      routeSub: `${modelName}s`,
+      action: `games/${modelName}s/update/${id}`,
+      routeSub: `games/${modelName}s`,
       method: 'post',
       formFields: formFields,
       data: gameRoom

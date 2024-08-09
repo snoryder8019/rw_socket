@@ -8,86 +8,38 @@ const socketGameHandlers = {
 
     console.log(`GAMES.JS ~ User: ${user.firstName} connected to the games namespace`);
 
-    const emitActivity = (message) => {
-      nsp.emit('marquee', message);
-    };
+    socket.on('joinMatchmaking', async (gameType) => {
+      console.log(`User ${user.firstName} is matchmaking for ${gameType}`);
 
-    socket.on('joinGameRoom', async (roomId) => {
-      console.log(`GAMES.JS ~ User: ${user.firstName} joined game room ${roomId}`);
-      const db = getDb();
-      const roomIdObj = new ObjectId(roomId);
+      // Matchmaking logic here: create or join a room
+      const roomId = await findOrCreateRoomForGame(gameType, userId);
 
-      const room = await db.collection('game_rooms').findOne({ "_id": roomIdObj });
-      if (room) {
-        socket.emit('roomState', room);
-        socket.to(roomId).emit('userJoined', { userId: socket.id, userName: user.firstName });
-        socket.join(roomId);
-        await db.collection('game_rooms').updateOne({ "_id": roomIdObj }, { $inc: { guests: 1 } });
-      } else {
-        socket.emit('error', 'Game room not found');
-      }
-    });
+      socket.join(roomId);
+      socket.emit('assignedRoom', roomId);
 
-    socket.on('gameMove', async (data) => {
-      try {
-        const db = getDb();
-        const roomIdObj = new ObjectId(data.roomId);
-
-        await db.collection('game_rooms').updateOne(
-          { "_id": roomIdObj },
-          { $push: { moves: data.move } }
-        );
-
-        socket.to(data.roomId).emit('newMove', {
-          from: socket.id,
-          move: data.move
-        });
-
-        emitActivity(`${user.firstName} made a move.`);
-      } catch (error) {
-        console.error('Error in gameMove:', error);
-      }
+      const players = await getPlayersInRoom(roomId);
+      nsp.to(roomId).emit('updatePlayerList', players);
     });
 
     socket.on('playerReady', async (data) => {
-      try {
-        const db = getDb();
-        const roomIdObj = new ObjectId(data.roomId);
+      const { roomId } = data;
+      console.log(`Player ${user.firstName} is ready in room ${roomId}`);
+      
+      // Mark player as ready
+      await markPlayerAsReady(roomId, userId);
 
-        await db.collection('game_rooms').updateOne(
-          { "_id": roomIdObj },
-          { $set: { [`players.${socket.id}.ready`]: true } }
-        );
+      const players = await getPlayersInRoom(roomId);
+      nsp.to(roomId).emit('updatePlayerList', players);
 
-        const room = await db.collection('game_rooms').findOne({ "_id": roomIdObj });
-        const allReady = Object.values(room.players).every(player => player.ready);
-
-        if (allReady) {
-          nsp.to(roomIdObj).emit('startGame');
-        }
-
-        emitActivity(`${user.firstName} is ready.`);
-      } catch (error) {
-        console.error('Error in playerReady:', error);
+      const allReady = players.every(p => p.ready);
+      if (allReady) {
+        nsp.to(roomId).emit('startGameSession');
       }
     });
 
     socket.on('disconnect', async () => {
       console.log(`GAMES.JS ~ User: ${user.firstName} disconnected`);
-
-      const db = getDb();
-      const room = await db.collection('game_rooms').findOne({ "players._id": socket.id });
-
-      if (room) {
-        await db.collection('game_rooms').updateOne(
-          { "_id": room._id },
-          { $unset: { [`players.${socket.id}`]: "" } }
-        );
-
-        socket.to(room._id).emit('userLeft', { userId: socket.id });
-      }
-
-      emitActivity(`${user.firstName} disconnected.`);
+      // Handle player disconnection, e.g., remove them from the room
     });
   }
 };
