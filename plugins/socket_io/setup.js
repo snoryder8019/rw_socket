@@ -4,7 +4,7 @@ const configureNamespace = require('./namespace');
 const mainChatHandlers = require('./mainChat');
 const socketAdminHandlers = require('./socketAdmin');
 const socketP2PHandlers = require('./videoStream');
-const gamesHandlers = require('./games');
+const socketGameHandlers = require('./games');
 
 
 const express = require('express')
@@ -22,7 +22,7 @@ const setupSocketIO = (server) => {
     configureNamespace(io, '/main_chat', mainChatHandlers);
 configureNamespace(io,'/socketAdmin',socketAdminHandlers);
 configureNamespace(io,'/videoStream',socketP2PHandlers);
-configureNamespace(io,'/games',gamesHandlers);
+configureNamespace(io,'/games',socketGameHandlers);
 };
 
 module.exports = {

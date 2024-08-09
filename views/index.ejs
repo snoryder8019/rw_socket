@@ -15,10 +15,17 @@
   
   iv id="main">
 <!--includeLIGHT BOXES HERE-->
+
+<!--THIS IS THE SELF VIEW WHEN CAMERA IS ALLOWED-->
   <div class="client_camera">
     <video  id="myVideo" autoplay></video>
   </div>
+
+
     <%if(typeof webappSettings === 'object'&& webappSettings){%>
+
+      <!--INDEX ALWAYS SET TO [0]-->
+      <!--There is only one setting allowed , we could add more setting and choose from the backend but it is hardcoded here-->
     <div id="mainBanner" style="background-image: url(<%=webappSettings[0].mainBannerDesktop%>);" class="banner">
       <%}%>
       <div id="bannerControls">
@@ -65,56 +72,56 @@
       }
     });
 
-    document.addEventListener('DOMContentLoaded', () => {
+    // document.addEventListener('DOMContentLoaded', () => {
      
-      var socket = io('/videoProduction');
+    //   var socket = io('/videoProduction');
 
-      // Handle video upload
-      $('#uploadForm').on('submit', function(e) {
-        e.preventDefault();
-        var formData = new FormData();
-        formData.append('video', $('#video')[0].files[0]);
+    //   // Handle video upload
+    //   $('#uploadForm').on('submit', function(e) {
+    //     e.preventDefault();
+    //     var formData = new FormData();
+    //     formData.append('video', $('#video')[0].files[0]);
 
-        $.ajax({
-          url: '/admin/videos/upload',
-          type: 'POST',
-          data: formData,
-          processData: false,
-          contentType: false,
-          success: function(response) {
-            alert('Video uploaded successfully!');
-            socket.emit('newVideo', response.video);
-          },
-          error: function(err) {
-            alert('Error uploading video');
-          }
-        });
-      });
+    //     $.ajax({
+    //       url: '/admin/videos/upload',
+    //       type: 'POST',
+    //       data: formData,
+    //       processData: false,
+    //       contentType: false,
+    //       success: function(response) {
+    //         alert('Video uploaded successfully!');
+    //         socket.emit('newVideo', response.video);
+    //       },
+    //       error: function(err) {
+    //         alert('Error uploading video');
+    //       }
+    //     });
+    //   });
 
-      // Listen for new videos
-      socket.on('newVideo', function(video) {
-        $('#videoList').append(`<div><img src="${video.thumbnail}" alt="Video Thumbnail"><p>${video.name}</p><button onclick="playVideo('${video.url}')">Play</button></div>`);
-      });
+    //   // Listen for new videos
+    //   socket.on('newVideo', function(video) {
+    //     $('#videoList').append(`<div><img src="${video.thumbnail}" alt="Video Thumbnail"><p>${video.name}</p><button onclick="playVideo('${video.url}')">Play</button></div>`);
+    //   });
 
-      // Schedule video push
-      $('#schedulePush').on('click', function() {
-        socket.emit('scheduleVideoPush');
-      });
+    //   // Schedule video push
+    //   $('#schedulePush').on('click', function() {
+    //     socket.emit('scheduleVideoPush');
+    //   });
 
-      // Listen for scheduled videos
-      socket.on('scheduledVideos', function(videos) {
-        $('#scheduledVideos').empty();
-        videos.forEach(function(video) {
-          $('#scheduledVideos').append(`<div><img src="${video.thumbnail}" alt="Video Thumbnail"><p>${video.name}</p><button onclick="playVideo('${video.url}')">Play</button></div>`);
-        });
-      });
-    });
+    //   // Listen for scheduled videos
+    //   socket.on('scheduledVideos', function(videos) {
+    //     $('#scheduledVideos').empty();
+    //     videos.forEach(function(video) {
+    //       $('#scheduledVideos').append(`<div><img src="${video.thumbnail}" alt="Video Thumbnail"><p>${video.name}</p><button onclick="playVideo('${video.url}')">Play</button></div>`);
+    //     });
+    //   });
+    // });
 
-    function playVideo(url) {
-      var videoPlayer = document.getElementById('videoPlayer');
-      videoPlayer.src = url;
-      videoPlayer.play();
-    }
+    // function playVideo(url) {
+    //   var videoPlayer = document.getElementById('videoPlayer');
+    //   videoPlayer.src = url;
+    //   videoPlayer.play();
+    // }
   </script>
   <script src="/javascripts/loader.js"></script>
 </body>

@@ -1,0 +1,75 @@
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const socket = io('/games');
+        let currentRoomId = null;
+
+        // Handle connection
+        socket.on('connect', () => {
+            console.log('Connected to /games namespace with ID:', socket.id);
+        });
+
+        // Handle game selection
+        document.querySelectorAll('#gameSelection a').forEach(link => {
+            link.addEventListener('click', (event) => {
+                event.preventDefault();
+                console.log(`games!!!`)
+                const gameType = link.getAttribute('data-game');
+                joinGameRoom(gameType);
+            });
+        });
+
+        function joinGameRoom(gameType) {
+            socket.emit('joinGameRoom', gameType);
+        }
+
+        // Update player list in launcher when a new player connects
+        socket.on('updateLauncherPlayerList', (players) => {
+            const playerListLauncherDiv = document.getElementById('playerListLauncher');
+            playerListLauncherDiv.innerHTML = players.map(p => `<p>${p.username}</p>`).join('');
+        });
+
+        // When server assigns a room
+        socket.on('assignedRoom', (roomId) => {
+            currentRoomId = roomId;
+            console.log(`Joined room: ${roomId}`);
+            switchToGameRoom();
+        });
+
+        // When a player joins the room
+        socket.on('updatePlayerList', (players) => {
+            const playerListDiv = document.getElementById('playerList');
+            playerListDiv.innerHTML = players.map(p => `<p>${p.username} ${p.ready ? '(Ready)' : ''}</p>`).join('');
+
+            // Show start button if this user is the first player
+            if (players.length > 0 && players[0].id === socket.id) {
+                document.getElementById('startGameButton').style.display = 'block';
+            }
+        });
+
+        // Player ready function
+        function readyUp() {
+            socket.emit('playerReady', { roomId: currentRoomId });
+        }
+
+        // Start game button click handler
+        document.getElementById('startGameButton').addEventListener('click', () => {
+            socket.emit('startGame', { roomId: currentRoomId });
+        });
+
+        // Handle game start
+        socket.on('startGameSession', () => {
+            switchToGameSession();
+        });
+
+        function switchToGameRoom() {
+            document.getElementById('launcher').style.display = 'none';
+            document.getElementById('gameRoom').style.display = 'block';
+        }
+
+        function switchToGameSession() {
+            document.getElementById('gameRoom').style.display = 'none';
+            document.getElementById('gameSession').style.display = 'block';
+            // Initialize the game canvas and start the game logic
+        }
+    });
+</script>

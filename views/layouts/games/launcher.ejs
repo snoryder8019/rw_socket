@@ -1,90 +1,24 @@
 <div id="launcher">
-  <h1>Welcome to the Game Launcher</h1>
-  <div id="gameSelection">
-      <ul>
-          <li><a href="#" data-game="/getGame/bingo">Bingo</a></li>
-          <li><a href="#" data-game="/games/games/dominoes/getGame">Dominoes</a></li>
-          <li><a href="#" data-game="/getGame/ginrummy">Gin Rummy</a></li>
-          <li><a href="#" data-game="/getGame/gemGrinderGame">Gems</a></li>
-      </ul>
-  </div>
+    <h1>Welcome to the Game Launcher</h1>
+    <div id="playerListLauncher"></div> <!-- Player list in the launcher -->
+    <div id="gameSelection">
+        <ul>
+            <li><a href="#" data-game="bingo">Bingo</a></li>
+            <li><a href="#" data-game="dominoes">Dominoes</a></li>
+            <li><a href="#" data-game="ginrummy">Gin Rummy</a></li>
+            <li><a href="#" data-game="gemGrinderGame">Gems</a></li>
+        </ul>
+    </div>
 </div>
 
-<div id="gameContainer"></div> <!-- Container where game content will be injected -->
+<div id="gameRoom" style="display: none;">
+    <h1>Game Room</h1>
+    <div id="playerList"></div>
+    <button id="startGameButton" style="display: none;">Start Game</button>
+</div>
 
-<script>
-  document.addEventListener('DOMContentLoaded', function() {
-      // Add click event listeners to all game links
-      const gameLinks = document.querySelectorAll('#gameSelection a');
-      gameLinks.forEach(link => {
-          link.addEventListener('click', function(event) {
-              event.preventDefault(); // Prevent default link behavior
-              const gameUrl = this.getAttribute('data-game');
-              loadGame(gameUrl); // Load the selected game
-          });
-      });
+<div id="gameSession" style="display: none;">
+    <h1>Game Session</h1>
+    <canvas id="gameCanvas" width="800" height="600"></canvas>
+</div>
 
-      function loadGame(url) {
-          fetch(url)
-              .then(response => response.json())
-              .then(data => {
-                  // Inject the rendered HTML into the gameContainer
-                  const gameContainer = document.getElementById('gameContainer');
-                  gameContainer.innerHTML = data.html;
-
-                  // Dynamically load the required scripts
-                  data.scripts.forEach(scriptSrc => {
-                      const script = document.createElement('script');
-                      script.src = scriptSrc;
-                      document.body.appendChild(script);
-                  });
-
-                  // Optionally, update the page title
-                  document.title = data.title;
-              })
-              .catch(error => console.error('Error loading game:', error));
-      }
-  });
-</script>
-<script>
-  document.addEventListener('DOMContentLoaded', function() {
-      // Add click event listeners to all game links
-      const gameLinks = document.querySelectorAll('#gameSelection a');
-      gameLinks.forEach(link => {
-          link.addEventListener('click', function(event) {
-              event.preventDefault(); // Prevent default link behavior
-              const gameUrl = this.getAttribute('data-game');
-              loadGame(gameUrl); // Load the selected game
-          });
-      });
-
-      function loadGame(url) {
-          fetch(url)
-              .then(response => response.json())
-              .then(data => {
-                  // Update the DOM with the canvas element
-                  const gameContainer = document.getElementById('gameContainer');
-                  gameContainer.innerHTML = `<canvas id="cardCanvas" width="800" height="600"></canvas>`;
-
-                  // Dynamically load the required scripts
-                  data.scripts.forEach(scriptSrc => {
-                      const script = document.createElement('script');
-                      script.src = scriptSrc;
-                      document.body.appendChild(script);
-                  });
-
-                  // Establish the Socket.IO connection to /games namespace
-                  const socket = io('/games');
-
-                  // Handle connection events
-                  socket.on('connect', () => {
-                      console.log('Connected to /games namespace with ID:', socket.id);
-                  });
-
-                  // Optionally, you could also set the document title
-                  document.title = data.title;
-              })
-              .catch(error => console.error('Error loading game:', error));
-      }
-  });
-</script>

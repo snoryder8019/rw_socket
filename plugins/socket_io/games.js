@@ -75,7 +75,6 @@ const socketGameHandlers = {
     socket.on('disconnect', async () => {
       console.log(`GAMES.JS ~ User: ${user.firstName} disconnected`);
 
-      // Remove the user from the game room and update the state
       const db = getDb();
       const room = await db.collection('game_rooms').findOne({ "players._id": socket.id });
 

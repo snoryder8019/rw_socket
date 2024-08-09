@@ -63,7 +63,7 @@
     </div>
   </div>
 </div>
-
+<%- include('../layouts/games/socketScripts.ejs')%>
 <script>
   document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('.auth_view_true').forEach(div => {
@@ -90,7 +90,6 @@
   });
 </script>
 
-<script src="/socket.io/socket.io.js"></script>
 <script>
   window.onload = () => {
     const scrollContainerX = document.querySelector('.container-scrollbox-x');
