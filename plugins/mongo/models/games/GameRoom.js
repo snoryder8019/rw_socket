@@ -8,6 +8,7 @@ class GameRoom extends ModelHelper {
     super(`${modelName}s`);
     this.modelFields = {
       name: { type: 'text', value: null },
+      gameType: { type: 'text', value: null },
       description: { type: 'text', value: null },
       backgroundImg: { type: 'file', value: null },
       mediumIcon: { type: 'file', value: null },

@@ -1,3 +1,4 @@
+<!-- views/layouts/games/socketScripts.ejs -->
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const socket = io('/games');
@@ -16,8 +17,8 @@
                     link.addEventListener('click', (event) => {
                         event.preventDefault();
                         console.log('Game selected!');
-                        const gameType = link.getAttribute('data-game');
-                        joinMatchmaking(gameType);
+                        const gameId = link.getAttribute('data-game');
+                        joinMatchmaking(gameId);
                     });
                 });
             }
@@ -34,9 +35,9 @@
 
         observer.observe(document.body, { childList: true, subtree: true });
 
-        function joinMatchmaking(gameType) {
-            console.log(`Joining matchmaking for game: ${gameType}`);
-            socket.emit('joinMatchmaking', gameType);
+        function joinMatchmaking(gameId) {
+            console.log(`Joining matchmaking for game ID: ${gameId}`);
+            socket.emit('joinMatchmaking', gameId);
         }
 
         // When the server assigns a room after matchmaking

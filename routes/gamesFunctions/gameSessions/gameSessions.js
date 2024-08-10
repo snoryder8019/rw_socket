@@ -1,5 +1,7 @@
+// routes/gamesFunctions/gamesSessions/gameSessions.js
+
 const express = require('express');
-const GameSession = require('../../../plugins/mongo/models/GameSession');
+const GameSession = require('../../../plugins/mongo/models/games/GameSession');
 const { generateFormFields } = require('../../../plugins/helpers/formHelper');
 const buildRoutes = require('../../helpers/routeBuilder');
 
@@ -51,11 +53,36 @@ router.get('/renderEditForm/:id', async (req, res) => {
 // Route to load game sessions
 router.get('/section', async (req, res) => {
   try {
-    const data = await new GameSession().getAll();
+    const gameSession = new GameSession();
+    const data = await gameSession.getAll();
     res.render(`./layouts/${modelName}`, {
       title: 'Game Session View',
       data: data
     });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ error: error.message });
+  }
+});
+
+// Route to get game sessions and related data to render the launcher view
+
+// Route to render the game menu view after joining a session
+router.get('/getGameSession', async (req, res) => {
+  try {
+    const { userId, gameRoomId } = req.query; // Assuming userId and gameRoomId are passed as query parameters
+
+    // Get or create a game session
+    const sessionToJoin = await GameSession.getGameSession(gameRoomId, userId);
+
+    // Render the game menu view with session data
+    res.render(sessionToJoin.pathForGameMenuView(), {
+      title: 'Game Menu',
+      userId: userId,
+      gameRoomId: gameRoomId,
+      gameSession: sessionToJoin // Pass the session data to the view
+    });
+
   } catch (error) {
     console.error(error);
     res.status(500).send({ error: error.message });
