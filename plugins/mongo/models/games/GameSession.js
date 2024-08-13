@@ -116,8 +116,51 @@ static async getPlayersInRoom(roomId) {
   });
 }
 
+  // Method to allow a player to leave a session
+  static async leaveSession(sessionId, userId) {
+    try {
+        // Ensure the sessionId and userId are ObjectId instances
+        const sessionObjectId = ObjectId.isValid(sessionId) ? new ObjectId(sessionId) : sessionId;
+        const userObjectId = ObjectId.isValid(userId) ? new ObjectId(userId) : userId;
+
+        // Create an instance of GameSession
+        const gameSessionModel = new GameSession();
+
+        // Use the instance to call getById
+        const session = await gameSessionModel.getById(sessionObjectId);
+        if (!session) throw new Error('Game session not found');
+
+        // Remove the userId from the playerIds array
+        const updateOperation = { $pull: { playerIds: userObjectId } };
+
+        const db = getDb();
+        const result = await db.collection(`${modelName}s`).updateOne(
+            { _id: sessionObjectId },
+            updateOperation
+        );
+
+        if (result.modifiedCount === 0) {
+            throw new Error('Failed to remove player from the session.');
+        }
+
+        console.log(`User ${userId} has left session ${sessionId}`);
+
+        // Additional logic (optional):
+        // If the session has no players left, you might want to delete it or update its status
+        const updatedSession = await gameSessionModel.getById(sessionObjectId);
+        if (updatedSession.playerIds.length === 0) {
+            await db.collection(`${modelName}s`).deleteOne({ _id: sessionObjectId });
+            console.log(`Session ${sessionId} deleted as it has no remaining players.`);
+        }
+
+        return { success: true, message: 'Player successfully left the session.' };
+    } catch (error) {
+        console.error('Error leaving session:', error);
+        return { success: false, message: error.message };
+    }
 
   // Include any other methods you had here...
+}
 }
 
 module.exports = GameSession;

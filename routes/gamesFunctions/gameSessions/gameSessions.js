@@ -4,6 +4,9 @@ const express = require('express');
 const GameSession = require('../../../plugins/mongo/models/games/GameSession');
 const { generateFormFields } = require('../../../plugins/helpers/formHelper');
 const buildRoutes = require('../../helpers/routeBuilder');
+const { session } = require('passport');
+const { ObjectId } = require('mongodb');
+const GameRoom = require('../../../plugins/mongo/models/games/GameRoom');
 
 const router = express.Router();
 const modelName = "gameSession";
@@ -11,19 +14,20 @@ const modelName = "gameSession";
 
 
 
-router.get('/join-game/:gameRoomId', async (req, res) => {
-    const gameRoomId = req.params.gameRoomId;
-    const userId = req.user._id; // Assuming the user ID is available on the request
-
+router.get('/join/:sessionId', async (req, res) => {
+    const sessionId = req.params.gameRoomId;
+   const userId = req.user._id; // Assuming the user ID is available on the request
+const seshId = new ObjectId(sessionId)
+console.log(seshId)
     try {
         // Find or create a game session
-        const { session, game } = await GameSession.getGameSession(gameRoomId, userId);
-
+        const  session = await GameSession.getGameSession(seshId, userId);
+    
+    console.log(session)
         // Render the game menu with session, game, and user details
         res.render('layouts/games/gameMenu', {
             user: req.user,
-            game,
-            session
+            session:session
         });
     } catch (error) {
         console.error('Error joining game session:', error);
@@ -31,6 +35,21 @@ router.get('/join-game/:gameRoomId', async (req, res) => {
     }
 })
 
+router.get('/exit/:sessionId', async (req, res) => {
+  const sessionId = req.params.sessionId;
+  const userId = req.user._id; // Assuming the user ID is available on the request
+  const seshId = new ObjectId(sessionId);
+
+  try {
+      // Find the game session by its ID
+      const session = await GameSession.leaveSession(seshId,userId);
+    
+      // Send a response indicating success
+  } catch (error) {
+      console.error('Error exiting game session:', error);
+      res.status(500).send('An error occurred while trying to exit the game session.');
+  }
+});
 
 
 

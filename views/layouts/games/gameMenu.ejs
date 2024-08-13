@@ -1,65 +1,19 @@
-<!-- views/layouts/games/gameMenu.ejs -->
 <div id="gameMenu">
     <h1>Game Menu</h1>
     <p>Welcome, <%= user.firstName %>!</p>
-    <p>Game: <%= game.name %></p>
+  
     <p>Session ID: <%= session._id %></p>
 
+    <div id="liveGameInfo">
+        <!-- This will be populated with live game info via Socket.IO -->
+        <p>Waiting for players to join...</p>
+    </div>
+
     <div id="playerList">
+        players
         <!-- Player list will be dynamically updated via Socket.IO -->
     </div>
 
-    <button id="startGameButton" style="display: none;">Start Game</button>
+    <button id="startGameButton">Start Game</button>
     <button id="exitGameRoomButton">Exit Game Room</button>
 </div>
-
-<script src="/socket.io/socket.io.js"></script>
-<script>
-    const socket = io();
-
-    // Session details passed from server-side
-    const sessionId = "<%= session._id %>";
-    const userId = "<%= user._id %>";
-    const gameName = "<%= game.name %>";
-
-    // Emit event to join the session room
-    socket.emit('joinSession', { sessionId, userId });
-
-    // Listen for updates to the player list
-    socket.on('updatePlayerList', (players) => {
-        const playerListDiv = document.getElementById('playerList');
-        playerListDiv.innerHTML = ''; // Clear the current list
-
-        players.forEach(player => {
-            const playerItem = document.createElement('div');
-            playerItem.textContent = `${player.username} (${player.ready ? 'Ready' : 'Not Ready'})`;
-            playerListDiv.appendChild(playerItem);
-        });
-
-        // Check if all players are ready to show the start button
-        const allReady = players.every(player => player.ready);
-        const startButton = document.getElementById('startGameButton');
-        if (allReady && userId === players[0].id) { // Show start button only for the session creator
-            startButton.style.display = 'block';
-        } else {
-            startButton.style.display = 'none';
-        }
-    });
-
-    // Handle the Start Game button click
-    document.getElementById('startGameButton').addEventListener('click', () => {
-        socket.emit('startGameSession', sessionId);
-    });
-
-    // Handle the Exit Game Room button click
-    document.getElementById('exitGameRoomButton').addEventListener('click', () => {
-        socket.emit('leaveSession', { sessionId, userId });
-        window.location.href = '/games'; // Redirect to games list or home page
-    });
-
-    // Handle session start event from the server
-    socket.on('startGameSession', () => {
-        alert('The game is starting!');
-        // Redirect to the game page or load the game interface
-    });
-</script>

@@ -1,5 +1,5 @@
-<!-- views/layouts/games/socketScripts.ejs -->
 <script>
+
     document.addEventListener('DOMContentLoaded', function () {
         const socket = io('/games');
         let currentRoomId = null;
@@ -7,9 +7,13 @@
         // Handle connection
         socket.on('connect', () => {
             console.log('Connected to /games namespace with ID:', socket.id);
+         //   updateLiveGameInfo(`Connected to server with ID: ${socket.id}`);
         });
 
-        // Function to initialize event listeners for game selection
+        function updateLiveGamesData() {
+            console.log(`update Live Games Data`);
+        }
+
         function initializeGameSelection() {
             const gameLinks = document.querySelectorAll('.gameSelection');
             if (gameLinks.length > 0) {
@@ -18,103 +22,167 @@
                         event.preventDefault();
                         console.log('Game selected!');
                         const gameId = link.getAttribute('data-game');
+                        
                         joinMatchmaking(gameId);
+                        updateLiveGamesData();
                     });
                 });
             }
         }
 
-        // Observe for the launcher element to be added to the DOM
-        const observer = new MutationObserver((mutations, observer) => {
-            const launcherElement = document.getElementById('launcher');
-            if (launcherElement) {
-                initializeGameSelection();
-                observer.disconnect(); // Stop observing once the launcher is found
+        function initializeGameFunction(button) {
+            const url = button.getAttribute('button-url');
+            if (url) {
+                button.addEventListener('click', () => {
+                    console.log(`Fetching data from URL: ${url}`);
+                    
+                    fetch(url, {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-Requested-With': 'XMLHttpRequest'
+                        }
+                    })
+                    .then(response => response.text())
+                    .then(data => {
+                        document.getElementById('launcher').style.display = 'none';
+                        document.getElementById('matchmaking').innerHTML = data;
+                    })
+                    .catch(error => console.error('Error fetching data:', error));
+                });
             }
-        });
-
-        observer.observe(document.body, { childList: true, subtree: true });
+        }
 
         function joinMatchmaking(gameId) {
             console.log(`Joining matchmaking for game ID: ${gameId}`);
             socket.emit('joinMatchmaking', gameId);
+          //  updateLiveGameInfo(`Attempting to join matchmaking for game ID: ${gameId}`);
         }
 
-        // When the server assigns a room after matchmaking
-        socket.on('assignedRoom', (roomId) => {
-            currentRoomId = roomId;
-            console.log(`Assigned to room: ${roomId}`);
-            switchToGameRoom();
-        });
+        function initializeSocketListeners() {
+            socket.on('assignedRoom', (roomId) => {
+                currentRoomId = roomId;
+                console.log(`Assigned to room: ${roomId}`);
+               // updateLiveGameInfo(`Assigned to room: ${roomId}`);
+                switchToGameRoom();
+            });
+            
+            socket.on('updatePlayerList', (players) => {
+                const playerListDiv = document.getElementById('playerList');
+                playerListDiv.innerHTML = players.map(p => `<p>${p.username} ${p.ready ? '(Ready)' : ''}</p>`).join('');
+                
+                if (players.length > 0 && players[0].id === socket.id) {
+                    document.getElementById('startGameButton').style.display = 'block';
+                }
+            });
+            
+            document.getElementById('startGameButton').addEventListener('click', () => {
+                socket.emit('startGame', { roomId: currentRoomId });
+            });
 
-        // When a player joins the room
-        socket.on('updatePlayerList', (players) => {
-            const playerListDiv = document.getElementById('playerList');
-            playerListDiv.innerHTML = players.map(p => `<p>${p.username} ${p.ready ? '(Ready)' : ''}</p>`).join('');
+            socket.on('startGameSession', () => {
+                switchToGameSession();
+            });
 
-            // Show start button if this user is the first player
-            if (players.length > 0 && players[0].id === socket.id) {
-                document.getElementById('startGameButton').style.display = 'block';
-            }
-        });
+            document.getElementById('exitGameRoomButton').addEventListener('click', () => {
+                switchToLauncher();
+            });
 
-        // Player ready function
-        function readyUp() {
-            socket.emit('playerReady', { roomId: currentRoomId });
+            document.getElementById('exitGameSessionButton').addEventListener('click', () => {
+                switchToLauncher();
+            });
+
+            document.getElementById('exitCardTableButton').addEventListener('click', () => {
+                switchToLauncher();
+            });
+
+            // Example additional socket event for live info
+            socket.on('gameStatusUpdate', (status) => {
+              //  updateLiveGameInfo(`Game Status: ${status}`);
+            });
         }
 
-        // Start game button click handler
-        document.getElementById('startGameButton').addEventListener('click', () => {
-            socket.emit('startGame', { roomId: currentRoomId });
-        });
-
-        // Handle game start
-        socket.on('startGameSession', () => {
-            switchToGameSession();
-        });
-
-        // Button to exit from game room to launcher
-        document.getElementById('exitGameRoomButton').addEventListener('click', () => {
-            switchToLauncher();
-        });
-
-        // Button to exit from game session to launcher
-        document.getElementById('exitGameSessionButton').addEventListener('click', () => {
-            switchToLauncher();
-        });
-
-        // Button to exit from card table to launcher
-        document.getElementById('exitCardTableButton').addEventListener('click', () => {
-            switchToLauncher();
-        });
-
-        // Function to switch to game room
         function switchToGameRoom() {
-            document.getElementById('launcher').style.display = 'none';
-            document.getElementById('gameRoom').style.display = 'block';
+            fetch(`/games/join-game/${gameId}`);
         }
 
-        // Function to switch to game session
         function switchToGameSession() {
             document.getElementById('gameRoom').style.display = 'none';
             document.getElementById('gameSession').style.display = 'block';
-            // Initialize the game canvas and start the game logic
         }
 
-        // Function to switch to card table
         function switchToCardTable() {
             document.getElementById('launcher').style.display = 'none';
             document.getElementById('cardTable').style.display = 'block';
-            // Initialize the card table canvas and start the game logic
         }
 
-        // Function to switch back to the launcher
         function switchToLauncher() {
             document.getElementById('gameRoom').style.display = 'none';
+            document.getElementById('gameMenu').style.display = 'none';
             document.getElementById('gameSession').style.display = 'none';
             document.getElementById('cardTable').style.display = 'none';
             document.getElementById('launcher').style.display = 'block';
             currentRoomId = null;
         }
+
+       
+
+        const observer = new MutationObserver((mutations, observer) => {
+            const launcherElement = document.getElementById('launcher');
+            const gameManagers = document.getElementsByClassName('gameManagers');
+            const gameMenu = document.getElementById('gameMenu');
+            const playerList = document.getElementById('playerList');
+
+            if (launcherElement) {
+                initializeGameSelection();
+            }
+            
+            if (gameManagers.length > 0) {
+                Array.from(gameManagers).forEach(gameManager => {
+                    initializeGameFunction(gameManager);
+                });
+            }
+
+            if (gameMenu && playerList) {
+                initializeSocketListeners();
+                observer.disconnect(); // Stop observing once both elements are found
+            }
+        });
+        
+        observer.observe(document.body, { childList: true, subtree: true });
+
+        socket.emit('joinSession', { sessionId, userId });
+
+        socket.on('updateGameMenu', (players) => {
+            const playerListDiv = document.getElementById('playerList');
+            playerListDiv.innerHTML = '';
+            
+            players.forEach(player => {
+                const playerItem = document.createElement('div');
+                playerItem.textContent = `${player.username} (${player.ready ? 'Ready' : 'Not Ready'})`;
+                playerListDiv.appendChild(playerItem);
+            });
+
+            const allReady = players.every(player => player.ready);
+            const startButton = document.getElementById('startGameButton');
+            if (allReady && userId === players[0].id) {
+                startButton.style.display = 'block';
+            } else {
+                startButton.style.display = 'none';
+            }
+        });
+
+        document.getElementById('startGameButton').addEventListener('click', () => {
+            socket.emit('startGameSession', sessionId);
+        });
+
+        document.getElementById('exitGameRoomButton').addEventListener('click', () => {
+            socket.emit('leaveSession', { sessionId, userId });
+            window.location.href = '/games';
+        });
+       
+        socket.on('startGameSession', () => {
+            alert('The game is starting!');
+        });
     });
 </script>

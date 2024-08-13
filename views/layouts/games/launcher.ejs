@@ -1,7 +1,11 @@
+<div id="matchmaking"></div>
+<div id="liveInfoDiv"></div>
+<!--/views/layouts/games/launcher.ejs-->
 <div id="launcher">
     <h1>Welcome to the Game Launcher</h1>
     <div id="playerListLauncher"></div> <!-- Player list in the launcher -->
     <div id="gameSelection">
+        <%if(!inGame){%>
         <h2>Select a Game to Play</h2>
         <ul>
             <%if(typeof gameRooms == 'object' && gameRooms){%>
@@ -11,27 +15,38 @@
                     <%}%>
                     
                 </ul>
+                <%}else{%>
+You are enrolled in a game:
+<%=inGame.gameType%> room #<%=inGame.gameNo%>
+<button class="gameManagers" button-url="games/gameSessions/join/<%=inGame.id%>">join party</button>
+<button class="gameManagers" button-url="games/gameSessions/exit/<%=inGame.id%>">exit party</button>
+                    <%}%>
             </div>
 
-            <h3>Active Game Rooms</h3>
-            <table>
-            <thead>
-                <th>Game Type</th>
-                <th>Game Staus</th>
-                <th>No of Players</th>
-            </thead>
-<tbody>
-            <%gameSessions.forEach(gameSession=>{%>
-                <tr>
-                    <td> <%=gameSession.gameName%></td>
-                    <td> <%=gameSession.status%></td>
-                    <td><%=gameSession.playerIds.length%></td>
-            </tr>
-            <%})%>
-        </tbody>
-</table>
 
-
-        </div>
-        
-        
+            <%if(gameSessions.length>0){%>
+                <h3>Active Game Rooms</h3>
+                <table id="activeGameRooms">
+                    <thead>
+                        <th>Game Type</th>
+                        <th>Game Staus</th>
+                        <th>No of Players</th>
+                    </thead>
+                    <tbody>
+                        <%gameSessions.forEach((gameSession, index) =>{%>
+                            <tr>
+                                <td> <%=gameSession.gameName%> Room #<%=index +1%></td>
+                                <td> <%=gameSession.status%></td>
+                                <td><%=gameSession.playerIds.length%></td>
+                            </tr>
+                            <%})%>
+                        </tbody>
+                    </table>
+                    <%}else{%>
+                        There are no Active Games. 
+                    <%}%>
+                    
+                    
+                </div>
+                
+                

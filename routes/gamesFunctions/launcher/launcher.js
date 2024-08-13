@@ -67,17 +67,33 @@ router.get('/section', async (req, res) => {
 // Entry point to the launcher
 router.get('/getLauncher', async (req, res) => {
   try {
-    
-    const data = await new Launcher().getAll(); // Assuming this fetches the necessary launcher data
+    // Fetch necessary data
+    const data = await new Launcher().getAll();
     const data2 = await new GameRoom().getAll();
     const data3 = await new GameSession().getAll();
+    
+    // Determine if the user is currently in a game session
+    const userId = req.user._id; // Assuming req.user contains the logged-in user's information
+    let inGame = false;
+
+    // Iterate through gameSessions to check if the user is in any session
+    data3.forEach((session, index) => {
+      if (session.playerIds.some(playerId => playerId.equals(userId))) {
+        inGame = {
+          id: session._id,
+          gameNo: index +1, // Using the index in the return order
+          gameType: session.gameName
+        };
+      }
+    });
+
+    // Render the launcher page
     res.render(`./layouts/games/launcher`, {
       title: 'Game Launcher',
       launchers: data,
-      gameRooms:data2,
-      gameSessions:data3
-      
-      
+      gameRooms: data2,
+      gameSessions: data3,
+      inGame: inGame // Pass the session details or false
     });
   } catch (error) {
     console.error(error);
