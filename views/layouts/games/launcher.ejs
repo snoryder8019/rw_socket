@@ -2,14 +2,36 @@
     <h1>Welcome to the Game Launcher</h1>
     <div id="playerListLauncher"></div> <!-- Player list in the launcher -->
     <div id="gameSelection">
+        <h2>Select a Game to Play</h2>
         <ul>
             <%if(typeof gameRooms == 'object' && gameRooms){%>
                 <%gameRooms.forEach(gameRoom =>{%>
                     <li><a href="#" class="gameSelection" data-game="<%=gameRoom._id%>"><%=gameRoom.name%></a></li>
-                <%})%>
-                <%}%>
-          
-        </ul>
-    </div>
-</div>
+                    <%})%>
+                    <%}%>
+                    
+                </ul>
+            </div>
 
+            <h3>Active Game Rooms</h3>
+            <table>
+            <thead>
+                <th>Game Type</th>
+                <th>Game Staus</th>
+                <th>No of Players</th>
+            </thead>
+<tbody>
+            <%gameSessions.forEach(gameSession=>{%>
+                <tr>
+                    <td> <%=gameSession.gameName%></td>
+                    <td> <%=gameSession.status%></td>
+                    <td><%=gameSession.playerIds.length%></td>
+            </tr>
+            <%})%>
+        </tbody>
+</table>
+
+
+        </div>
+        
+        

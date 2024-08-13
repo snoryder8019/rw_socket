@@ -3,6 +3,7 @@ const Launcher = require('../../../plugins/mongo/models/games/Launcher');
 const { generateFormFields } = require('../../../plugins/helpers/formHelper');
 const buildRoutes = require('../../helpers/routeBuilder');
 const GameRoom = require('../../../plugins/mongo/models/games/GameRoom');
+const GameSession = require('../../../plugins/mongo/models/games/GameSession');
 
 const router = express.Router();
 const modelName = "launcher";
@@ -69,10 +70,12 @@ router.get('/getLauncher', async (req, res) => {
     
     const data = await new Launcher().getAll(); // Assuming this fetches the necessary launcher data
     const data2 = await new GameRoom().getAll();
+    const data3 = await new GameSession().getAll();
     res.render(`./layouts/games/launcher`, {
       title: 'Game Launcher',
       launchers: data,
       gameRooms:data2,
+      gameSessions:data3
       
       
     });

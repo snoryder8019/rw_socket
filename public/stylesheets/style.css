@@ -98,6 +98,25 @@
   text-align: center;
 }
 
+table {
+  width: 100%;
+  margin: 0;
+  padding: 2%;
+}
+
+th {
+  text-decoration: underline;
+}
+
+td {
+  border: 1px dotted black;
+}
+
+#gameSelection li {
+  text-decoration: none;
+  list-style: none;
+}
+
 .footerDiv {
   text-align: center;
   flex-shrink: 0;

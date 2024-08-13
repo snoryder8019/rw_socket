@@ -8,6 +8,32 @@ const buildRoutes = require('../../helpers/routeBuilder');
 const router = express.Router();
 const modelName = "gameSession";
 
+
+
+
+router.get('/join-game/:gameRoomId', async (req, res) => {
+    const gameRoomId = req.params.gameRoomId;
+    const userId = req.user._id; // Assuming the user ID is available on the request
+
+    try {
+        // Find or create a game session
+        const { session, game } = await GameSession.getGameSession(gameRoomId, userId);
+
+        // Render the game menu with session, game, and user details
+        res.render('layouts/games/gameMenu', {
+            user: req.user,
+            game,
+            session
+        });
+    } catch (error) {
+        console.error('Error joining game session:', error);
+        res.status(500).send('An error occurred while trying to join the game session.');
+    }
+})
+
+
+
+
 // Route to render the form to add a new game session
 router.get('/renderAddForm', (req, res) => {
   try {
