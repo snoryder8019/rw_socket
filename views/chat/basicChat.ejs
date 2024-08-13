@@ -1,25 +1,24 @@
 <div id="chat-window-basic">
     <%- include('../animations/confetti')%>
-<div id="marquee"></div>
+    <div id="marquee"></div>
     <% if(typeof user === 'object' && user) { %>
         <script>var firstName = "<%= user.firstName %>"</script>
-        <script>var chatStyle = "<%=user.chatStyle%>"</script>
-       <script>var avatarStyle = "<%=user.avatarStyle%>"</script>
-       <script id="updatedRoomId">var roomId = "<%=chatRooms[0]._id%>"</script>
-       <div id="userList">
+        <script>var chatStyle = "<%= user.chatStyle %>"</script>
+        <script>var avatarStyle = "<%= user.avatarStyle %>"</script>
+        <script id="updatedRoomId">var roomId = "<%= chatRooms[0]._id %>"</script>
+        <div id="userList">
             <div class="loaderWheel">
                 <div class="loaderDiv"><h3>loading chatroom...</h3></div>
                 <div class="loaderDiv"><div class="wheel"></div></div>
             </div>
         </div>
         <div id="chatTabs">
-           <%if (typeof chatRooms == 'object' && chatRooms){%>
-         <%for(let i=0; i<chatRooms.length;i++){%>
-            <div onclick="changeRooms()" id="tab_section_<%=chatRooms[i]._id%>" class="tab_section"><%=chatRooms[i].roomName%></div>
-            <%}%>
-            <%}%>
-         <!--this will ultimately pull up a list of rooms you have permission to join-->
-         
+            <% if (typeof chatRooms === 'object' && chatRooms) { %>
+                <% for(let i = 0; i < chatRooms.length; i++) { %>
+                    <div onclick="changeRooms()" id="tab_section_<%= chatRooms[i]._id %>" class="tab_section"><%= chatRooms[i].roomName %></div>
+                <% } %>
+            <% } %>
+            <!--this will ultimately pull up a list of rooms you have permission to join-->
         </div>
         <div id="chat">
             <div id="messages"></div>
@@ -32,22 +31,20 @@
     <% } %>
 </div>
 <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const elements = document.querySelectorAll('.message');
-            elements.forEach((element, index) => {
-                const delay = index * 0.2; // Adjust the multiplier for different delays
-                element.style.animationDelay = `${delay}s`;
-            });
-        });
-    </script>
-<script>
     document.addEventListener('DOMContentLoaded', () => {
+        // Set up socket connection
         var socket = io('/main_chat');
         let currentPage = 1;
         const messagesPerPage = 12; 
+
         function requestInitialMessages() {
-            socket.emit('fetch messages', { roomId: roomId, page: currentPage, messagesPerPage: messagesPerPage });
+            if (roomId) {
+                socket.emit('fetch messages', { roomId: roomId, page: currentPage, messagesPerPage: messagesPerPage });
+            } else {
+                console.error('Room ID is not defined');
+            }
         }        
+
         socket.on('messages fetched', (messages) => {
             if (messages.length) {
                 const reversedMessages = messages.reverse();
@@ -58,18 +55,22 @@
                 currentPage++;
             }
         });
-        
+
         function addMessage(messageObject, isOwnMessage = false) {
             const messagesContainer = document.getElementById('chat');
+            if (!messagesContainer) {
+                console.error('Messages container not found');
+                return;
+            }
+
             const shouldScroll = messagesContainer.scrollTop + messagesContainer.clientHeight + 50 >= messagesContainer.scrollHeight;
             
             const messageDiv = document.createElement('div');
-            messageDiv.className = 'messages'
             messageDiv.className = isOwnMessage ? 'message ownMessage' : 'message';
             
             const messageAvatar = document.createElement('img');
             messageAvatar.className = 'usersOnline';
-            messageAvatar.src = messageObject.thumbnailUrl || `/images/userHeadshots/defaultThumbnail.png`;
+            messageAvatar.src = messageObject.thumbnailUrl || '/images/userHeadshots/defaultThumbnail.png';
             
             const messageTextSpan = document.createElement('span');
             messageTextSpan.className = 'messageText';
@@ -81,13 +82,10 @@
             
             const heartIcon = document.createElement('span');
             heartIcon.textContent = '❤️';
-            // const flagIcon = document.createElement('span');
-            // flagIcon.textContent = '🚩';
             const threeDotsIcon = document.createElement('span');
             threeDotsIcon.textContent = '⋮';
     
             actionsDiv.appendChild(heartIcon);
-            //  actionsDiv.appendChild(flagIcon);
             actionsDiv.appendChild(threeDotsIcon);
             
             messageDiv.appendChild(messageAvatar);
@@ -99,61 +97,88 @@
                 messagesContainer.scrollTop = messagesContainer.scrollHeight;
             }
         }
-        
-        socket.on('chat message', (msg,roomyId) => {
-            console.log(`chatting..${msg.user} room:${roomId}`)
-        console.log(roomId == msg.roomId)
-           if (roomId == msg.roomId){addMessage(msg, msg.user === 'You')};
+
+        socket.on('chat message', (msg) => {
+            if (roomId === msg.roomId) {
+                addMessage(msg, msg.user === 'You');
+            }
             
             const messagesContainer = document.getElementById('messages');
-            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            if (messagesContainer) {
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            }
         });
-        
-        document.getElementById('submitChat').addEventListener('click', sendMessage);
-        document.getElementById('chatInput').addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                sendMessage();
-            }        
-        });    
-        
-        
-                function sendMessage() {
-                    const input = document.getElementById('chatInput');
-                    const message = input.value.trim();  
-                       
-                    console.log(`send messagefunction~ room: ${roomId}`)
-                    if (message !== '') {
-                        socket.emit('chat message', message, roomId);
-                        input.value = '';
-                    }
+
+        // Add event listeners with null checks
+        const submitButton = document.getElementById('submitChat');
+        const chatInput = document.getElementById('chatInput');
+
+        if (submitButton) {
+            submitButton.addEventListener('click', sendMessage);
+        } else {
+            console.error('Submit button not found');
+        }
+
+        if (chatInput) {
+            chatInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    sendMessage();
                 }
+            });
+        } else {
+            console.error('Chat input field not found');
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();  
+            
+            if (message !== '') {
+                socket.emit('chat message', message, roomId);
+                input.value = '';
+            }
+        }
 
         function changeRooms(newRoomId) {
-    currentPage = 1; // Reset the page to 1 when changing rooms        
-    roomId = newRoomId; // Update the roomId to the new room's ID
-console.log(`changing rooms ${newRoomId}`)    
-const messagesContainer = document.getElementById('chat');
-console.log(`changing rooms ${messagesContainer}`)
-    messagesContainer.innerHTML = ''; // Clear the current chat messages
-    socket.emit('fetch messages', { roomId: roomId, page: currentPage, messagesPerPage: messagesPerPage });
-}    
+            if (!newRoomId) {
+                console.error('New room ID is not defined');
+                return;
+            }
+
+            currentPage = 1; // Reset the page to 1 when changing rooms        
+            roomId = newRoomId; // Update the roomId to the new room's ID
+            
+            const messagesContainer = document.getElementById('chat');
+            if (!messagesContainer) {
+                console.error('Messages container not found');
+                return;
+            }
+
+            messagesContainer.innerHTML = ''; // Clear the current chat messages
+            socket.emit('fetch messages', { roomId: roomId, page: currentPage, messagesPerPage: messagesPerPage });
+        }    
 
         document.addEventListener('click', (event) => {
-    if (event.target.classList.contains('tab_section')) {
-        const roomIdNum = event.target.id.split("_", 3);
-        changeRooms(roomIdNum[2]); // Call changeRooms with the new room ID
-     }
-});
+            if (event.target.classList.contains('tab_section')) {
+                const roomIdNum = event.target.id.split("_", 3);
+                changeRooms(roomIdNum[2]); // Call changeRooms with the new room ID
+            }
+        });
 
         socket.on('user list', (users) => {
             const userList = document.getElementById('userList');
+            if (!userList) {
+                console.error('User list container not found');
+                return;
+            }
+
             userList.innerHTML = '';
             users.forEach((user) => {
                 const div = document.createElement('div');
                 div.className = 'usersOnline';
                 div.dataset.userId = user.id;
                 div.dataset.userName = user.name;
-                div.dataset.userAvatar = user.avatarThumbnailUrl || '/path/to/default/avatar/image.jpg';
+                div.dataset.userAvatar = user.avatarThumbnailUrl || '/images/userHeadshots/defaultThumbnail.png';
     
                 const img = document.createElement('img');
                 img.className = 'userImage';
@@ -163,41 +188,21 @@ console.log(`changing rooms ${messagesContainer}`)
                 userList.appendChild(div);
             });
         });
-    
+
         socket.on('connect_error', (error) => {
-            console.log('Connection Error:', error);
+            console.error('Connection Error:', error);
         });
-    
+
         const chatToggle = document.getElementById('chatToggle');
         const chatWindow = document.getElementById('chat-window-basic');
-        chatToggle.addEventListener('click', () => {
-            const isOpen = chatWindow.style.transform === "translateX(-106%)";
-            chatWindow.style.transform = isOpen ? "translateX(0%)" : "translateX(-106%)";
-          //  chatToggle.innerHTML = isOpen ? "C" : "X";
-        });
-    
-        // document.addEventListener('click', (event) => {
-        //     if (event.target.classList.contains('usersOnline')) {
-        //         const userId = event.target.parentElement.dataset.userId;
-        //         const userName = event.target.parentElement.dataset.userName;
-        //         const userAvatar = event.target.parentElement.dataset.userAvatar;
-    
-        //         const userInfoBox = document.getElementById('userInfoBox');
-        //         userInfoBox.querySelector('.userName').textContent = userName;
-        //         userInfoBox.querySelector('.userAvatar').src = userAvatar;
-    
-        //         userInfoBox.style.left = `${event.pageX}px`;
-        //         userInfoBox.style.top = `${event.pageY}px`;
-        //         userInfoBox.style.display = 'block';
-        //     } else {
-        //         const userInfoBox = document.getElementById('userInfoBox');
-        //         userInfoBox.style.display = 'none';
-        //     };
-       
-        // });
-    
-
-
+        if (chatToggle && chatWindow) {
+            chatToggle.addEventListener('click', () => {
+                const isOpen = chatWindow.style.transform === "translateX(-106%)";
+                chatWindow.style.transform = isOpen ? "translateX(0%)" : "translateX(-106%)";
+            });
+        } else {
+            console.error('Chat toggle or chat window not found');
+        }
 
         requestInitialMessages();
     });

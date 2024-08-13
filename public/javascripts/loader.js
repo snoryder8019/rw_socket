@@ -17,49 +17,51 @@ const scriptsToLoad = [
   '/javascripts/controllers/userControllers.js',
   '/javascripts/controllers/backendControllers.js',
 ];
+
 document.addEventListener('DOMContentLoaded', function() {
-Promise.all(scriptsToLoad.map(loadScript))
-  .then(() => {
-    window.addEventListener('load', function() {
-      document.body.style.display = 'block';
+  Promise.all(scriptsToLoad.map(loadScript))
+    .then(() => {
+      window.addEventListener('load', function() {
+        document.body.style.display = 'block';
+      });
+      console.log('All scripts loaded');
+
+      // Check if the functions are defined before calling them
+      if (typeof logPos === 'function') {
+        logPos();  // Call your function here
+      } else {
+        console.log('logPos function did not load');
+      }
+
+      if (typeof warningLoader === 'function') {
+        warningLoader();  // Call your function here
+      } else {
+        console.log('warningLoader function did not load');
+      }
+
+      if (typeof mainButtonControl === 'function') {
+        mainButtonControl();
+      } else {
+        console.log('mainButtonControl did not load');
+      }
+
+      if (typeof userButtonControl === 'function') {
+        const user = {
+          isAdmin: true // Example user object, adjust based on your actual user data
+        };
+        userButtonControl(user);
+      } else {
+        console.log('userButtonControl did not load');
+      }
+
+      if (typeof backendControl === 'function') {
+        backendControl();
+      } else {
+        console.log('backendControl did not load');
+      }
+    })
+    .catch((error) => {
+      console.error('Error loading scripts:', error);
     });
-    console.log('All scripts loaded');
-    if (typeof logPos === 'function') {
-      logPos();  // Call your function here
-    }
-    if (typeof warningLoader === 'function') {
-      warningLoader();
+});
 
-  ;  // Call your function here
-  if(typeof mainButtonControl ===  'function'){
-    mainButtonControl();
-  }else{
-    console.log(`mainButtonControl did not load`)
-  };
-    }
-    if(typeof userButtonControl ===  'function'){
-      userButtonControl();
-    }else{
-      console.log(`userButtonControl did not load`)
-    };
-
-    // if(typeof closeControl ===  'function'){
-    //   closeControl();
-
-    // }else{
-    //   console.log(`closeControl did not load`)
-    // };
-
-
-    if(typeof backendControl ===  'function'){
-      backendControl();
-    }else{
-      console.log(`backendControl did not load`)
-    };
-
-  })
-  .catch((error) => {
-    console.error('Error loading scripts:', error);
-
-  });
-  });

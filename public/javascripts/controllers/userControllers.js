@@ -1,14 +1,16 @@
+
+// public/javascripts/controllers/userControllers.js
+
 const userButtonControl = (user) => {
-  // controller || button
   const toggleNotifications = document.getElementById('toggleNotifications');
   const toggleSettings = document.getElementById('toggleSettings');
   const toggleHelp = document.getElementById('toggleHelp');
-  const toggleAdmin = user.isAdmin ? document.getElementById('toggleAdmin') : null; // Admin button
+  const toggleAdmin = user.isAdmin ? document.getElementById('toggleAdmin') : null;
 
   const notificationsDiv = document.getElementById('notifications');
   const settingsDiv = document.getElementById('settings');
   const helpDiv = document.getElementById('help');
-  const adminDiv = user.isAdmin ? document.getElementById('admin') : null; // Admin div
+  const adminDiv = user.isAdmin ? document.getElementById('admin') : null;
 
   const buttonCtlGroups = [
     { button: toggleNotifications, div: notificationsDiv },
@@ -20,16 +22,11 @@ const userButtonControl = (user) => {
     buttonCtlGroups.push({ button: toggleAdmin, div: adminDiv });
   }
 
-  //console.log('userButtonControl() ran');
-
   for (let i = 0; i < buttonCtlGroups.length; i++) {
     const btn = buttonCtlGroups[i].button;
     const div = buttonCtlGroups[i].div;
 
-    // Check if both button and div are not null
     if (btn && div) {
-     // console.log(div);
-     // console.log(btn);
       btn.addEventListener('click', function () {
         if (div.style.display === "block") {
           div.style.display = 'none';
@@ -42,11 +39,13 @@ const userButtonControl = (user) => {
           div.style.display = 'block';
         }
       });
+    } else {
+      console.log(`Button or div missing: ${btn}, ${div}`);
     }
   }
 };
 
-// Example usage: call the function with user object
+// Example usage: call the function with a user object
 const user = {
   isAdmin: true // Set to true if the user is an admin
 };

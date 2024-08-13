@@ -72,7 +72,8 @@ router.get('/getLauncher', async (req, res) => {
     res.render(`./layouts/games/launcher`, {
       title: 'Game Launcher',
       launchers: data,
-      gameRooms:data2
+      gameRooms:data2,
+      
       
     });
   } catch (error) {

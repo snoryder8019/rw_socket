@@ -60,7 +60,7 @@
     const main = document.getElementById('main')
     dashToggle.addEventListener('click', () => {
     
-    console.log(`is there user?: ${!user}`)
+    console.log(`no user?: ${!user}`)
       if (dashWindow.style.transform != "translateX(106%)") {
         dashWindow.style.transform = "translateX(106%)";
 
@@ -111,5 +111,12 @@ if(!user==true){
     window.changeToLoginMethod = changeToLoginMethod;
 });
 
+document.addEventListener('DOMContentLoaded', () => {
+    const firstTimeYes = document.getElementById('firstTimeYes');
+    const firstTimeNo = document.getElementById('firstTimeNo');
+    // Use closures to pass the correct argument to the function
+    firstTimeYes.addEventListener('click', () => changeToLoginMethod('regWindow'));
+    firstTimeNo.addEventListener('click', () => changeToLoginMethod('loginWindow'));
+});
 
 </script>
