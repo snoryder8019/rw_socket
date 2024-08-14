@@ -10,8 +10,8 @@
          //   updateLiveGameInfo(`Connected to server with ID: ${socket.id}`);
         });
 
-        function updateLiveGamesData() {
-            console.log(`update Live Games Data`);
+        function updateLiveGamesData(msg) {
+            console.log(`update Live Games Data: ${msg}`);
         }
 
         function initializeGameSelection() {
@@ -24,17 +24,18 @@
                         const gameId = link.getAttribute('data-game');
                         
                         joinMatchmaking(gameId);
-                        updateLiveGamesData();
+                        updateLiveGamesData('initGameSelect');
                     });
                 });
             }
         }
-
+        
         function initializeGameFunction(button) {
             const url = button.getAttribute('button-url');
             if (url) {
                 button.addEventListener('click', () => {
                     console.log(`Fetching data from URL: ${url}`);
+                    updateLiveGamesData('initGameFunction');
                     
                     fetch(url, {
                         method: 'GET',
@@ -52,70 +53,71 @@
                 });
             }
         }
-
+        
         function joinMatchmaking(gameId) {
             console.log(`Joining matchmaking for game ID: ${gameId}`);
+            updateLiveGamesData('joinMatchmaking');
             socket.emit('joinMatchmaking', gameId);
-          //  updateLiveGameInfo(`Attempting to join matchmaking for game ID: ${gameId}`);
+            fetch(`games/gameSessions/join/${gameId}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('launcher').style.display = 'none';
+                document.getElementById('matchmaking').innerHTML = data;
+            })
+            .catch(error => console.error('Error fetching data:', error));
         }
-
+        
+        
         function initializeSocketListeners() {
             socket.on('assignedRoom', (roomId) => {
+                updateLiveGamesData('initSocketListeners');
                 currentRoomId = roomId;
                 console.log(`Assigned to room: ${roomId}`);
-               // updateLiveGameInfo(`Assigned to room: ${roomId}`);
+                // updateLiveGameInfo(`Assigned to room: ${roomId}`);
                 switchToGameRoom();
             });
             
             socket.on('updatePlayerList', (players) => {
+                updateLiveGamesData('updatePlayerList');
                 const playerListDiv = document.getElementById('playerList');
                 playerListDiv.innerHTML = players.map(p => `<p>${p.username} ${p.ready ? '(Ready)' : ''}</p>`).join('');
                 
                 if (players.length > 0 && players[0].id === socket.id) {
-                    document.getElementById('startGameButton').style.display = 'block';
+                    
                 }
             });
             
-            document.getElementById('startGameButton').addEventListener('click', () => {
-                socket.emit('startGame', { roomId: currentRoomId });
-            });
-
+            
+            
             socket.on('startGameSession', () => {
                 switchToGameSession();
             });
-
-            document.getElementById('exitGameRoomButton').addEventListener('click', () => {
-                switchToLauncher();
-            });
-
-            document.getElementById('exitGameSessionButton').addEventListener('click', () => {
-                switchToLauncher();
-            });
-
-            document.getElementById('exitCardTableButton').addEventListener('click', () => {
-                switchToLauncher();
-            });
-
-            // Example additional socket event for live info
-            socket.on('gameStatusUpdate', (status) => {
-              //  updateLiveGameInfo(`Game Status: ${status}`);
-            });
+            
+            
+            
+            
         }
-
+        
         function switchToGameRoom() {
             fetch(`/games/join-game/${gameId}`);
         }
-
+        
         function switchToGameSession() {
             document.getElementById('gameRoom').style.display = 'none';
             document.getElementById('gameSession').style.display = 'block';
         }
-
+        
         function switchToCardTable() {
             document.getElementById('launcher').style.display = 'none';
             document.getElementById('cardTable').style.display = 'block';
         }
-
+        
         function switchToLauncher() {
             document.getElementById('gameRoom').style.display = 'none';
             document.getElementById('gameMenu').style.display = 'none';
@@ -124,15 +126,16 @@
             document.getElementById('launcher').style.display = 'block';
             currentRoomId = null;
         }
-
-       
-
+        
+        
+        
         const observer = new MutationObserver((mutations, observer) => {
+            updateLiveGamesData('mutations observes launcher gamemgr gmaemenu playerlist');
             const launcherElement = document.getElementById('launcher');
             const gameManagers = document.getElementsByClassName('gameManagers');
             const gameMenu = document.getElementById('gameMenu');
             const playerList = document.getElementById('playerList');
-
+            
             if (launcherElement) {
                 initializeGameSelection();
             }
@@ -142,7 +145,7 @@
                     initializeGameFunction(gameManager);
                 });
             }
-
+            
             if (gameMenu && playerList) {
                 initializeSocketListeners();
                 observer.disconnect(); // Stop observing once both elements are found
@@ -150,9 +153,8 @@
         });
         
         observer.observe(document.body, { childList: true, subtree: true });
-
-        socket.emit('joinSession', { sessionId, userId });
-
+        
+        
         socket.on('updateGameMenu', (players) => {
             const playerListDiv = document.getElementById('playerList');
             playerListDiv.innerHTML = '';
@@ -164,7 +166,7 @@
             });
 
             const allReady = players.every(player => player.ready);
-            const startButton = document.getElementById('startGameButton');
+        
             if (allReady && userId === players[0].id) {
                 startButton.style.display = 'block';
             } else {
@@ -172,14 +174,8 @@
             }
         });
 
-        document.getElementById('startGameButton').addEventListener('click', () => {
-            socket.emit('startGameSession', sessionId);
-        });
 
-        document.getElementById('exitGameRoomButton').addEventListener('click', () => {
-            socket.emit('leaveSession', { sessionId, userId });
-            window.location.href = '/games';
-        });
+
        
         socket.on('startGameSession', () => {
             alert('The game is starting!');

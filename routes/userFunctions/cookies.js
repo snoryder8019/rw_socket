@@ -19,7 +19,7 @@ router.get('/', async (req, res, next) => {
 
         const user = req.user;
         if (user) {
-            console.log(`user: ${user.firstName}`);
+          //  console.log(`user: ${user.firstName}`);
             res.cookie('userName', user.firstName, { maxAge: 900000, httpOnly: true });
         }
 

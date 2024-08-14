@@ -14,6 +14,6 @@
         <!-- Player list will be dynamically updated via Socket.IO -->
     </div>
 
-    <button id="startGameButton">Start Game</button>
-    <button id="exitGameRoomButton">Exit Game Room</button>
-</div>
+    <button class="gameManagers" button-url="games/gameSessions/ready/<%=user._id%>">ready to play</button></div>
+    <button class="gameManagers" button-url="games/gameSessions/exit/<%=session._id%>">exit party</button></div>
+    <button id="startGameButton">StartGame</button>

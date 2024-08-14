@@ -2,9 +2,8 @@ const socketAdminHandlers = {
 onConnection:(nsp,socket,users)=>{
     const user = socket.request.user;
     const userName = user.firstName;
+    if(user.isAdmin){
     console.log(`SOCKETADMIN.JS ~ User: ${userName} connected to socketAdmin`);
-if(user.isAdmin){
-console.log(`Admin Status: ${user.isAdmin}`);
 
     socket.join('Admin');
 
