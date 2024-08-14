@@ -875,7 +875,6 @@ input {
   left: 0;
   min-height: 79vh;
   z-index: 8000;
-  overflow-y: scroll;
 }
 @media (min-width: 768px) {
   .expanded {
@@ -966,6 +965,10 @@ input {
   width: 100%;
 }
 
+#gameMenu, #launcher {
+  animation: fadeIn 0.8s ease-in 0s 1 forward;
+}
+
 #game-container, .index-container {
   color: black;
   width: 90%;
@@ -974,6 +977,7 @@ input {
   border-radius: 10px;
   padding: 20px;
   box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.442);
+  overflow-y: scroll;
 }
 
 .index-container {

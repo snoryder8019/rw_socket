@@ -1,0 +1,47 @@
+<style>
+    .auth_view_true {
+      transition: all 0.3s ease-in-out;
+    }
+    .auth_view_true.expanded {
+      transform: scale(1.05);
+      z-index: 1;
+    }
+  
+  </style>
+
+  
+<% if (typeof sectionSettings === 'object' && sectionSettings && sectionSettings.length > 0) { %>
+    <% sectionSettings.forEach(function(setting) { %>
+      <% if (setting.visible && setting.authView) { %>
+        <div class="auth_view_true" style="background-image: url('<%= setting.backgroundImg %>');">
+          <div class="index-container">
+          <% if (setting.title) { %>
+    <h1><%= setting.title %></h1>
+  <% } %>
+  
+  <% if (setting.subtitle) { %>
+    <h1><%= setting.subtitle %></h1>
+  <% } %>
+  
+  <% if (setting.description) { %>
+    <p><%= setting.description %></p>
+  <% } %>
+  
+            <% if (Array.isArray(setting.links)) { %>
+              <div class="linkTable"><br>
+  
+              <% setting.links.forEach(function(link) { %>
+                <a href="<%= link %>"  target="_blank" rel="noopener noreferrer"><%= link %></a>
+                <br>
+              <% }); %>
+            </div>
+            <% } %>
+            <br>
+            <button style="background-image: url('<%= setting.entryBackground %>');" class="collapsible"><%= setting.entryText %><span class="carrot">||</span></button>
+            <div class="content" data-url="<%= setting.entryUrl %>"></div>
+          </div>
+        </div>
+      <% } %>
+    <% }); %>
+  <% } %>
+  

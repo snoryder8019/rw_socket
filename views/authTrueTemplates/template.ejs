@@ -1,54 +1,7 @@
-<style>
-  .auth_view_true {
-    transition: all 0.3s ease-in-out;
-  }
-  .auth_view_true.expanded {
-    transform: scale(1.05);
-    z-index: 1;
-  }
-  .close-button {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    display: none;
-  }
-</style>
+<!--CONTROL THE LOOPED LAYOUT HERE-->
+<%- include('../layouts/sections/original', {webappSettings:webappSettings})%>
 
-<% if (typeof sectionSettings === 'object' && sectionSettings && sectionSettings.length > 0) { %>
-  <% sectionSettings.forEach(function(setting) { %>
-    <% if (setting.visible && setting.authView) { %>
-      <div class="auth_view_true" style="background-image: url('<%= setting.backgroundImg %>');">
-        <div class="index-container">
-        <% if (setting.title) { %>
-  <h1><%= setting.title %></h1>
-<% } %>
-
-<% if (setting.subtitle) { %>
-  <h1><%= setting.subtitle %></h1>
-<% } %>
-
-<% if (setting.description) { %>
-  <p><%= setting.description %></p>
-<% } %>
-
-          <% if (Array.isArray(setting.links)) { %>
-            <div class="linkTable"><br>
-
-            <% setting.links.forEach(function(link) { %>
-              <a href="<%= link %>"  target="_blank" rel="noopener noreferrer"><%= link %></a>
-              <br>
-            <% }); %>
-          </div>
-          <% } %>
-          <br>
-          <button style="background-image: url('<%= setting.entryBackground %>');" class="collapsible"><%= setting.entryText %><span class="carrot">||</span></button>
-          <div class="content" data-url="<%= setting.entryUrl %>"></div>
-        </div>
-      </div>
-    <% } %>
-  <% }); %>
-<% } %>
-
+<!--HARDCODED FOR EXPERIMENTALS-->
 <div class="auth_view_true" style="background-image: url('./images/hugeIcon.png');">
   <div class="index-container">
     <h1>The Parlor</h1>
@@ -58,11 +11,15 @@
       <%- include('../videoChannels/userStream') %>
       <%- include('../videoChannels/channel_1') %>
     </div>
+
     <div class="marquee">
       <span id="marquee-text"></span>
     </div>
   </div>
 </div>
+
+
+<!--INDEX LEVEL STATIC SCRIPTS-->
 <%- include('../layouts/games/socketScripts.ejs')%>
 <script>
   document.addEventListener('DOMContentLoaded', () => {
@@ -88,9 +45,9 @@
       });
     });
   });
-</script>
 
-<script>
+
+  //controls header with a scroll listener
   window.onload = () => {
     const scrollContainerX = document.querySelector('.container-scrollbox-x');
     if (scrollContainerX) {

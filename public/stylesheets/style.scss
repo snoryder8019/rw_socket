@@ -903,7 +903,7 @@ animation:fadeIn .3s ease-IN 0s 1;
   
     z-index:8000;
    // margin-top: 16vh;
-    overflow-y: scroll;
+   // overflow-y: scroll;
 //margin-bottom: 50px;
     @media (min-width:768px) {
       min-height: 73vh;
@@ -914,6 +914,7 @@ animation:fadeIn .3s ease-IN 0s 1;
     min-height: 100%;
     overflow-y: scroll;
   }
+
   .close-button {
     position: absolute;
     top: 5%;
@@ -972,7 +973,9 @@ animation:flashMsg 2.8s ease-in-out 0s 1 ;
 #remoteVideo{
   width:100%;
 }
-
+#gameMenu, #launcher{
+  animation: fadeIn .8s ease-in 0s 1 forward;
+}
 #game-container, .index-container {
   color: black;
   width: 90%;
@@ -981,6 +984,7 @@ animation:flashMsg 2.8s ease-in-out 0s 1 ;
   border-radius: 10px;
   padding: 20px;
   box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.442);
+  overflow-y: scroll;
 }
 .index-container {
   overflow-y: scroll;

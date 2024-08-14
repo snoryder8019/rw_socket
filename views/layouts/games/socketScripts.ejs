@@ -1,5 +1,5 @@
 <script>
-
+//views/layouts/games/socketScripts.ejs
     document.addEventListener('DOMContentLoaded', function () {
         const socket = io('/games');
         let currentRoomId = null;
@@ -148,7 +148,7 @@
             
             if (gameMenu && playerList) {
                 initializeSocketListeners();
-                observer.disconnect(); // Stop observing once both elements are found
+             //   observer.disconnect(); // Stop observing once both elements are found
             }
         });
         
@@ -156,29 +156,66 @@
         
         
         socket.on('updateGameMenu', (players) => {
-            const playerListDiv = document.getElementById('playerList');
-            playerListDiv.innerHTML = '';
-            
-            players.forEach(player => {
-                const playerItem = document.createElement('div');
-                playerItem.textContent = `${player.username} (${player.ready ? 'Ready' : 'Not Ready'})`;
-                playerListDiv.appendChild(playerItem);
-            });
+    const playerListDiv = document.getElementById('playerList');
+    playerListDiv.innerHTML = ''; // Clear the existing list
 
-            const allReady = players.every(player => player.ready);
-        
-            if (allReady && userId === players[0].id) {
-                startButton.style.display = 'block';
-            } else {
-                startButton.style.display = 'none';
+    players.forEach(player => {
+        // Create the player item container
+        const playerItem = document.createElement('div');
+        playerItem.classList.add('userswOnline');
+
+        // Create and set up the avatar image
+        const avatarImg = document.createElement('img');
+        avatarImg.src = player.avatarUrl; // Assuming player.avatarUrl contains the avatar image URL
+        avatarImg.alt = `${player.displayName}'s avatar`;
+        avatarImg.classList.add('avatar'); // Add a class for styling if needed
+
+        // Create and set up the player info container
+        const playerInfo = document.createElement('div');
+        playerInfo.classList.add('message');
+
+        // Add the display name and ready status
+        const playerName = document.createElement('p');
+        playerName.textContent = `${player.displayName} (${player.ready ? 'Ready' : 'Not Ready'})`;
+
+        // Append the elements together
+        playerInfo.appendChild(playerName);
+        playerItem.appendChild(avatarImg);
+        playerItem.appendChild(playerInfo);
+        playerListDiv.appendChild(playerItem);
+    });
+
+    // Check if all players are ready and display the start button accordingly
+    const allReady = players.every(player => player.ready);
+    if (allReady && userID === players[0].id) {
+        document.getElementById('startButton').style.display = 'block';
+    } else {
+        document.getElementById('startButton').style.display = 'none';
+    }
+});
+
+
+    // Start observing the entire document for attribute changes
+    observer.observe(document, {
+        attributes: true,
+        subtree: true,
+    });
+
+    // Emit events based on button clicks
+    document.querySelectorAll('.gameManagers').forEach(button => {
+        button.addEventListener('click', (event) => {
+            const buttonURL = event.target.getAttribute('button-url');
+            if (buttonURL.includes('ready')) {
+                socket.emit('playerReady', { userId: userID });
+            } else if (buttonURL.includes('exit')) {
+                socket.emit('leaveSession', { userId: userID });
+            } else if (buttonURL.includes('join')) {
+                socket.emit('joinSession', { userId: userID });
+            } else if (buttonURL.includes('start')) {
+                socket.emit('startGame', { userId: userID });
             }
         });
-
-
-
-       
-        socket.on('startGameSession', () => {
-            alert('The game is starting!');
-        });
     });
+});
+
 </script>

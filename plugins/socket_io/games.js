@@ -1,47 +1,45 @@
 const GameSession = require('../../plugins/mongo/models/games/GameSession');
+const { getDb } = require('../mongo/mongo');
 
 const socketGameHandlers = {
   onConnection: (nsp, socket, users) => {
     const user = socket.request.user;
-    const userId = user._id;
+    const userId = user._id.toString(); // Convert ObjectId to string
 
     console.log(`GAMES.JS ~ User: ${user.firstName} (ID: ${userId}) connected to the games namespace`);
 
-
     socket.on('joinSession', async ({ sessionId, userId }) => {
       try {
+        console.log(`join sesh!!`);
         // Logic to add user to the session room, fetch and update player list, etc.
       } catch (error) {
         console.error(`Error joining session ${sessionId}:`, error);
       }
     });
-    
+
     socket.on('leaveSession', async ({ sessionId, userId }) => {
       try {
+        console.log(`leave sesh!!`);
         // Logic to remove user from the session room, update player list, etc.
       } catch (error) {
         console.error(`Error leaving session ${sessionId}:`, error);
       }
     });
-    
+
     socket.on('startGameSession', async (sessionId) => {
       try {
-        // Logic to handle starting the game session
+        console.log(`start Game!!`);
         nsp.to(sessionId).emit('startGameSession');
       } catch (error) {
         console.error(`Error starting session ${sessionId}:`, error);
       }
     });
-    
-
-
-
-
 
     socket.on('joinMatchmaking', async (gameId) => {
+      console.log('joinMatchmaking event triggered');
       try {
         console.log(`User ${user.firstName} is matchmaking for game ID: ${gameId}`);
-        
+
         // Find or create a game session and get the roomId (gameSession._id)
         const gameSession = await GameSession.getGameSession(gameId, userId);
         const roomId = gameSession._id.toString();
@@ -52,8 +50,34 @@ const socketGameHandlers = {
         socket.join(roomId);
         socket.emit('assignedRoom', roomId);
 
+        // Check if the user is already in the session's players list
+        const playerExists = gameSession.players.some(player => player.id === userId);
+
+        if (!playerExists) {
+          // Add the player to the session
+          const playerData = {
+            id: userId,
+            username: user.firstName, // Or use displayName if more appropriate
+            ready: false,
+            avatarUrl: user.images && user.images.find(image => image.avatar === true)?.url
+          };
+
+          gameSession.players.push(playerData);
+
+          // Update the session in the database
+          const db = getDb();
+          await db.collection('gameSessions').updateOne(
+            { _id: gameSession._id },
+            { $set: { players: gameSession.players } }
+          );
+        }
+
         // Get the updated list of players in the room
-        const players = await GameSession.getPlayersInRoom(gameSession._id);
+        const players = gameSession.players.map(player => ({
+          id: player.id,
+          username: player.username,
+          ready: player.ready
+        }));
 
         console.table(players, ['id', 'username', 'ready']);
 
@@ -66,32 +90,12 @@ const socketGameHandlers = {
       }
     });
 
-    socket.on('startGameSession', async (roomId) => {
-      try {
-        console.log(`Starting game session for room ID: ${roomId}`);
-
-        // Notify all clients in the room to update the gameMenu
-        const players = await GameSession.getPlayersInRoom(roomId);
-
-        nsp.to(roomId).emit('updateGameMenu', {
-          roomId: roomId,
-          gameState: 'started', // or whatever state the game is in
-          players: players // pass current players or any relevant data
-        });
-
-      } catch (error) {
-        console.error(`Error starting game session in room ${roomId}:`, error);
-        socket.emit('error', 'An error occurred while starting the game session.');
-      }
-    });
-
-    socket.on('playerReady', async (data) => {
-      const { roomId } = data;
+    socket.on('playerReady', async ({ roomId }) => {
       console.log(`Player ${user.firstName} is ready in room ${roomId}`);
-      
+
       try {
         // Mark player as ready
-        await markPlayerAsReady(roomId, userId);
+        await GameSession.readyUp(roomId, userId);
 
         const players = await GameSession.getPlayersInRoom(roomId);
         console.table(players, ['id', 'username', 'ready']);
@@ -113,8 +117,8 @@ const socketGameHandlers = {
 
     socket.on('disconnect', async () => {
       console.log(`GAMES.JS ~ User: ${user.firstName} (ID: ${userId}) disconnected`);
-      // Handle player disconnection, e.g., remove them from the room
-      // Optionally, you can add logic to remove the user from the session or handle reconnections
+      // Logic to handle player disconnection, e.g., remove them from the session
+      // Consider removing the player from the session in the database if needed
     });
   }
 };

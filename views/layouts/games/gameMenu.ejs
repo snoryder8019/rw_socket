@@ -1,19 +1,26 @@
 <div id="gameMenu">
-    <h1>Game Menu</h1>
-    <p>Welcome, <%= user.firstName %>!</p>
-  
-    <p>Session ID: <%= session._id %></p>
+    <h1><%=session.gameName%> Menu</h1>
+    <p>Welcome to <%=session.gameName%> <%= user.firstName %>!</p>  
 
+    
     <div id="liveGameInfo">
         <!-- This will be populated with live game info via Socket.IO -->
-        <p>Waiting for players to join...</p>
     </div>
-
+    
+    
+    <button class="gameManagers" button-url="games/gameSessions/ready/<%=session._id%>">ready to play</button>
+    <button class="gameManagers" button-url="games/gameSessions/exit/<%=session._id%>">exit party</button>
+    <button class="gameManagers" button-url="games/gameSessions/start/<%=session._id%>">StartGame</button>
+    
     <div id="playerList">
-        players
+        
+        <div class="loaderWheel">
+            <div class="loaderDiv"><h3>Waiting for players to join...</h3></div>
+            <div class="loaderDiv"><div class="wheel"></div></div>
+        </div>
         <!-- Player list will be dynamically updated via Socket.IO -->
     </div>
+    
+    <p style="font-size: .8rem;">Session ID: <%= session._id %></p>
+    </div>
 
-    <button class="gameManagers" button-url="games/gameSessions/ready/<%=user._id%>">ready to play</button></div>
-    <button class="gameManagers" button-url="games/gameSessions/exit/<%=session._id%>">exit party</button></div>
-    <button id="startGameButton">StartGame</button>

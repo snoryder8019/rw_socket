@@ -13,8 +13,10 @@ class Game extends ModelHelper {
       genre: { type: 'text', value: null },
       developer: { type: 'text', value: null },
       releaseDate: { type: 'date', value: null },
-      iconImage: { type: 'file', value: null },
-      backgroundImg: { type: 'file', value: null }
+      backgroundImg: { type: 'file', value: null },
+      mediumIcon: { type: 'file', value: null }, 
+      maxPlayers: { type: 'number', value: null },
+      minPlayers: { type: 'number', value: null },
     };
     if (gameData) {
       for (let key in this.modelFields) {

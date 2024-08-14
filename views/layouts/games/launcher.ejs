@@ -24,20 +24,18 @@ You are enrolled in a game:
             </div>
 
 
-            <%if(gameSessions.length>0){%>
+            <%if(typeof gameSessions == 'object'&& gameSessions){%>
                 <h3>Active Game Rooms</h3>
                 <table id="activeGameRooms">
                     <thead>
                         <th>Game Type</th>
                         <th>Game Staus</th>
-                        <th>No of Players</th>
                     </thead>
                     <tbody>
                         <%gameSessions.forEach((gameSession, index) =>{%>
                             <tr>
                                 <td> <%=gameSession.gameName%> Room #<%=index +1%></td>
                                 <td> <%=gameSession.status%></td>
-                                <td><%=gameSession.playerIds.length%></td>
                             </tr>
                             <%})%>
                         </tbody>

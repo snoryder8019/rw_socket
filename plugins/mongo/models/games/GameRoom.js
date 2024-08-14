@@ -9,12 +9,13 @@ class GameRoom extends ModelHelper {
     this.modelFields = {
       name: { type: 'text', value: null },
       gameType: { type: 'text', value: null },
+      title: { type: 'text', value: null },
       description: { type: 'text', value: null },
+      subtitle: { type: 'text', value: null },
       backgroundImg: { type: 'file', value: null },
-      mediumIcon: { type: 'file', value: null },
-      playerIds: { type: 'array', value: [] },
-      status: { type: 'text', value: null },
+      mediumIcon: { type: 'file', value: null }, 
       maxPlayers: { type: 'number', value: null },
+      minPlayers: { type: 'number', value: null },
     };
 
     if (gameRoomData) {

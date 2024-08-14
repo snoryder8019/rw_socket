@@ -1,3 +1,4 @@
+//routes/gamesFunctions/launcher/launcher.js
 const express = require('express');
 const Launcher = require('../../../plugins/mongo/models/games/Launcher');
 const { generateFormFields } = require('../../../plugins/helpers/formHelper');
@@ -65,6 +66,7 @@ router.get('/section', async (req, res) => {
 });
 
 // Entry point to the launcher
+
 router.get('/getLauncher', async (req, res) => {
   try {
     // Fetch necessary data
@@ -73,15 +75,15 @@ router.get('/getLauncher', async (req, res) => {
     const data3 = await new GameSession().getAll();
     
     // Determine if the user is currently in a game session
-    const userId = req.user._id; // Assuming req.user contains the logged-in user's information
+    const userId = req.user._id.toString(); // Assuming req.user contains the logged-in user's information
     let inGame = false;
 
     // Iterate through gameSessions to check if the user is in any session
     data3.forEach((session, index) => {
-      if (session.playerIds.some(playerId => playerId.equals(userId))) {
+      if (Array.isArray(session.players) && session.players.some(player => player.id === userId)) {
         inGame = {
           id: session._id,
-          gameNo: index +1, // Using the index in the return order
+          gameNo: index + 1, // Using the index in the return order
           gameType: session.gameName
         };
       }
@@ -96,11 +98,11 @@ router.get('/getLauncher', async (req, res) => {
       inGame: inGame // Pass the session details or false
     });
   } catch (error) {
-    console.error(error);
-    res.status(500).send({ error: error.message });
+    console.error('Error in /getLauncher:', error); // Add more detailed logging
+    res.status(500).send('An error occurred while trying to load the launcher.');
   }
+  return; //routes/gamesFunctions/launcher/launcher.js
 });
-
 buildRoutes(new Launcher(), router);
 
 module.exports = router;
