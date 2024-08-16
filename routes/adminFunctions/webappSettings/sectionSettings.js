@@ -1,10 +1,10 @@
-const express = require('express');
-const SectionSetting = require('../../../plugins/mongo/models/SectionSetting');
-const { generateFormFields } = require('../../../plugins/helpers/formHelper');
-const buildRoutes = require('../../helpers/routeBuilder');
+import express from 'express';
+import SectionSetting from '../../../plugins/mongo/models/SectionSetting.js';
+import { generateFormFields } from '../../../plugins/helpers/formHelper.js';
+import { buildRoutes } from '../../helpers/routeBuilder.js';
 
 const router = express.Router();
-const modelName = "sectionSetting";
+const modelName = 'sectionSetting';
 // Route to render the form to add a new section setting
 router.get('/renderAddForm', (req, res) => {
   try {
@@ -15,7 +15,7 @@ router.get('/renderAddForm', (req, res) => {
     res.render('forms/generalForm', {
       title: `Add New ${modelName}`,
       action: `/${modelName}s/create`,
-      formFields: formFields
+      formFields: formFields,
     });
   } catch (error) {
     console.error(error);
@@ -39,7 +39,7 @@ router.get('/renderEditForm/:id', async (req, res) => {
       routeSub: `${modelName}s`,
       method: 'post',
       formFields: formFields,
-      data: sectionSetting
+      data: sectionSetting,
     });
   } catch (error) {
     console.error(error);
@@ -52,7 +52,7 @@ router.get('/section', async (req, res) => {
     const data = await new SectionSetting().getAll();
     res.render(`./layouts/${modelName}`, {
       title: 'Section View',
-      data:data
+      data: data,
     });
   } catch (error) {
     console.error(error);
@@ -62,4 +62,4 @@ router.get('/section', async (req, res) => {
 
 buildRoutes(new SectionSetting(), router);
 
-module.exports = router;
+export default router;

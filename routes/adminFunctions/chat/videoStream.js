@@ -1,7 +1,8 @@
-const express = require('express');
+import express from 'express';
+import { getDb } from '../../../plugins/mongo/mongo.js';
+import { ObjectId } from 'mongodb';
+
 const router = express.Router();
-const { getDb } = require('../../../plugins/mongo/mongo'); // Assuming getDb is defined in your db configuration
-const { ObjectId } = require('mongodb');
 
 // Create a new room
 router.post('/createRoom', async (req, res) => {
@@ -14,7 +15,7 @@ router.post('/createRoom', async (req, res) => {
       established: new Date(),
       guests: 0,
       offerCandidates: {},
-      answerCandidates: {}
+      answerCandidates: {},
     });
     const roomId = result.insertedId;
     res.json({ roomId });
@@ -29,10 +30,12 @@ router.post('/joinRoom', async (req, res) => {
     const { roomId } = req.body;
     const db = getDb();
     const roomIdObj = new ObjectId(roomId);
-    const room = await db.collection('p2p_rooms').findOne({ "_id": roomIdObj });
+    const room = await db.collection('p2p_rooms').findOne({ _id: roomIdObj });
 
     if (room) {
-      await db.collection('p2p_rooms').updateOne({ "_id": roomIdObj }, { $inc: { guests: 1 } });
+      await db
+        .collection('p2p_rooms')
+        .updateOne({ _id: roomIdObj }, { $inc: { guests: 1 } });
       res.json({ roomId });
     } else {
       res.status(404).json({ error: 'Room not found' });
@@ -48,11 +51,11 @@ router.post('/deleteRoom', async (req, res) => {
     const { roomId } = req.body;
     const db = getDb();
     const roomIdObj = new ObjectId(roomId);
-    await db.collection('p2p_rooms').deleteOne({ "_id": roomIdObj });
+    await db.collection('p2p_rooms').deleteOne({ _id: roomIdObj });
     res.json({ success: true });
   } catch (error) {
     res.status(500).json({ error: 'Failed to delete room' });
   }
 });
 
-module.exports = router;
+export default router;

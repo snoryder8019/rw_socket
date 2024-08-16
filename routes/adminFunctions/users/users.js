@@ -1,6 +1,7 @@
-const express = require('express');
+import express from 'express';
+import { getDb } from '../../../plugins/mongo/mongo.js';
+
 const router = express.Router();
-const { getDb } = require('../../../plugins/mongo/mongo');
 
 router.get('/paginateUsers', async (req, res) => {
   try {
@@ -30,7 +31,9 @@ router.get('/paginateUsers', async (req, res) => {
     const totalUsers = await usersCollection.countDocuments(query);
     const totalPages = Math.ceil(totalUsers / parseInt(limit));
 
-    const userHtml = users.map(user => `
+    const userHtml = users
+      .map(
+        (user) => `
       <div class="user">
         <p>${user.firstName}</p>
         <p>${user.lastName}</p>
@@ -38,11 +41,16 @@ router.get('/paginateUsers', async (req, res) => {
         <p><button>contact</button></p>
         <p><button data-url="/users/edit">edit</button></p>
       </div>
-    `).join('');
+    `
+      )
+      .join('');
 
-    const paginationHtml = Array.from({ length: totalPages }, (_, i) => `
+    const paginationHtml = Array.from(
+      { length: totalPages },
+      (_, i) => `
       <a href="#" data-page="${i + 1}" ${i + 1 === parseInt(page) ? 'style="font-weight:bold"' : ''}>${i + 1}</a>
-    `).join(' ');
+    `
+    ).join(' ');
 
     const filterFormHtml = `
       <form id="filterForm">
@@ -98,8 +106,10 @@ router.get('/paginateUsers', async (req, res) => {
     `);
   } catch (error) {
     console.error(error);
-    res.status(500).send({ error: 'An error occurred while fetching user data' });
+    res
+      .status(500)
+      .send({ error: 'An error occurred while fetching user data' });
   }
 });
 
-module.exports = router;
+export default router;

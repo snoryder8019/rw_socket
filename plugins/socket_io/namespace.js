@@ -1,17 +1,18 @@
-// /plugins/socket_io/namespace.js
-const { sessionMiddleware, passportMiddleware, authenticate } = require('./socket_middleware');
+import {
+  sessionMiddleware,
+  passportMiddleware,
+  authenticate,
+} from './socket_middleware.js';
 
-const configureNamespace = (io, namespace, namespaceHandlers) => {
-    const nsp = io.of(namespace);
-    const users = {};
+export const configureNamespace = (io, namespace, namespaceHandlers) => {
+  const nsp = io.of(namespace);
+  const users = {};
 
-    nsp.use(sessionMiddleware);
-    nsp.use(passportMiddleware);
-    nsp.use(authenticate);
+  nsp.use(sessionMiddleware);
+  nsp.use(passportMiddleware);
+  nsp.use(authenticate);
 
-    nsp.on('connection', (socket) => {
-        namespaceHandlers.onConnection(nsp, socket, users);
-    });
+  nsp.on('connection', (socket) => {
+    namespaceHandlers.onConnection(nsp, socket, users);
+  });
 };
-
-module.exports = configureNamespace;

@@ -1,10 +1,6 @@
-const express = require('express');
-const router = express.Router();
-const { getDb } = require('../../../plugins/mongo/mongo');
-const { ObjectId } = require('mongodb');
-const config = require('../../../config/config');
-const lib = require('../../logFunctions/logFunctions');
-const fs = require('fs');
+import express from 'express';
+import { getDb } from '../../../plugins/mongo/mongo.js';
+import { ObjectId } from 'mongodb';
 
 function isAdmin(req, res, next) {
   let user = req.user;
@@ -17,7 +13,8 @@ function isAdmin(req, res, next) {
     res.redirect('/');
   }
 }
-const ticketUpdate = async (req, res) => {
+
+export const ticketUpdate = async (req, res) => {
   try {
     const db = getDb();
     const ticketsCollection = db.collection('tickets');
@@ -30,7 +27,13 @@ const ticketUpdate = async (req, res) => {
       { _id: new ObjectId(ticketId) },
       {
         $set: { status: status },
-        $push: { devUpdates: { timestamp: updatedTime, message: devUpdate, source:source } }, // Update status and push the updated timestamp along with the devUpdate message
+        $push: {
+          devUpdates: {
+            timestamp: updatedTime,
+            message: devUpdate,
+            source: source,
+          },
+        }, // Update status and push the updated timestamp along with the devUpdate message
       },
       { returnOriginal: false }
     );
@@ -48,16 +51,16 @@ const ticketUpdate = async (req, res) => {
       req.flash('error', 'Ticket not found or update failed.');
     }
   } catch (err) {
-    console.error("Error in Update Ticket: ", err);
+    console.error('Error in Update Ticket: ', err);
     req.flash('error', 'An error occurred while updating the ticket.');
   }
 
   const backURL = req.header('Referer') || '/';
-  console.log("Redirecting to: ", backURL);
+  console.log('Redirecting to: ', backURL);
   res.redirect(backURL);
 };
 
-const ticketDelete = async (req, res) => {
+export const ticketDelete = async (req, res) => {
   try {
     const db = getDb();
     const collection = db.collection('tickets');
@@ -76,24 +79,27 @@ const ticketDelete = async (req, res) => {
       req.flash('error', 'Ticket not found or flagging for deletion failed.');
     }
   } catch (err) {
-    console.error("Error in Flag for Deletion: ", err);
-    req.flash('error', 'An error occurred while flagging the ticket for deletion.');
+    console.error('Error in Flag for Deletion: ', err);
+    req.flash(
+      'error',
+      'An error occurred while flagging the ticket for deletion.'
+    );
   }
 
   const backURL = req.header('Referer') || '/';
-  console.log("Redirecting to: ", backURL);
+  console.log('Redirecting to: ', backURL);
   res.redirect('/admin');
 };
 
-
-
-const ticketData = async (req, res) => {
+export const ticketData = async (req, res) => {
   try {
     const db = getDb();
     const collection = db.collection('tickets');
     const { ticketId } = req.body;
 
-    const deleteResult = await collection.deleteOne({ _id: new ObjectId(ticketId) });
+    const deleteResult = await collection.deleteOne({
+      _id: new ObjectId(ticketId),
+    });
 
     if (deleteResult.deletedCount === 1) {
       req.flash('success', 'Ticket deleted successfully.');
@@ -101,13 +107,11 @@ const ticketData = async (req, res) => {
       req.flash('error', 'Ticket not found or delete failed.');
     }
   } catch (err) {
-    console.error("Error in Delete Ticket: ", err);
+    console.error('Error in Delete Ticket: ', err);
     req.flash('error', 'An error occurred while deleting the ticket.');
   }
 
   const backURL = req.header('Referer') || '/';
-  console.log("Redirecting to: ", backURL);
+  console.log('Redirecting to: ', backURL);
   res.redirect('/admin');
 };
-
-module.exports = { ticketUpdate, ticketDelete, ticketData };

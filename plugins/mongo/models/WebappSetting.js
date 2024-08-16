@@ -1,9 +1,10 @@
-const ModelHelper = require('../helpers/models');
-const { upload, processImages } = require('../../multer/subscriptionSetup');
-const { uploadToLinode } = require('../../aws_sdk/setup');
+import ModelHelper from '../../helpers/models.js';
+import { upload, processImages } from '../../../multer/subscriptionSetup.js';
+import { uploadToLinode } from '../../../aws_sdk/setup.js';
+
 const modelName = 'webappSetting';
 
-class WebappSetting extends ModelHelper {
+export default class WebappSetting extends ModelHelper {
   constructor(webappSettingData) {
     super(`${modelName}s`);
     this.modelFields = {
@@ -33,7 +34,7 @@ class WebappSetting extends ModelHelper {
       inputBoxShadow: { type: 'text', value: null },
       inputFontFamily: { type: 'text', value: null },
       inputFontWeight: { type: 'text', value: null },
-      inputFontColor: { type: 'text', value: null }
+      inputFontColor: { type: 'text', value: null },
     };
     if (webappSettingData) {
       for (let key in this.modelFields) {
@@ -45,18 +46,26 @@ class WebappSetting extends ModelHelper {
   }
 
   static getModelFields() {
-    return Object.keys(new WebappSetting().modelFields).map(key => {
+    return Object.keys(new WebappSetting().modelFields).map((key) => {
       const field = new WebappSetting().modelFields[key];
       return { name: key, type: field.type };
     });
   }
 
   middlewareForCreateRoute() {
-    return [upload.fields(this.fileFields), processImages, this.uploadImagesToLinode.bind(this)];
+    return [
+      upload.fields(this.fileFields),
+      processImages,
+      this.uploadImagesToLinode.bind(this),
+    ];
   }
 
   middlewareForEditRoute() {
-    return [upload.fields(this.fileFields), processImages, this.uploadImagesToLinode.bind(this)];
+    return [
+      upload.fields(this.fileFields),
+      processImages,
+      this.uploadImagesToLinode.bind(this),
+    ];
   }
 
   get fileFields() {
@@ -71,7 +80,7 @@ class WebappSetting extends ModelHelper {
       { name: 'googleLoginIcon', maxCount: 1 },
       { name: 'facebookLoginIcon', maxCount: 1 },
       { name: 'passwordLoginIcon', maxCount: 1 },
-      { name: 'registerIcon', maxCount: 1 }
+      { name: 'registerIcon', maxCount: 1 },
     ];
   }
 
@@ -87,7 +96,7 @@ class WebappSetting extends ModelHelper {
       }
       next();
     } catch (error) {
-      console.error("Error in uploadImagesToLinode middleware:", error);
+      console.error('Error in uploadImagesToLinode middleware:', error);
       next(error);
     }
   }
@@ -96,5 +105,3 @@ class WebappSetting extends ModelHelper {
     return `admin/${modelName}s/template`;
   }
 }
-
-module.exports = WebappSetting;

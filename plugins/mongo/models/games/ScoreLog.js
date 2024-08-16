@@ -1,7 +1,8 @@
-const ModelHelper = require('../../helpers/models');
+import ModelHelper from '../../helpers/models.js';
+
 const modelName = 'scoreLog';
 
-class ScoreLog extends ModelHelper {
+export default class ScoreLog extends ModelHelper {
   constructor(scoreLogData) {
     super(`${modelName}s`);
     this.modelFields = {
@@ -11,7 +12,7 @@ class ScoreLog extends ModelHelper {
       gameId: { type: 'text', value: null },
       sessionId: { type: 'text', value: null },
       score: { type: 'number', value: null },
-      timestamp: { type: 'date', value: null }
+      timestamp: { type: 'date', value: null },
     };
     if (scoreLogData) {
       for (let key in this.modelFields) {
@@ -23,7 +24,7 @@ class ScoreLog extends ModelHelper {
   }
 
   static getModelFields() {
-    return Object.keys(new ScoreLog().modelFields).map(key => {
+    return Object.keys(new ScoreLog().modelFields).map((key) => {
       const field = new ScoreLog().modelFields[key];
       return { name: key, type: field.type };
     });
@@ -49,5 +50,3 @@ class ScoreLog extends ModelHelper {
     return `admin/${modelName}s/template`;
   }
 }
-
-module.exports = ScoreLog;

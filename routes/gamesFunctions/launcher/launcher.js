@@ -1,10 +1,10 @@
-const express = require('express');
-const Launcher = require('../../../plugins/mongo/models/games/Launcher');
-const { generateFormFields } = require('../../../plugins/helpers/formHelper');
-const buildRoutes = require('../../helpers/routeBuilder');
+import express from 'express';
+import Launcher from '../../../plugins/mongo/models/games/Launcher.js';
+import { generateFormFields } from '../../../plugins/helpers/formHelper.js';
+import { buildRoutes } from '../../helpers/routeBuilder.js';
 
 const router = express.Router();
-const modelName = "launcher";
+const modelName = 'launcher';
 
 // Route to render the form to add a new launcher
 router.get('/renderAddForm', (req, res) => {
@@ -16,7 +16,7 @@ router.get('/renderAddForm', (req, res) => {
     res.render('forms/generalForm', {
       title: `Add New ${modelName}`,
       action: `/${modelName}s/create`,
-      formFields: formFields
+      formFields: formFields,
     });
   } catch (error) {
     console.error(error);
@@ -40,7 +40,7 @@ router.get('/renderEditForm/:id', async (req, res) => {
       routeSub: `${modelName}s`,
       method: 'post',
       formFields: formFields,
-      data: launcher
+      data: launcher,
     });
   } catch (error) {
     console.error(error);
@@ -54,7 +54,7 @@ router.get('/section', async (req, res) => {
     const data = await new Launcher().getAll();
     res.render(`./layouts/${modelName}`, {
       title: 'Launcher View',
-      data: data
+      data: data,
     });
   } catch (error) {
     console.error(error);
@@ -64,4 +64,4 @@ router.get('/section', async (req, res) => {
 
 buildRoutes(new Launcher(), router);
 
-module.exports = router;
+export default router;

@@ -1,4 +1,4 @@
-const ModelHelper = require('../helpers/models');
+import ModelHelper from '../../helpers/models.js';
 
 class Video extends ModelHelper {
   constructor() {
@@ -6,4 +6,4 @@ class Video extends ModelHelper {
   }
 }
 
-module.exports = new Video();
+export default new Video();

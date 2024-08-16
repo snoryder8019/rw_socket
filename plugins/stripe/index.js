@@ -1,23 +1,24 @@
-const express = require('express');
-const stripe = require('stripe')(process.env.STRIPESECTEST);
+import express from 'express';
+import stripe from 'stripe';
+import stripeWebhooks from './webhook.js';
+
 const router = express.Router();
-const stripeWebhooks = require('./webhook');
 router.use('/stripe', stripeWebhooks);
 router.post('/charge', async (req, res) => {
-    try {
-        const { amount, token } = req.body;
-        const charge = await stripe.charges.create({
-            amount,
-            currency: 'usd',
-            description: 'Description of your product/service',
-            source: token,
-        });
+  try {
+    const { amount, token } = req.body;
+    const charge = await stripe.charges.create({
+      amount,
+      currency: 'usd',
+      description: 'Description of your product/service',
+      source: token,
+    });
 
-        res.status(200).send(charge);
-    } catch (err) {
-        res.status(500).send({ error: 'Charge Failed' });
-        console.error(err);
-    }
+    res.status(200).send(charge);
+  } catch (err) {
+    res.status(500).send({ error: 'Charge Failed' });
+    console.error(err);
+  }
 });
 
-module.exports = router;
+export default router;

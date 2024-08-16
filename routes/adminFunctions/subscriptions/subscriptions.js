@@ -1,10 +1,10 @@
-const express = require('express');
-const Subscription = require('../../../plugins/mongo/models/Subscription');
-const { generateFormFields } = require('../../../plugins/helpers/formHelper');
-const buildRoutes = require('../../helpers/routeBuilder');
+import express from 'express';
+import Subscription from '../../../plugins/mongo/models/Subscription.js';
+import { generateFormFields } from '../../../plugins/helpers/formHelper.js';
+import { buildRoutes } from '../../helpers/routeBuilder.js';
 
 const router = express.Router();
-const modelName = "subscription";
+const modelName = 'subscription';
 
 // Route to render the form to add a new subscription
 router.get('/renderAddForm', (req, res) => {
@@ -16,7 +16,7 @@ router.get('/renderAddForm', (req, res) => {
     res.render('forms/generalForm', {
       title: `Add New ${modelName}`,
       action: `/${modelName}s/create`,
-      formFields: formFields
+      formFields: formFields,
     });
   } catch (error) {
     console.error(error);
@@ -40,7 +40,7 @@ router.get('/renderEditForm/:id', async (req, res) => {
       routeSub: `${modelName}s`,
       method: 'post',
       formFields: formFields,
-      data: subscription
+      data: subscription,
     });
   } catch (error) {
     console.error(error);
@@ -54,7 +54,7 @@ router.get('/section', async (req, res) => {
     const data = await new Subscription().getAll();
     res.render(`./layouts/section`, {
       title: 'Subscription View',
-      data: data
+      data: data,
     });
   } catch (error) {
     console.error(error);
@@ -66,7 +66,7 @@ router.get('/sectionSlide', async (req, res) => {
     const data = await new Subscription().getAll();
     res.render(`./layouts/sectionSlide`, {
       title: 'Subscription View',
-      data: data
+      data: data,
     });
   } catch (error) {
     console.error(error);
@@ -76,4 +76,4 @@ router.get('/sectionSlide', async (req, res) => {
 
 buildRoutes(new Subscription(), router);
 
-module.exports = router;
+export default router;

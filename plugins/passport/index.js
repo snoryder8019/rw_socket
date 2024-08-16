@@ -1,9 +1,5 @@
-const setupPassport = require('./setup');
-const authRoutes = require('./auth');
-const { createUser } = require('./localStrat');
+import setupPassport from './setup.js';
+import authRouter from './auth.js';
+import { createUser } from './localStrat.js';
 
-module.exports = {
-    setupPassport,
-    authRoutes,
-    createUser
-};
+export { setupPassport, authRouter, createUser };

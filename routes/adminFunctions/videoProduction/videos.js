@@ -1,19 +1,19 @@
-const express = require('express');
-const multer = require('multer');
-const path = require('path');
-const { uploadToLinode } = require('../../../plugins/aws_sdk/setup'); // Adjust the path as needed
-const Video = require('../../../plugins/mongo/models/Video'); // Adjust the path as needed
+import express from 'express';
+import multer from 'multer';
+import path from 'path';
+import { uploadToLinode } from '../../../plugins/aws_sdk/setup.js'; // Ensure this path is correct
+import Video from '../../../plugins/mongo/models/Video.js'; // Model for storing video info
 
 const router = express.Router();
 
 // Configure multer for file uploads
 const storage = multer.diskStorage({
-  destination: function(req, file, cb) {
+  destination: function (req, file, cb) {
     cb(null, 'uploads/admin/videos');
   },
-  filename: function(req, file, cb) {
+  filename: function (req, file, cb) {
     cb(null, Date.now() + path.extname(file.originalname));
-  }
+  },
 });
 const upload = multer({ storage: storage });
 
@@ -28,7 +28,7 @@ router.post('/upload', upload.single('video'), async (req, res) => {
     const video = new Video({
       name: file.originalname,
       url: url,
-      thumbnail: `${url}-thumbnail` // Assuming thumbnail generation logic
+      thumbnail: `${url}-thumbnail`, // Assuming thumbnail generation logic
     });
     await video.save();
 
@@ -39,4 +39,4 @@ router.post('/upload', upload.single('video'), async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;

@@ -1,12 +1,14 @@
-const { getDb } = require('../../plugins/mongo/mongo');
-const { ObjectId } = require('mongodb');
+import { getDb } from '../../plugins/mongo/mongo.js';
+import { ObjectId } from 'mongodb';
 
-const socketP2PHandlers = {
+export const socketP2PHandlers = {
   onConnection: (nsp, socket, users) => {
     const user = socket.request.user;
     const userId = user._id;
 
-    console.log(`VIDEOSTREAM.JS ~ User: ${user.firstName} connected to videoStream`);
+    console.log(
+      `VIDEOSTREAM.JS ~ User: ${user.firstName} connected to videoStream`
+    );
 
     // Emit activity to the marquee
     const emitActivity = (message) => {
@@ -14,24 +16,30 @@ const socketP2PHandlers = {
     };
 
     socket.on('joinRoom', async (roomId) => {
-      console.log(`VIDEOSTREAM.JS ~ User: ${user.firstName} joined room ${roomId}`);
+      console.log(
+        `VIDEOSTREAM.JS ~ User: ${user.firstName} joined room ${roomId}`
+      );
       const db = getDb();
       const roomIdObj = new ObjectId(roomId);
 
       // Fetch the room details
-      const room = await db.collection('p2p_rooms').findOne({ "_id": roomIdObj });
+      const room = await db.collection('p2p_rooms').findOne({ _id: roomIdObj });
       if (room) {
         // Send the current room state to the new user
         socket.emit('roomState', room);
 
         // Notify other users in the room
-        socket.to(roomId).emit('userJoined', { userId: socket.id, userName: user.firstName });
-        
+        socket
+          .to(roomId)
+          .emit('userJoined', { userId: socket.id, userName: user.firstName });
+
         // Add the user to the room
         socket.join(roomId);
-        
+
         // Update the guest count
-        await db.collection('p2p_rooms').updateOne({ "_id": roomIdObj }, { $inc: { guests: 1 } });
+        await db
+          .collection('p2p_rooms')
+          .updateOne({ _id: roomIdObj }, { $inc: { guests: 1 } });
       } else {
         socket.emit('error', 'Room not found');
       }
@@ -39,16 +47,15 @@ const socketP2PHandlers = {
 
     socket.on('p2pInit', async (data) => {
       try {
-       // console.log(`VIDEOSTREAM.JS ~ User: ${user.firstName} initiated P2P connection`);
+        // console.log(`VIDEOSTREAM.JS ~ User: ${user.firstName} initiated P2P connection`);
         const db = getDb();
         const roomIdObj = new ObjectId(data._id);
-        await db.collection('p2p_rooms').updateOne(
-          { "_id": roomIdObj },
-          { $set: { offer: data.offer } }
-        );
+        await db
+          .collection('p2p_rooms')
+          .updateOne({ _id: roomIdObj }, { $set: { offer: data.offer } });
         socket.to(data.peerId).emit('p2pOffer', {
           from: socket.id,
-          offer: data.offer
+          offer: data.offer,
         });
         emitActivity(`${user.firstName} initiated a video chat session.`);
       } catch (error) {
@@ -58,16 +65,15 @@ const socketP2PHandlers = {
 
     socket.on('p2pAnswer', async (data) => {
       try {
-      //  console.log(`VIDEOSTREAM.JS ~ User: ${user.firstName} answered P2P connection`);
+        //  console.log(`VIDEOSTREAM.JS ~ User: ${user.firstName} answered P2P connection`);
         const db = getDb();
         const roomIdObj = new ObjectId(data._id);
-        await db.collection('p2p_rooms').updateOne(
-          { "_id": roomIdObj },
-          { $set: { answer: data.answer } }
-        );
+        await db
+          .collection('p2p_rooms')
+          .updateOne({ _id: roomIdObj }, { $set: { answer: data.answer } });
         socket.to(data.peerId).emit('p2pAnswer', {
           from: socket.id,
-          answer: data.answer
+          answer: data.answer,
         });
         emitActivity(`Hi ${user.firstName}, welcome to the stream.`);
       } catch (error) {
@@ -77,18 +83,22 @@ const socketP2PHandlers = {
 
     socket.on('p2pCandidate', async (data) => {
       try {
-        console.log(`VIDEOSTREAM.JS ~ User: ${user.firstName} sent ICE candidate`);
+        console.log(
+          `VIDEOSTREAM.JS ~ User: ${user.firstName} sent ICE candidate`
+        );
         const db = getDb();
         const roomIdObj = new ObjectId(data._id);
-        await db.collection('p2p_rooms').updateOne(
-          { "_id": roomIdObj },
-          { $push: { candidates: data.candidate } }
-        );
+        await db
+          .collection('p2p_rooms')
+          .updateOne(
+            { _id: roomIdObj },
+            { $push: { candidates: data.candidate } }
+          );
         socket.to(data.peerId).emit('p2pCandidate', {
           from: socket.id,
-          candidate: data.candidate
+          candidate: data.candidate,
         });
-     //   emitActivity(`${user.firstName} sent an ICE candidate.`);
+        //   emitActivity(`${user.firstName} sent an ICE candidate.`);
       } catch (error) {
         console.error('Error in p2pCandidate:', error);
       }
@@ -98,7 +108,5 @@ const socketP2PHandlers = {
       console.log(`VIDEOSTREAM.JS ~ User: ${user.firstName} disconnected`);
       emitActivity(`${user.firstName} disconnected.`);
     });
-  }
+  },
 };
-
-module.exports = socketP2PHandlers;

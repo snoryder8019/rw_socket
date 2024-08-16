@@ -1,8 +1,3 @@
-const express = require('express');
-const { getDb } = require('../../plugins/mongo/mongo');
-const { ObjectId } = require('mongodb');
+import express from 'express';
 
-const updateBanned = async (req,res)=>{
-    
-}
-module.exports = {updateBanned}
+export const updateBanned = async (req, res) => {};

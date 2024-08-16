@@ -1,10 +1,9 @@
-const ModelHelper = require('../helpers/models');
+import ModelHelper from '../../helpers/models.js';
 
-class ChatMessage extends ModelHelper {
+export default class ChatMessage extends ModelHelper {
   constructor(chatMessageData) {
     super('chat_messages_meta');
     if (chatMessageData) {
-   
       this.roomId = chatMessageData.roomId;
       this.avatarType = chatMessageData.avatarType;
       this.chatType = chatMessageData.chatType;
@@ -20,11 +19,8 @@ class ChatMessage extends ModelHelper {
       this.user = chatMessageData.user;
       this.visible = chatMessageData.visible;
       this.reviewed = chatMessageData.reveiwed;
-      this.reviewedBy= chatMessageData.reviewedBy || [];
+      this.reviewedBy = chatMessageData.reviewedBy || [];
       this.thumbnailUrl = chatMessageData.thumbnailUrl;
-      
     }
   }
 }
-
-module.exports = ChatMessage;

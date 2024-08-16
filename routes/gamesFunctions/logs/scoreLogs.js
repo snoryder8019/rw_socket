@@ -1,10 +1,10 @@
-const express = require('express');
-const ScoreLog = require('../../../plugins/mongo/models/ScoreLog');
-const { generateFormFields } = require('../../../plugins/helpers/formHelper');
-const buildRoutes = require('../../helpers/routeBuilder');
+import express from 'express';
+import ScoreLog from '../../../plugins/mongo/models/ScoreLog.js';
+import { generateFormFields } from '../../../plugins/helpers/formHelper.js';
+import { buildRoutes } from '../../helpers/routeBuilder.js';
 
 const router = express.Router();
-const modelName = "scoreLog";
+const modelName = 'scoreLog';
 
 // Route to render the form to add a new score log
 router.get('/renderAddForm', (req, res) => {
@@ -16,7 +16,7 @@ router.get('/renderAddForm', (req, res) => {
     res.render('forms/generalForm', {
       title: `Add New ${modelName}`,
       action: `/${modelName}s/create`,
-      formFields: formFields
+      formFields: formFields,
     });
   } catch (error) {
     console.error(error);
@@ -40,7 +40,7 @@ router.get('/renderEditForm/:id', async (req, res) => {
       routeSub: `${modelName}s`,
       method: 'post',
       formFields: formFields,
-      data: scoreLog
+      data: scoreLog,
     });
   } catch (error) {
     console.error(error);
@@ -54,7 +54,7 @@ router.get('/section', async (req, res) => {
     const data = await new ScoreLog().getAll();
     res.render(`./layouts/${modelName}`, {
       title: 'Score Log View',
-      data: data
+      data: data,
     });
   } catch (error) {
     console.error(error);
@@ -64,4 +64,4 @@ router.get('/section', async (req, res) => {
 
 buildRoutes(new ScoreLog(), router);
 
-module.exports = router;
+export default router;

@@ -1,7 +1,8 @@
-const ModelHelper = require('../../helpers/models');
+import ModelHelper from '../../helpers/models.js';
+
 const modelName = 'gameSession';
 
-class GameSession extends ModelHelper {
+export default class GameSession extends ModelHelper {
   constructor(gameSessionData) {
     super(`${modelName}s`);
     this.modelFields = {
@@ -10,7 +11,7 @@ class GameSession extends ModelHelper {
       playerIds: { type: 'array', value: [] },
       startTime: { type: 'date', value: null },
       endTime: { type: 'date', value: null },
-      status: { type: 'text', value: null }
+      status: { type: 'text', value: null },
     };
     if (gameSessionData) {
       for (let key in this.modelFields) {
@@ -22,7 +23,7 @@ class GameSession extends ModelHelper {
   }
 
   static getModelFields() {
-    return Object.keys(new GameSession().modelFields).map(key => {
+    return Object.keys(new GameSession().modelFields).map((key) => {
       const field = new GameSession().modelFields[key];
       return { name: key, type: field.type };
     });
@@ -48,5 +49,3 @@ class GameSession extends ModelHelper {
     return `admin/${modelName}s/template`;
   }
 }
-
-module.exports = GameSession;

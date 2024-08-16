@@ -1,27 +1,30 @@
-const express = require('express');
+import express from 'express';
+import { getDb } from '../../../plugins/mongo/mongo.js';
+import { ObjectId } from 'mongodb';
+
 const router = express.Router();
-const path = require('path')
-const upload = require('../../../plugins/multer/setup');
-const { getDb } = require('../../../plugins/mongo/mongo');
-const { ObjectId } = require('mongodb');
-const config = require('../../../config/config'); // Import config if you're using it
-const lib = require('../../logFunctions/logFunctions')
-const fs = require('fs')
 // Route to get a small subset of users with action buttons
 router.get('/load', async (req, res) => {
   try {
     const db = getDb();
     const usersCollection = db.collection('users');
-    const users = await usersCollection.find({}, { projection: { firstName: 1, lastName: 1, email: 1 } }).limit(10).toArray();
+    const users = await usersCollection
+      .find({}, { projection: { firstName: 1, lastName: 1, email: 1 } })
+      .limit(10)
+      .toArray();
 
-    const userHtml = users.map(user => `
+    const userHtml = users
+      .map(
+        (user) => `
       <div class="user">
       <p>${user.firstName}</p>
         <p> ${user.lastName}</p>
         <p>${user.email}</p>
         <button onclick="editPermissions('${user._id}')">Edit Permissions</button>
       </div>
-    `).join('');
+    `
+      )
+      .join('');
 
     res.send(`
       <html>
@@ -90,7 +93,9 @@ router.get('/load', async (req, res) => {
     `);
   } catch (error) {
     console.error(error);
-    res.status(500).send({ error: 'An error occurred while fetching user data' });
+    res
+      .status(500)
+      .send({ error: 'An error occurred while fetching user data' });
   }
 });
 
@@ -100,7 +105,10 @@ router.get('/get/:userId', async (req, res) => {
     const userId = req.params.userId;
     const db = getDb();
     const usersCollection = db.collection('users');
-    const user = await usersCollection.findOne({ _id: new ObjectId(userId) }, { projection: { permissions: 1 } });
+    const user = await usersCollection.findOne(
+      { _id: new ObjectId(userId) },
+      { projection: { permissions: 1 } }
+    );
 
     if (!user) {
       return res.status(404).send({ error: 'User not found' });
@@ -127,7 +135,9 @@ router.get('/get/:userId', async (req, res) => {
     res.send(permissionsHtml);
   } catch (error) {
     console.error(error);
-    res.status(500).send({ error: 'An error occurred while fetching user permissions' });
+    res
+      .status(500)
+      .send({ error: 'An error occurred while fetching user permissions' });
   }
 });
 
@@ -137,12 +147,17 @@ router.post('/save', async (req, res) => {
     const { userId, permission } = req.body;
     const db = getDb();
     const usersCollection = db.collection('users');
-    await usersCollection.updateOne({ _id: new ObjectId(userId) }, { $set: { permissions: permission } });
+    await usersCollection.updateOne(
+      { _id: new ObjectId(userId) },
+      { $set: { permissions: permission } }
+    );
     res.send({ message: 'Permissions updated successfully' });
   } catch (error) {
     console.error(error);
-    res.status(500).send({ error: 'An error occurred while updating user permissions' });
+    res
+      .status(500)
+      .send({ error: 'An error occurred while updating user permissions' });
   }
 });
 
-module.exports = router;
+export default router;

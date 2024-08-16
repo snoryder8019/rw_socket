@@ -1,27 +1,21 @@
-const { MongoClient } = require('mongodb');
-const config = require('../../config/config');
-const env = require('dotenv').config();
+import { MongoClient } from 'mongodb';
+import config from '../../config/config.js';
 
 let _db;
 
-const connect = async () => {
+export const connect = async () => {
   if (!_db) {
     const client = new MongoClient(config.db_uri);
     await client.connect();
     _db = client.db(config.DB_NAME);
-    console.log("Connected to MongoDB");
+    console.log('Connected to MongoDB');
   }
   return _db;
 };
 
-const getDb = () => {
+export const getDb = () => {
   if (!_db) {
     throw new Error('Database not initialized');
   }
   return _db;
-};
-
-module.exports = {
-  connect,
-  getDb
 };

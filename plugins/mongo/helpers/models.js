@@ -1,7 +1,7 @@
-const { getDb } = require('../mongo');
-const { ObjectId } = require('mongodb');
+import { getDb } from '../mongo.js';
+import { ObjectId } from 'mongodb';
 
-class ModelHelper {
+export default class ModelHelper {
   constructor(collectionName) {
     this.collectionName = collectionName;
     this.modelFields = {}; // Child classes should define this
@@ -117,5 +117,3 @@ class ModelHelper {
     return '';
   }
 }
-
-module.exports = ModelHelper;

@@ -1,5 +1,5 @@
-// /routes/adminFunctions/videoLead/videoLead.js
-const express = require('express');
+import express from 'express';
+
 const router = express.Router();
 
 const ensureAuthenticated = (req, res, next) => {
@@ -18,9 +18,13 @@ const ensureVideoLeadPermission = (req, res, next) => {
   }
 };
 
-router.get('/load', ensureAuthenticated, ensureVideoLeadPermission, (req, res) => {
-  console.log("Rendering /load route for video lead");
-  res.send(`
+router.get(
+  '/load',
+  ensureAuthenticated,
+  ensureVideoLeadPermission,
+  (req, res) => {
+    console.log('Rendering /load route for video lead');
+    res.send(`
     <div id="videoContainer">
       <h1>Video Lead</h1>
       <video id="video" autoplay></video>
@@ -28,6 +32,7 @@ router.get('/load', ensureAuthenticated, ensureVideoLeadPermission, (req, res) =
     </div>
     <div id="videoFeed"></div>
   `);
-});
+  }
+);
 
-module.exports = router;
+export default router;
