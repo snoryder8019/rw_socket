@@ -1,0 +1,137 @@
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        var socket = io('/main_chat');
+        let currentPage = 1;
+        const messagesPerPage = 12; 
+        function requestInitialMessages() {
+            socket.emit('fetch messages', { roomId: roomId, page: currentPage, messagesPerPage: messagesPerPage });
+        }        
+        socket.on('messages fetched', (messages) => {
+            if (messages.length) {
+                const reversedMessages = messages.reverse();
+                reversedMessages.forEach(messageObject => {
+                    let isOwnMessage = messageObject.user === "currentUserDisplayName";
+                    addMessage(messageObject, isOwnMessage);
+                });
+                currentPage++;
+            }
+        });
+        
+        function addMessage(messageObject, isOwnMessage = false) {
+            const messagesContainer = document.getElementById('chat');
+            const shouldScroll = messagesContainer.scrollTop + messagesContainer.clientHeight + 50 >= messagesContainer.scrollHeight;
+            
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'messages'
+            messageDiv.className = isOwnMessage ? 'message ownMessage' : 'message';
+            
+            const messageAvatar = document.createElement('img');
+            messageAvatar.className = 'usersOnline';
+            messageAvatar.src = messageObject.thumbnailUrl || `/images/userHeadshots/defaultThumbnail.png`;
+            
+            const messageTextSpan = document.createElement('span');
+            messageTextSpan.className = 'messageText';
+            messageTextSpan.textContent = messageObject.message || 'No message text.';
+            
+            const actionsDiv = document.createElement('div');
+            actionsDiv.className = 'messageActions';
+            actionsDiv.id = `${messageObject.id}_actions`;
+            
+            const heartIcon = document.createElement('span');
+            heartIcon.textContent = '❤️';
+            // const flagIcon = document.createElement('span');
+            // flagIcon.textContent = '🚩';
+            const threeDotsIcon = document.createElement('span');
+            threeDotsIcon.textContent = '⋮';
+    
+            actionsDiv.appendChild(heartIcon);
+            //  actionsDiv.appendChild(flagIcon);
+            actionsDiv.appendChild(threeDotsIcon);
+            
+            messageDiv.appendChild(messageAvatar);
+            messageDiv.appendChild(messageTextSpan);
+            messageDiv.appendChild(actionsDiv);
+            messagesContainer.appendChild(messageDiv);
+            
+            if (shouldScroll) {
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            }
+        }
+        
+        socket.on('chat message', (msg,roomyId) => {
+            console.log(`chatting..${msg.user} room:${roomId}`)
+        console.log(roomId == msg.roomId)
+           if (roomId == msg.roomId){addMessage(msg, msg.user === 'You')};
+            
+            const messagesContainer = document.getElementById('messages');
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        });
+        
+        document.getElementById('submitChat').addEventListener('click', sendMessage);
+        document.getElementById('chatInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }        
+        });    
+        
+        
+                function sendMessage() {
+                    const input = document.getElementById('chatInput');
+                    const message = input.value.trim();  
+                       
+                    console.log(`send messagefunction~ room: ${roomId}`)
+                    if (message !== '') {
+                        socket.emit('chat message', message, roomId);
+                        input.value = '';
+                    }
+                }
+
+        function changeRooms(newRoomId) {
+    currentPage = 1; // Reset the page to 1 when changing rooms        
+    roomId = newRoomId; // Update the roomId to the new room's ID
+console.log(`changing rooms ${newRoomId}`)    
+const messagesContainer = document.getElementById('chat');
+console.log(`changing rooms ${messagesContainer}`)
+    messagesContainer.innerHTML = ''; // Clear the current chat messages
+    socket.emit('fetch messages', { roomId: roomId, page: currentPage, messagesPerPage: messagesPerPage });
+}    
+
+        document.addEventListener('click', (event) => {
+    if (event.target.classList.contains('tab_section')) {
+        const roomIdNum = event.target.id.split("_", 3);
+        changeRooms(roomIdNum[2]); // Call changeRooms with the new room ID
+     }
+});
+
+        socket.on('user list', (users) => {
+            const userList = document.getElementById('userList');
+            userList.innerHTML = '';
+            users.forEach((user) => {
+                const div = document.createElement('div');
+                div.className = 'usersOnline';
+                div.dataset.userId = user.id;
+                div.dataset.userName = user.name;
+                div.dataset.userAvatar = user.avatarThumbnailUrl || '/path/to/default/avatar/image.jpg';
+          const img = document.createElement('img');
+                img.className = 'userImage';
+                img.src = div.dataset.userAvatar;
+                div.appendChild(img);
+    
+                userList.appendChild(div);
+            });
+        });
+    
+        socket.on('connect_error', (error) => {
+            console.log('Connection Error:', error);
+        });
+    
+        const chatToggle = document.getElementById('chatToggle');
+        const chatWindow = document.getElementById('chat-window-basic');
+        chatToggle.addEventListener('click', () => {
+            const isOpen = chatWindow.style.transform === "translateX(-106%)";
+            chatWindow.style.transform = isOpen ? "translateX(0%)" : "translateX(-106%)";
+      });
+
+        requestInitialMessages();
+    });
+</script>

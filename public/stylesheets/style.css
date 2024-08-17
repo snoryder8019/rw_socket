@@ -73,10 +73,6 @@
   padding: 1%;
 }
 
-#main {
-  max-width: 50vw;
-}
-
 #notifications, #cart, #rewards, #help, #settings, #admin, #wallet {
   display: none;
 }

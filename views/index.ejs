@@ -6,19 +6,18 @@
   <title><%=config.title%></title>
 </head>
 <body>      
-  
   <!--ALL FIXED PARTIALS OUTSIDE THE MAIN DIV-->
   <div id="flashErrors"><%- include('./partials/flashErrors',{message:message})%></div>  
   
   <d
-  
-  
   iv id="main">
-<!--includeLIGHT BOXES HERE-->
+  <!--includeLIGHT BOXES HERE-->
   <div class="client_camera">
     <video  id="myVideo" autoplay></video>
   </div>
-    <%if(typeof webappSettings === 'object'&& webappSettings){%>
+  <div id="marquee"></div>
+
+  <%if(typeof webappSettings === 'object'&& webappSettings){%>
     <div id="mainBanner" style="background-image: url(<%=webappSettings[0].mainBannerDesktop%>);" class="banner">
       <%}%>
       <div id="bannerControls">
@@ -29,100 +28,38 @@
             <%if(typeof webappSettings === 'object'&& webappSettings){%>
               <button style="background-image: url('<%=webappSettings[0].signInIcon%>');" id="dashToggle"></button>
               <%}%>
-        <% } %>
-      </div>
- 
-    </div>
-
-    <% if (typeof user === 'object' && user) { %>
-      <%- include('./authTrueTemplates/template') %>
-    <% } else { %>
-      <%- include('./authFalseTemplates/template') %>
+              <% } %>
+            </div>
+            
+          </div>
+          
+          <% if (typeof user === 'object' && user) { %>
+            <%- include('./authTrueTemplates/template') %>
+            <% } else { %>
+              <%- include('./authFalseTemplates/template') %>
     <% } %>
   </div>    
-
+  
   <% if (typeof user === 'object' && user) { %>
     <%- include('./chat/basicChat', {user: user}) %>
     <%- include('./userDash/userDash', {user: user}) %>
-  <% } else { %>
-    <%- include('./chat/basicChat', {user: ""}) %>
-    <%- include('./userDash/userDash', {user: ""}) %>
-  <% } %>
-  <div id="footer"><%- include('./partials/footer') %></div>      
-
-  <script>
-    window.addEventListener('scroll', function() {
-      var banner = document.getElementById('mainBanner');
-      var bannerControls = document.getElementById('bannerControls');
-      var bannerHeight = banner.offsetHeight;
+    <% } else { %>
+      <%- include('./chat/basicChat', {user: ""}) %>
+      <%- include('./userDash/userDash', {user: ""}) %>
+      <% } %>
+      <div id="footer"><%- include('./partials/footer') %></div>      
       
-      if (window.pageYOffset > bannerHeight) {
-        banner.classList.add('sticky');
-        banner.classList.add('shrunk');
-      } else {
-        banner.classList.remove('sticky');
-        banner.classList.remove('shrunk');
-      }
-    });
+  
+  
+  <%-include('./scripts/index.ejs')%>
 
-    document.addEventListener('DOMContentLoaded', () => {
-     
-      var socket = io('/videoProduction');
-
-      // Handle video upload
-      $('#uploadForm').on('submit', function(e) {
-        e.preventDefault();
-        var formData = new FormData();
-        formData.append('video', $('#video')[0].files[0]);
-
-        $.ajax({
-          url: '/admin/videos/upload',
-          type: 'POST',
-          data: formData,
-          processData: false,
-          contentType: false,
-          success: function(response) {
-            alert('Video uploaded successfully!');
-            socket.emit('newVideo', response.video);
-          },
-          error: function(err) {
-            alert('Error uploading video');
-          }
-        });
-      });
-
-      // Listen for new videos
-      socket.on('newVideo', function(video) {
-        $('#videoList').append(`<div><img src="${video.thumbnail}" alt="Video Thumbnail"><p>${video.name}</p><button onclick="playVideo('${video.url}')">Play</button></div>`);
-      });
-
-      // Schedule video push
-      $('#schedulePush').on('click', function() {
-        socket.emit('scheduleVideoPush');
-      });
-
-      // Listen for scheduled videos
-      socket.on('scheduledVideos', function(videos) {
-        $('#scheduledVideos').empty();
-        videos.forEach(function(video) {
-          $('#scheduledVideos').append(`<div><img src="${video.thumbnail}" alt="Video Thumbnail"><p>${video.name}</p><button onclick="playVideo('${video.url}')">Play</button></div>`);
-        });
-      });
-    });
-
-    function playVideo(url) {
-      var videoPlayer = document.getElementById('videoPlayer');
-      videoPlayer.src = url;
-      videoPlayer.play();
-    }
-  </script>
   <script src="/javascripts/loader.js"></script>
 </body>
 <%if(typeof webappSettings === 'object'&& webappSettings){%>
-<style>
-  @font-face {
-    font-family: 'backslash';
-    src: url('/fonts/backslash.otf');
+  <style>
+    @font-face {
+      font-family: 'backslash';
+      src: url('/fonts/backslash.otf');
   }
   :root h1 {
     font-family: <%= webappSettings[0].mainFont %>;

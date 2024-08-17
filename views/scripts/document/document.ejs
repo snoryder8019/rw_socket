@@ -1,0 +1,17 @@
+<script>
+
+
+window.addEventListener('scroll', function() {
+          var banner = document.getElementById('mainBanner');
+      var bannerControls = document.getElementById('bannerControls');
+      var bannerHeight = banner.offsetHeight;
+      
+      if (window.pageYOffset > bannerHeight) {
+        banner.classList.add('sticky');
+        banner.classList.add('shrunk');
+      } else {
+        banner.classList.remove('sticky');
+        banner.classList.remove('shrunk');
+      }
+    });
+</script>
