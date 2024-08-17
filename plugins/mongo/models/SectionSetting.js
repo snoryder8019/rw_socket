@@ -8,6 +8,7 @@ class SectionSetting extends ModelHelper {
     super(`${modelName}s`);
     this.modelFields = {
       name:{type:'text',value:null},
+      order:{type:'number',value:null},
       title:{type:'text',value:null},
       subTitle:{type:'text',value:null},
       animation:{type:'text',value:'none'},
