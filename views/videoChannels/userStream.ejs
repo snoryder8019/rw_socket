@@ -8,7 +8,7 @@
         <button class="go-back" onclick="showPreviousCard()">Go Back</button>
       </div>
     </div>
-    <div class="index-card">
+    <div class="">
       <div class="p2pRoomsList">
         <h3>Join a Parlor Room:</h3>
         <% if (typeof rooms == 'object' && rooms) { %>
@@ -21,13 +21,13 @@
             </div>
           <% }) %>
         <% } %>
-        <button class="go-back" onclick="showPreviousCard()">Go Back</button>
+    
       </div>
     </div>
-    <div class="index-card">
+    <div class="">
       <div class="peers"></div>
       <div class="P2Pcontrols"></div>
-      <button class="go-back" onclick="showPreviousCard()">Go Back</button>
+    
     </div>
   </div>
 </div>
@@ -61,23 +61,6 @@
     showNextCard();
   }
 
-  function showNextCard() {
-    const currentCard = document.querySelector('.index-card.active');
-    const nextCard = currentCard.nextElementSibling;
-    if (nextCard && nextCard.classList.contains('index-card')) {
-      currentCard.classList.remove('active');
-      nextCard.classList.add('active');
-    }
-  }
-
-  function showPreviousCard() {
-    const currentCard = document.querySelector('.index-card.active');
-    const previousCard = currentCard.previousElementSibling;
-    if (previousCard && previousCard.classList.contains('index-card')) {
-      currentCard.classList.remove('active');
-      previousCard.classList.add('active');
-    }
-  }
 
   async function createRoom() {
     const roomName = document.getElementById('roomName').value;

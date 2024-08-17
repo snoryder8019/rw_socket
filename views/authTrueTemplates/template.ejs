@@ -13,12 +13,13 @@
     display: none;
   }
 </style>
+<%- include('../videoChannels/channel_1') %>
 
 <% if (typeof sectionSettings === 'object' && sectionSettings && sectionSettings.length > 0) { %>
   <% sectionSettings.forEach(function(setting) { %>
     <% if (setting.visible && setting.authView) { %>
-      <div class="auth_view_true" style="background-image: url('<%= setting.backgroundImg %>');">
-        <div class="index-container">
+      <div class="<%=setting.style%>" style="background-image: url('<%= setting.backgroundImg %>');">
+        <div class="<%=setting.innerStyle%>">
         <% if (setting.title) { %>
   <h1><%= setting.title %></h1>
 <% } %>
@@ -31,8 +32,8 @@
   <p><%= setting.description %></p>
 <% } %>
 
-          <% if (Array.isArray(setting.links)) { %>
-            <div class="linkTable"><br>
+          <% if (Array.isArray(setting.links) && setting.links[0]!=="") { %>
+            <div class="<%=setting.linkStyle%>"><br>
 
             <% setting.links.forEach(function(link) { %>
               <a href="<%= link %>"  target="_blank" rel="noopener noreferrer"><%= link %></a>
@@ -41,9 +42,11 @@
           </div>
           <% } %>
           <br>
-          <button style="background-image: url('<%= setting.entryBackground %>');" class="collapsible"><%= setting.entryText %><span class="carrot">||</span></button>
-          <div class="content" data-url="<%= setting.entryUrl %>"></div>
-        </div>
+          <%if(setting.entryText !=="" && setting.entryText!==""){%>
+          <button style="background-image: url('<%= setting.entryBackground %>');" class="<%=setting.buttonStyle%>"><%= setting.entryText %><span class="carrot">||</span></button>
+          <div class="<%=setting.buttonDivStyle%>" data-url="<%= setting.entryUrl %>"></div>
+      <%}%>
+          </div>
       </div>
     <% } %>
   <% }); %>
@@ -56,7 +59,6 @@
 
     <div class="container-scrollbox-x">
       <%- include('../videoChannels/userStream') %>
-      <%- include('../videoChannels/channel_1') %>
     </div>
     <div class="marquee">
       <span id="marquee-text"></span>
@@ -65,29 +67,32 @@
 </div>
 
 <script>
-  document.addEventListener('DOMContentLoaded', () => {
-    document.querySelectorAll('.auth_view_true').forEach(div => {
-      div.addEventListener('click', function () {
-        if (!this.classList.contains('expanded')) {
-          this.classList.add('expanded');
-          let closeButton = this.querySelector('.close-button');
-          if (!closeButton) {
-            closeButton = document.createElement('button');
-            closeButton.className = 'close-button';
-            closeButton.innerHTML = 'X';
-            this.appendChild(closeButton);
-          }
-          closeButton.style.display = 'block'; // Ensure the close button is visible
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.auth_view_true').forEach(div => {
+    div.addEventListener('click', function () {
+      if (!this.classList.contains('expanded')) {
+        this.classList.add('expanded');
 
-          closeButton.addEventListener('click', function (e) {
-            e.stopPropagation(); // Prevent click from propagating to the div
-            this.parentNode.classList.remove('expanded');
-            this.style.display = 'none'; // Hide button after collapsing
-          });
+        let closeButton = this.querySelector('.close-button');
+        if (!closeButton) {
+          closeButton = document.createElement('button');
+          closeButton.className = 'close-button';
+          closeButton.innerHTML = 'X';
+          this.appendChild(closeButton);
         }
-      });
+
+        closeButton.style.display = 'block'; // Ensure the close button is visible
+
+        closeButton.addEventListener('click', function (e) {
+          e.stopPropagation(); // Prevent click from propagating to the div
+          this.parentElement.classList.remove('expanded');
+          this.style.display = 'none'; // Hide button after collapsing
+        });
+      }
     });
   });
+});
+
 </script>
 
 <script src="/socket.io/socket.io.js"></script>

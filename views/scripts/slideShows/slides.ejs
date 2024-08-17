@@ -1,0 +1,14 @@
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const slideArray = [];
+    const slideContainers = document.getElementsByClassName('slide_view');
+    
+    // Convert HTMLCollection to an Array
+    Array.from(slideContainers).forEach(container => {
+        console.log(`slideshow: ${container}`);
+    //    slideArray.push(container);
+    });
+});
+
+
+</script>
