@@ -8,8 +8,8 @@ const {getUserEditor,postUserEdit} = require('./users/userControl')
 
 const chat = require('./chat/chat');
 router.use('/chat',chat);
-const travel = require('./travel/travel');
-router.use('/travel',travel);
+const travels = require('./travels/travels');
+router.use('/travels',travels);
 
 const users = require('./users/users');
 router.use('/users',users);
