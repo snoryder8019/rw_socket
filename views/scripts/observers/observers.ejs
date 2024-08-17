@@ -2,11 +2,150 @@
 //all observers should be here with one executable function to ensure propper loading
 
 
+document.addEventListener('DOMContentLoaded', () => {
+    const collapsibles = document.querySelectorAll('.collapsible');
+
+    collapsibles.forEach(collapsible => {
+      collapsible.addEventListener('click', function () {
+        this.classList.toggle('active');
+        const content = this.nextElementSibling;
+        const carrot = this.querySelector('.carrot');
+        if (content.style.display === "block") {
+          content.style.display = "none";
+          carrot.classList.remove('rotate');
+        } else {
+          content.style.display = "block";
+          carrot.classList.add('rotate');
+          observeAndLoadContent(content);
+        }
+      });
+    });
+
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const content = entry.target;
+          if (!content.dataset.loaded) {
+            loadContent(content);
+          }
+        }
+      });
+    });
+
+    function observeAndLoadContent(content) {
+      if (content && content.getAttribute('data-url')) {
+        observer.observe(content);
+      }
+    }
+
+    async function loadContent(content) {
+      const url = content.getAttribute('data-url');
+      if (!url || url === 'false') {
+        return; // Skip loading if data-url is false or not provided
+      }
+      try {
+        const response = await fetch(url);
+        const data = await response.text();
+        content.innerHTML = data;
+        content.dataset.loaded = true; // Mark as loaded
+        observer.unobserve(content); // Stop observing once loaded
+        initializeDynamicContent(content); // Initialize JS for newly loaded content
+      } catch (error) {
+        console.error(`Error loading content from ${url}:`, error);
+        content.innerHTML = '<p>Error loading content</p>';
+      }
+    }
+
+    // Function to initialize event listeners for dynamically loaded content
+    function initializeDynamicContent(parent) {
+      const newCollapsibles = parent.querySelectorAll('.collapsible');
+
+      newCollapsibles.forEach(collapsible => {
+        collapsible.addEventListener('click', function () {
+          this.classList.toggle('active');
+          const content = this.nextElementSibling;
+          const carrot = this.querySelector('.carrot');
+          if (content.style.display === "block") {
+            content.style.display = "none";
+            carrot.classList.remove('rotate');
+          } else {
+            content.style.display = "block";
+            carrot.classList.add('rotate');
+            observeAndLoadContent(content);
+          }
+        });
+      });
+    }
+  });
 
 
 
+// observerCarrots.js
 
+function observeCarrots() {
+    const carrots = document.querySelectorAll('.carrot');
+  
+    console.log('Observing carrots:', carrots);
+  
+    if (!('IntersectionObserver' in window)) {
+      carrots.forEach(carrot => {
+        carrot.style.display = 'block';
+        console.log('Fallback: Showing carrot:', carrot);
+      });
+      return;
+    }
+  
+    const observer = new IntersectionObserver((entries, observer) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.display = 'block';
+          observer.unobserve(entry.target);
+          console.log('Carrot is intersecting and shown:', entry.target);
+        }
+      });
+    }, { threshold: 0.1 });
+  
+    carrots.forEach(carrot => {
+      observer.observe(carrot);
+      console.log('Observer attached to carrot:', carrot);
+    });
+  }
+  
+  window.observeCarrots = observeCarrots;  // Make sure this function is globally accessible
+  document.addEventListener("DOMContentLoaded", function() {
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        fetch('/getNotifications')
+          .then(response => response.json())
+          .then(data => {
+            // Process the data and convert it to HTML
+            const notificationsContainer = document.querySelector('#notificationsSection');
+            notificationsContainer.innerHTML = ''; // Clear existing notifications (if any)
+            data.forEach(notification => {  // Corrected here
+              const notificationElement = document.createElement('div');
+              notificationElement.className = 'notification';
 
+              notificationElement.innerHTML = `
+                <img src="${notification.imgUrl}" alt="">
+                <h3>${notification.title}</h3>
+                <h4><a href="${notification.link}">...see more</a></h4>
+              `;
+              notificationsContainer.appendChild(notificationElement);
+            });
+          })
+          .catch(error => console.error('Error fetching notifications:', error));
+        // Optional: Unobserve after the first fetch
+        observer.unobserve(document.querySelector('#notifications'));
+      }
+    });
+  }, { threshold: 0.1 });
+
+  const notifications = document.querySelector('#notifications');
+  if (notifications) {
+    observer.observe(notifications);
+  }
+});
 
 
 </script>

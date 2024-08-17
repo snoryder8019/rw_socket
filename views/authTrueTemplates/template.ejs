@@ -1,5 +1,11 @@
 
+<%- include('../videoChannels/channel_1') %>
+<div id="marquee">
+</div>
 
+<div style="color:red" id="marqueeContainer">
+  <marquee id="marqueeText" behavior="scroll" direction="left" style="display: none;"></marquee>
+</div>
 <% if (typeof sectionSettings === 'object' && sectionSettings && sectionSettings.length > 0) { %>
   <% sectionSettings.forEach(function(setting) { %>
     <% if (setting.visible && setting.authView) { %>
@@ -42,7 +48,7 @@
 
     <div class="container-scrollbox-x">
       <%- include('../videoChannels/userStream') %>
-      <%- include('../videoChannels/channel_1') %>
+ 
     </div>
     <div class="marquee">
       <span id="marquee-text"></span>
@@ -76,7 +82,6 @@
   });
 </script>
 
-<script src="/socket.io/socket.io.js"></script>
 <script>
   window.onload = () => {
     const scrollContainerX = document.querySelector('.container-scrollbox-x');

@@ -4,8 +4,6 @@
      
       <%if(typeof user =='object'&& user){%>
       </div>      
-
-
       <div class="wallet">
         <div class="jewel"><img class="usersOnline"src="<%=user.images[0].thumbnailUrl%>"></div>
         <div class="jewel"><div><%=user.displayName%></div><div> <%=user.email%></div></div>
@@ -41,85 +39,3 @@
 </div>
 
 
-
-
-
-
-
-<%if(typeof user =='object'&&user){%>
-  <%let userObj = " user there"%>
-  <%}else{%>
-<%let userObj = "no user"%>
-    <%}%>
-<script>
-  document.addEventListener('DOMContentLoaded', () => {
-    let user = "<%=user%>"
-    let dashWindowState = null;
-    const dashToggle = document.getElementById('dashToggle');
-    const dashWindow = document.getElementById('userDash');
-    const main = document.getElementById('main')
-    dashToggle.addEventListener('click', () => {
-    
-    console.log(`is there user?: ${!user}`)
-      if (dashWindow.style.transform != "translateX(106%)") {
-        dashWindow.style.transform = "translateX(106%)";
-
-      //  dashToggle.innerHTML = "X";
-        dashWindowState = "open"
-      } else {
-if(!user==true){
-  dashToggle.innerHTML = "Sign in";
-  dashWindow.style.transform = "translateX(0%)";
-  dashWindowState = "hidden";
-  
-}else{
-  
- // dashToggle.innerHTML = "D";
-  dashWindow.style.transform = "translateX(0%)";
-  dashWindowState = "hidden";
-}
-      }
-    })
-  })
-  document.addEventListener('DOMContentLoaded', function() {
-    function changeToLoginMethod(divId) {
-        // Log the event for debugging
-        console.log(event);
-
-        // Hide both windows initially
-        document.getElementById('regWindow').style.display = 'none';
-        document.getElementById('loginWindow').style.display = 'none';
-
-        // Show the relevant window based on the argument passed
-        document.getElementById(divId).style.display = 'block';
-
-        // Reset the background color of all buttons to their default
-        const buttons = document.getElementById('authOptionButtons').getElementsByTagName('button');
-        for (let button of buttons) {
-            button.style.backgroundColor = ''; // Reset background color to default
-            button.style.color = ''; // Reset background color to default
-        }
-
-        // Change the background color of the clicked button to purple
-        if (event.target.tagName === 'BUTTON') {
-            event.target.style.backgroundColor = 'purple';
-            event.target.style.color = 'gold';
-        }
-    }
-
-    // Attach the function to the global scope
-    window.changeToLoginMethod = changeToLoginMethod;
-});
-
-
-document.addEventListener('DOMContentLoaded', () => {
-    const firstTimeYes = document.getElementById('firstTimeYes');
-    const firstTimeNo = document.getElementById('firstTimeNo');
-
-    // Use closures to pass the correct argument to the function
-    firstTimeYes.addEventListener('click', () => changeToLoginMethod('regWindow'));
-    firstTimeNo.addEventListener('click', () => changeToLoginMethod('loginWindow'));
-});
-
-
-</script>

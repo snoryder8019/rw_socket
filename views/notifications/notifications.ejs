@@ -40,38 +40,5 @@
 
 </div>
 <script>
-document.addEventListener("DOMContentLoaded", function() {
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        fetch('/getNotifications')
-          .then(response => response.json())
-          .then(data => {
-            // Process the data and convert to HTML
-            const notificationsContainer = document.querySelector('#notificationsSection');
-            notificationsContainer.innerHTML = ''; // Clear existing notifications (if any)
-            data.forEach(notification => {
-              const notificationElement = document.createElement('div');
-              notificationElement.className = 'notification';
 
-              notificationElement.innerHTML = `
-                <img src="${notification.imgUrl}" alt="">
-                <h3>${notification.title}</h3>
-                <h4><a href="${notification.link}">...see more</a></h4>
-              `;
-              notificationsContainer.appendChild(notificationElement);
-            });
-          })
-          .catch(error => console.error('Error fetching notifications:', error));
-        // Optional: Unobserve after the first fetch
-        observer.unobserve(document.querySelector('#notifications'));
-      }
-    });
-  }, { threshold: 0.1 });
-
-  const notifications = document.querySelector('#notifications');
-  if (notifications) {
-    observer.observe(notifications);
-  }
-});
 </script>

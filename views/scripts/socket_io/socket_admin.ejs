@@ -1,0 +1,48 @@
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+      var socket = io('/socketAdmin');
+      console.log('Connected to Socket Admin view');
+  
+      // Handle video upload
+      var uploadForm = document.getElementById('uploadForm');
+      uploadForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        var formData = new FormData(uploadForm);
+  
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', '/videoProduction/upload', true);
+        xhr.onload = function() {
+          if (xhr.status === 200) {
+            alert('Video uploaded successfully!');
+            socket.emit('newVideo', JSON.parse(xhr.responseText).video);
+          } else {
+            alert('Error uploading video');
+          }
+        };
+        xhr.send(formData);
+      });
+  
+      socket.on('connect', () => {
+        console.log(`SOCKET_ADMIN.EJS client connected`)
+      });
+  
+      document.addEventListener('click', (event) => {
+        if (event.target.classList.contains('play-video')) {
+          const videoUrl = event.target.getAttribute('data-video');
+          console.log(event.target);
+          console.log('Playing video', videoUrl);
+          // Emit socket event to play video
+          socket.emit('broadcast',  videoUrl);
+        }
+        
+        if (event.target.classList.contains('marqueeButton')) {
+          const marqueeMessage = document.getElementById('marqueeMessage').value;
+          console.log('Button clicked', marqueeMessage);
+          socket.emit('marquee', { message: marqueeMessage });
+          console.log('Marquee event emitted');
+        }
+      });
+    });
+  </script>
+  

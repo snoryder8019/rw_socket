@@ -2,67 +2,12 @@
 <%- include('./socket_P2P.ejs')%>
 <%- include('./socket_chat.ejs')%>
 <%- include('./socket_video.ejs')%>
+<%- include('./socket_admin.ejs')%>
 
 <script>
 //the basis of this file is to organize all inline scripts rendered in the DOM to easily be debugged
 
-    //CHANNEL_1 SCRIPTS
-    const socket_CH1 = io();
 
-    document.addEventListener('DOMContentLoaded', function() {
-
-socket_CH1.on('connect', () => {
-  console.log('Connected to channel_1 client');
-});
-
-socket_CH1.on('connect_error', (err) => {
-  console.error('Connection error:', err);
-});
-socket_CH1.on('broadcast', (videoUrl) => {
-  const finUrl = videoUrl.videoUrl.videoUrl;
-  console.log(`CHANNEL ONE BROADCAST NOTICED url: ${finUrl}`);
-  const containerVid = document.querySelector('.myVideo');
-  const statusText = document.getElementById('statusText');
-  statusText.style.display = 'none'; // Hide the "Awaiting Update..." text
- 
-  containerVid.innerHTML += `
-    <video autoplay id="videoPlayer" repeat autoplay style="max-height:200px;width: 100%;">
-      <source src="https://${finUrl}" type="video/mp4">
-      Your browser does not support the video tag.
-    </video>
-  `;
-});
-socket_CH1.on('broadcast',(videoUrl)=>{
-  const finUrl = videoUrl.videoUrl.videoUrl
-  console.log(`CHANNEL ONE BROADCAST NOTICED url:${finUrl}`)
-
-})
-
-socket_CH1.on('marquee', (data) => {
-  console.log('Received marquee message:', data.message);
-  const marqueeText = document.getElementById('marqueeText');
-  marqueeText.innerText = data.message;
-  marqueeText.style.display = 'block'; // Show the marquee
-});
-
-document.addEventListener('click', (event) => {
-  if(event.target.classList.contains('play-video')){
-    const videoUrl=event.target.getAttribute('data-video')
-    console.log(`playVIDDDSS!!k ${videoUrl}`)
-    socket_CH1.emit('broadcast',{videoUrl:videoUrl})
-  }
-});
-document.addEventListener('click', (event) => {
-  if (event.target.classList.contains('marqueeButton')) {
-    const marqueeMessage = document.getElementById('marqueeMessage').value;
-    console.log('Button clicked', marqueeMessage);
-    socket_CH1.emit('marquee', { message: marqueeMessage });
-    console.log('Marquee event emitted');
-
-  
-  }
-});
-});
     
 </script>
 <!--PUBLIC SCRIPTS TO LOAD RUNS AFTER THE INLINES-->

@@ -1,4 +1,7 @@
 <!--THIS IS THE VIEW ROUTER FOR ALL INLINE SCRIPTS-->
+
+
+
 <%- include('./socket_io/socket_io.ejs')%>
-<%-include('./document/document.ejs')%>
+<%-include('./document/document.ejs',{user:user})%>
 <%-include('./observers/observers.ejs')%>

@@ -6,16 +6,16 @@
   <title><%=config.title%></title>
 </head>
 <body>      
+  <%- include('./scripts/variables/variables')%>
   <!--ALL FIXED PARTIALS OUTSIDE THE MAIN DIV-->
   <div id="flashErrors"><%- include('./partials/flashErrors',{message:message})%></div>  
   
-  <d
-  iv id="main">
+  <div id="main">
   <!--includeLIGHT BOXES HERE-->
   <div class="client_camera">
     <video  id="myVideo" autoplay></video>
   </div>
-  <div id="marquee"></div>
+
 
   <%if(typeof webappSettings === 'object'&& webappSettings){%>
     <div id="mainBanner" style="background-image: url(<%=webappSettings[0].mainBannerDesktop%>);" class="banner">
@@ -32,7 +32,7 @@
             </div>
             
           </div>
-          
+      
           <% if (typeof user === 'object' && user) { %>
             <%- include('./authTrueTemplates/template') %>
             <% } else { %>
@@ -51,9 +51,8 @@
       
   
   
-  <%-include('./scripts/index.ejs')%>
+  <%-include('./scripts/index.ejs', {user:user})%>
 
-  <script src="/javascripts/loader.js"></script>
 </body>
 <%if(typeof webappSettings === 'object'&& webappSettings){%>
   <style>

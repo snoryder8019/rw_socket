@@ -1,6 +1,7 @@
 <script>
     document.addEventListener('DOMContentLoaded', () => {
         var socket = io('/main_chat');
+        console.log(`connected to socket chat view`)
         let currentPage = 1;
         const messagesPerPage = 12; 
         function requestInitialMessages() {
@@ -17,6 +18,21 @@
             }
         });
         
+
+        socket.on('broadcast', (videoUrl) => {
+  const finUrl = videoUrl.videoUrl.videoUrl;
+  console.log(`CHANNEL ONE BROADCAST NOTICED url: ${finUrl}`);
+  const containerVid = document.querySelector('.myVideo');
+  const statusText = document.getElementById('statusText');
+  statusText.style.display = 'none'; // Hide the "Awaiting Update..." text
+ 
+  containerVid.innerHTML += `
+    <video autoplay id="videoPlayer" repeat autoplay style="max-height:200px;width: 100%;">
+      <source src="https://${finUrl}" type="video/mp4">
+      Your browser does not support the video tag.
+    </video>
+  `;
+});
         function addMessage(messageObject, isOwnMessage = false) {
             const messagesContainer = document.getElementById('chat');
             const shouldScroll = messagesContainer.scrollTop + messagesContainer.clientHeight + 50 >= messagesContainer.scrollHeight;

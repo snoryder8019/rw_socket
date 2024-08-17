@@ -1,11 +1,277 @@
 <script>
+  // LOGINS
+  document.addEventListener('DOMContentLoaded', function() {
+  const user = "<%= user%>";
+    console.log(`user status:${user}`)
+
+/////
+
+const userButtonControl = () => {
+  // controller || button
+  const toggleNotifications = document.getElementById('toggleNotifications');
+  const toggleSettings = document.getElementById('toggleSettings');
+  const toggleHelp = document.getElementById('toggleHelp');
+  // const toggleAdmin = user.isAdmin ? document.getElementById('toggleAdmin') : null; // Admin button
+  const toggleAdmin = document.getElementById('toggleAdmin') // Admin button
+
+  const notificationsDiv = document.getElementById('notifications');
+  const settingsDiv = document.getElementById('settings');
+  const helpDiv = document.getElementById('help');
+  // const adminDiv = user.isAdmin ? document.getElementById('admin') : null; // Admin div
+  const adminDiv = document.getElementById('admin'); // Admin div
+  const buttonCtlGroups = [
+    { button: toggleNotifications, div: notificationsDiv },
+    { button: toggleSettings, div: settingsDiv },
+    { button: toggleHelp, div: helpDiv },
+    { button: toggleAdmin, div: adminDiv },
+  ];
+
+  // if (user.isAdmin) {
+  //   console.log(user.isAdmin)
+  //   buttonCtlGroups.push({ button: toggleAdmin, div: adminDiv });
+  // }
+
+  for (let i = 0; i < buttonCtlGroups.length; i++) {
+    const btn = buttonCtlGroups[i].button;
+    const div = buttonCtlGroups[i].div;
+
+    // Check if both button and div are not null
+    if (btn && div) {
+     // console.log(div);
+     // console.log(btn);
+      btn.addEventListener('click', function () {
+        if (div.style.display === "block") {
+          div.style.display = 'none';
+        } else {
+          for (let j = 0; j < buttonCtlGroups.length; j++) {
+            if (buttonCtlGroups[j].div) {
+              buttonCtlGroups[j].div.style.display = 'none';
+            }
+          }
+          div.style.display = 'block';
+        }
+      });
+    }
+  }
+};
+
+userButtonControl(user);
 
 
-window.addEventListener('scroll', function() {
-          var banner = document.getElementById('mainBanner');
-      var bannerControls = document.getElementById('bannerControls');
-      var bannerHeight = banner.offsetHeight;
+
+const backendButtonControl= ()=> {
+  //note
+  //controller || button
+  const toggleUsers = document.getElementById('toggleUsers');
+  const toggleTicketsAdmin = document.getElementById('toggleTicketsAdmin');
+  const toggleLogs = document.getElementById('toggleLogs');
+  
+  //div || window
+  const usersDiv = document.getElementById('users');
+  const ticketsAdminDiv = document.getElementById('ticketsAdmin');
+  const logs = document.getElementById('logs')
+  const buttonCtlGroups = [
+    { button: toggleUsers, div:usersDiv  },
+    { button: toggleTicketsAdmin, div:ticketsAdminDiv  },  
+    { button: toggleLogs, div:logs  },
+  
+  ];
+ // console.log('backendButtonControl() ran');
+  for (let i = 0; i < buttonCtlGroups.length; i++) {
+    const btn = buttonCtlGroups[i].button;
+    const div = buttonCtlGroups[i].div;
+   // console.log(div)
+   // console.log(btn)
+    btn.addEventListener('click', function () {
+      if (div.style.display === "block") {
+        div.style.display = 'none';
+      } else {
+        for(let i =0;i<buttonCtlGroups.length;i++){
+          buttonCtlGroups[i].div.style.display='none'
+        }
+                div.style.display = 'block';
+      }
+    });
+  }
+}
+
+const mainButtonControl= ()=> {  
+  const div0 = document.getElementById('div0');
+  const toggleDiv = document.getElementById('toggleDiv');
+  const login_div = document.getElementById('login_div');
+  const reg_div = document.getElementById('register_div');
+  const reg_ctrl = document.getElementById('reg_ctrl');
+ // const tickets = document.getElementById('tickets');
+  const login_ctrl = document.getElementById('login_ctrl');
+  const buttonCtlGroups = [
+    { button: toggleDiv, div: div0 },
+    { button: login_ctrl, div: login_div },
+    { button: reg_ctrl, div: reg_div },   
+  ];
+ // console.log('mainButtonControl() ran');
+  for (let i = 0; i < buttonCtlGroups.length; i++) {
+    const btn = buttonCtlGroups[i].button;
+    const div = buttonCtlGroups[i].div;
+    //console.log(div)
+    //console.log(btn)
+    btn.addEventListener('click', function () {
+      if (div.style.display === "block") {
+        div.style.display = 'none';
+      } else {
+        for(let i =0;i<buttonCtlGroups.length;i++){
+          buttonCtlGroups[i].div.style.display='none'
+        }
+        div.style.display = 'block';
+      }
+    });
+  }
+}
+//document.addEventListener('onload', buttonControl())
+//buttonControl();
+
+const closeControl= ()=> {
+  const tickets_ctrl = document.getElementById('tickets_ctrl');
+  const regClose = document.getElementById('regClose');
+  const loginClose = document.getElementById('loginClose');
+ // console.log('closeControl() ran');
+  const closeCtlGroups = [
+    { button: loginClose, div: login_div },
+    { button: regClose, div: reg_div },
+   // { button:tickets_ctrl , div: tickets },
+    
+  ]
+  for (let i = 0; i < closeCtlGroups.length; i++) {
+    const btn = closeCtlGroups[i].button;
+    const div = closeCtlGroups[i].div;
+    //console.log(div)
+    //console.log(btn)
+    btn.addEventListener('click', function () {
       
+      div.style.display = 'none';
+      
+    });
+  }
+}
+//document.addEventListener('onload', closeControl())
+//buttonControl();
+
+//LOGIN CONTROLLERS
+    const localAuthButton = document.getElementById('localAuthButton');
+    const emailLoginForm = document.getElementById('emailLoginForm');
+    const resetLink = document.getElementById('resetLink');
+    const resetEmailInput = document.getElementById('resetEmailInput');
+    const resetPasswordForm = document.getElementById('resetPasswordForm');
+    const resetPassInput = document.getElementById('resetPassInput');
+    const resetPassButton = document.getElementById('resetPassButton');
+
+    if (localAuthButton && emailLoginForm) {
+      localAuthButton.addEventListener('click', function() {
+        emailLoginForm.style.display = (emailLoginForm.style.display === 'none' ? 'block' : 'none');
+      });
+    }
+
+    if (resetLink && resetEmailInput) {
+      resetLink.addEventListener('click', function() {
+        resetEmailInput.style.display = (resetEmailInput.style.display === 'none' ? 'block' : 'none');
+      });
+    }
+
+    if (resetPasswordForm && resetPassInput && resetPassButton) {
+      resetPasswordForm.addEventListener('submit', async function(event) {
+        event.preventDefault();
+        try {
+          const response = await fetch('/reset-password-request', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: resetPassInput.value })
+          });
+
+          if (response.ok) {
+            resetEmailInput.style.display = 'none';
+            alert('Please check your email for your secure password reset link.');
+          } else {
+            alert("Hmmmm..something's not right \n\n User email not found, double check your email is correct. \n\n *Have you registered this email before?\n You must register before logging in the first time*");
+          }
+        } catch (error) {
+          console.error('Error:', error);
+        }
+      });
+
+      resetPassInput.addEventListener('input', function() {
+        if (!resetPassInput.value.includes('@')) {
+          resetPassButton.style.display = 'none';
+        } else {
+          resetPassButton.style.display = 'block';
+          resetPassButton.style.marginLeft = '8%';
+        }
+      });
+    }
+  });
+
+  document.addEventListener('DOMContentLoaded', (user) => {
+    let dashWindowState = null;
+    const dashToggle = document.getElementById('dashToggle');
+    const dashWindow = document.getElementById('userDash');
+    const main = document.getElementById('main');
+
+    if (dashToggle && dashWindow) {
+      dashToggle.addEventListener('click', () => {    
+        if (dashWindow.style.transform != "translateX(106%)") {
+          dashWindow.style.transform = "translateX(106%)";
+          dashWindowState = "open";
+        } else {
+          if (!user == true) {
+            dashToggle.innerHTML = "Sign in";
+            dashWindow.style.transform = "translateX(0%)";
+            dashWindowState = "hidden";
+          } else {
+            dashWindow.style.transform = "translateX(0%)";
+            dashWindowState = "hidden";
+          }
+        }
+      });
+    }
+  });
+
+  document.addEventListener('DOMContentLoaded', function() {
+    function changeToLoginMethod(divId) {
+      console.log(event);
+      document.getElementById('regWindow').style.display = 'none';
+      document.getElementById('loginWindow').style.display = 'none';
+
+      document.getElementById(divId).style.display = 'block';
+
+      const buttons = document.getElementById('authOptionButtons').getElementsByTagName('button');
+      for (let button of buttons) {
+        button.style.backgroundColor = ''; 
+        button.style.color = ''; 
+      }
+
+      if (event.target.tagName === 'BUTTON') {
+        event.target.style.backgroundColor = 'purple';
+        event.target.style.color = 'gold';
+      }
+    }
+
+    window.changeToLoginMethod = changeToLoginMethod;
+  });
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const firstTimeYes = document.getElementById('firstTimeYes');
+    const firstTimeNo = document.getElementById('firstTimeNo');
+
+    if (firstTimeYes && firstTimeNo) {
+      firstTimeYes.addEventListener('click', () => changeToLoginMethod('regWindow'));
+      firstTimeNo.addEventListener('click', () => changeToLoginMethod('loginWindow'));
+    }
+  });
+
+  window.addEventListener('scroll', function() {
+    const banner = document.getElementById('mainBanner');
+    const bannerControls = document.getElementById('bannerControls');
+    const bannerHeight = banner ? banner.offsetHeight : 0;
+
+    if (banner && bannerControls) {
       if (window.pageYOffset > bannerHeight) {
         banner.classList.add('sticky');
         banner.classList.add('shrunk');
@@ -13,5 +279,6 @@ window.addEventListener('scroll', function() {
         banner.classList.remove('sticky');
         banner.classList.remove('shrunk');
       }
-    });
+    }
+  });
 </script>
