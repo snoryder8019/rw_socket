@@ -1,10 +1,10 @@
-const ModelHelper = require('../helpers/models');
-const { upload, processImages } = require('../../multer/subscriptionSetup');
-const { uploadToLinode } = require('../../aws_sdk/setup');
+const ModelHelper = require('../../helpers/models');
+const { upload, processImages } = require('../../../multer/subscriptionSetup');
+const { uploadToLinode } = require('../../../aws_sdk/setup');
 const modelName = 'destination';
 
 class Destination extends ModelHelper {
-  constructor(travelData) {
+  constructor(destinationData) {
     super(`${modelName}s`);
     this.modelFields = {
       name: { type: 'text', value: null },

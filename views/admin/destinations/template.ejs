@@ -1,0 +1,12 @@
+<div class="adminWindow">
+    <div class="adminStatsRow">
+      <% documents.forEach(destination => { %>
+        <div class="adminStat">
+          <p><%= destination.name %></p>
+          <img alt="Destination image" src="<%= destination.mediumIcon %>">
+          <button class="collapsible">view: <span class="carrot">&#9654;</span></button>
+          <div class="content" data-url="/destinations/renderEditForm/<%= destination._id %>"></div>
+        </div>
+      <% }) %>
+    </div>
+  </div>

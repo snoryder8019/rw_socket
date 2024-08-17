@@ -6,6 +6,10 @@ const {isAdmin,gatherIp} = require('./adminFunctions')
 const {getUserEditor,postUserEdit} = require('./users/userControl')
 
 
+const destinations = require('./destinations/destinations');
+router.use('/destinations',destinations);
+const excursions = require('./excursions/excursions');
+router.use('/excursions',excursions);
 const chat = require('./chat/chat');
 router.use('/chat',chat);
 const travels = require('./travels/travels');
