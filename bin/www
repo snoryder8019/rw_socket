@@ -4,11 +4,20 @@ const { app } = require('../app');
 const debug = require('debug')('yourapp:server');
 const http = require('http');
 const { setupSocketIO } = require('../plugins/socket_io/setup');
+const socketIo = require('socket.io');
+
 
 const port = normalizePort(process.env.PORT || '3000');
+
+
 app.set('port', port);
 
 const server = http.createServer(app);
+
+const io = socketIo(server);
+
+// Make io accessible throughout the app
+app.set('io', io);
 
 server.listen(port);
 server.on('error', onError);

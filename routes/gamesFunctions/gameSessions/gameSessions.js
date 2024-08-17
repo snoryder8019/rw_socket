@@ -51,37 +51,41 @@ router.get('/join/:sessionId', async (req, res) => {
       session: session
     });
   } catch (error) {
-    console.error('Error joining game session:', error);
+    console.error('GAMESESSION.js ~ Error joining game session:', error);
     res.status(500).send('An error occurred while trying to join the game session.');
   }
   return; // routes/gamesFunctions/gamesSessions/gameSessions.js
 });
-
 router.get('/ready/:sessionId', async (req, res) => {
   const sessionId = req.params.sessionId;
   const userId = req.user._id;
 
   try {
-      // Call the readyUp function to mark the user as ready
-      const { success, message, session } = await GameSession.readyUp(sessionId, userId);
+    // Call the readyUp function to mark the user as ready
+    const { success, message, session } = await GameSession.readyUp(sessionId, userId);
 
-      if (!success) {
-          return res.status(404).send(message); // Return 404 if the player was not found or there was an issue
-      }
+    if (!success) {
+      return res.status(404).json({ error: message }); // Return 404 if the player was not found or there was an issue
+    }
 
-      // Render the game menu with the updated session and user details
-      res.render('layouts/games/gameMenu', {
-          user: req.user,
-          session: session,
-          game: session.game // Ensure game details are also passed to the view
-      });
+    // Optionally log the success message
+    console.log(`User ${userId} marked as ready in session ${sessionId}`);
+
+    // Emit a socket event to notify other clients (optional)
+    req.app.get('io').to(sessionId).emit('playerReady', {
+      sessionId: sessionId,
+      userId: userId,
+      players: session.players, // Send the updated list of players
+    });
+return
+    // Return a JSON response
+   // res.json({ success: true, message: 'Player marked as ready.', session });
   } catch (error) {
-      console.error('Error updating game session:', error);
-      res.status(500).send('An error occurred while trying to update the game session.');
+    console.error('Error updating game session:', error);
+    res.status(500).json({ error: 'An error occurred while trying to update the game session.' });
   }
-  return; // routes/gamesFunctions/gamesSessions/gameSessions.js
 });
-// routes/gamesFunctions/gamesSessions/gameSessions.js
+//nctions/gamesSessions/gameSessions.js
 
 router.get('/exit/:sessionId', async (req, res) => {
   const sessionId = req.params.sessionId;
@@ -124,6 +128,71 @@ router.get('/exit/:sessionId', async (req, res) => {
   }
   return; // routes/gamesFunctions/gamesSessions/gameSessions.js
 });
+
+
+// routes/gamesFunctions/gamesSessions/gameSessions.js
+
+router.get('/start/:sessionId', async (req, res) => {
+  const sessionId = req.params.sessionId;
+
+  try {
+    // Retrieve the game session
+    const gameSession = await new GameSession().getById(sessionId);
+
+    if (!gameSession) {
+      return res.status(404).send({ error: 'Game session not found' });
+    }
+
+    // Initialize the game state for the session
+    const gameState = {
+      tiles: [], // Array to hold the domino tiles
+      players: gameSession.players, // Array to hold player data
+      currentPlayer: null, // To track whose turn it is
+      board: [], // Array to represent the tiles on the board
+    };
+
+    // Initialize the domino tiles (0-6)
+    for (let i = 0; i <= 6; i++) {
+      for (let j = i; j <= 6; j++) {
+        gameState.tiles.push({ left: i, right: j });
+      }
+    }
+
+    // Shuffle the tiles (basic shuffle algorithm)
+    gameState.tiles.sort(() => Math.random() - 0.5);
+
+    // Distribute tiles to players
+    const tilesPerPlayer = 7;
+
+    gameSession.players.forEach((player, index) => {
+      player.hand = gameState.tiles.splice(0, tilesPerPlayer);
+    });
+
+    // Set the first player (for example, the first player in the list)
+    gameState.currentPlayer = gameSession.players[0].id;
+
+    // Store the updated game state in the session
+    gameSession.gameState = gameState;
+    const db = getDb();
+    await db.collection('gameSessions').updateOne(
+      { _id: new ObjectId(sessionId) },
+      { $set: { gameState: gameState } }
+    );
+
+    // Render the card table view with the game session data
+    res.render('layouts/games/cardTable', {
+      session: gameSession,
+      gameState: gameState,
+    });
+  } catch (error) {
+    console.error('Error starting the game session:', error);
+    res.status(500).send({ error: 'An error occurred while starting the game session.' });
+  }
+});
+
+
+
+
 
 
 // Route to render the form to add a new game session

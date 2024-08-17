@@ -54,8 +54,8 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log('userButtonControl did not load');
       }
 
-      if (typeof backendControl === 'function') {
-        backendControl();
+      if (typeof backendButtonControl === 'function') {
+        backendButtonControl();
       } else {
         console.log('backendControl did not load');
       }

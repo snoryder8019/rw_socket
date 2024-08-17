@@ -1,6 +1,3 @@
-const canvas = document.getElementById('cardCanvas');
-const context = canvas.getContext('2d');
-const socket = io();
 
 let gameState = {
   tiles: [], // Array to hold the domino tiles
@@ -9,57 +6,43 @@ let gameState = {
   board: [], // Array to represent the tiles on the board
 };
 
-// Example of initializing the game with tiles and players
-function initializeGame() {
-  // Create domino tiles (0-6)
-  for (let i = 0; i <= 6; i++) {
-    for (let j = i; j <= 6; j++) {
-      gameState.tiles.push({ left: i, right: j });
-    }
-  }
+// Listen for the startGameSession event to initialize the game
+socket.on('startGameSession', (data) => {
+  gameState = data.gameState; // Update the local gameState with the session state
+  renderGame();
+});
 
-  // Shuffle the tiles (basic shuffle algorithm)
-  gameState.tiles.sort(() => Math.random() - 0.5);
+// Listen for an update to the game state from the server
+socket.on('updateGameState', (data) => {
+  gameState = data.gameState; // Update the local gameState with the new state
+  renderGame();
+});
 
-  // Distribute tiles to players
-  const playerCount = 2; // For example, a two-player game
-  const tilesPerPlayer = 7;
+function renderGame() {
+  const canvas = document.getElementById('cardCanvas');
+  const context = canvas.getContext('2d');
 
-  for (let p = 0; p < playerCount; p++) {
-    gameState.players[p] = {
-      id: p + 1,
-      hand: gameState.tiles.splice(0, tilesPerPlayer),
-    };
-  }
+  // Set the canvas background to green
+  context.fillStyle = 'green';
+  context.fillRect(0, 0, canvas.width, canvas.height);
 
-  // Set the first player
-  gameState.currentPlayer = gameState.players[0];
-}
-
-// Render the game board
-function render() {
-  context.clearRect(0, 0, canvas.width, canvas.height);
-
-  // Draw the board
+  // Draw the board tiles
   gameState.board.forEach((tile, index) => {
-    drawTile(tile, index);
+    drawTile(tile, index, context, false);
   });
 
-  // Draw the player's hand (just the current player for now)
-  const playerHand = gameState.currentPlayer.hand;
-  playerHand.forEach((tile, index) => {
-    drawTile(tile, index, true);
+  // Draw the current player's hand
+  const currentPlayer = gameState.players.find(player => player.id === gameState.currentPlayer);
+  currentPlayer.hand.forEach((tile, index) => {
+    drawTile(tile, index, context, true);
   });
 }
 
-// Function to draw a domino tile
-function drawTile(tile, index, isPlayerHand = false) {
+function drawTile(tile, index, context, isPlayerHand) {
   const tileWidth = 60;
   const tileHeight = 30;
   const padding = 10;
-  const x = isPlayerHand
-    ? padding + index * (tileWidth + padding)
-    : padding + index * (tileWidth + padding);
+  const x = padding + index * (tileWidth + padding);
   const y = isPlayerHand ? canvas.height - tileHeight - padding : padding;
 
   // Draw rectangle for the tile
@@ -74,15 +57,49 @@ function drawTile(tile, index, isPlayerHand = false) {
   context.fillText(tile.right, x + tileWidth - 20, y + 20);
 }
 
-// Handle click events to place a tile on the board
-canvas.addEventListener('click', (event) => {
+// Handle player actions (like clicking to place a tile)
+document.getElementById('cardCanvas').addEventListener('click', (event) => {
   const mouseX = event.clientX - canvas.offsetLeft;
   const mouseY = event.clientY - canvas.offsetTop;
+  console.log(`mouseX: ${mouseX}, mouseY: ${mouseY}`);
 
-  // Logic to determine if a tile is clicked and where to place it on the board
-  // This part of the logic can be expanded based on the rules of the game
+  // Check if the click is on a player's tile
+  const tileIndex = detectTileClick(mouseX, mouseY);
+  if (tileIndex !== -1) {
+    // Get the clicked tile from the player's hand
+    const currentPlayer = gameState.players.find(player => player.id === gameState.currentPlayer);
+    const selectedTile = currentPlayer.hand[tileIndex];
+
+    // Send the selected tile to the server to place it on the board
+    socket.emit('placeTile', {
+      roomId: currentPlayer.roomId, // Add roomId to the game state or session
+      tile: selectedTile,
+      position: {
+        x: mouseX,
+        y: mouseY,
+      }
+    });
+
+    // Remove the tile from the player's hand locally
+    currentPlayer.hand.splice(tileIndex, 1);
+  }
 });
 
-// Initialize the game and start rendering
-initializeGame();
-render();
+function detectTileClick(mouseX, mouseY) {
+  const tileWidth = 60;
+  const tileHeight = 30;
+  const padding = 10;
+
+  const currentPlayer = gameState.players.find(player => player.id === gameState.currentPlayer);
+
+  for (let i = 0; i < currentPlayer.hand.length; i++) {
+    const x = padding + i * (tileWidth + padding);
+    const y = canvas.height - tileHeight - padding;
+
+    if (mouseX >= x && mouseX <= x + tileWidth && mouseY >= y && mouseY <= y + tileHeight) {
+      return i; // Return the index of the clicked tile
+    }
+  }
+
+  return -1; // Return -1 if no tile was clicked
+}

@@ -8,19 +8,28 @@ const socketGameHandlers = {
 
     console.log(`GAMES.JS ~ User: ${user.firstName} (ID: ${userId}) connected to the games namespace`);
 
-    socket.on('joinSession', async ({ sessionId, userId }) => {
+    async function updatePlayerList(roomId) {
+      const players = await GameSession.getPlayersInRoom(roomId);
+      console.table(players, ['id', 'username', 'ready']);
+      nsp.to(roomId).emit('updatePlayerList', players);
+    }
+
+    socket.on('joinSession', async ({ sessionId }) => {
       try {
-        console.log(`join sesh!!`);
-        // Logic to add user to the session room, fetch and update player list, etc.
+        console.log(`User ${user.firstName} is joining session ${sessionId}`);
+        socket.join(sessionId);
+        updatePlayerList(sessionId);
       } catch (error) {
         console.error(`Error joining session ${sessionId}:`, error);
       }
     });
 
-    socket.on('leaveSession', async ({ sessionId, userId }) => {
+    socket.on('leaveSession', async ({ sessionId }) => {
       try {
-        console.log(`leave sesh!!`);
-        // Logic to remove user from the session room, update player list, etc.
+        console.log(`User ${user.firstName} is leaving session ${sessionId}`);
+        await GameSession.leaveSession(sessionId, userId);
+        socket.leave(sessionId);
+        updatePlayerList(sessionId);
       } catch (error) {
         console.error(`Error leaving session ${sessionId}:`, error);
       }
@@ -28,7 +37,7 @@ const socketGameHandlers = {
 
     socket.on('startGameSession', async (sessionId) => {
       try {
-        console.log(`start Game!!`);
+        console.log(`Starting game session ${sessionId}`);
         nsp.to(sessionId).emit('startGameSession');
       } catch (error) {
         console.error(`Error starting session ${sessionId}:`, error);
@@ -40,31 +49,25 @@ const socketGameHandlers = {
       try {
         console.log(`User ${user.firstName} is matchmaking for game ID: ${gameId}`);
 
-        // Find or create a game session and get the roomId (gameSession._id)
         const gameSession = await GameSession.getGameSession(gameId, userId);
         const roomId = gameSession._id.toString();
 
         console.log(`User ${user.firstName} is assigned to session ID: ${roomId}`);
 
-        // Join the socket room
         socket.join(roomId);
-        socket.emit('assignedRoom', roomId);
 
-        // Check if the user is already in the session's players list
         const playerExists = gameSession.players.some(player => player.id === userId);
 
         if (!playerExists) {
-          // Add the player to the session
           const playerData = {
             id: userId,
-            username: user.firstName, // Or use displayName if more appropriate
+            username: user.firstName,
             ready: false,
             avatarUrl: user.images && user.images.find(image => image.avatar === true)?.url
           };
 
           gameSession.players.push(playerData);
 
-          // Update the session in the database
           const db = getDb();
           await db.collection('gameSessions').updateOne(
             { _id: gameSession._id },
@@ -72,38 +75,26 @@ const socketGameHandlers = {
           );
         }
 
-        // Get the updated list of players in the room
-        const players = gameSession.players.map(player => ({
-          id: player.id,
-          username: player.username,
-          ready: player.ready
-        }));
-
-        console.table(players, ['id', 'username', 'ready']);
-
-        // Notify all clients in the room about the updated player list
-        nsp.to(roomId).emit('updatePlayerList', players);
-
+        socket.emit('assignedRoom', roomId);
+      //  updatePlayerList(roomId);
+        
       } catch (error) {
-        console.error(`Error in joinMatchmaking for ${user.firstName}:`, error);
+        console.error(`GAMES.JS ~ Error in joinMatchmaking for ${user.firstName}:`, error);
         socket.emit('error', 'An error occurred during matchmaking.');
       }
     });
-
+    
     socket.on('playerReady', async ({ roomId }) => {
       console.log(`Player ${user.firstName} is ready in room ${roomId}`);
+    //  updatePlayerList(roomId);
 
       try {
-        // Mark player as ready
         await GameSession.readyUp(roomId, userId);
+     //   updatePlayerList(roomId);
 
         const players = await GameSession.getPlayersInRoom(roomId);
-        console.table(players, ['id', 'username', 'ready']);
-
-        nsp.to(roomId).emit('updatePlayerList', players);
-
-        // Check if all players are ready to start the game
         const allReady = players.every(p => p.ready);
+
         if (allReady) {
           console.log(`All players in room ${roomId} are ready. Starting game...`);
           nsp.to(roomId).emit('startGameSession');
@@ -117,9 +108,33 @@ const socketGameHandlers = {
 
     socket.on('disconnect', async () => {
       console.log(`GAMES.JS ~ User: ${user.firstName} (ID: ${userId}) disconnected`);
-      // Logic to handle player disconnection, e.g., remove them from the session
-      // Consider removing the player from the session in the database if needed
+      
+      try {
+        const sessions = await GameSession.getAllSessions(); // Use the new method
+        const session = sessions.find(session => session.players.some(player => player.id === userId));
+    
+        if (session) {
+          await GameSession.leaveSession(session._id, userId);
+          socket.leave(session._id.toString());
+          updatePlayerList(session._id.toString());
+        }
+      } catch (error) {
+        console.error(`Error during disconnect handling for user ${userId}:`, error);
+      }
     });
+    
+
+
+    socket.on('playerMove', (moveData) => {
+      // Update gameState based on the move
+      gameState.board.push(moveData.tile);
+      gameState.currentPlayer = getNextPlayer(gameState.currentPlayer);
+    
+      // Broadcast the updated gameState to all players in the room
+      nsp.to(roomId).emit('updateGameState', { gameState });
+    });
+    
+
   }
 };
 

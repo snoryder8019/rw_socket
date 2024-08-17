@@ -8,9 +8,9 @@
     </div>
     
     
-    <button class="gameManagers" button-url="games/gameSessions/ready/<%=session._id%>">ready to play</button>
-    <button class="gameManagers" button-url="games/gameSessions/exit/<%=session._id%>">exit party</button>
-    <button class="gameManagers" button-url="games/gameSessions/start/<%=session._id%>">StartGame</button>
+    <button onclick="updatePlayer('<%=session._id%>')" class="gameManagers" button-url="games/gameSessions/ready/<%=session._id%>">ready to play</button>
+    <button onclick="updatePlayer('<%=session._id%>')" class="gameManagers" button-url="games/gameSessions/exit/<%=session._id%>">exit party</button>
+    <button onclick="updatePlayer('<%=session._id%>')" class="gameManagers" button-url="games/gameSessions/start/<%=session._id%>">StartGame</button>
     
     <div id="playerList">
         

@@ -34,7 +34,7 @@ const backendButtonControl = () => {
         }
       });
     } else {
-      console.log(`Button or div missing: ${btn}, ${div}`);
+      console.log(`BACKENDCONTROLLERS ~ Button or div missing: ${btn}, ${div}`);
     }
   }
 };

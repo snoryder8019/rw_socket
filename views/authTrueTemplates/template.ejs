@@ -20,7 +20,6 @@
 
 
 <!--INDEX LEVEL STATIC SCRIPTS-->
-<%- include('../layouts/games/socketScripts.ejs')%>
 <script>
   document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('.auth_view_true').forEach(div => {
@@ -35,7 +34,7 @@
             this.appendChild(closeButton);
           }
           closeButton.style.display = 'block'; // Ensure the close button is visible
-
+          
           closeButton.addEventListener('click', function (e) {
             e.stopPropagation(); // Prevent click from propagating to the div
             this.parentNode.classList.remove('expanded');
@@ -45,7 +44,7 @@
       });
     });
   });
-
+  
 
   //controls header with a scroll listener
   window.onload = () => {
@@ -55,3 +54,4 @@
     }
   };
 </script>
+<%- include('../layouts/games/socketScripts.ejs')%>

@@ -123,6 +123,13 @@ class GameSession extends ModelHelper {
 
     return sessionToJoin; // Return the session to join or newly created session
   }
+// plugins/mongo/models/games/GameSession.js
+
+// Add this method to GameSession class
+static async getAllSessions() {
+  const db = getDb();
+  return db.collection('gameSessions').find({}).toArray(); // Fetch all game sessions
+}
 
   // Static method to get players in a specific game session (room)
   static async getPlayersInRoom(roomId) {
@@ -131,17 +138,28 @@ class GameSession extends ModelHelper {
     // Ensure the roomId is an ObjectId before querying
     const roomObjectId = ObjectId.isValid(roomId) ? new ObjectId(roomId) : roomId;
 
+    console.log(`Fetching game session with ID: ${roomObjectId}`);
+
     // Fetch the session by ID
     const session = await gameSessionModel.getById(roomObjectId);
-    if (!session) throw new Error('Game session not found');
+
+    if (!session) {
+        console.error(`No game session found with ID: ${roomObjectId}`);
+        throw new Error('Game session not found');
+    }
 
     // Map players to an array of player details
-    return session.players.map(player => ({
-      id: player.id,
-      username: player.username || `Player ${player.id}`, // Use a username or placeholder
-      ready: player.ready
+    const players = session.players.map(player => ({
+        id: player.id,
+        username: player.username || `Player ${player.id}`, // Use a username or placeholder
+        ready: player.ready
     }));
-  }
+
+    console.log(`Players in room ${roomObjectId}:`, players);
+
+    return players;
+}
+
 
   // Method to allow a player to leave a session
   static async leaveSession(sessionId, userId) {

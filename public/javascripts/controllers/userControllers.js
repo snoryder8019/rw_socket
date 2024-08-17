@@ -40,7 +40,7 @@ const userButtonControl = (user) => {
         }
       });
     } else {
-      console.log(`Button or div missing: ${btn}, ${div}`);
+      console.log(` USER CTRL ~ Button or div missing: ${btn}, ${div}`);
     }
   }
 };

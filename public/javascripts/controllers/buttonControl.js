@@ -34,7 +34,7 @@ const mainButtonControl = () => {
         }
       });
     } else {
-      console.log(`Button or div missing: ${btn}, ${div}`);
+      console.log(`BUTTONCONTROL ~ Button or div missing: ${btn}, ${div}`);
     }
   }
 };
