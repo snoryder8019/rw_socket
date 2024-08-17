@@ -64,8 +64,42 @@ const getVideos = async (prefix = '') => {
         throw error; // Rethrow to handle it in the calling function
     }
 };
+const getImageGrid = async (prefix = '') => {
+    const params = {
+        Bucket: process.env.LINODE_BUCKET,
+        Prefix: prefix
+    };
 
+    try {
+        const data = await s3.listObjectsV2(params).promise();
+        
+        // Filter images based on common image extensions
+        const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.webp', '.svg'];
+        const images = data.Contents.filter(item => 
+            imageExtensions.some(ext => item.Key.toLowerCase().endsWith(ext))
+        );
+
+        // Generate HTML grid
+        let gridHtml = '<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px;">';
+        images.forEach(image => {
+            const imageUrl = `${process.env.LINODE_URL}/${process.env.LINODE_BUCKET}/${image.Key}`;
+            gridHtml += `
+                <div style="text-align: center;">
+                    <img src="${imageUrl}" alt="${image.Key}" style="width: 100%; height: auto;" />
+                    <br />
+                    <input type="text" value="${imageUrl}" readonly style="width: 100%;" />
+                </div>`;
+        });
+        gridHtml += '</div>';
+
+        return gridHtml;
+    } catch (error) {
+        console.error("Error retrieving images from Linode Object Storage:", error);
+        throw error; // Rethrow to handle it in the calling function
+    }
+};
 module.exports = {
     uploadToLinode,
     getVideos,
+    getImageGrid 
 };
