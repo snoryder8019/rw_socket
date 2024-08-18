@@ -2,7 +2,6 @@
   "name": "rw-socket",
   "version": "0.0.0",
   "private": true,
-  
   "scripts": {
     "start": "node ./bin/www",
     "dev": "nodemon ./bin/www",
@@ -45,7 +44,7 @@
     "passport-google-oauth20": "^2.0.0",
     "passport-local": "^1.0.0",
     "passport-yahoo-oauth": "^0.2.0",
-    "puppeteer": "^22.12.1",
+    "puppeteer": "^22.15.0",
     "session": "^0.1.0",
     "sharp": "^0.33.4",
     "sinon": "^18.0.0",
