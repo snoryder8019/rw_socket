@@ -21,6 +21,8 @@ router.use('/travels',travels);
 
 const users = require('./users/users');
 router.use('/users',users);
+const vendors = require('./vendors/vendors');
+router.use('/vendors',vendors);
 
 const videoLead = require('./videoLead/videoLead');
 router.use('/videoLead',videoLead);
