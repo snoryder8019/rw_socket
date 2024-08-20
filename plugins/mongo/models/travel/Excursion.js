@@ -8,7 +8,9 @@ class Excursion extends ModelHelper {
     super(`${modelName}s`);
     this.modelFields = {
       name: { type: 'text', value: null },
-     
+      title: { type: 'text', value: null },
+      subtitle: { type: 'text', value: null },
+      links: { type: 'array', value:[] },     
     };
     if (excursionData) {
       for (let key in this.modelFields) {

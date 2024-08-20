@@ -19,6 +19,9 @@ router.use('/chat',chat);
 const travels = require('./travels/travels');
 router.use('/travels',travels);
 
+const gems = require('./gems/gems');
+router.use('/gems',gems);
+
 const users = require('./users/users');
 router.use('/users',users);
 const vendors = require('./vendors/vendors');

@@ -1,0 +1,15 @@
+<div class="adminWindow">
+    <div class="adminStatsRow">
+      <% documents.forEach(gem => { %>
+        <div class="adminStat">
+          <p><%= gem.name %></p>
+          <img alt="Gem image" src="<%= gem.mediumIcon %>">
+          <button class="collapsible">view: <span class="carrot">&#9654;</span></button>
+          <div class="content" data-url="/gems/renderEditForm/<%= gem._id %>"></div>
+        </div>
+      <% }) %>
+    </div>
+  </div>
+  
+  
+  

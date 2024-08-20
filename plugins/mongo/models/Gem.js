@@ -2,9 +2,9 @@ const ModelHelper = require('../helpers/models');
 const { upload, processImages } = require('../../multer/subscriptionSetup');
 const { uploadToLinode } = require('../../aws_sdk/setup');
 
-class Club extends ModelHelper {
-  constructor(clubData) {
-    super('clubs');
+class Gem extends ModelHelper {
+  constructor(gemData) {
+    super('gems');
     this.modelFields = {
       name: { type: 'text', value: null },
       title: { type: 'text', value: null },
@@ -32,18 +32,18 @@ class Club extends ModelHelper {
       members: { type: 'array', value: [] }  // Assuming comma-separated string for simplicity
     };
 
-    if (clubData) {
+    if (gemData) {
       for (let key in this.modelFields) {
-        if (clubData[key] !== undefined) {
-          this.modelFields[key].value = clubData[key];
+        if (gemData[key] !== undefined) {
+          this.modelFields[key].value = gemData[key];
         }
       }
     }
   }
 
   static getModelFields() {
-    return Object.keys(new Club().modelFields).map(key => {
-      const field = new Club().modelFields[key];
+    return Object.keys(new Gem().modelFields).map(key => {
+      const field = new Gem().modelFields[key];
       return { name: key, type: field.type };
     });
   }
@@ -69,7 +69,7 @@ class Club extends ModelHelper {
       if (req.files) {
         for (const key in req.files) {
           const file = req.files[key][0];
-          const fileKey = `clubs/${Date.now()}-${file.originalname}`;
+          const fileKey = `gems/${Date.now()}-${file.originalname}`;
           const url = await uploadToLinode(file.path, fileKey);
           req.body[key] = url; // Save the URL in the request body
         }
@@ -82,8 +82,8 @@ class Club extends ModelHelper {
   }
 
   pathForGetRouteView() {
-    return 'admin/clubs/template';
+    return 'admin/gems/template';
   }
 }
 
-module.exports = Club;
+module.exports = Gem;

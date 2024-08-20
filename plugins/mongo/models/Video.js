@@ -11,6 +11,10 @@ class Video extends ModelHelper {
       url: { type: 'text', value: null },
       thumnail: { type: 'text', value: null },
       thumnailFile: { type: 'file', value: null },
+   //premium content
+   //club
+   //tags
+   //blog
    
      
     };

@@ -17,7 +17,13 @@ class Vendor extends ModelHelper {
       mediumIcon: { type: 'file', value: null },
       backgroundImg: { type: 'file', value: null },
       horizBkgd: { type: 'file', value: null },
-     
+     // email, contact, dropship--nancyShip--eventBased
+     //conversion webhook
+     //shopify webhook
+     //shopify link
+     //active
+     //permissions
+     //login
     };
     if (vendorData) {
       for (let key in this.modelFields) {
