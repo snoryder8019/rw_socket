@@ -351,10 +351,12 @@ box-shadow:inset 2px 2px 2px $black;
 
 
 //forms
-input{
+.chatInput{
     margin: 1% 0%;
     width:78%;
     height:34px;
+    font-size: 1.2rem;
+    font-weight: 900;
     @media screen  and (max-width: 768px) {
       
       width:78%;
@@ -844,7 +846,7 @@ margin-bottom: 10px;
 width: 98%;
 //padding: 5px;
 border-radius: 5px;
-//box-shadow: inset 2px 2px 1px $black;
+box-shadow:  2px 2px 5px rgba(255, 217, 0, 0.406);
 //border: 1px solid $black;
 background:linear-gradient(to right,rgba(128, 0, 128, 0.56),rgba(255, 217, 0, 0.229),$purple,$purple,$purple,$purple,$purple,$purple,$purple,$purple,$purple); /* Light grey background */
 animation:fadeIn .3s ease-IN 0s 1;
@@ -876,7 +878,8 @@ animation:fadeIn .3s ease-IN 0s 1;
 }
 .messageText {
     text-align: left;
-
+font-size: 1.2rem;
+font-weight: 800;
     /* Additional styling as needed */
 }
 #confettiCanvas{

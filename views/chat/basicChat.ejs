@@ -26,7 +26,7 @@
    
         <div class="inputBar">
             <div class="emojiSlider"></div>
-            <input id="chatInput" autocomplete="off" /><button id="submitChat">Send</button>
+            <input class="chatInput"id="chatInput" autocomplete="off" /><button id="submitChat">Send</button>
             </div>
     <% } else { %>
         <p>Please log in to join the chat.</p>
@@ -215,13 +215,13 @@
     replyIcon.textContent = '↩️';
     replyIcon.className = 'replyIcon';
 
-    const threeDotsIcon = document.createElement('span');
-    threeDotsIcon.textContent = '⋮';
-    threeDotsIcon.className = 'threeDotsIcon';
+    // const threeDotsIcon = document.createElement('span');
+    // threeDotsIcon.textContent = '⋮';
+    // threeDotsIcon.className = 'threeDotsIcon';
 
     actionsDiv.appendChild(heartIcon);
     actionsDiv.appendChild(replyIcon);
-    actionsDiv.appendChild(threeDotsIcon);
+  //  actionsDiv.appendChild(threeDotsIcon);
 
     messageDiv.appendChild(messageAvatar);
     messageDiv.appendChild(messageTextSpan);

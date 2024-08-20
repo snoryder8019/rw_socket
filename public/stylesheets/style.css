@@ -289,19 +289,21 @@
   overflow-y: scroll;
 }
 
-input {
+.chatInput {
   margin: 1% 0%;
   width: 78%;
   height: 34px;
+  font-size: 1.2rem;
+  font-weight: 900;
 }
 @media screen and (max-width: 768px) {
-  input {
+  .chatInput {
     width: 78%;
     height: 34px;
   }
 }
 @media screen and (max-width: 768px) and (min-aspect-ratio: 1/1) {
-  input {
+  .chatInput {
     margin: 1% 1%;
     width: 78%;
     height: 34px;
@@ -766,6 +768,7 @@ input {
   margin-bottom: 10px;
   width: 98%;
   border-radius: 5px;
+  box-shadow: 2px 2px 5px rgba(255, 217, 0, 0.406);
   background: linear-gradient(to right, rgba(128, 0, 128, 0.56), rgba(255, 217, 0, 0.229), #711881, #711881, #711881, #711881, #711881, #711881, #711881, #711881, #711881); /* Light grey background */
   animation: fadeIn 0.3s ease-IN 0s 1;
 }
@@ -793,6 +796,8 @@ input {
 
 .messageText {
   text-align: left;
+  font-size: 1.2rem;
+  font-weight: 800;
   /* Additional styling as needed */
 }
 
