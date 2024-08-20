@@ -8,6 +8,12 @@ class Vendor extends ModelHelper {
     super(`${modelName}s`);
     this.modelFields = {
       name: { type: 'text', value: null },
+      title: { type: 'text', value: null },
+      subtitle: { type: 'text', value: null },
+      links: { type: 'array', value:[] },
+      promos: { type: 'array', value:[] },
+      clubs: { type: 'array', value:[] },
+      description: { type: 'text', value: null },
       mediumIcon: { type: 'file', value: null },
       backgroundImg: { type: 'file', value: null },
       horizBkgd: { type: 'file', value: null },
