@@ -1,6 +1,5 @@
 <div id="chat-window-basic">
-    <%- include('../animations/confetti')%>
-<div id="marquee"></div>
+  
     <% if(typeof user === 'object' && user) { %>
         <script>var firstName = "<%= user.firstName %>"</script>
         <script>var chatStyle = "<%=user.chatStyle%>"</script>
@@ -24,14 +23,73 @@
         <div id="chat">
             <div id="messages"></div>
         </div>
+   
         <div class="inputBar">
+            <div class="emojiSlider"></div>
             <input id="chatInput" autocomplete="off" /><button id="submitChat">Send</button>
-        </div>
+            </div>
     <% } else { %>
         <p>Please log in to join the chat.</p>
     <% } %>
 </div>
 <script>
+    document.addEventListener('DOMContentLoaded', function() {
+  const emojiSlider = document.querySelector('.emojiSlider');
+
+  // Create an Intersection Observer
+  const observer = new IntersectionObserver((entries, observer) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        // Element is in view, load the .ejs content
+        loadEmojiContent();
+        // Stop observing once the content is loaded
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 }); // Adjust the threshold as needed
+
+  // Observe the emojiSlider element
+  observer.observe(emojiSlider);
+
+  // Function to load the .ejs file content
+  function loadEmojiContent() {
+    fetch('/chat/getEmojis')
+      .then(response => response.text())
+      .then(data => {
+        emojiSlider.innerHTML = data; // Insert the loaded content into the div
+        attachEmojiClickHandlers(); // Attach click handlers to the loaded emojis
+      })
+      .catch(error => console.error('Error loading the .ejs file:', error));
+  }
+
+  // Function to attach click handlers to each emoji
+  function attachEmojiClickHandlers() {
+    const emojis = emojiSlider.querySelectorAll('.emoji-option');
+    emojis.forEach(emoji => {
+      emoji.addEventListener('click', () => {
+        const emojiValue = emoji.getAttribute('data-emoji');
+        selectEmoji(emojiValue);
+      });
+    });
+  }
+
+  // Function to handle emoji selection
+  function selectEmoji(emoji) {
+    const inputField = document.querySelector('input'); // Select the input field (modify the selector as needed)
+    if (inputField) {
+      const currentValue = inputField.value; // Get the current value of the input field
+      inputField.value = currentValue + emoji; // Append the emoji to the current value
+    }
+  }
+});
+
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded',()=>{
+
+
+    })
         document.addEventListener('DOMContentLoaded', () => {
             const elements = document.querySelectorAll('.message');
             elements.forEach((element, index) => {
@@ -129,47 +187,72 @@
                 currentPage++;
             }
         });
-        
+        let userId = "<%=user._id%>"
         function addMessage(messageObject, isOwnMessage = false) {
-            const messagesContainer = document.getElementById('chat');
-            const shouldScroll = messagesContainer.scrollTop + messagesContainer.clientHeight + 50 >= messagesContainer.scrollHeight;
-            
-            const messageDiv = document.createElement('div');
-            messageDiv.className = 'messages'
-            messageDiv.className = isOwnMessage ? 'message ownMessage' : 'message';
-            
-            const messageAvatar = document.createElement('img');
-            messageAvatar.className = 'usersOnline';
-            messageAvatar.src = messageObject.thumbnailUrl || `/images/userHeadshots/defaultThumbnail.png`;
-            
-            const messageTextSpan = document.createElement('span');
-            messageTextSpan.className = 'messageText';
-            messageTextSpan.textContent = messageObject.message || 'No message text.';
-            
-            const actionsDiv = document.createElement('div');
-            actionsDiv.className = 'messageActions';
-            actionsDiv.id = `${messageObject.id}_actions`;
-            
-            const heartIcon = document.createElement('span');
-            heartIcon.textContent = '❤️';
-            // const flagIcon = document.createElement('span');
-            // flagIcon.textContent = '🚩';
-            const threeDotsIcon = document.createElement('span');
-            threeDotsIcon.textContent = '⋮';
+    const messagesContainer = document.getElementById('chat');
+    const shouldScroll = messagesContainer.scrollTop + messagesContainer.clientHeight + 50 >= messagesContainer.scrollHeight;
     
-            actionsDiv.appendChild(heartIcon);
-            //  actionsDiv.appendChild(flagIcon);
-            actionsDiv.appendChild(threeDotsIcon);
-            
-            messageDiv.appendChild(messageAvatar);
-            messageDiv.appendChild(messageTextSpan);
-            messageDiv.appendChild(actionsDiv);
-            messagesContainer.appendChild(messageDiv);
-            
-            if (shouldScroll) {
-                messagesContainer.scrollTop = messagesContainer.scrollHeight;
-            }
-        }
+    const messageDiv = document.createElement('div');
+    messageDiv.className = isOwnMessage ? 'message ownMessage' : 'message';
+
+    const messageAvatar = document.createElement('img');
+    messageAvatar.className = 'usersOnline';
+    messageAvatar.src = messageObject.thumbnailUrl || `/images/userHeadshots/defaultThumbnail.png`;
+
+    const messageTextSpan = document.createElement('span');
+    messageTextSpan.className = 'messageText';
+    messageTextSpan.textContent = messageObject.message || 'No message text.';
+
+    const actionsDiv = document.createElement('div');
+    actionsDiv.className = 'messageActions';
+    actionsDiv.id = `${messageObject.id}_actions`;
+
+    const heartIcon = document.createElement('span');
+    heartIcon.textContent = '❤️';
+    heartIcon.className = 'heartIcon';
+
+    const replyIcon = document.createElement('span');
+    replyIcon.textContent = '↩️';
+    replyIcon.className = 'replyIcon';
+
+    const threeDotsIcon = document.createElement('span');
+    threeDotsIcon.textContent = '⋮';
+    threeDotsIcon.className = 'threeDotsIcon';
+
+    actionsDiv.appendChild(heartIcon);
+    actionsDiv.appendChild(replyIcon);
+    actionsDiv.appendChild(threeDotsIcon);
+
+    messageDiv.appendChild(messageAvatar);
+    messageDiv.appendChild(messageTextSpan);
+    messageDiv.appendChild(actionsDiv);
+    messagesContainer.appendChild(messageDiv);
+
+    if (shouldScroll) {
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
+
+    // Event Listeners with postId and userId
+    const postId = messageObject._id;  // Assuming messageObject.id is the postId
+
+    heartIcon.addEventListener('click', () => {
+        handleIconClick('heart', postId, userId);
+    });
+
+    replyIcon.addEventListener('click', () => {
+        handleIconClick('reply', postId, userId);
+    });
+
+    threeDotsIcon.addEventListener('click', () => {
+        handleIconClick('options', postId, userId);
+    });
+}
+
+function handleIconClick(action, postId, userId) {
+    console.log(`Action: ${action}, Post ID: ${postId}, User ID: ${userId}`);
+    // Add any additional logic here, such as making a network request or updating the UI
+}
+
         
         socket.on('chat message', (msg,roomyId) => {
             console.log(`chatting..${msg.user} room:${roomId}`)
