@@ -1,35 +1,30 @@
 const ModelHelper = require('../helpers/models');
 const { upload, processImages } = require('../../multer/subscriptionSetup');
 const { uploadToLinode } = require('../../aws_sdk/setup');
-const modelName = 'video';
+const modelName = 'travel';
 
-class Video extends ModelHelper {
-  constructor(videoData) {
+class Travel extends ModelHelper {
+  constructor(travelData) {
     super(`${modelName}s`);
     this.modelFields = {
       name: { type: 'text', value: null },
-      url: { type: 'text', value: null },
-      thumnail: { type: 'text', value: null },
-      thumnailFile: { type: 'file', value: null },
-   //premium content
-   //club
-   //tags
-   //blog
-   
+      mediumIcon: { type: 'file', value: null },
+      backgroundImg: { type: 'file', value: null },
+      horizBkgd: { type: 'file', value: null },
      
     };
-    if (videoData) {
+    if (travelData) {
       for (let key in this.modelFields) {
-        if (videoData[key] !== undefined) {
-          this.modelFields[key].value = videoData[key];
+        if (travelData[key] !== undefined) {
+          this.modelFields[key].value = travelData[key];
         }
       }
     }
   }
 
   static getModelFields() {
-    return Object.keys(new Video().modelFields).map(key => {
-      const field = new Video().modelFields[key];
+    return Object.keys(new Travel().modelFields).map(key => {
+      const field = new Travel().modelFields[key];
       return { name: key, type: field.type };
     });
   }
@@ -44,8 +39,11 @@ class Video extends ModelHelper {
 
   get fileFields() {
     return [
-      { name: 'thumbnailFile', maxCount: 1 },
- 
+      { name: 'mediumIcon', maxCount: 1 },
+      { name: 'squareNonAuthBkgd', maxCount: 1 },
+      { name: 'squareAuthBkgd', maxCount: 1 },
+      { name: 'horizNonAuthBkgd', maxCount: 1 },
+      { name: 'horizAuthBkgd', maxCount: 1 }
     ];
   }
 
@@ -71,4 +69,4 @@ class Video extends ModelHelper {
   }
 }
 
-module.exports = Video;
+module.exports = Travel;

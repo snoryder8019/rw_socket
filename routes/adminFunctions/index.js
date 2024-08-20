@@ -6,13 +6,27 @@ const {isAdmin,gatherIp} = require('./adminFunctions')
 const {getUserEditor,postUserEdit} = require('./users/userControl')
 
 
+const destinations = require('./destinations/destinations');
+router.use('/destinations',destinations);
+const excursions = require('./excursions/excursions');
+router.use('/excursions',excursions);
+const permissions = require('./permissions/permissions');
+router.use('/permissions',permissions);
+const media = require('./media/media');
+router.use('/media',media);
 const chat = require('./chat/chat');
 router.use('/chat',chat);
+const travels = require('./travels/travels');
+router.use('/travels',travels);
+
+const gems = require('./gems/gems');
+router.use('/gems',gems);
 
 const users = require('./users/users');
 router.use('/users',users);
-const permissions = require('./permissions/permissions');
-router.use('/permissions',permissions);
+const vendors = require('./vendors/vendors');
+router.use('/vendors',vendors);
+
 const videoLead = require('./videoLead/videoLead');
 router.use('/videoLead',videoLead);
 const videoProduction = require('./videoProduction/videoProduction');

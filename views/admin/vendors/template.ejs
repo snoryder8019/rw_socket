@@ -1,0 +1,15 @@
+<div class="adminWindow">
+    <div class="adminStatsRow">
+      <% documents.forEach(vendor => { %>
+        <div class="adminStat">
+          <p><%= vendor.name %></p>
+          <img alt="Vendor image" src="<%= vendor.mediumIcon %>">
+          <button class="collapsible">view: <span class="carrot">&#9654;</span></button>
+          <div class="content" data-url="/vendors/renderEditForm/<%= vendor._id %>"></div>
+        </div>
+      <% }) %>
+    </div>
+  </div>
+  
+  
+  

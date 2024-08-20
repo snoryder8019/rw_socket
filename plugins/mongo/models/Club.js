@@ -22,6 +22,9 @@ class Club extends ModelHelper {
       updatedDate: { type: 'date', value: null },
       status: { type: 'text', value: null },
       visible: { type: 'boolean', value: false },
+      premium: { type: 'boolean', value: false },
+      cost: { type: 'number', value: null },
+      duration: { type: 'text', value: null },
       tags: { type: 'array', value: [] },  // Assuming comma-separated string for simplicity
       links: { type: 'array', value: [] },  // Assuming comma-separated string for simplicity
       blogs: { type: 'array', value: [] },  // Assuming comma-separated string for simplicity

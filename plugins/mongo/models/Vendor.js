@@ -1,35 +1,42 @@
 const ModelHelper = require('../helpers/models');
 const { upload, processImages } = require('../../multer/subscriptionSetup');
 const { uploadToLinode } = require('../../aws_sdk/setup');
-const modelName = 'video';
+const modelName = 'vendor';
 
-class Video extends ModelHelper {
-  constructor(videoData) {
+class Vendor extends ModelHelper {
+  constructor(vendorData) {
     super(`${modelName}s`);
     this.modelFields = {
       name: { type: 'text', value: null },
-      url: { type: 'text', value: null },
-      thumnail: { type: 'text', value: null },
-      thumnailFile: { type: 'file', value: null },
-   //premium content
-   //club
-   //tags
-   //blog
-   
-     
+      title: { type: 'text', value: null },
+      subtitle: { type: 'text', value: null },
+      links: { type: 'array', value:[] },
+      promos: { type: 'array', value:[] },
+      clubs: { type: 'array', value:[] },
+      description: { type: 'text', value: null },
+      mediumIcon: { type: 'file', value: null },
+      backgroundImg: { type: 'file', value: null },
+      horizBkgd: { type: 'file', value: null },
+     // email, contact, dropship--nancyShip--eventBased
+     //conversion webhook
+     //shopify webhook
+     //shopify link
+     //active
+     //permissions
+     //login
     };
-    if (videoData) {
+    if (vendorData) {
       for (let key in this.modelFields) {
-        if (videoData[key] !== undefined) {
-          this.modelFields[key].value = videoData[key];
+        if (vendorData[key] !== undefined) {
+          this.modelFields[key].value = vendorData[key];
         }
       }
     }
   }
 
   static getModelFields() {
-    return Object.keys(new Video().modelFields).map(key => {
-      const field = new Video().modelFields[key];
+    return Object.keys(new Vendor().modelFields).map(key => {
+      const field = new Vendor().modelFields[key];
       return { name: key, type: field.type };
     });
   }
@@ -44,8 +51,10 @@ class Video extends ModelHelper {
 
   get fileFields() {
     return [
-      { name: 'thumbnailFile', maxCount: 1 },
- 
+      { name: 'mediumIcon', maxCount: 1 },
+      { name: 'backgroundImg', maxCount: 1 },
+      { name: 'horizBkgrd', maxCount: 1 },
+    
     ];
   }
 
@@ -71,4 +80,4 @@ class Video extends ModelHelper {
   }
 }
 
-module.exports = Video;
+module.exports = Vendor;

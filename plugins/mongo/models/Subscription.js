@@ -26,6 +26,8 @@ class Subscription extends ModelHelper {
       gemsCt: { type: 'number', value: null },
       items: { type: 'array', value: [] },
       vendors: { type: 'array', value: [] },
+      shopifyWebhook: { type: 'text', value: null },
+      vendors: { type: 'array', value: [] },
       gameTokens: { type: 'number', value: null }
     };
     if (subscriptionData) {

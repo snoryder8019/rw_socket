@@ -16,16 +16,34 @@
   
   <% if (typeof sectionSettings === 'object' && sectionSettings && sectionSettings.length > 0) { %>
     <% sectionSettings.forEach(function(setting) { %>
-      <% if (setting.visible && setting.nonAuthView == "true") { %>
-        <div class="auth_view_true" style="background-image: url('<%= setting.backgroundImg %>');">
-          <div class="index-container">
+      <% if (setting.visible && setting.nonAuthView) { %>
+        <div class="<%=setting.style%>" style="background-image: url('<%= setting.backgroundImg %>');" data-order="<%= setting.order %>">
+          <div class="<%=setting.innerStyle%>">
+          <% if (setting.title) { %>
             <h1><%= setting.title %></h1>
+          <% } %>
+  
+          <% if (setting.subtitle) { %>
             <h1><%= setting.subtitle %></h1>
+          <% } %>
+  
+          <% if (setting.description) { %>
             <p><%= setting.description %></p>
-            <button style="background-image: url('<%= setting.entryBackground %>');" class="collapsible">
-              <%= setting.entryText %><span class="carrot">||</span>
-            </button>
-            <div class="content" data-url="<%= setting.entryUrl %>"></div>
+          <% } %>
+  
+            <% if (Array.isArray(setting.links) && setting.links[0]!=="") { %>
+              <div class="<%=setting.linkStyle%>"><br>
+                <% setting.links.forEach(function(link) { %>
+                  <a href="<%= link %>" target="_blank" rel="noopener noreferrer"><%= link %></a>
+                  <br>
+                <% }); %>
+              </div>
+            <% } %>
+            <br>
+            <% if(setting.entryText !=="" && setting.entryText!=="") { %>
+              <button style="background-image: url('<%= setting.entryBackground %>');" class="<%=setting.buttonStyle%>"><%= setting.entryText %><span class="carrot">||</span></button>
+              <div class="<%=setting.buttonDivStyle%>" data-url="<%= setting.entryUrl %>"></div>
+            <% } %>
           </div>
         </div>
       <% } %>
