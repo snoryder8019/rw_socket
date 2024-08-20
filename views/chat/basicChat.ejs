@@ -47,7 +47,78 @@
         const messagesPerPage = 12; 
         function requestInitialMessages() {
             socket.emit('fetch messages', { roomId: roomId, page: currentPage, messagesPerPage: messagesPerPage });
-        }        
+        }   
+        //////
+
+  socket.on('connect_error', (err) => {
+    console.error('Connection error:', err);
+  });
+
+  socket.on('broadcast', (videoUrl) => {
+    const finUrl = videoUrl.videoUrl.videoUrl;
+    console.log(`CHANNEL ONE BROADCAST NOTICED url: ${finUrl}`);
+    const containerVid = document.querySelector('.myVideo');
+    const statusText = document.getElementById('statusText');
+    
+    // Hide the "New videos here daily!" text
+    statusText.style.display = 'none';
+    
+    // Stop and remove the existing video if it exists
+    let existingVideo = document.getElementById('videoPlayer');
+    if (existingVideo) {
+      existingVideo.pause(); // Stop the video
+      existingVideo.src = ''; // Clear the source
+      existingVideo.load(); // Stop downloading the video
+      existingVideo.remove(); // Remove the video element from the DOM
+    }
+    
+    // Create a new video element and add it to the container
+    const videoPlayer = document.createElement('video');
+    videoPlayer.id = 'videoPlayer';
+    videoPlayer.autoplay = true;
+    videoPlayer.muted = true;
+    videoPlayer.controls = true;
+    videoPlayer.style.maxHeight = '200px';
+    videoPlayer.style.width = '100%';
+
+    const sourceElement = document.createElement('source');
+    sourceElement.src = `https://${finUrl}`;
+    sourceElement.type = 'video/mp4';
+
+    videoPlayer.appendChild(sourceElement);
+    containerVid.appendChild(videoPlayer);
+    
+    // Load and play the new video
+    videoPlayer.load();
+    videoPlayer.play();
+  });
+
+  socket.on('marquee', (data) => {
+    console.log('Received marquee message:', data.message);
+    const marqueeText = document.getElementById('marqueeText');
+    marqueeText.innerText = data.message;
+    marqueeText.style.display = 'block'; // Show the marquee
+  });
+  
+  document.addEventListener('click', (event) => {
+    if(event.target.classList.contains('play-video')){
+      const videoUrl = event.target.getAttribute('data-video');
+      console.log(`playVIDDDSS!!k ${videoUrl}`);
+      socket.emit('broadcast', { videoUrl: videoUrl });
+    }
+  });
+
+  document.addEventListener('click', (event) => {
+    if (event.target.classList.contains('marqueeButton')) {
+      const marqueeMessage = document.getElementById('marqueeMessage').value;
+      console.log('Button clicked', marqueeMessage);
+      socket.emit('marquee', { message: marqueeMessage });
+      console.log('Marquee event emitted');
+    }
+  });
+
+
+        ////////     
         socket.on('messages fetched', (messages) => {
             if (messages.length) {
                 const reversedMessages = messages.reverse();

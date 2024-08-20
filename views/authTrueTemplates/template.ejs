@@ -67,23 +67,23 @@
 </div-->
 
 <script>
-document.addEventListener('DOMContentLoaded', () => {
-    const parentContainer = document.getElementById('parentContainer'); // Adjust the ID as needed
-    const sections = Array.from(document.querySelectorAll('[data-order]'));
-    const orderSort = parentContainer.getAttribute('data-order-sort');
+// document.addEventListener('DOMContentLoaded', () => {
+//     const parentContainer = document.getElementById('parentContainer'); // Adjust the ID as needed
+//     const sections = Array.from(document.querySelectorAll('[data-order]'));
+//     const orderSort = parentContainer.getAttribute('data-order-sort');
 
-    if (orderSort !== "") {
-        sections.sort((a, b) => {
-            return parseInt(a.getAttribute('data-order')) - parseInt(b.getAttribute('data-order'));
-        });
+//     if (orderSort !== "") {
+//         sections.sort((a, b) => {
+//             return parseInt(a.getAttribute('data-order')) - parseInt(b.getAttribute('data-order'));
+//         });
 
-        sections.forEach(section => {
-            parentContainer.appendChild(section);
-        });
-    }
+//         sections.forEach(section => {
+//             parentContainer.appendChild(section);
+//         });
+//     }
 
-    // Existing code for dynamic content loading or other functionalities...
-});
+//     // Existing code for dynamic content loading or other functionalities...
+// });
 
 
 
