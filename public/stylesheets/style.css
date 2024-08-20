@@ -349,9 +349,10 @@ input {
   transition-duration: 0.4s;
   transform: translateX(0%);
   background-color: #711881;
-  left: 55%;
-  top: 20%;
-  height: 65vh;
+  left: 59%;
+  top: 1%;
+  height: 98vh;
+  margin: 0%;
   z-index: 1001;
 }
 @media (max-width: 768px) {
@@ -385,8 +386,8 @@ input {
   #userDash {
     font-size: smaller;
     width: 91%;
-    top: 19%;
-    height: 74vh;
+    top: 15%;
+    height: 78vh;
     z-index: 1001;
     box-shadow: 0px 0px 120px rgba(53, 0, 52, 0.865);
   }
@@ -527,7 +528,7 @@ input {
   overflow-y: auto;
   transition-timing-function: ease-out;
   transition-duration: 0.6s;
-  height: 70%;
+  height: 63%;
   box-shadow: inset 1px 1px 4px rgba(0, 0, 0, 0.749);
   border-top-left-radius: 25px;
   border-bottom-right-radius: 25px;
@@ -551,7 +552,8 @@ input {
 }
 @media (min-width: 768px) {
   #mainBanner {
-    width: 100%;
+    width: 56%;
+    margin: 0%;
     background-size: contain;
     z-index: 8001;
   }
@@ -799,7 +801,7 @@ input {
 @media (min-width: 768px) {
   .adminWindow {
     display: block;
-    width: 48%;
+    width: 52%;
   }
 }
 
@@ -824,7 +826,7 @@ input {
 @media (min-width: 768px) {
   .auth_view_true {
     display: block;
-    width: 48%;
+    width: 52%;
   }
 }
 
@@ -849,7 +851,7 @@ input {
 @media (min-width: 768px) {
   .auth_view_false {
     display: block;
-    width: 48%;
+    width: 52%;
   }
 }
 
@@ -861,6 +863,11 @@ input {
 }
 .slide_view h1 {
   text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.65);
+}
+@media (min-width: 768px) {
+  .slide_view {
+    width: 52%;
+  }
 }
 
 .linkTable_alt a {
@@ -1284,12 +1291,22 @@ button good {
   color: white;
 }
 
-.client_window {
+.noStyle {
+  border-radius: 5px;
+}
+
+.client_window, .noStyle {
   border: 4px solid #d7b436;
   background-color: rgba(113, 73, 111, 0.666);
   box-shadow: inset 2px 2px 2px rgba(128, 128, 128, 0.878);
   color: white;
   text-shadow: rgba(113, 24, 129, 0);
+}
+@media (min-width: 768px) {
+  .client_window, .noStyle {
+    width: 52%;
+    margin: 2%;
+  }
 }
 
 /* Add this CSS to your stylesheet */
