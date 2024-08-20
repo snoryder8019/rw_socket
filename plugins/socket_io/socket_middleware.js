@@ -1,4 +1,4 @@
-import { sessionMiddleware } from '../../app';
+import { sessionMiddleware } from '../../app.js';
 import passport from 'passport';
 
 const wrapMiddlewareForSocketIO = (middleware) => {

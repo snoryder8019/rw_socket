@@ -1,4 +1,4 @@
-import ModelHelper from '../../helpers/models.js';
+import ModelHelper from '../helpers/models.js';
 
 class Video extends ModelHelper {
   constructor() {

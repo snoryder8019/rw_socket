@@ -4,7 +4,7 @@ import { resizeAndCropImage } from '../../plugins/sharp/sharp.js';
 import { getDb } from '../../plugins/mongo/mongo.js';
 import { ObjectId } from 'mongodb';
 import { config } from '../../config/config.js';
-import lib from '../../logFunctions/logFunctions.js';
+import lib from '../logFunctions/logFunctions.js';
 import fs from 'fs';
 import fsp from 'fs/promises';
 import sharp from 'sharp';

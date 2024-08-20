@@ -2,8 +2,6 @@ import multer from 'multer';
 import path from 'path';
 import { resizeAndCropImage } from '../sharp/sharp.js'; // Adjust path as necessary
 
-const { resizeAndCropImage } = require('../sharp/sharp'); // Adjust path as necessary
-
 // Use memory storage to process the image before saving
 const storage = multer.memoryStorage();
 

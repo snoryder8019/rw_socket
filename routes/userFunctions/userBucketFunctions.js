@@ -2,10 +2,7 @@ import express from 'express';
 import path from 'path';
 import { ObjectId } from 'mongodb';
 import { getDb } from '../../plugins/mongo/mongo.js';
-import {
-  uploadToLinode,
-  deleteFromLinode,
-} from '../../plugins/aws_sdk/setup.js';
+import { uploadToLinode } from '../../plugins/aws_sdk/setup.js';
 import { upload, processImage } from '../../plugins/multer/setup.js';
 import { resizeAndCropImage } from '../../plugins/sharp/sharp.js';
 

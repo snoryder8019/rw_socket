@@ -1,8 +1,7 @@
-import {
-  sessionMiddleware,
-  passportMiddleware,
-  authenticate,
-} from './socket_middleware.js';
+import socket_middleware from './socket_middleware.js';
+
+const { sessionMiddleware, passportMiddleware, authenticate } =
+  socket_middleware;
 
 export const configureNamespace = (io, namespace, namespaceHandlers) => {
   const nsp = io.of(namespace);

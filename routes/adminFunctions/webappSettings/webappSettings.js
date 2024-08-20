@@ -1,6 +1,6 @@
 import express from 'express';
 import WebappSetting from '../../../plugins/mongo/models/WebappSetting.js';
-import { generateFormFields } from '../../../plugins/helpers/formHelper.js';
+import generateFormFields from '../../../plugins/helpers/formHelper.js';
 import { buildRoutes } from '../../helpers/routeBuilder.js';
 
 const router = express.Router();

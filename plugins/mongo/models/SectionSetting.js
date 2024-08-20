@@ -1,6 +1,6 @@
-import ModelHelper from '../../helpers/models.js';
-import { upload, processImages } from '../../../multer/subscriptionSetup.js';
-import { uploadToLinode } from '../../../aws_sdk/setup.js';
+import ModelHelper from '../helpers/models.js';
+import { upload, processImages } from '../../multer/subscriptionSetup.js';
+import { uploadToLinode } from '../../aws_sdk/setup.js';
 
 const modelName = 'sectionSetting';
 

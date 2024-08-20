@@ -1,5 +1,5 @@
 import { MongoClient } from 'mongodb';
-import config from '../../config/config.js';
+import { config } from '../../config/config.js';
 
 let _db;
 

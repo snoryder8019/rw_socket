@@ -1,4 +1,4 @@
-import { getDb } from '../../plugins/mongo/mongo';
+import { getDb } from '../../plugins/mongo/mongo.js';
 
 const forbiddenTerms = [
   '.env',

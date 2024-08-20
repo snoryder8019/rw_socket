@@ -1,7 +1,7 @@
 import express from 'express';
 import { getProducts, renderHtml } from './crud/storefrontCRUD.js';
 
-export const router = express.Router();
+const router = express.Router();
 
 // Define the route to get products and render with the template
 router.get('/products', async (req, res) => {
@@ -14,3 +14,5 @@ router.get('/products', async (req, res) => {
     res.send(error.message); // Send the raw HTML error response
   }
 });
+
+export default router;

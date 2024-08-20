@@ -7,30 +7,30 @@ import {
 } from './help/ticketFunctions.js';
 import { getUserEditor, postUserEdit } from './users/userControl.js';
 import chat from './chat/chat.js';
+import users from './users/users.js';
+import permissions from './permissions/permissions.js';
+import videoLead from './videoLead/videoLead.js';
+import videoProduction from './videoProduction/videoProduction.js';
+import clubs from './clubs/clubs.js';
+import webappSettings from './webappSettings/webappSettings.js';
+import notifications from './notifications/notifications.js';
+import sectionSettings from './webappSettings/sectionSettings.js';
+import subscriptions from './subscriptions/subscriptions.js';
+import generalEditor from './generalEditor.js';
 
 const router = express.Router();
 
 router.use('/chat', chat);
 
-const users = require('./users/users');
 router.use('/users', users);
-const permissions = require('./permissions/permissions');
 router.use('/permissions', permissions);
-const videoLead = require('./videoLead/videoLead');
 router.use('/videoLead', videoLead);
-const videoProduction = require('./videoProduction/videoProduction');
 router.use('/videoProduction', videoProduction);
-const clubs = require('./clubs/clubs');
 router.use('/clubs', clubs);
-const webappSettings = require('./webappSettings/webappSettings');
 router.use('/webappSettings', webappSettings);
-const notifications = require('./notifications/notifications');
 router.use('/notifications', notifications);
-const sectionSettings = require('./webappSettings/sectionSettings');
 router.use('/sectionSettings', sectionSettings);
-const subscriptions = require('./subscriptions/subscriptions');
 router.use('/subscriptions', subscriptions);
-const generalEditor = require('./generalEditor');
 router.use('/generalEditor', generalEditor);
 router.get('/ticketData', ticketData);
 router.post('/ticketUpdate', ticketUpdate);

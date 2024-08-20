@@ -4,7 +4,7 @@ import cookieParser from 'cookie-parser';
 import logger from 'morgan';
 import bodyParser from 'body-parser';
 import flash from 'connect-flash';
-import config from './config/config.js';
+import { config } from './config/config.js';
 import { connect } from './plugins/mongo/mongo.js';
 import indexRouter from './routes/index.js';
 import adminRouter from './routes/admin.js';

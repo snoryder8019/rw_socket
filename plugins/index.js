@@ -4,6 +4,7 @@ import { exporter } from './puppeteer/setup.js';
 import { oauthCallbackHandler, emailOutGeneral } from './nodemailer/setup.js';
 import setupShopifyRoutes from './shopify-storefront/setup.js';
 import stripeRoutes from './stripe/index.js';
+import { router as passportRouter } from './passport/localStrat.js';
 
 const router = express.Router();
 
@@ -16,7 +17,6 @@ router.get('/exporter', exporter);
 router.get('/oauth/callback', oauthCallbackHandler);
 router.use('/shopify-storefront', setupShopifyRoutes);
 
-const { router: passportRouter } = require('./passport/localStrat');
 router.use(passportRouter);
 
 export default router;

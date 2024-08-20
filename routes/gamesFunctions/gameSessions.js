@@ -1,6 +1,6 @@
 import express from 'express';
 import GameSession from '../../../plugins/mongo/models/GameSession.js';
-import { generateFormFields } from '../../../plugins/helpers/formHelper.js';
+import generateFormFields from '../../../plugins/helpers/formHelper.js';
 import { buildRoutes } from '../../helpers/routeBuilder.js';
 
 const router = express.Router();
