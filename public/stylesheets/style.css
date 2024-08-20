@@ -89,6 +89,11 @@
   margin-left: 3%;
   box-shadow: inset 5px 5px 12px #1a0a1b;
 }
+@media (min-width: 768px) {
+  #footer {
+    width: 46%;
+  }
+}
 
 .footerContainer {
   padding: 1%;
@@ -794,7 +799,7 @@ input {
 @media (min-width: 768px) {
   .adminWindow {
     display: block;
-    width: 50vw;
+    width: 48%;
   }
 }
 
@@ -819,7 +824,7 @@ input {
 @media (min-width: 768px) {
   .auth_view_true {
     display: block;
-    width: 50vw;
+    width: 48%;
   }
 }
 
@@ -844,7 +849,7 @@ input {
 @media (min-width: 768px) {
   .auth_view_false {
     display: block;
-    width: 50vw;
+    width: 48%;
   }
 }
 

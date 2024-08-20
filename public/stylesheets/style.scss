@@ -143,6 +143,9 @@ padding: 1%;
     width: 90%;
     margin-left: 3%;
     box-shadow: inset 5px 5px 12px $black;
+    @media (min-width:768px){
+      width:46%;
+    }
 }
 .footerContainer{
     padding:1%;
@@ -857,7 +860,7 @@ animation:fadeIn .3s ease-IN 0s 1;
     overflow-y: scroll;
     @media (min-width:768px) {
       display: block;
-      width: 50vw;
+      width: 48%;
     }
   }
   .adminWindow{
