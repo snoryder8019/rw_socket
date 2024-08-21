@@ -86,6 +86,26 @@ router.get('/section', async (req, res) => {
   }
 });
 
+router.get('/getSearchForm', async(req,res)=>{
+  try{
+const users = await new User().getAll()
+console.log('getting Users Search')
+res.render('./forms/generalSearchForm',{
+  users:users,
+})
+  }
+  catch(error){
+    console.error(error);
+    res.status(500).send({error:error.message})
+  
+  }
+})
+
+
+
+
+
+
 buildRoutes(new User(), router);
 
 
