@@ -7,6 +7,7 @@ class User extends ModelHelper {
   constructor(userData) {
     super('users');
     this.modelFields = {
+      isAdmin: { type: 'boolean', value: false },
       name: { type: 'text', value: null },
       title: { type: 'text', value: null },
       surname: { type: 'text', value: null },
@@ -20,7 +21,6 @@ class User extends ModelHelper {
       firstName: { type: 'text', value: null },
       lastName: { type: 'text', value: null },
       password: { type: 'text', value: null },
-      isAdmin: { type: 'boolean', value: false },
       permissions: { type: 'object', value: {} },
       wallet: { type: 'object', value: {
         emerald:0,

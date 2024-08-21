@@ -21,7 +21,7 @@ class Permission extends ModelHelper {
       clubs:false,
       blogs:false,
       webappSettings:false,
-      sectionSettings,
+      sectionSettings:false,
       permissions:false,        
       notifications:false,   
       media:false,     

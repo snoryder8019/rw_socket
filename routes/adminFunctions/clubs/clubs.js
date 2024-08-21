@@ -2,7 +2,7 @@ const express = require('express');
 const Club = require('../../../plugins/mongo/models/Club');
 const { generateFormFields } = require('../../../plugins/helpers/formHelper');
 const buildRoutes = require('../../helpers/routeBuilder');
-
+const Vendor = require('../../../plugins/mongo/models/Vendor');
 const router = express.Router();
 const modelName = "club";
 // Route to render the form to add a new club
