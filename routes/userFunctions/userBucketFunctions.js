@@ -6,7 +6,15 @@ const { getDb } = require('../../plugins/mongo/mongo');
 const { upload, processImage } = require('../../plugins/multer/setup');
 const { resizeAndCropImage } = require('../../plugins/sharp/sharp');
 const { uploadToLinode, deleteFromLinode } = require('../../plugins/aws_sdk/setup');
-
+router.get('/getEmojis', async (req, res) => {
+  try {
+    // Render the emojis.ejs file and send it as the response
+    res.render('forms/emojis'); // This assumes your emojis.ejs is located in /views/forms
+  } catch (error) {
+    console.error('Error rendering emojis:', error);
+    res.status(500).send('An error occurred while loading emojis.');
+  }
+});
 router.post('/userImgUpload', upload, processImage, async (req, res) => {
   try {
     console.log('userImgUpload Endpoint Called');

@@ -1,3 +1,5 @@
+////plugins/mongo/helpers/models.js **GPT NOTE: DONT REMOVE THIS LINE IN EXAMPLES**
+
 const { getDb } = require('../mongo');
 const { ObjectId } = require('mongodb');
 

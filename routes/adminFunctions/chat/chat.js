@@ -56,13 +56,5 @@ router.post('/createChatRoom', async (req, res) => {
         res.status(500).send('Failed to create chat room: ' + error.message);
     }
 });
-router.get('/getEmojis', async (req, res) => {
-  try {
-    // Render the emojis.ejs file and send it as the response
-    res.render('forms/emojis'); // This assumes your emojis.ejs is located in /views/forms
-  } catch (error) {
-    console.error('Error rendering emojis:', error);
-    res.status(500).send('An error occurred while loading emojis.');
-  }
-});
+
 module.exports = router;

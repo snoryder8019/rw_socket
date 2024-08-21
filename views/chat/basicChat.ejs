@@ -53,7 +53,7 @@
 
   // Function to load the .ejs file content
   function loadEmojiContent() {
-    fetch('/chat/getEmojis')
+    fetch('/getEmojis')
       .then(response => response.text())
       .then(data => {
         emojiSlider.innerHTML = data; // Insert the loaded content into the div

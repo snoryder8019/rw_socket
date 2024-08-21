@@ -1,3 +1,5 @@
+//routes/helpers/routeBuilder.js **GPT NOTE: DONT REMOVE THIS LINE IN EXAMPLES**
+
 const { ObjectId } = require('mongodb');
 
 // model needs to be an instance of the model that you want routes built for.

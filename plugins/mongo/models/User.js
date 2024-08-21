@@ -1,3 +1,4 @@
+//plugins/mongo/models/User.js **GPT NOTE: DONT REMOVE THIS LINE IN EXAMPLES**
 const ModelHelper = require('../helpers/models');
 const { upload, processImages } = require('../../multer/subscriptionSetup');
 const { uploadToLinode } = require('../../aws_sdk/setup');
@@ -10,7 +11,8 @@ class User extends ModelHelper {
       title: { type: 'text', value: null },
       surname: { type: 'text', value: null },
       images: { type: 'array', value: [{thumbnailFile}] },
-      bio: { type: 'textarea', value: null },
+      bio: { type: 'textarea', value: null },      
+      modelVersion: { type: 'text', value: "version 1"},
       providerId: { type: 'text', value: null },
       provider: { type: 'text', value: null },
       email: { type: 'text', value: null, },
@@ -19,7 +21,12 @@ class User extends ModelHelper {
       lastName: { type: 'text', value: null },
       password: { type: 'text', value: null },
       isAdmin: { type: 'boolean', value: false },
-      permissions: { type: 'array', value: [] },
+      permissions: { type: 'object', value: {} },
+      wallet: { type: 'object', value: {
+        emerald:0,
+        sapphire:0,
+        amethyst:0
+      } },
       subscription: { type: 'text', value: "free" },
       gems: { type: 'number', value: 25 },
       cart: { type: 'array', value: [] },
