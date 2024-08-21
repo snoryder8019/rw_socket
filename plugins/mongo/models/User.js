@@ -1,53 +1,69 @@
-const mongoose = require('mongoose');
+const ModelHelper = require('../helpers/models');
+const { upload, processImages } = require('../../multer/subscriptionSetup');
+const { uploadToLinode } = require('../../aws_sdk/setup');
 
-const UserSchema = new mongoose.Schema({
-    googleId:{
-        type: String,
-        required : false,
-            },
-            facebookId:{
-                type: String,
-                required : false,
-                    },
-                    provider:{
-                type:String,
-                required:true
-                    },
-            email:{
-                type:String,
-                required:true,
-            },
-            password:{
-                type:String,
-                required:false
-            },
-    displayName:{
-        type: String,
-        required : false,
-            },
-    firstName:{
-        type: String,
-       required : false,
-            },
-    lastName:{
-        type: String,
-        required : false,
-            },
-            cart:{
-                type:Array
-            },
-     isAdmin:{
-        type:Boolean,
-        default:false,
-        required:true,
-        creds:{
-            dbName:"n/a",
-            default:"n/a"
+class User extends ModelHelper {
+  constructor(userData) {
+    super('users');
+    this.modelFields = {
+      name: { type: 'text', value: null },
+      title: { type: 'text', value: null },
+      subtitle: { type: 'text', value: null },
+      description: { type: 'textarea', value: null },
+    };
+
+    if (userData) {
+      for (let key in this.modelFields) {
+        if (userData[key] !== undefined) {
+          this.modelFields[key].value = userData[key];
         }
-    },
-       createdAt:{
-         type:Date,
-         default:Date.now
-            }
-})
-module.exports =  mongoose.model('User',UserSchema,'_users')
+      }
+    }
+  }
+
+  static getModelFields() {
+    return Object.keys(new User().modelFields).map(key => {
+      const field = new User().modelFields[key];
+      return { name: key, type: field.type };
+    });
+  }
+
+  middlewareForCreateRoute() {
+    return [upload.fields(this.fileFields), processImages, this.uploadImagesToLinode.bind(this)];
+  }
+
+  middlewareForEditRoute() {
+    return [upload.fields(this.fileFields), processImages, this.uploadImagesToLinode.bind(this)];
+  }
+
+  get fileFields() {
+    return [
+      { name: 'mediumIcon', maxCount: 1 },
+      { name: 'backgroundImg', maxCount: 1 },
+      { name: 'horizBkgd', maxCount: 1 }
+    ];
+  }
+
+  async uploadImagesToLinode(req, res, next) {
+    try {
+      if (req.files) {
+        for (const key in req.files) {
+          const file = req.files[key][0];
+          const fileKey = `users/${Date.now()}-${file.originalname}`;
+          const url = await uploadToLinode(file.path, fileKey);
+          req.body[key] = url; // Save the URL in the request body
+        }
+      }
+      next();
+    } catch (error) {
+      console.error("Error in uploadImagesToLinode middleware:", error);
+      next(error);
+    }
+  }
+
+  pathForGetRouteView() {
+    return 'admin/users/template';
+  }
+}
+
+module.exports = User;
