@@ -65,50 +65,7 @@
       }
     });
 
-    document.addEventListener('DOMContentLoaded', () => {
-     
-      var socket = io('/videoProduction');
-
-      // Handle video upload
-      $('#uploadForm').on('submit', function(e) {
-        e.preventDefault();
-        var formData = new FormData();
-        formData.append('video', $('#video')[0].files[0]);
-
-        $.ajax({
-          url: '/admin/videos/upload',
-          type: 'POST',
-          data: formData,
-          processData: false,
-          contentType: false,
-          success: function(response) {
-            alert('Video uploaded successfully!');
-            socket.emit('newVideo', response.video);
-          },
-          error: function(err) {
-            alert('Error uploading video');
-          }
-        });
-      });
-
-      // Listen for new videos
-      socket.on('newVideo', function(video) {
-        $('#videoList').append(`<div><img src="${video.thumbnail}" alt="Video Thumbnail"><p>${video.name}</p><button onclick="playVideo('${video.url}')">Play</button></div>`);
-      });
-
-      // Schedule video push
-      $('#schedulePush').on('click', function() {
-        socket.emit('scheduleVideoPush');
-      });
-
-      // Listen for scheduled videos
-      socket.on('scheduledVideos', function(videos) {
-        $('#scheduledVideos').empty();
-        videos.forEach(function(video) {
-          $('#scheduledVideos').append(`<div><img src="${video.thumbnail}" alt="Video Thumbnail"><p>${video.name}</p><button onclick="playVideo('${video.url}')">Play</button></div>`);
-        });
-      });
-    });
+ 
 
     function playVideo(url) {
       var videoPlayer = document.getElementById('videoPlayer');
