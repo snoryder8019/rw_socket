@@ -1,7 +1,74 @@
 const express = require('express');
 const router = express.Router();
+const User = require('../../../plugins/mongo/models/User')
 const { getDb } = require('../../../plugins/mongo/mongo');
+const buildRoutes = require('../../helpers/routeBuilder');
+const { generateFormFields } = require('../../../plugins/helpers/formHelper');
 
+////////Version 1 Functions
+const modelName = "user";
+// Route to render the form to add a new user
+router.get('/renderAddForm', (req, res) => {
+  try {
+    const model = User.getModelFields();
+    const formFields = generateFormFields(model);
+    console.log('renderAddForm');
+
+    res.render('forms/generalForm', {
+      title: 'Add New User',
+      action: '/users/create',
+      formFields: formFields
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ error: error.message });
+  }
+});
+
+// Route to render the form to edit an existing user
+router.get('/renderEditForm/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const user = await new User().getById(id);
+    if (!user) {
+      return res.status(404).send({ error: 'User not found' });
+    }
+    const model = User.getModelFields();
+    const formFields = generateFormFields(model, user); // Generate form fields as an array
+
+    res.render('forms/generalEditForm', {
+      title: 'Edit User',
+      action: `users/update/${id}`,
+      routeSub: 'users',
+      method: 'post',
+      formFields: formFields,
+      data: user
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ error: error.message });
+  }
+});
+/////////////////
+router.get('/section', async (req, res) => {
+  try {
+    const data = await new User().getAll();
+    res.render('./layouts/section', {
+      title: 'Section View',
+      data: data
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ error: error.message });
+  }
+});
+
+buildRoutes(new User(), router);
+
+
+
+
+//////// VERSION 0.9 functions
 router.get('/paginateUsers', async (req, res) => {
   try {
     const db = getDb();

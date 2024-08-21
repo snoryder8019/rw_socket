@@ -1,15 +1,30 @@
 const ModelHelper = require('../helpers/models');
 const { upload, processImages } = require('../../multer/subscriptionSetup');
 const { uploadToLinode } = require('../../aws_sdk/setup');
-
+const thumbnailFile = '/images/hugeIcon.png'
 class User extends ModelHelper {
   constructor(userData) {
     super('users');
     this.modelFields = {
       name: { type: 'text', value: null },
       title: { type: 'text', value: null },
-      subtitle: { type: 'text', value: null },
-      description: { type: 'textarea', value: null },
+      surname: { type: 'text', value: null },
+      images: { type: 'array', value: [{thumbnailFile}] },
+      bio: { type: 'textarea', value: null },
+      providerId: { type: 'text', value: null },
+      provider: { type: 'text', value: null },
+      email: { type: 'text', value: null, },
+      displayName: { type: 'text', value: `user:${new Date()}` },
+      firstName: { type: 'text', value: null },
+      lastName: { type: 'text', value: null },
+      password: { type: 'text', value: null },
+      isAdmin: { type: 'boolean', value: false },
+      permissions: { type: 'array', value: [] },
+      subscription: { type: 'text', value: "free" },
+      gems: { type: 'number', value: 25 },
+      cart: { type: 'array', value: [] },
+      clubs: { type: 'array', value: [] },
+      notifications: { type: 'array', value: [] },
     };
 
     if (userData) {
