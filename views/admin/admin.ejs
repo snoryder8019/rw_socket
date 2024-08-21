@@ -15,13 +15,9 @@
     <button class="collapsible">VideoProduction<span class="carrot">&#9654;</span></button>
     <div class="content" ><%-include('./videoLead/videoProduction')%></div>
 
-    <button class="collapsible">BingoLead<span class="carrot">&#9654;</span></button>
-    <div class="content" data-url="/bingoLead/load">Content for BingoLead</div>
-
     <button class="collapsible">Help and Tickets<span class="carrot">&#9654;</span></button>
     <div class="content" data-url="/tickets/load">Content for Tickets</div>
 <!--dataurl for each subscriptiton in  div.adminWindow-->
-
 
     <button class="collapsible">Subscriptions<span class="carrot">&#9654;</span></button>
     <div class="content"><%-include('./subscriptions/index')%></div>
@@ -41,9 +37,7 @@
     <button class="collapsible">Notifications<span class="carrot">&#9654;</span></button>
     <div class="content" ><%-include('./notifications/index')%></div>
 
-    <button class="collapsible">Permissions<span class="carrot">&#9654;</span></button>
-    <div class="content" data-url="/permissions/load"><%-include('./permissions/index')%></div>
-
+ 
     
     <!--OBSERVER ON CLICK FOR LIGHTER LOAD append data-url for server rendering-->
     <button class="collapsible">TRYCATCH<span class="carrot">&#9654;</span></button>
