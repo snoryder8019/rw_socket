@@ -289,9 +289,14 @@
   overflow-y: scroll;
 }
 
+.addImage {
+  font-size: 1.8rem;
+  padding: 2%;
+}
+
 .chatInput {
   margin: 1% 0%;
-  width: 78%;
+  width: 55%;
   height: 34px;
   font-size: 1.2rem;
   font-weight: 900;

@@ -1,0 +1,15 @@
+<div class="adminWindow">
+    <div class="adminStatsRow">
+      <% documents.forEach(chatRoom => { %>
+        <div class="adminStat">
+          <p><%= chatRoom.roomName %></p>
+          <img alt="Chat image" src="<%= chatRoom.mediumIcon %>">
+          <button class="collapsible">view: <span class="carrot">&#9654;</span></button>
+          <div class="content" data-url="/chats/renderEditForm/<%= chatRoom._id %>"></div>
+        </div>
+      <% }) %>
+    </div>
+  </div>
+  
+  
+  

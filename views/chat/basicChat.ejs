@@ -26,7 +26,8 @@
    
         <div class="inputBar">
             <div class="emojiSlider"></div>
-            <input class="chatInput"id="chatInput" autocomplete="off" /><button id="submitChat">Send</button>
+           
+            <input class="chatInput"id="chatInput" autocomplete="off" /> <span class="addImage">🖼️</span><button id="submitChat">Send</button>
             </div>
     <% } else { %>
         <p>Please log in to join the chat.</p>
@@ -187,8 +188,9 @@
                 currentPage++;
             }
         });
-        let userId = "<%=user._id%>"
-        function addMessage(messageObject, isOwnMessage = false) {
+        let userId = "<%=user._id%>";
+
+ function addMessage(messageObject, isOwnMessage = false) {
     const messagesContainer = document.getElementById('chat');
     const shouldScroll = messagesContainer.scrollTop + messagesContainer.clientHeight + 50 >= messagesContainer.scrollHeight;
     
@@ -209,11 +211,13 @@
 
     const heartIcon = document.createElement('span');
     heartIcon.textContent = '❤️';
-    heartIcon.className = 'heartIcon';
+heartIcon.className = 'heartIcon';
+heartIcon.style.filter = "grayscale(50%)";
 
-    const replyIcon = document.createElement('span');
-    replyIcon.textContent = '↩️';
-    replyIcon.className = 'replyIcon';
+const replyIcon = document.createElement('span');
+replyIcon.textContent = '↩️';
+replyIcon.className = 'replyIcon';
+replyIcon.style.filter = "grayscale(5%)";
 
     // const threeDotsIcon = document.createElement('span');
     // threeDotsIcon.textContent = '⋮';
@@ -235,8 +239,8 @@
     // Event Listeners with postId and userId
     const postId = messageObject._id;  // Assuming messageObject.id is the postId
 
-    heartIcon.addEventListener('click', () => {
-        handleIconClick('heart', postId, userId);
+    heartIcon.addEventListener('click', (e) => {
+        handleIconClick('heart', postId, userId,e,'❤️','heartIcon');
     });
 
     replyIcon.addEventListener('click', () => {
@@ -247,10 +251,43 @@
     //     handleIconClick('options', postId, userId);
     // });
 }
-
-function handleIconClick(action, postId, userId) {
+function handleIconClick(action, postId, userId, e, isLiked) {
     console.log(`Action: ${action}, Post ID: ${postId}, User ID: ${userId}`);
-    // Add any additional logic here, such as making a network request or updating the UI
+    
+    // Determine the new action and tally based on the current state
+    const newAction = isLiked ? 'unlike' : 'like';
+    const tally = isLiked ? '--' : '++';
+
+    // Fetch to update the tally on the server
+    fetch(`/user/chat/like/${tally}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ userId,postId })
+    })
+    .then(response => response.json())
+    .then(data => {
+        // Assuming the server returns the updated tally count
+        const newTally = data.tally;
+
+        // Toggle the icon state
+        if (isLiked) {
+            e.target.textContent = '♡'; // Unlike icon (empty heart)
+            e.target.className = 'unliked-icon';
+            e.target.style.filter = `grayscale(${100}%)`; // Apply full grayscale
+        } else {
+            e.target.textContent = '❤️'; // Like icon (filled heart)
+            e.target.className = 'liked-icon';
+            e.target.style.filter = `grayscale(${0}%)`; // Remove grayscale
+        }
+
+        // Update the isLiked flag for the next click
+        e.target.dataset.isLiked = !isLiked;
+    })
+    .catch(error => {
+        console.error('Error updating tally:', error);
+    });
 }
 
         

@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-const videoStream = require('./chat/videoStream')
+const videoStream = require('./chats/videoStream')
 const {ticketUpdate,ticketDelete, ticketData} = require('./help/ticketFunctions')
 const {isAdmin,gatherIp} = require('./adminFunctions')
 const {getUserEditor,postUserEdit} = require('./users/userControl')
@@ -30,8 +30,8 @@ const permissions = require('./permissions/permissions');
 router.use('/permissions',permissionsChecker,permissions);
 const media = require('./media/media');
 router.use('/media',permissionsChecker,media);
-const chat = require('./chat/chat');
-router.use('/chat',permissionsChecker,chat);
+const chats = require('./chats/chat');
+router.use('/chats',permissionsChecker,chats);
 const travels = require('./travels/travels');
 router.use('/travels',permissionsChecker,travels);
 

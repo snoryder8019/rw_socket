@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { uploadToLinode, getVideos, getImageGrid } = require('../../../plugins/aws_sdk/setup');
+const { uploadToLinode, getVideos,getDirectories, getImageGrid } = require('../../../plugins/aws_sdk/setup');
 const multer = require('multer');
 const path = require('path');
 
@@ -61,5 +61,28 @@ router.get('/images', async (req, res) => {
         res.status(500).json({ success: false, message: 'Failed to retrieve images', error: error.message });
     }
 });
+router.get('/images/:directory', async (req, res) => {
+    try {
+        const directory = req.params.directory;
+        const prefix = directory ? `${directory}/` : ''; // Ensure the directory ends with a slash
+        const imageGrid = await getImageGrid(prefix);
+        res.send(imageGrid); // Sending HTML grid as the response
+    } catch (error) {
+        console.error("Error in /images/:directory endpoint:", error);
+        res.status(500).json({ success: false, message: 'Failed to retrieve images', error: error.message });
+    }
+});
+
+router.get('/getDirectories', async (req, res) => {
+    try {
+        const prefix = req.query.prefix || ''; // Optional prefix for filtering
+        const directoriesHtml = await getDirectories(prefix); // Fetch directory links
+        res.send(directoriesHtml); // Sending HTML links as the response
+    } catch (error) {
+        console.error("Error in /getDirectories endpoint:", error);
+        res.status(500).json({ success: false, message: 'Failed to retrieve directories', error: error.message });
+    }
+});
+
 
 module.exports = router;

@@ -1,3 +1,4 @@
+//plugins/aws_sdk/setup.js **NOTE GPT: DONT REMOVE THIS LINE**
 const AWS = require('aws-sdk');
 const fs = require('fs');
 
@@ -64,10 +65,40 @@ const getVideos = async (prefix = '') => {
         throw error; // Rethrow to handle it in the calling function
     }
 };
-const getImageGrid = async (prefix = '') => {
+const getDirectories = async (prefix = '') => {
     const params = {
         Bucket: process.env.LINODE_BUCKET,
-        Prefix: prefix
+        Prefix: prefix,
+        Delimiter: '/' // Delimiter indicates that the result should be grouped by directories
+    };
+
+    try {
+        const data = await s3.listObjectsV2(params).promise();
+        
+        // Extract directories (common prefixes)
+        const directories = data.CommonPrefixes.map(item => item.Prefix);
+
+        // Generate HTML buttons
+        let buttonsHtml = '<div>';
+        directories.forEach((dir, index) => {
+            const dirName = dir.replace(prefix, '').replace('/', ''); // Clean up the directory name
+            const buttonId = `dir-button-${index}`; // Unique ID for each button
+            buttonsHtml += `<button class="bucketDirectory" id="${buttonId}" data-dir="${dirName}" onclick="getDirImages('${dirName}')">${dirName}</button>`;
+        });
+        buttonsHtml += '</div>';
+
+        return buttonsHtml;
+    } catch (error) {
+        console.error("Error retrieving directories from Linode Object Storage:", error);
+        throw error; // Rethrow to handle it in the calling function
+    }
+};
+
+
+const getImageGrid = async (directory = '') => {
+    const params = {
+        Bucket: process.env.LINODE_BUCKET,
+        Prefix: directory // Use the directory as the prefix to filter images
     };
 
     try {
@@ -98,8 +129,10 @@ const getImageGrid = async (prefix = '') => {
         throw error; // Rethrow to handle it in the calling function
     }
 };
+
 module.exports = {
     uploadToLinode,
     getVideos,
-    getImageGrid 
+    getImageGrid,
+    getDirectories
 };
