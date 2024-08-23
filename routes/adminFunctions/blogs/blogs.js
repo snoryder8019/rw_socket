@@ -1,5 +1,5 @@
 const express = require('express');
-const Blog = require('../../../plugins/mongo/models/Blog');
+const Blog = require('../../../plugins/mongo/models/blog/Blog');
 const { generateFormFields } = require('../../../plugins/helpers/formHelper');
 const buildRoutes = require('../../helpers/routeBuilder');
 const router = express.Router();
@@ -10,12 +10,12 @@ router.get('/renderAddForm', (req, res) => {
   try {
     const model = Blog.getModelFields();
     const formFields = generateFormFields(model);
-    console.log('renderAddForm');
 
-    res.render('forms/generalForm', {
+    res.render('forms/generalBlogForm', {
       title: 'Add New Blog',
       action: '/blogs/create',
-      formFields: formFields
+      formFields: formFields,
+      wysiwyg: true // Indicate to initialize WYSIWYG editor
     });
   } catch (error) {
     console.error(error);
@@ -32,15 +32,16 @@ router.get('/renderEditForm/:id', async (req, res) => {
       return res.status(404).send({ error: 'Blog not found' });
     }
     const model = Blog.getModelFields();
-    const formFields = generateFormFields(model, blog); // Generate form fields as an array
+    const formFields = generateFormFields(model, blog);
 
-    res.render('forms/generalEditForm', {
+    res.render('forms/generalEditBlogForm', {
       title: 'Edit Blog',
       action: `/blogs/update/${id}`,
       routeSub: 'blogs',
       method: 'post',
       formFields: formFields,
-      data: blog
+      data: blog,
+      wysiwyg: true // Indicate to initialize WYSIWYG editor
     });
   } catch (error) {
     console.error(error);
@@ -48,21 +49,8 @@ router.get('/renderEditForm/:id', async (req, res) => {
   }
 });
 
-// Route to render a section view of blogs
-router.get('/section', async (req, res) => {
-  try {
-    const data = await new Blog().getAll();
-    res.render('./layouts/section', {
-      title: 'Section View',
-      data: data
-    });
-  } catch (error) {
-    console.error(error);
-    res.status(500).send({ error: error.message });
-  }
-});
+// Other routes...
 
-// Automatically build the standard CRUD routes for Blog
 buildRoutes(new Blog(), router);
 
 module.exports = router;

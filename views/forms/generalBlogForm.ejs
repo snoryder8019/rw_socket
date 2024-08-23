@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,12 +12,14 @@
 </head>
 <body>
   <h1><%= title %></h1>
-  <!-- Dynamically bring the model keys as inputs -->
-  <form action="<%= action %>" method="post" enctype="multipart/form-data">
+  <form action="<%= action %>" method="post" enctype="multipart/form-data" id="blogForm">
     <% formFields.forEach(field => { %>
       <div>
         <label for="<%= field.name %>"><%= field.label %>:</label>
-        <% if (field.type === 'textarea') { %>
+        <% if (field.type === 'textarea' && field.name === 'content') { %>
+          <!-- Content field for the blog body with a special class to indicate WYSIWYG support -->
+          <textarea name="<%= field.name %>" id="<%= field.name %>" class="wysiwyg"><%- field.value %></textarea>
+        <% } else if (field.type === 'textarea') { %>
           <textarea name="<%= field.name %>" id="<%= field.name %>"><%= field.value %></textarea>
         <% } else if (field.type === 'file') { %>
           <input type="file" name="<%= field.name %>" id="<%= field.name %>">
@@ -38,32 +39,6 @@
           <label for="<%= field.name %>-true">True</label>
           <input type="radio" name="<%= field.name %>" id="<%= field.name %>-false" value="false" <%= field.value === 'false' ? 'checked' : '' %>>
           <label for="<%= field.name %>-false">False</label>
-        <% } else if (field.type === 'array') { %>
-          <% if (Array.isArray(field.value)) { %>
-            <% field.value.forEach((item, index) => { %>
-              <div class="array-field">
-                <input type="text" name="<%= field.name %>[]"
-                       id="<%= field.name %>-<%= index %>"
-                       value="<%= item %>">
-              </div>
-            <% }); %>
-          <% } else { %>
-            <div class="array-field">
-              <input type="text" name="<%= field.name %>[]"
-                     id="<%= field.name %>-0"
-                     value="<%= field.value %>">
-            </div>
-          <% } %>
-          <button type="button" onclick="addArrayField('<%= field.name %>')">Add more</button>
-        <% } else if (field.type === 'object') { %>
-          <% for (const key in field.value) { %>
-            <div class="object-field">
-              <label for="<%= field.name %>_<%= key %>"><%= key %>:</label>
-              <input type="text" name="<%= field.name %>[<%= key %>]"
-                     id="<%= field.name %>_<%= key %>"
-                     value="<%= field.value[key] %>">
-            </div>
-          <% } %>
         <% } else { %>
           <input type="<%= field.type %>" name="<%= field.name %>" id="<%= field.name %>" value="<%= field.value %>">
         <% } %>
@@ -71,7 +46,5 @@
     <% }) %>
     <button type="submit">Submit</button>
   </form>
-
-
 </body>
 </html>

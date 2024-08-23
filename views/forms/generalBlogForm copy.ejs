@@ -1,0 +1,34 @@
+<form action="<%= action %>" method="post" enctype="multipart/form-data" id="blogForm">
+  <% formFields.forEach(field => { %>
+    <div>
+      <label for="<%= field.name %>"><%= field.label %>:</label>
+      <% if (field.type === 'textarea' && field.name === 'content') { %>
+        <!-- Content field for the blog body with a special class to indicate WYSIWYG support -->
+        <textarea name="<%= field.name %>" id="<%= field.name %>" class="wysiwyg"><%- field.value %></textarea>
+      <% } else if (field.type === 'textarea') { %>
+        <textarea name="<%= field.name %>" id="<%= field.name %>"><%= field.value %></textarea>
+      <% } else if (field.type === 'file') { %>
+        <input type="file" name="<%= field.name %>" id="<%= field.name %>">
+      <% } else if (field.type === 'dropdown') { %>
+        <select name="<%= field.name %>" id="<%= field.name %>">
+          <% field.options.forEach(option => { %>
+            <option value="<%= option %>" <%= field.value === option ? 'selected' : '' %>><%= option %></option>
+          <% }) %>
+        </select>
+      <% } else if (field.type === 'radio') { %>
+        <% field.options.forEach(option => { %>
+          <input type="radio" name="<%= field.name %>" id="<%= field.name %>-<%= option %>" value="<%= option %>" <%= field.value === option ? 'checked' : '' %>>
+          <label for="<%= field.name %>-<%= option %>"><%= option %></label>
+        <% }) %>
+      <% } else if (field.type === 'boolean') { %>
+        <input type="radio" name="<%= field.name %>" id="<%= field.name %>-true" value="true" <%= field.value === 'true' ? 'checked' : '' %>>
+        <label for="<%= field.name %>-true">True</label>
+        <input type="radio" name="<%= field.name %>" id="<%= field.name %>-false" value="false" <%= field.value === 'false' ? 'checked' : '' %>>
+        <label for="<%= field.name %>-false">False</label>
+      <% } else { %>
+        <input type="<%= field.type %>" name="<%= field.name %>" id="<%= field.name %>" value="<%= field.value %>">
+      <% } %>
+    </div>
+  <% }) %>
+  <button type="submit">Submit</button>
+</form>

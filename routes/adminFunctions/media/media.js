@@ -51,8 +51,25 @@ router.get('/videos', async (req, res) => {
 });
 
 router.post('/videos/delete', async (req, res) => {
-
-});
+    try {
+      const { fileKey } = req.body; // Assuming the video key is passed in the request body
+  
+      if (!fileKey) {
+        return res.status(400).json({ success: false, message: 'No file key provided' });
+      }
+  
+      // Call the function to delete the video from Linode Object Storage
+      await deleteFromLinode(fileKey);
+  
+      // Optionally, remove the video from your database if you're tracking them there
+      await new Video().deleteById({ key: fileKey });
+  
+      res.json({ success: true, message: 'Video deleted successfully' });
+    } catch (error) {
+      console.error("Error in /videos/delete endpoint:", error);
+      res.status(500).json({ success: false, message: 'Failed to delete video', error: error.message });
+    }
+  });
 
 // GET /adminFunctions/media/images
 // Endpoint to retrieve a grid of images from Linode Object Storage

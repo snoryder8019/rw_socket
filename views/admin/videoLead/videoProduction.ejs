@@ -2,11 +2,6 @@
 <!--/views/admin/videoLead/videoProduction-->
 <h1>Video Production</h1>
 
-<!-- Form to upload videos -->
-<form id="uploadForm" action="/videoProduction/upload" method="post" enctype="multipart/form-data">
-  <input id="video" type="file" name="video" />
-  <button type="submit">Upload</button>
-</form>
 
 <% if (typeof videos == 'object' && videos) { %>
   <style>
@@ -15,7 +10,8 @@
     .btn { padding: 10px 20px; background-color: #007bff; color: #fff; border: none; cursor: pointer; }
   </style>
   <div class="video_container">
-    <h1>Uploaded Videos</h1>
+    <h1>Broadcast Videos</h1>
+    <p>Video will play to all connected user on the Webapp.</p>
     <% videos.forEach(video => { %>
       <div class="video-card">
         <div class="videoTitle"><%= video.name %></div>
@@ -25,8 +21,10 @@
   </div>
 <% } %>
 
+<button class="collapsible">Add Video<span class="carrot">&#9654;</span></button>
+<div class="content" data-url="/videos/renderAddForm"></div>
 <button class="collapsible">Get Videos<span class="carrot">&#9654;</span></button>
-<div class="content" data-url="/videoProduction/getVideos"></div>
+<div class="content" data-url="/videos/all"></div>
 <h2>create a Parlor Room:</h2>
 <input id="roomName" name="name" type="text" placeholder="Room Name">
 <button class="good" onclick="createRoom()">Create Room</button>

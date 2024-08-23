@@ -69,7 +69,6 @@ const getVideos = async (prefix = '') => {
                         </video>
                         <p>Last Modified: ${lastModified}</p>
                         <p>Size: ${sizeMB} MB</p>
-                        <button data-url="/media/video/delete" style="background-color:red;color:white">delete</button>
                     </div>
                 `;
             })

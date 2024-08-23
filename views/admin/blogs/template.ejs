@@ -1,0 +1,14 @@
+<div class="adminWindow">
+    <div class="adminStatsRow">
+      <% documents.forEach(blog => { %>
+        <div class="adminStat">
+          <p><%= blog.name %></p>
+          <img alt="Blog image" src="<%= blog.mediumIcon %>">
+          <button class="collapsible">view: <span class="carrot">&#9654;</span></button>
+          <div class="content" data-url="/blogs/renderEditForm/<%= blog._id %>"></div>
+        </div>
+      <% }) %>
+    </div>
+  </div>
+  
+  
