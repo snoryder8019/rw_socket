@@ -7,6 +7,14 @@
   <style>
     .array-item {
       margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+    }
+    .thumbnail {
+      width: 75px;
+      height: auto;
+      margin-right:
+      10px;
     }
   </style>
 </head>
@@ -25,6 +33,10 @@
           <% } else if (field.type === 'textarea') { %>
             <textarea name="<%= field.name %>" id="<%= field.name %>"><%= field.value %></textarea>
           <% } else if (field.type === 'file') { %>
+            <% if (field.name === 'thumbnailUrl' && field.value) { %>
+              <!-- Display thumbnail if it exists -->
+              <img src="<%= field.value %>" alt="Thumbnail" class="thumbnail">
+            <% } %>
             <input type="file" name="<%= field.name %>" id="<%= field.name %>">
           <% } else if (field.type === 'dropdown') { %>
             <select name="<%= field.name %>" id="<%= field.name %>">
@@ -48,6 +60,8 @@
                 <% if (typeof item === 'object' && item !== null) { %>
                   <div class="array-item">
                     <% if (item.thumbnailUrl) { %>
+                      <!-- Display thumbnail if it exists -->
+                      <img src="<%= item.thumbnailUrl %>" alt="Thumbnail" class="thumbnail">
                       <label for="<%= field.name %>[<%= index %>].thumbnailUrl">Thumbnail URL:</label>
                       <input type="text" name="<%= field.name %>[<%= index %>].thumbnailUrl" id="<%= field.name %>-<%= index %>-thumbnailUrl" value="<%= item.thumbnailUrl %>">
                     <% } %>

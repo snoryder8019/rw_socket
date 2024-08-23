@@ -22,24 +22,52 @@ const s3 = new AWS.S3({
  * @param {String} fileKey Key under which to store the file in the bucket
  * @returns {Promise<String>} URL of the uploaded file
  */
-const uploadToLinode = async (filePath, fileKey) => {
-    const fileContent = fs.readFileSync(filePath);
-
-    const params = {
-        Bucket: process.env.LINODE_BUCKET,
-        Key: fileKey,
-        Body: fileContent,
-        ACL: 'public-read', // Adjust according to your privacy requirements
-    };
-
+async function uploadVideoToLinode(filePath, key) {
     try {
-        const uploadResult = await s3.upload(params).promise();
-        return uploadResult.Location; // URL of the uploaded file
+        if (!filePath || typeof filePath !== 'string') {
+            throw new TypeError('The "path" argument must be of type string or an instance of Buffer or URL.');
+        }
+
+        const fileContent = fs.readFileSync(filePath); // Read the video file content from the path
+
+        const params = {
+            Bucket: process.env.LINODE_BUCKET, // Replace with your Linode bucket name
+            Key: key, // File name you want to save as in S3
+            Body: fileContent,
+            ContentType: 'video/mp4', // Set ContentType for video
+            ACL: 'public-read' // Make the video publicly readable if required
+        };
+
+        // Uploading video files to the bucket
+        const data = await s3.upload(params).promise();
+        return data.Location; // Return the URL of the uploaded video file
     } catch (error) {
-        console.error("Error uploading to Linode Object Storage:", error);
-        throw error; // Rethrow to handle it in the calling function
+        console.error("Error uploading video to Linode:", error);
+        throw error;
     }
-};
+}
+async function uploadToLinode(filePath, key) {
+    try {
+      if (!filePath || typeof filePath !== 'string') {
+        throw new TypeError('The "path" argument must be of type string or an instance of Buffer or URL.');
+      }
+  
+      const fileContent = fs.readFileSync(filePath); // Read the file content from the path
+  
+      const params = {
+        Bucket: process.env.LINODE_BUCKET, // Replace with your Linode bucket name
+        Key: key, // File name you want to save as in S3
+        Body: fileContent
+      };
+  
+      // Uploading files to the bucket
+      const data = await s3.upload(params).promise();
+      return data.Location; // Return the URL of the uploaded file
+    } catch (error) {
+      console.error("Error uploading to Linode:", error);
+      throw error;
+    }
+  }
 //https://royal-bucket.us-ord-1.linodeobjects.com/admin/videos/1720417954431.mp4
 /**
  * Retrieves a list of videos from Linode Object Storage
@@ -146,6 +174,7 @@ const getImageGrid = async (directory = '') => {
 
 module.exports = {
     uploadToLinode,
+    uploadVideoToLinode,
     getVideos,
     getImageGrid,
     getDirectories

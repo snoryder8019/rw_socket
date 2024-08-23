@@ -1,0 +1,15 @@
+<div class="adminWindow">
+    <div class="adminStatsRow">
+      <% documents.forEach(help => { %>
+        <div class="adminStat">
+          <p><%= help.name %></p>
+          <img alt="Help image" src="<%= help.mediumIcon %>">
+          <button class="collapsible">view: <span class="carrot">&#9654;</span></button>
+          <div class="content" data-url="/helps/renderEditForm/<%= help._id %>"></div>
+        </div>
+      <% }) %>
+    </div>
+  </div>
+  
+  
+  

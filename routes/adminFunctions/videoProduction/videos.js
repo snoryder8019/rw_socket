@@ -1,3 +1,4 @@
+//routes/adminfunctions/videoProductions.js **NODE GPT: DONT REMOVE THIS LINE**
 const express = require('express');
 const multer = require('multer');
 const buildRoutes = require('../../helpers/routeBuilder');
@@ -20,26 +21,50 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 // Route to handle video upload
-router.post('/upload', upload.single('video'), async (req, res) => {
+router.post('/upload', upload.single('videoFile'), async (req, res) => {
   try {
-    const file = req.file;
-    const fileKey = `admin/videos/${file.filename}`;
-    const url = await uploadToLinode(file.path, fileKey);
+    console.log('Uploading video...');
+    const videoFile = req.file;
 
-    // Save video info to database
-    const video = new Video({
-      name: file.originalname,
-      url: url,
-      thumbnail: `${url}-thumbnail` // Assuming thumbnail generation logic
-    });
-    await video.save();
+    if (!videoFile) {
+      console.error('No video file provided');
+      return res.status(400).send('No video file provided');
+    }
 
-    res.status(200).send({ video: video });
+    // Call the createVid method to handle upload and DB save
+    const video = await new Video().createVid(videoFile);
+
+    if (!video) {
+      console.error('Failed to create video entry in database');
+      return res.status(500).send('Failed to create video entry in database');
+    }
+
+    console.log(`Video uploaded and saved: ${video.url}`);
+    req.flash('success', `Video: ${videoFile.originalname} uploaded successfully`);
+    res.redirect('/');
   } catch (error) {
-    console.error(error);
-    res.status(500).send('Error uploading video');
+    console.error("Error uploading video:", error);
+    res.status(500).render('error', { error: error });
   }
 });
+router.post('/createVid', async(req,res)=>{ 
+  try{  
+   const response = await new Video().createVid()
+    res.send(response)
+  }
+  catch(error){console.error(error)}
+})
+router.post('/updateVid/:id', async(req,res)=>{ 
+  try{  
+    const {id}= req.params;
+    const updates=req.body;
+    
+    console.log(`update:${updates}\nid: ${id}`)
+   const response = await new Video().updateVid(id,file,updates)
+    res.send(response)
+  }
+  catch(error){console.error(error)}
+})
 router.get('/renderAddForm', (req, res) => {
   try {
     const model = Video.getModelFields();
@@ -48,7 +73,7 @@ router.get('/renderAddForm', (req, res) => {
 
     res.render('forms/generalForm', {
       title: 'Add New Video',
-      action: '/videos/create',
+      action: '/videos/upload',
       formFields: formFields
     });
   } catch (error) {
@@ -70,7 +95,7 @@ router.get('/renderEditForm/:id', async (req, res) => {
 
     res.render('forms/generalEditForm', {
       title: 'Edit Video',
-      action: `videos/update/${id}`,
+      action: `videos/updateVid/${id}`,
       routeSub: 'videos',
       method: 'post',
       formFields: formFields,

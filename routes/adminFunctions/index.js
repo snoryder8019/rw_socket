@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 const videoStream = require('./chats/videoStream')
-const {ticketUpdate,ticketDelete, ticketData} = require('./help/ticketFunctions')
+
 const {isAdmin,gatherIp} = require('./adminFunctions')
 const {getUserEditor,postUserEdit} = require('./users/userControl')
 
@@ -53,19 +53,21 @@ const clubs = require('./clubs/clubs');
 router.use('/clubs',permissionsChecker,clubs);
 const blogs = require('./blogs/blogs');
 router.use('/blogs',permissionsChecker,blogs);
+const helps = require('./helps/helps');
+router.use('/helps',permissionsChecker,helps);
+const faqs = require('./helps/faqs');
+router.use('/faqs',permissionsChecker,faqs);
 const webappSettings = require('./webappSettings/webappSettings');
 router.use('/webappSettings',permissionsChecker,webappSettings);
 const notifications = require('./notifications/notifications');
-router.use('/notifications',permissionsChecker,notifications);
+router.use('/nfaqications',permissionsChecker,notifications);
 const sectionSettings = require('./webappSettings/sectionSettings');
 router.use('/sectionSettings',permissionsChecker,sectionSettings);
 const subscriptions = require('./subscriptions/subscriptions');
 router.use('/subscriptions',permissionsChecker,subscriptions);
 const generalEditor = require('./generalEditor');
 router.use('/generalEditor',permissionsChecker,generalEditor);
-router.get('/ticketData',ticketData)
-router.post('/ticketUpdate', ticketUpdate);
-router.post('/ticketDelete', ticketDelete);
+
 
 
 /////P2P routes

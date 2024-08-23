@@ -1,6 +1,6 @@
-const ModelHelper = require('../helpers/models');
-const { upload, processImages } = require('../../multer/subscriptionSetup');
-const { uploadToLinode } = require('../../aws_sdk/setup');
+const ModelHelper = require('../../helpers/models');
+const { upload, processImages } = require('../../../multer/subscriptionSetup');
+const { uploadToLinode } = require('../../../aws_sdk/setup');
 
 class Help extends ModelHelper {
   constructor(helpData) {

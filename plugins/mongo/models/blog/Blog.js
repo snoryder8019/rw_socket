@@ -6,6 +6,7 @@ class Blog extends ModelHelper {
   constructor(blogData) {
     super('blogs');
     this.modelFields = {
+      name: { type: 'text', value: null },
       title: { type: 'text', value: null },
       subtitle: { type: 'text', value: null },
       content: { type: 'textarea', value: null },
@@ -15,7 +16,9 @@ class Blog extends ModelHelper {
       publishDate: { type: 'date', value: null },
       lastUpdated: { type: 'date', value: null },
       featuredImage: { type: 'file', value: null },
-      coverImage: { type: 'file', value: null },
+      horizBkgrd: { type: 'file', value: null },
+      mediumIcon: { type: 'file', value: null },
+      backgroundImg: { type: 'file', value: null },
       categories: { type: 'array', value: [] },
       metaDescription: { type: 'text', value: null },
       metaKeywords: { type: 'array', value: [] },
@@ -56,8 +59,10 @@ class Blog extends ModelHelper {
 
   get fileFields() {
     return [
-      { name: 'featuredImage', maxCount: 1 },
-      { name: 'coverImage', maxCount: 1 }
+      { name: 'horizBkgrd', maxCount: 1 },
+      { name: 'featureImage', maxCount: 1 },
+      { name: 'backgroundImg', maxCount: 1 },
+      { name: 'mediumIcon', maxCount: 1 },
     ];
   }
 

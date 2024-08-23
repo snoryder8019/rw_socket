@@ -1,4 +1,6 @@
-const ModelHelper = require('../helpers/models');
+const ModelHelper = require('../../helpers/models');
+const { upload, processImages } = require('../../../multer/subscriptionSetup');
+const { uploadToLinode } = require('../../../aws_sdk/setup');
 
 class Faq extends ModelHelper {
   constructor(faqData) {
@@ -31,7 +33,7 @@ class Faq extends ModelHelper {
   }
 
   pathForGetRouteView() {
-    return 'admin/faqs/template';
+    return 'admin/helps/templateFaq';
   }
 }
 

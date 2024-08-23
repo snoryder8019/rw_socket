@@ -8,7 +8,7 @@ const users = require('./userFunctions');
 const { getDb } = require('../plugins/mongo/mongo');
 const noNos = require('./securityFunctions/forbiddens');
 const { resetPasswordRequest, resetPassword, handleResetPasswordGet } = require('../plugins/passport/passwordReset');
-const { userDataUpload, submitTicket, saveRotation, assignAvatar, deleteAvatar } = require('./userFunctions/userFunctions');
+const { userDataUpload, saveRotation, assignAvatar, deleteAvatar } = require('./userFunctions/userFunctions');
 const { updateBanned } = require('./securityFunctions/updateBanned');
 const upload = require('../plugins/multer/setup');
 const userBucketRouter = require('./userFunctions/userBucketFunctions');
@@ -29,7 +29,6 @@ router.get('/getNotifications', getNotifications);
 router.post('/deleteAvatar', deleteAvatar);
 router.post('/assignAvatar', assignAvatar);
 
-router.post('/submitTicket', submitTicket);
 router.post('/reset-password-request', resetPasswordRequest);
 router.post('/passwordReset/:token', resetPassword);
 router.get('/reset-password/:token', handleResetPasswordGet);
