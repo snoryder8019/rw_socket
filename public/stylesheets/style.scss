@@ -334,7 +334,11 @@ box-shadow:inset 2px 2px 2px $black;
 .collapsed {
     max-height: 0; /* Collapse the div */
 }
-
+.uploadedVideo{
+  width: 96%;
+  margin: 1%;
+  padding: 1%;
+}
 
   .thumb {
     display: block;

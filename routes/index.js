@@ -4,7 +4,7 @@ const cookieParser = require('cookie-parser');
 const pluginsRouter = require('../plugins');
 const cookiesRouter = require('./userFunctions/cookies');
 const adminFunctionsRouter = require('./adminFunctions');
-const userFunctionsRouter = require('./userFunctions');
+const users = require('./userFunctions');
 const { getDb } = require('../plugins/mongo/mongo');
 const noNos = require('./securityFunctions/forbiddens');
 const { resetPasswordRequest, resetPassword, handleResetPasswordGet } = require('../plugins/passport/passwordReset');
@@ -20,7 +20,7 @@ router.use(cookieParser());
 
 router.use(pluginsRouter);
 router.use('/', adminFunctionsRouter);
-router.use('/user', userFunctionsRouter);
+router.use('/users', users);
 router.use('/', cookiesRouter);
 router.use(userBucketRouter);
 router.use('/games', gamesRouter);

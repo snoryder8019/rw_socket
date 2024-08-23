@@ -35,6 +35,7 @@ const buildRoutes = (model, router) => {
       if (!ObjectId.isValid(id)) {
         return res.status(400).send({ error: 'Invalid ID format' });
       }
+      console.log(document)
       const document = await model.getById(id);
       res.status(200).send(document);
     } catch (error) {

@@ -40,7 +40,7 @@ const uploadToLinode = async (filePath, fileKey) => {
         throw error; // Rethrow to handle it in the calling function
     }
 };
-
+//https://royal-bucket.us-ord-1.linodeobjects.com/admin/videos/1720417954431.mp4
 /**
  * Retrieves a list of videos from Linode Object Storage
  * @param {String} prefix (optional) Prefix to filter the videos (e.g., folder path)
@@ -54,17 +54,32 @@ const getVideos = async (prefix = '') => {
 
     try {
         const data = await s3.listObjectsV2(params).promise();
-        return data.Contents.map(item => ({
-            key: item.Key,
-            lastModified: item.LastModified,
-            size: item.Size,
-            url: `${process.env.LINODE_URL}/${process.env.LINODE_BUCKET}/${item.Key}`
-        }));
+        return data.Contents
+            .filter(item => item.Key.endsWith('.mp4')) // Ensure only video files are processed
+            .map(item => {
+                const videoUrl = `${process.env.LINODE_URL}/${process.env.LINODE_BUCKET}/${item.Key}`;
+                const lastModified = new Date(item.LastModified).toLocaleDateString();
+                const sizeMB = (item.Size / (1024 * 1024)).toFixed(2);
+                console.log(`videoUrl: ${videoUrl} \nlastModified: ${lastModified} \nsizeMB: ${sizeMB}`)
+                return `
+                    <div class="uploadedVideo">
+                        <video muted paused controls class="uploadedVideo">
+                            <source src="${videoUrl}" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                        <p>Last Modified: ${lastModified}</p>
+                        <p>Size: ${sizeMB} MB</p>
+                        <button data-url="/media/video/delete" style="background-color:red;color:white">delete</button>
+                    </div>
+                `;
+            })
+            .join(''); // Join all HTML strings to form a single string
     } catch (error) {
         console.error("Error retrieving videos from Linode Object Storage:", error);
         throw error; // Rethrow to handle it in the calling function
     }
 };
+
 const getDirectories = async (prefix = '') => {
     const params = {
         Bucket: process.env.LINODE_BUCKET,

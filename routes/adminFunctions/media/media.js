@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { uploadToLinode, getVideos,getDirectories, getImageGrid } = require('../../../plugins/aws_sdk/setup');
 const multer = require('multer');
+const Video = require('../../../plugins/mongo/models/Video.js');
 const path = require('path');
 
 // Configure multer for file uploads
@@ -42,11 +43,15 @@ router.get('/videos', async (req, res) => {
     try {
         const prefix = req.query.prefix || ''; // Optional prefix for filtering
         const videos = await getVideos(prefix);
-        res.json({ success: true, videos });
+        res.send( videos );
     } catch (error) {
         console.error("Error in /videos endpoint:", error);
         res.status(500).json({ success: false, message: 'Failed to retrieve videos', error: error.message });
     }
+});
+
+router.post('/videos/delete', async (req, res) => {
+
 });
 
 // GET /adminFunctions/media/images

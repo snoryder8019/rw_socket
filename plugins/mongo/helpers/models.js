@@ -54,7 +54,26 @@ class ModelHelper {
     }
     return await collection.findOne({ _id: new ObjectId(id) });
   }
-
+  async pushById(id, updateObject) {
+    if (!ObjectId.isValid(id)) {
+      throw new Error('Invalid ID format');
+    }
+    const db = getDb();
+    const collection = db.collection(this.collectionName);
+  
+    // Use $push operation with the provided updateObject
+    const result = await collection.updateOne(
+      { _id: new ObjectId(id) },
+      { $push: updateObject }
+    );
+  
+    if (result.matchedCount === 0) {
+      throw new Error('No document found with that ID');
+    }
+    // Return the updated document
+    return await collection.findOne({ _id: new ObjectId(id) });
+  }
+  
   async deleteById(id) {
     if (!ObjectId.isValid(id)) {
       throw new Error('Invalid ID format');

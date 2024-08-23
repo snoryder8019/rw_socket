@@ -1,43 +1,46 @@
-//plugins/mongo/models/Video.js **NOTE GPT: DONOT REMOVE THIS LINE**
+// plugins/mongo/models/Image.js **NOTE GPT: DONOT REMOVE THIS LINE**
 const ModelHelper = require('../helpers/models');
 const { upload, processImages } = require('../../multer/subscriptionSetup');
 const { uploadToLinode } = require('../../aws_sdk/setup');
-const modelName = 'video';
+const modelName = 'image';
 
-class Video extends ModelHelper {
-  constructor(videoData) {
+class Image extends ModelHelper {
+  constructor(imageData) {
     super(`${modelName}s`);
     this.modelFields = {
       name: { type: 'text', value: null },
-      url: { type: 'text', value: null },
-      alt:{type:'text',value:"Royal World Videos New Everyday!"},
-      directory:{type:'text',value:null},
-      thumnailUrl: { type: 'text', value: null },
+      bucketUrl: { type: 'text', value: null },
+      thumbnailUrl: { type: 'text', value: null },
+      alt: { type: 'text', value: 'Default alt text' },      
+      visible: { type: 'boolean', value: false },
+      avatarTag: { type: 'boolean', value: false },
+      backgroundTag: { type: 'boolean', value: false },
+      directory: { type: 'text', value: null },
       settings: { type: 'array', value: [] },
-      thumnailFile: { type: 'file', value: null },
       blog: { type: 'boolean', value: false },
       travel: { type: 'boolean', value: false },
       sectionReel: { type: 'boolean', value: false },
       club: { type: 'text', value: null },
       tags: { type: 'array', value: [] },
+      adminTags: { type: 'array', value: [] },
+      flaggedBy: { type: 'array', value: [] },
+      sharedBy: { type: 'array', value: [] },
       premiumContent: { type: 'boolean', value: false },
+      createdBy: { type: 'text', value: null },//userID#, 'system'functionSource, 'admin'userId#
 
-
-   
-     
     };
-    if (videoData) {
+    if (imageData) {
       for (let key in this.modelFields) {
-        if (videoData[key] !== undefined) {
-          this.modelFields[key].value = videoData[key];
+        if (imageData[key] !== undefined) {
+          this.modelFields[key].value = imageData[key];
         }
       }
     }
   }
 
   static getModelFields() {
-    return Object.keys(new Video().modelFields).map(key => {
-      const field = new Video().modelFields[key];
+    return Object.keys(new Image().modelFields).map(key => {
+      const field = new Image().modelFields[key];
       return { name: key, type: field.type };
     });
   }
@@ -53,7 +56,6 @@ class Video extends ModelHelper {
   get fileFields() {
     return [
       { name: 'thumbnailFile', maxCount: 1 },
- 
     ];
   }
 
@@ -79,4 +81,4 @@ class Video extends ModelHelper {
   }
 }
 
-module.exports = Video;
+module.exports = Image;

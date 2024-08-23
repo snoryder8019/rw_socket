@@ -5,7 +5,7 @@ const { uploadToLinode } = require('../../aws_sdk/setup');
 
 class ChatMessage extends ModelHelper {
   constructor(chatMessageData) {
-    super('chatMessages');
+    super('chat_messages_meta');
     this.modelFields = {
       roomId: { type: 'text', value: null },
       textOnly:{type:'boolean',value:true},

@@ -189,8 +189,7 @@
             }
         });
         let userId = "<%=user._id%>";
-
- function addMessage(messageObject, isOwnMessage = false) {
+        function addMessage(messageObject, isOwnMessage = false) {
     const messagesContainer = document.getElementById('chat');
     const shouldScroll = messagesContainer.scrollTop + messagesContainer.clientHeight + 50 >= messagesContainer.scrollHeight;
     
@@ -207,25 +206,21 @@
 
     const actionsDiv = document.createElement('div');
     actionsDiv.className = 'messageActions';
-    actionsDiv.id = `${messageObject.id}_actions`;
+    actionsDiv.id = `${messageObject._id}_actions`;
 
     const heartIcon = document.createElement('span');
     heartIcon.textContent = '❤️';
-heartIcon.className = 'heartIcon';
-heartIcon.style.filter = "grayscale(50%)";
+    heartIcon.className = 'heartIcon unliked-icon';
+    heartIcon.style.filter = "grayscale(50%)";
+    heartIcon.dataset.isLiked = "false";  // Set initial state to "unliked"
 
-const replyIcon = document.createElement('span');
-replyIcon.textContent = '↩️';
-replyIcon.className = 'replyIcon';
-replyIcon.style.filter = "grayscale(5%)";
-
-    // const threeDotsIcon = document.createElement('span');
-    // threeDotsIcon.textContent = '⋮';
-    // threeDotsIcon.className = 'threeDotsIcon';
+    const replyIcon = document.createElement('span');
+    replyIcon.textContent = '↩️';
+    replyIcon.className = 'replyIcon';
+    replyIcon.style.filter = "grayscale(5%)";
 
     actionsDiv.appendChild(heartIcon);
     actionsDiv.appendChild(replyIcon);
-  //  actionsDiv.appendChild(threeDotsIcon);
 
     messageDiv.appendChild(messageAvatar);
     messageDiv.appendChild(messageTextSpan);
@@ -236,61 +231,57 @@ replyIcon.style.filter = "grayscale(5%)";
         messagesContainer.scrollTop = messagesContainer.scrollHeight;
     }
 
-    // Event Listeners with postId and userId
-    const postId = messageObject._id;  // Assuming messageObject.id is the postId
+    const postId = messageObject._id;  // Assuming messageObject._id is the postId
+    const userId = messageObject.userId; // Assuming messageObject contains userId
 
     heartIcon.addEventListener('click', (e) => {
-        handleIconClick('heart', postId, userId,e,'❤️','heartIcon');
+        const isLiked = e.target.dataset.isLiked === "true";
+        handleIconClick('heart', postId, userId, e, isLiked);
     });
 
     replyIcon.addEventListener('click', () => {
         handleIconClick('reply', postId, userId);
     });
-
-    // threeDotsIcon.addEventListener('click', () => {
-    //     handleIconClick('options', postId, userId);
-    // });
 }
+
 function handleIconClick(action, postId, userId, e, isLiked) {
     console.log(`Action: ${action}, Post ID: ${postId}, User ID: ${userId}`);
-    
-    // Determine the new action and tally based on the current state
-    const newAction = isLiked ? 'unlike' : 'like';
-    const tally = isLiked ? '--' : '++';
 
-    // Fetch to update the tally on the server
-    fetch(`/user/chat/like/${tally}`, {
+    const newAction = isLiked ? 'unlike' : 'like';
+    const tally = isLiked ? '--' : '++'; // Correct the tally increment/decrement
+
+    console.log(`New Action: ${newAction}`);
+    console.log(`Tally: ${tally}`);
+
+    fetch(`/users/chat/like`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ userId,postId })
+        body: JSON.stringify({ userId, postId, tally })
     })
     .then(response => response.json())
     .then(data => {
-        // Assuming the server returns the updated tally count
         const newTally = data.tally;
 
         // Toggle the icon state
-        if (isLiked) {
-            e.target.textContent = '♡'; // Unlike icon (empty heart)
-            e.target.className = 'unliked-icon';
-            e.target.style.filter = `grayscale(${100}%)`; // Apply full grayscale
-        } else {
+        if (!isLiked) {
             e.target.textContent = '❤️'; // Like icon (filled heart)
-            e.target.className = 'liked-icon';
-            e.target.style.filter = `grayscale(${0}%)`; // Remove grayscale
+            e.target.className = 'heartIcon liked-icon'; // Apply liked class
+            e.target.style.filter = 'grayscale(0%)'; // Remove grayscale
+            e.target.dataset.isLiked = "true"; // Set isLiked to true
+        } else {
+            e.target.textContent = '❤️'; // Unlike icon (empty heart)
+            e.target.className = 'heartIcon unliked-icon'; // Apply unliked class
+            e.target.style.filter = 'grayscale(50%)'; // Apply grayscale
+            e.target.dataset.isLiked = "false"; // Set isLiked to false
         }
-
-        // Update the isLiked flag for the next click
-        e.target.dataset.isLiked = !isLiked;
     })
     .catch(error => {
         console.error('Error updating tally:', error);
     });
 }
 
-        
         socket.on('chat message', (msg,roomyId) => {
             console.log(`chatting..${msg.user} room:${roomId}`)
         console.log(roomId == msg.roomId)
