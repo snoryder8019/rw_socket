@@ -1,12 +1,7 @@
 import express from 'express';
-import videoStream from './chat/videoStream.js';
-import {
-  ticketUpdate,
-  ticketDelete,
-  ticketData,
-} from './help/ticketFunctions.js';
+import videoStream from './chats/videoStream.js';
 import { getUserEditor, postUserEdit } from './users/userControl.js';
-import chat from './chat/chat.js';
+import chat from './chats/chat.js';
 import users from './users/users.js';
 import permissions from './permissions/permissions.js';
 import videoLead from './videoLead/videoLead.js';
@@ -65,9 +60,6 @@ router.use('/notifications', permissionsChecker, notifications);
 router.use('/sectionSettings', permissionsChecker, sectionSettings);
 router.use('/subscriptions', permissionsChecker, subscriptions);
 router.use('/generalEditor', permissionsChecker, generalEditor);
-router.get('/ticketData', permissionsChecker, ticketData);
-router.post('/ticketUpdate', permissionsChecker, ticketUpdate);
-router.post('/ticketDelete', permissionsChecker, ticketDelete);
 router.use('/destinations', permissionsChecker, destinations);
 router.use('/excursions', permissionsChecker, excursions);
 router.use('/media', permissionsChecker, media);

@@ -1,10 +1,10 @@
-const express = require('express');
-const Excursion = require('../../../plugins/mongo/models/travel/Excursion');
-const { generateFormFields } = require('../../../plugins/helpers/formHelper');
-const buildRoutes = require('../../helpers/routeBuilder');
+import express from 'express';
+import Excursion from '../../../plugins/mongo/models/travel/Excursion.js';
+import generateFormFields from '../../../plugins/helpers/formHelper.js';
+import { buildRoutes } from '../../helpers/routeBuilder.js';
 
 const router = express.Router();
-const modelName = "excursion";
+const modelName = 'excursion';
 // Route to render the form to add a new excursion
 router.get('/renderAddForm', (req, res) => {
   try {
@@ -15,7 +15,7 @@ router.get('/renderAddForm', (req, res) => {
     res.render('forms/generalForm', {
       title: 'Add New Excursion',
       action: '/excursions/create',
-      formFields: formFields
+      formFields: formFields,
     });
   } catch (error) {
     console.error(error);
@@ -40,7 +40,7 @@ router.get('/renderEditForm/:id', async (req, res) => {
       routeSub: 'excursions',
       method: 'post',
       formFields: formFields,
-      data: excursion
+      data: excursion,
     });
   } catch (error) {
     console.error(error);
@@ -53,7 +53,7 @@ router.get('/section', async (req, res) => {
     const data = await new Excursion().getAll();
     res.render('./layouts/section', {
       title: 'Section View',
-      data: data
+      data: data,
     });
   } catch (error) {
     console.error(error);
@@ -63,4 +63,4 @@ router.get('/section', async (req, res) => {
 
 buildRoutes(new Excursion(), router);
 
-module.exports = router;
+export default router;

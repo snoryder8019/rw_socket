@@ -1,8 +1,8 @@
-const ModelHelper = require('../helpers/models');
-const { upload, processImages } = require('../../multer/subscriptionSetup');
-const { uploadToLinode } = require('../../aws_sdk/setup');
+import ModelHelper from '../helpers/models.js';
+import { upload, processImages } from '../../multer/subscriptionSetup.js';
+import { uploadToLinode } from '../../aws_sdk/setup.js';
 
-class Gem extends ModelHelper {
+export default class Gem extends ModelHelper {
   constructor(gemData) {
     super('gems');
     this.modelFields = {
@@ -25,11 +25,11 @@ class Gem extends ModelHelper {
       premium: { type: 'boolean', value: false },
       cost: { type: 'number', value: null },
       duration: { type: 'text', value: null },
-      tags: { type: 'array', value: [] },  // Assuming comma-separated string for simplicity
-      links: { type: 'array', value: [] },  // Assuming comma-separated string for simplicity
-      blogs: { type: 'array', value: [] },  // Assuming comma-separated string for simplicity
-      vendors: { type: 'array', value: [] },  // Assuming comma-separated string for simplicity
-      members: { type: 'array', value: [] }  // Assuming comma-separated string for simplicity
+      tags: { type: 'array', value: [] }, // Assuming comma-separated string for simplicity
+      links: { type: 'array', value: [] }, // Assuming comma-separated string for simplicity
+      blogs: { type: 'array', value: [] }, // Assuming comma-separated string for simplicity
+      vendors: { type: 'array', value: [] }, // Assuming comma-separated string for simplicity
+      members: { type: 'array', value: [] }, // Assuming comma-separated string for simplicity
     };
 
     if (gemData) {
@@ -42,25 +42,33 @@ class Gem extends ModelHelper {
   }
 
   static getModelFields() {
-    return Object.keys(new Gem().modelFields).map(key => {
+    return Object.keys(new Gem().modelFields).map((key) => {
       const field = new Gem().modelFields[key];
       return { name: key, type: field.type };
     });
   }
 
   middlewareForCreateRoute() {
-    return [upload.fields(this.fileFields), processImages, this.uploadImagesToLinode.bind(this)];
+    return [
+      upload.fields(this.fileFields),
+      processImages,
+      this.uploadImagesToLinode.bind(this),
+    ];
   }
 
   middlewareForEditRoute() {
-    return [upload.fields(this.fileFields), processImages, this.uploadImagesToLinode.bind(this)];
+    return [
+      upload.fields(this.fileFields),
+      processImages,
+      this.uploadImagesToLinode.bind(this),
+    ];
   }
 
   get fileFields() {
     return [
       { name: 'mediumIcon', maxCount: 1 },
       { name: 'backgroundImg', maxCount: 1 },
-      { name: 'horizBkgd', maxCount: 1 }
+      { name: 'horizBkgd', maxCount: 1 },
     ];
   }
 
@@ -76,7 +84,7 @@ class Gem extends ModelHelper {
       }
       next();
     } catch (error) {
-      console.error("Error in uploadImagesToLinode middleware:", error);
+      console.error('Error in uploadImagesToLinode middleware:', error);
       next(error);
     }
   }
@@ -85,5 +93,3 @@ class Gem extends ModelHelper {
     return 'admin/gems/template';
   }
 }
-
-module.exports = Gem;

@@ -1,19 +1,20 @@
-const ModelHelper = require('../../helpers/models');
-const { upload, processImages } = require('../../../multer/subscriptionSetup');
-const { uploadToLinode } = require('../../../aws_sdk/setup');
+import ModelHelper from '../../helpers/models.js';
+import { upload, processImages } from '../../../multer/subscriptionSetup.js';
+import { uploadToLinode } from '../../../aws_sdk/setup.js';
+
 const modelName = 'destination';
 
-class Destination extends ModelHelper {
+export default class Destination extends ModelHelper {
   constructor(destinationData) {
     super(`${modelName}s`);
     this.modelFields = {
       name: { type: 'text', value: null },
       title: { type: 'text', value: null },
       subtitle: { type: 'text', value: null },
-      links: { type: 'array', value:[] },      mediumIcon: { type: 'file', value: null },
+      links: { type: 'array', value: [] },
+      mediumIcon: { type: 'file', value: null },
       backgroundImg: { type: 'file', value: null },
       horizBkgd: { type: 'file', value: null },
-     
     };
     if (destinationData) {
       for (let key in this.modelFields) {
@@ -25,18 +26,26 @@ class Destination extends ModelHelper {
   }
 
   static getModelFields() {
-    return Object.keys(new Destination().modelFields).map(key => {
+    return Object.keys(new Destination().modelFields).map((key) => {
       const field = new Destination().modelFields[key];
       return { name: key, type: field.type };
     });
   }
 
   middlewareForCreateRoute() {
-    return [upload.fields(this.fileFields), processImages, this.uploadImagesToLinode.bind(this)];
+    return [
+      upload.fields(this.fileFields),
+      processImages,
+      this.uploadImagesToLinode.bind(this),
+    ];
   }
 
   middlewareForEditRoute() {
-    return [upload.fields(this.fileFields), processImages, this.uploadImagesToLinode.bind(this)];
+    return [
+      upload.fields(this.fileFields),
+      processImages,
+      this.uploadImagesToLinode.bind(this),
+    ];
   }
 
   get fileFields() {
@@ -44,7 +53,6 @@ class Destination extends ModelHelper {
       { name: 'mediumIcon', maxCount: 1 },
       { name: 'backgroundImg', maxCount: 1 },
       { name: 'horizBkgrd', maxCount: 1 },
-    
     ];
   }
 
@@ -60,7 +68,7 @@ class Destination extends ModelHelper {
       }
       next();
     } catch (error) {
-      console.error("Error in uploadImagesToLinode middleware:", error);
+      console.error('Error in uploadImagesToLinode middleware:', error);
       next(error);
     }
   }
@@ -69,5 +77,3 @@ class Destination extends ModelHelper {
     return `admin/${modelName}s/template`;
   }
 }
-
-module.exports = Destination;

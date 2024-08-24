@@ -2,8 +2,8 @@ import express from 'express';
 import { getDb } from '../../../plugins/mongo/mongo.js';
 import User from '../../../plugins/mongo/models/User.js';
 import Permission from '../../../plugins/mongo/models/Permission.js';
-import buildRoutes from '../../helpers/routeBuilder.js';
-import { generateFormFields } from '../../../plugins/helpers/formHelper.js';
+import { buildRoutes } from '../../helpers/routeBuilder.js';
+import generateFormFields from '../../../plugins/helpers/formHelper.js';
 
 const router = express.Router();
 

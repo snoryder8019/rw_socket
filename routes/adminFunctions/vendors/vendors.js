@@ -1,10 +1,10 @@
-const express = require('express');
-const Vendor = require('../../../plugins/mongo/models/Vendor');
-const { generateFormFields } = require('../../../plugins/helpers/formHelper');
-const buildRoutes = require('../../helpers/routeBuilder');
+import express from 'express';
+import Vendor from '../../../plugins/mongo/models/Vendor.js';
+import generateFormFields from '../../../plugins/helpers/formHelper.js';
+import { buildRoutes } from '../../helpers/routeBuilder.js';
 
 const router = express.Router();
-const modelName = "vendor";
+const modelName = 'vendor';
 // Route to render the form to add a new vendor
 router.get('/renderAddForm', (req, res) => {
   try {
@@ -15,7 +15,7 @@ router.get('/renderAddForm', (req, res) => {
     res.render('forms/generalForm', {
       title: 'Add New Vendor',
       action: '/vendors/create',
-      formFields: formFields
+      formFields: formFields,
     });
   } catch (error) {
     console.error(error);
@@ -40,7 +40,7 @@ router.get('/renderEditForm/:id', async (req, res) => {
       routeSub: 'vendors',
       method: 'post',
       formFields: formFields,
-      data: vendor
+      data: vendor,
     });
   } catch (error) {
     console.error(error);
@@ -53,7 +53,7 @@ router.get('/section', async (req, res) => {
     const data = await new Vendor().getAll();
     res.render('./layouts/section', {
       title: 'Section View',
-      data: data
+      data: data,
     });
   } catch (error) {
     console.error(error);
@@ -63,4 +63,4 @@ router.get('/section', async (req, res) => {
 
 buildRoutes(new Vendor(), router);
 
-module.exports = router;
+export default router;

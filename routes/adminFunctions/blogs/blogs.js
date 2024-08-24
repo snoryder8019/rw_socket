@@ -1,9 +1,10 @@
-const express = require('express');
-const Blog = require('../../../plugins/mongo/models/blog/Blog');
-const { generateFormFields } = require('../../../plugins/helpers/formHelper');
-const buildRoutes = require('../../helpers/routeBuilder');
+import express from 'express';
+import Blog from '../../../plugins/mongo/models/blog/Blog.js';
+import generateFormFields from '../../../plugins/helpers/formHelper.js';
+import { buildRoutes } from '../../helpers/routeBuilder.js';
+
 const router = express.Router();
-const modelName = "blog";
+const modelName = 'blog';
 
 // Route to render the form to add a new blog
 router.get('/renderAddForm', (req, res) => {
@@ -15,7 +16,7 @@ router.get('/renderAddForm', (req, res) => {
       title: 'Add New Blog',
       action: '/blogs/create',
       formFields: formFields,
-      wysiwyg: true // Indicate to initialize WYSIWYG editor
+      wysiwyg: true, // Indicate to initialize WYSIWYG editor
     });
   } catch (error) {
     console.error(error);
@@ -41,7 +42,7 @@ router.get('/renderEditForm/:id', async (req, res) => {
       method: 'post',
       formFields: formFields,
       data: blog,
-      wysiwyg: true // Indicate to initialize WYSIWYG editor
+      wysiwyg: true, // Indicate to initialize WYSIWYG editor
     });
   } catch (error) {
     console.error(error);
@@ -53,4 +54,4 @@ router.get('/renderEditForm/:id', async (req, res) => {
 
 buildRoutes(new Blog(), router);
 
-module.exports = router;
+export default router;

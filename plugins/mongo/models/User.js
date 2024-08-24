@@ -2,9 +2,10 @@
 import ModelHelper from '../helpers/models.js';
 import { upload, processImages } from '../../multer/subscriptionSetup.js';
 import { uploadToLinode } from '../../aws_sdk/setup.js';
-import thumbnailFile from '/images/hugeIcon.png';
 
-export class User extends ModelHelper {
+const thumbnailFile = 'images/hugeIcon.png';
+
+export default class User extends ModelHelper {
   constructor(userData) {
     super('users');
     this.modelFields = {
@@ -12,7 +13,7 @@ export class User extends ModelHelper {
       name: { type: 'text', value: null },
       title: { type: 'text', value: null },
       surname: { type: 'text', value: null },
-      images: { type: 'array', value: [{ thumbnailFile }] },
+      images: { type: 'array', value: [thumbnailFile] },
       bio: { type: 'textarea', value: null },
       modelVersion: { type: 'text', value: 'version 1' },
       providerId: { type: 'text', value: null },

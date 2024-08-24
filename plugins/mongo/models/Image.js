@@ -1,17 +1,18 @@
 // plugins/mongo/models/Image.js **NOTE GPT: DONOT REMOVE THIS LINE**
-const ModelHelper = require('../helpers/models');
-const { upload, processImages } = require('../../multer/subscriptionSetup');
-const { uploadToLinode } = require('../../aws_sdk/setup');
+import ModelHelper from '../helpers/models.js';
+import { upload, processImages } from '../../multer/subscriptionSetup.js';
+import { uploadToLinode } from '../../aws_sdk/setup.js';
+
 const modelName = 'image';
 
-class Image extends ModelHelper {
+export default class Image extends ModelHelper {
   constructor(imageData) {
     super(`${modelName}s`);
     this.modelFields = {
       name: { type: 'text', value: null },
       bucketUrl: { type: 'text', value: null },
       thumbnailUrl: { type: 'text', value: null },
-      alt: { type: 'text', value: 'Default alt text' },      
+      alt: { type: 'text', value: 'Default alt text' },
       visible: { type: 'boolean', value: false },
       avatarTag: { type: 'boolean', value: false },
       backgroundTag: { type: 'boolean', value: false },
@@ -26,8 +27,7 @@ class Image extends ModelHelper {
       flaggedBy: { type: 'array', value: [] },
       sharedBy: { type: 'array', value: [] },
       premiumContent: { type: 'boolean', value: false },
-      createdBy: { type: 'text', value: null },//userID#, 'system'functionSource, 'admin'userId#
-
+      createdBy: { type: 'text', value: null }, //userID#, 'system'functionSource, 'admin'userId#
     };
     if (imageData) {
       for (let key in this.modelFields) {
@@ -39,24 +39,30 @@ class Image extends ModelHelper {
   }
 
   static getModelFields() {
-    return Object.keys(new Image().modelFields).map(key => {
+    return Object.keys(new Image().modelFields).map((key) => {
       const field = new Image().modelFields[key];
       return { name: key, type: field.type };
     });
   }
 
   middlewareForCreateRoute() {
-    return [upload.fields(this.fileFields), processImages, this.uploadImagesToLinode.bind(this)];
+    return [
+      upload.fields(this.fileFields),
+      processImages,
+      this.uploadImagesToLinode.bind(this),
+    ];
   }
 
   middlewareForEditRoute() {
-    return [upload.fields(this.fileFields), processImages, this.uploadImagesToLinode.bind(this)];
+    return [
+      upload.fields(this.fileFields),
+      processImages,
+      this.uploadImagesToLinode.bind(this),
+    ];
   }
 
   get fileFields() {
-    return [
-      { name: 'thumbnailFile', maxCount: 1 },
-    ];
+    return [{ name: 'thumbnailFile', maxCount: 1 }];
   }
 
   async uploadImagesToLinode(req, res, next) {
@@ -71,7 +77,7 @@ class Image extends ModelHelper {
       }
       next();
     } catch (error) {
-      console.error("Error in uploadImagesToLinode middleware:", error);
+      console.error('Error in uploadImagesToLinode middleware:', error);
       next(error);
     }
   }
@@ -80,5 +86,3 @@ class Image extends ModelHelper {
     return `admin/${modelName}s/template`;
   }
 }
-
-module.exports = Image;

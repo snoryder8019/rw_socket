@@ -4,7 +4,7 @@ import { uploadVideoToLinode } from '../../aws_sdk/setup.js'; // Use uploadVideo
 const modelName = 'video';
 import fs from 'fs'; // For file operations
 
-export class Video extends ModelHelper {
+export default class Video extends ModelHelper {
   constructor(videoData) {
     super(`${modelName}s`);
     this.modelFields = {

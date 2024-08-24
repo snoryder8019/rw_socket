@@ -3,7 +3,7 @@ import multer from 'multer';
 import path from 'path';
 import { uploadToLinode } from '../../../plugins/aws_sdk/setup.js'; // Ensure this path is correct
 import Video from '../../../plugins/mongo/models/Video.js'; // Model for storing video info
-import buildRoutes from '../../helpers/routeBuilder.js';
+import { buildRoutes } from '../../helpers/routeBuilder.js';
 
 const router = express.Router();
 

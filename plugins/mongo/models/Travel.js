@@ -1,9 +1,10 @@
-const ModelHelper = require('../helpers/models');
-const { upload, processImages } = require('../../multer/subscriptionSetup');
-const { uploadToLinode } = require('../../aws_sdk/setup');
+import ModelHelper from '../helpers/models.js';
+import { upload, processImages } from '../../multer/subscriptionSetup.js';
+import { uploadToLinode } from '../../aws_sdk/setup.js';
+
 const modelName = 'travel';
 
-class Travel extends ModelHelper {
+export default class Travel extends ModelHelper {
   constructor(travelData) {
     super(`${modelName}s`);
     this.modelFields = {
@@ -11,7 +12,6 @@ class Travel extends ModelHelper {
       mediumIcon: { type: 'file', value: null },
       backgroundImg: { type: 'file', value: null },
       horizBkgd: { type: 'file', value: null },
-     
     };
     if (travelData) {
       for (let key in this.modelFields) {
@@ -23,18 +23,26 @@ class Travel extends ModelHelper {
   }
 
   static getModelFields() {
-    return Object.keys(new Travel().modelFields).map(key => {
+    return Object.keys(new Travel().modelFields).map((key) => {
       const field = new Travel().modelFields[key];
       return { name: key, type: field.type };
     });
   }
 
   middlewareForCreateRoute() {
-    return [upload.fields(this.fileFields), processImages, this.uploadImagesToLinode.bind(this)];
+    return [
+      upload.fields(this.fileFields),
+      processImages,
+      this.uploadImagesToLinode.bind(this),
+    ];
   }
 
   middlewareForEditRoute() {
-    return [upload.fields(this.fileFields), processImages, this.uploadImagesToLinode.bind(this)];
+    return [
+      upload.fields(this.fileFields),
+      processImages,
+      this.uploadImagesToLinode.bind(this),
+    ];
   }
 
   get fileFields() {
@@ -43,7 +51,7 @@ class Travel extends ModelHelper {
       { name: 'squareNonAuthBkgd', maxCount: 1 },
       { name: 'squareAuthBkgd', maxCount: 1 },
       { name: 'horizNonAuthBkgd', maxCount: 1 },
-      { name: 'horizAuthBkgd', maxCount: 1 }
+      { name: 'horizAuthBkgd', maxCount: 1 },
     ];
   }
 
@@ -59,7 +67,7 @@ class Travel extends ModelHelper {
       }
       next();
     } catch (error) {
-      console.error("Error in uploadImagesToLinode middleware:", error);
+      console.error('Error in uploadImagesToLinode middleware:', error);
       next(error);
     }
   }
@@ -68,5 +76,3 @@ class Travel extends ModelHelper {
     return `admin/${modelName}s/template`;
   }
 }
-
-module.exports = Travel;
