@@ -1,9 +1,9 @@
 ////plugins/mongo/helpers/models.js **GPT NOTE: DONT REMOVE THIS LINE IN EXAMPLES**
 
-const { getDb } = require('../mongo');
-const { ObjectId } = require('mongodb');
+import { getDb } from '../mongo.js';
+import { ObjectId } from 'mongodb';
 
-class ModelHelper {
+export default class ModelHelper {
   constructor(collectionName) {
     this.collectionName = collectionName;
     this.modelFields = {}; // Child classes should define this
@@ -60,20 +60,20 @@ class ModelHelper {
     }
     const db = getDb();
     const collection = db.collection(this.collectionName);
-  
+
     // Use $push operation with the provided updateObject
     const result = await collection.updateOne(
       { _id: new ObjectId(id) },
       { $push: updateObject }
     );
-  
+
     if (result.matchedCount === 0) {
       throw new Error('No document found with that ID');
     }
     // Return the updated document
     return await collection.findOne({ _id: new ObjectId(id) });
   }
-  
+
   async deleteById(id) {
     if (!ObjectId.isValid(id)) {
       throw new Error('Invalid ID format');
@@ -138,5 +138,3 @@ class ModelHelper {
     return '';
   }
 }
-
-module.exports = ModelHelper;

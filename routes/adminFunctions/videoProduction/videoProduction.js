@@ -1,20 +1,20 @@
-const express = require('express');
-const multer = require('multer');
-const path = require('path');
-const { uploadToLinode } = require('../../../plugins/aws_sdk/setup'); // Ensure this path is correct
-const Video = require('../../../plugins/mongo/models/Video'); // Model for storing video info
-const buildRoutes = require('../../helpers/routeBuilder');
+import express from 'express';
+import multer from 'multer';
+import path from 'path';
+import { uploadToLinode } from '../../../plugins/aws_sdk/setup.js'; // Ensure this path is correct
+import Video from '../../../plugins/mongo/models/Video.js'; // Model for storing video info
+import { buildRoutes } from '../../helpers/routeBuilder.js';
 
 const router = express.Router();
 
 // Configure multer for file uploads
 const storage = multer.diskStorage({
-  destination: function(req, file, cb) {
+  destination: function (req, file, cb) {
     cb(null, 'uploads/admin/videos');
   },
-  filename: function(req, file, cb) {
+  filename: function (req, file, cb) {
     cb(null, Date.now() + path.extname(file.originalname));
-  }
+  },
 });
 const upload = multer({ storage: storage });
 
@@ -31,7 +31,7 @@ router.post('/upload', upload.single('video'), async (req, res) => {
     // Save video info to database
     const videoData = {
       name: videoFile.originalname,
-      url: videoUrl
+      url: videoUrl,
     };
 
     const video = await Video.create(videoData);
@@ -47,13 +47,17 @@ router.post('/upload', upload.single('video'), async (req, res) => {
 router.get('/getVideos', async (req, res) => {
   try {
     const videos = await Video.getAll();
-    const videoHtml = videos.map(video => `
+    const videoHtml = videos
+      .map(
+        (video) => `
       <div class="video-card">
         <div class="video-title">${video.name}</div>
         <div class="video-upload-date">Uploaded on: ${new Date(video.createdAt).toLocaleString()}</div>
         <button data-video-url="${video.url}" class="emit-viewers btn">Play Video</button>
       </div>
-    `).join('');
+    `
+      )
+      .join('');
 
     const html = `
       <style>
@@ -108,4 +112,4 @@ router.post('/playVideo', (req, res) => {
   res.status(200).send('Video play triggered');
 });
 
-module.exports = router;
+export default router;

@@ -1,13 +1,15 @@
 //routes/userFunctions/userBucketFunctions.js **NOTE GPT: DONT REMOVE THIS LINE**
-const express = require('express');
+import express from 'express';
+import path from 'path';
+import { ObjectId } from 'mongodb';
+import { getDb } from '../../plugins/mongo/mongo.js';
+import { uploadToLinode } from '../../plugins/aws_sdk/setup.js';
+import { upload, processImage } from '../../plugins/multer/setup.js';
+import { resizeAndCropImage } from '../../plugins/sharp/sharp.js';
+import Image from '../../plugins/mongo/models/Image.js';
+import User from '../../plugins/mongo/models/User.js';
+
 const router = express.Router();
-const path = require('path');
-const { ObjectId } = require('mongodb');
-const Image = require('../../plugins/mongo/models/Image.js');
-const User = require('../../plugins/mongo/models/User.js');
-const { upload, processImage } = require('../../plugins/multer/setup');
-const { resizeAndCropImage } = require('../../plugins/sharp/sharp');
-const { uploadToLinode, deleteFromLinode } = require('../../plugins/aws_sdk/setup');
 
 // Route to render emojis view
 router.get('/getEmojis', async (req, res) => {
@@ -32,7 +34,12 @@ router.post('/userImgUpload', upload, processImage, async (req, res) => {
     const bucketUrl = await uploadToLinode(imagePath, fileKey);
 
     // Create and upload thumbnail to Linode
-    const thumbnailPath = await resizeAndCropImage(fileBuffer, path.dirname(imagePath), `thumb-${req.file.filename}`, 'thumbnail');
+    const thumbnailPath = await resizeAndCropImage(
+      fileBuffer,
+      path.dirname(imagePath),
+      `thumb-${req.file.filename}`,
+      'thumbnail'
+    );
     const thumbFileKey = `rw_users/${user._id}/thumb-${req.file.filename}`;
     const thumbnailUrl = await uploadToLinode(thumbnailPath, thumbFileKey);
 
@@ -55,21 +62,22 @@ router.post('/userImgUpload', upload, processImage, async (req, res) => {
         thumbnailUrl: imageResponse.thumbnailUrl,
         avatarTag: false,
         // You can add additional fields if needed
-      }
+      },
     });
 
     // Log responses for debugging
     console.log(`imageResponse ID: ${imageResponse._id}`);
-    console.log(`userResponse acknowledged: ${userResponse.acknowledged}, modifiedCount: ${userResponse.modifiedCount}`);
+    console.log(
+      `userResponse acknowledged: ${userResponse.acknowledged}, modifiedCount: ${userResponse.modifiedCount}`
+    );
 
     req.flash('success', 'Avatar saved to profile.');
     res.redirect('/');
   } catch (error) {
-    console.error("Error in userImgUpload endpoint:", error);
+    console.error('Error in userImgUpload endpoint:', error);
     res.render('error', { error: error });
   }
 });
-
 
 // Route to get user images
 router.get('/GETUSERIMAGES', async (req, res) => {
@@ -91,22 +99,27 @@ router.post('/DELETEIMAGE', async (req, res) => {
     const user = req.user;
 
     // Use the Image model to find the image by ID and user ID
-    const imageToDelete = await new Image().findOne({ bucketUrl: imageId, createdBy: user._id });
+    const imageToDelete = await new Image().findOne({
+      bucketUrl: imageId,
+      createdBy: user._id,
+    });
 
     if (!imageToDelete) {
-      return res.status(404).send({ success: false, message: 'Image not found.' });
+      return res
+        .status(404)
+        .send({ success: false, message: 'Image not found.' });
     }
 
     // Delete the image and thumbnail from Linode
-    await deleteFromLinode(imageToDelete.bucketUrl);
-    await deleteFromLinode(imageToDelete.thumbnailUrl);
+    // await deleteFromLinode(imageToDelete.bucketUrl);
+    // await deleteFromLinode(imageToDelete.thumbnailUrl);
 
     // Use the Image model to delete the image entry from the database
     await new Image().deleteOne({ _id: imageToDelete._id });
 
     // Remove the image from the user's images array in the database
     await new User().updateById(user._id, {
-      $pull: { images: { bucketUrl: imageId } }
+      $pull: { images: { bucketUrl: imageId } },
     });
 
     res.send({ success: true, message: 'Image deleted successfully.' });
@@ -120,4 +133,4 @@ router.post('/EDITIMAGE', async (req, res) => {
   // Implement edit logic using Image model functions, similar to DELETEIMAGE and USERIMGUPLOAD combined
 });
 
-module.exports = router;
+export default router;

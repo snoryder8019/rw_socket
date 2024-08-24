@@ -1,27 +1,25 @@
+import ModelHelper from '../helpers/models.js';
+import { upload, processImages } from '../../multer/subscriptionSetup.js';
+import { uploadToLinode } from '../../aws_sdk/setup.js';
 
-
-const ModelHelper = require('../helpers/models');
-const { upload, processImages } = require('../../multer/subscriptionSetup');
-const { uploadToLinode } = require('../../aws_sdk/setup');
-
-class ChatRoom extends ModelHelper {
+export default class ChatRoom extends ModelHelper {
   constructor(chatRoomData) {
     super('chat_rooms_meta');
     this.modelFields = {
       roomName: { type: 'text', value: null },
-      roomMeassage:{type:'text',value:null},
-      active: { type: 'boolean', value: false},
-      createdBy: { type: 'text', value: false},
-      createdOn: { type: 'date', value: new Date()},
+      roomMeassage: { type: 'text', value: null },
+      active: { type: 'boolean', value: false },
+      createdBy: { type: 'text', value: false },
+      createdOn: { type: 'date', value: new Date() },
       lastMessage: { type: 'text', value: null },
-      lastMessageDate: { type: 'date', value: new Date()},
+      lastMessageDate: { type: 'date', value: new Date() },
       clubId: { type: 'text', value: null },
       gameSessionId: { type: 'text', value: null },
       clubOnly: { type: 'boolean', value: false },
       moderatedBy: { type: 'textarea', value: null },
       mainChat: { type: 'boolean', value: false },
-      tags: { type: 'array', value: []},
-      testMode: { type: 'boolean', value: false},
+      tags: { type: 'array', value: [] },
+      testMode: { type: 'boolean', value: false },
     };
 
     if (chatRoomData) {
@@ -34,25 +32,33 @@ class ChatRoom extends ModelHelper {
   }
 
   static getModelFields() {
-    return Object.keys(new ChatRoom().modelFields).map(key => {
+    return Object.keys(new ChatRoom().modelFields).map((key) => {
       const field = new ChatRoom().modelFields[key];
       return { name: key, type: field.type };
     });
   }
 
   middlewareForCreateRoute() {
-    return [upload.fields(this.fileFields), processImages, this.uploadImagesToLinode.bind(this)];
+    return [
+      upload.fields(this.fileFields),
+      processImages,
+      this.uploadImagesToLinode.bind(this),
+    ];
   }
 
   middlewareForEditRoute() {
-    return [upload.fields(this.fileFields), processImages, this.uploadImagesToLinode.bind(this)];
+    return [
+      upload.fields(this.fileFields),
+      processImages,
+      this.uploadImagesToLinode.bind(this),
+    ];
   }
 
   get fileFields() {
     return [
       { name: 'mediumIcon', maxCount: 1 },
       { name: 'backgroundImg', maxCount: 1 },
-      { name: 'horizBkgd', maxCount: 1 }
+      { name: 'horizBkgd', maxCount: 1 },
     ];
   }
 
@@ -68,7 +74,7 @@ class ChatRoom extends ModelHelper {
       }
       next();
     } catch (error) {
-      console.error("Error in uploadImagesToLinode middleware:", error);
+      console.error('Error in uploadImagesToLinode middleware:', error);
       next(error);
     }
   }
@@ -77,5 +83,3 @@ class ChatRoom extends ModelHelper {
     return 'admin/chats/template';
   }
 }
-
-module.exports = ChatRoom;

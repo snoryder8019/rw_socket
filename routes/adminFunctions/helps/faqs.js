@@ -1,13 +1,12 @@
-const express = require('express');
-const Help = require('../../../plugins/mongo/models/help/Help');
-const Faq = require('../../../plugins/mongo/models/help/Faq');
-const { generateFormFields } = require('../../../plugins/helpers/formHelper');
-const buildRoutes = require('../../helpers/routeBuilder');
+import express from 'express';
+import Help from '../../../plugins/mongo/models/help/Help.js';
+import Faq from '../../../plugins/mongo/models/help/Faq.js';
+import generateFormFields from '../../../plugins/helpers/formHelper.js';
+import { buildRoutes } from '../../helpers/routeBuilder.js';
+
 const router = express.Router();
-const modelName = "help";
-
-
+const modelName = 'help';
 
 buildRoutes(new Faq(), router);
 
-module.exports = router;
+export default router;

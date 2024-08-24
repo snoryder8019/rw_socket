@@ -1,10 +1,11 @@
-const express = require('express');
-const Club = require('../../../plugins/mongo/models/Club');
-const { generateFormFields } = require('../../../plugins/helpers/formHelper');
-const buildRoutes = require('../../helpers/routeBuilder');
-const Vendor = require('../../../plugins/mongo/models/Vendor');
+import express from 'express';
+import Club from '../../../plugins/mongo/models/Club.js';
+import generateFormFields from '../../../plugins/helpers/formHelper.js';
+import { buildRoutes } from '../../helpers/routeBuilder.js';
+import Vendor from '../../../plugins/mongo/models/Vendor.js';
+
 const router = express.Router();
-const modelName = "club";
+
 // Route to render the form to add a new club
 router.get('/renderAddForm', (req, res) => {
   try {
@@ -15,7 +16,7 @@ router.get('/renderAddForm', (req, res) => {
     res.render('forms/generalForm', {
       title: 'Add New Club',
       action: '/clubs/create',
-      formFields: formFields
+      formFields: formFields,
     });
   } catch (error) {
     console.error(error);
@@ -40,7 +41,7 @@ router.get('/renderEditForm/:id', async (req, res) => {
       routeSub: 'clubs',
       method: 'post',
       formFields: formFields,
-      data: club
+      data: club,
     });
   } catch (error) {
     console.error(error);
@@ -53,7 +54,7 @@ router.get('/section', async (req, res) => {
     const data = await new Club().getAll();
     res.render('./layouts/section', {
       title: 'Section View',
-      data: data
+      data: data,
     });
   } catch (error) {
     console.error(error);
@@ -63,4 +64,4 @@ router.get('/section', async (req, res) => {
 
 buildRoutes(new Club(), router);
 
-module.exports = router;
+export default router;

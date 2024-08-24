@@ -1,10 +1,10 @@
-const express = require('express');
-const GameLog = require('../../../plugins/mongo/models/games/GameLog');
-const { generateFormFields } = require('../../../plugins/helpers/formHelper');
-const buildRoutes = require('../../helpers/routeBuilder');
+import express from 'express';
+import GameLog from '../../../plugins/mongo/models/games/GameLog.js';
+import generateFormFields from '../../../plugins/helpers/formHelper.js';
+import { buildRoutes } from '../../helpers/routeBuilder.js';
 
 const router = express.Router();
-const modelName = "gameLog";
+const modelName = 'gameLog';
 
 // Route to render the form to add a new game log
 router.get('/renderAddForm', (req, res) => {
@@ -16,7 +16,7 @@ router.get('/renderAddForm', (req, res) => {
     res.render('forms/generalForm', {
       title: `Add New ${modelName}`,
       action: `/${modelName}s/create`,
-      formFields: formFields
+      formFields: formFields,
     });
   } catch (error) {
     console.error(error);
@@ -40,7 +40,7 @@ router.get('/renderEditForm/:id', async (req, res) => {
       routeSub: `${modelName}s`,
       method: 'post',
       formFields: formFields,
-      data: gameLog
+      data: gameLog,
     });
   } catch (error) {
     console.error(error);
@@ -54,7 +54,7 @@ router.get('/section', async (req, res) => {
     const data = await new GameLog().getAll();
     res.render(`./layouts/${modelName}`, {
       title: 'Game Log View',
-      data: data
+      data: data,
     });
   } catch (error) {
     console.error(error);
@@ -64,4 +64,4 @@ router.get('/section', async (req, res) => {
 
 buildRoutes(new GameLog(), router);
 
-module.exports = router;
+export default router;

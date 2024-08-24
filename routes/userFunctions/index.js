@@ -1,7 +1,8 @@
-const express = require('express');
+import express from 'express';
+import chat from './chat/chat.js';
+import help from './help/help.js';
+
 const router = express.Router();
-const chat = require('./chat/chat')
-router.use('/chat', chat)
-const help = require('./help/help')
-router.use('/help', help)
-module.exports = router
+router.use('/chat', chat);
+router.use('/help', help);
+export default router;

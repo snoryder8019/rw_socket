@@ -1,14 +1,13 @@
+import ModelHelper from '../helpers/models.js';
+import { upload, processImages } from '../../multer/subscriptionSetup.js';
+import { uploadToLinode } from '../../aws_sdk/setup.js';
 
-const ModelHelper = require('../helpers/models');
-const { upload, processImages } = require('../../multer/subscriptionSetup');
-const { uploadToLinode } = require('../../aws_sdk/setup');
-
-class ChatMessage extends ModelHelper {
+export default class ChatMessage extends ModelHelper {
   constructor(chatMessageData) {
     super('chat_messages_meta');
     this.modelFields = {
       roomId: { type: 'text', value: null },
-      textOnly:{type:'boolean',value:true},
+      textOnly: { type: 'boolean', value: true },
       avatarType: { type: 'text', value: null },
       chatType: { type: 'text', value: null },
       chatStyle: { type: 'text', value: null },
@@ -26,32 +25,32 @@ class ChatMessage extends ModelHelper {
       thumbnailUrl: { type: 'file', value: null },
       image: { type: 'file', value: null },
       messageThumb: { type: 'file', value: null },
-    
+
       link: { type: 'text', value: null },
     };
-
-    if (chatMessageData) {
-      for (let key in this.modelFields) {
-        if (chatMessageData[key] !== undefined) {
-          this.modelFields[key].value = chatMessageData[key];
-        }
-      }
-    }
   }
 
   static getModelFields() {
-    return Object.keys(new ChatMessage().modelFields).map(key => {
+    return Object.keys(new ChatMessage().modelFields).map((key) => {
       const field = new ChatMessage().modelFields[key];
       return { name: key, type: field.type };
     });
   }
 
   middlewareForCreateRoute() {
-    return [upload.fields(this.fileFields), processImages, this.uploadImagesToLinode.bind(this)];
+    return [
+      upload.fields(this.fileFields),
+      processImages,
+      this.uploadImagesToLinode.bind(this),
+    ];
   }
 
   middlewareForEditRoute() {
-    return [upload.fields(this.fileFields), processImages, this.uploadImagesToLinode.bind(this)];
+    return [
+      upload.fields(this.fileFields),
+      processImages,
+      this.uploadImagesToLinode.bind(this),
+    ];
   }
 
   get fileFields() {
@@ -59,7 +58,6 @@ class ChatMessage extends ModelHelper {
       { name: 'messageThumb', maxCount: 1 },
       { name: 'thumbnailUrl', maxCount: 1 },
       { name: 'image', maxCount: 1 },
-
     ];
   }
 
@@ -75,7 +73,7 @@ class ChatMessage extends ModelHelper {
       }
       next();
     } catch (error) {
-      console.error("Error in uploadImagesToLinode middleware:", error);
+      console.error('Error in uploadImagesToLinode middleware:', error);
       next(error);
     }
   }
@@ -84,5 +82,3 @@ class ChatMessage extends ModelHelper {
     return 'admin/chatMessages/template';
   }
 }
-
-module.exports = ChatMessage;

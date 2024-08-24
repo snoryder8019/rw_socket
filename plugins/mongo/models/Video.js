@@ -1,10 +1,10 @@
 // plugins/mongo/models/Video.js **NOTE GPT: DONOT REMOVE THIS LINE**
-const ModelHelper = require('../helpers/models');
-const { uploadVideoToLinode } = require('../../aws_sdk/setup'); // Use uploadVideoToLinode for video uploads
+import ModelHelper from '../helpers/models.js';
+import { uploadVideoToLinode } from '../../aws_sdk/setup.js'; // Use uploadVideoToLinode for video uploads
 const modelName = 'video';
-const fs = require('fs'); // For file operations
+import fs from 'fs'; // For file operations
 
-class Video extends ModelHelper {
+export default class Video extends ModelHelper {
   constructor(videoData) {
     super(`${modelName}s`);
     this.modelFields = {
@@ -35,16 +35,14 @@ class Video extends ModelHelper {
   }
 
   static getModelFields() {
-    return Object.keys(new Video().modelFields).map(key => {
+    return Object.keys(new Video().modelFields).map((key) => {
       const field = new Video().modelFields[key];
       return { name: key, type: field.type };
     });
   }
 
   get fileFields() {
-    return [
-      { name: 'thumbnailFile', maxCount: 1 },
-    ];
+    return [{ name: 'thumbnailFile', maxCount: 1 }];
   }
 
   async createVid(file) {
@@ -80,7 +78,7 @@ class Video extends ModelHelper {
       };
 
       // Save the metadata to the database
-      const savedVideo = await super.create(videoData);  // Use super.create() for database insertion
+      const savedVideo = await super.create(videoData); // Use super.create() for database insertion
       console.log(`Video metadata saved to database: ${savedVideo}`);
 
       // Optionally delete the file from the local system after uploading
@@ -89,7 +87,7 @@ class Video extends ModelHelper {
 
       return savedVideo;
     } catch (error) {
-      console.error("Error in Video.createVid:", error);
+      console.error('Error in Video.createVid:', error);
       throw error;
     }
   }
@@ -97,7 +95,7 @@ class Video extends ModelHelper {
   async updateVid(id, file, updatedFields) {
     try {
       console.log(`updateVid ran!`);
-      
+
       let videoUrl;
 
       // Check if a new video file is provided for upload
@@ -128,7 +126,7 @@ class Video extends ModelHelper {
 
       return updatedVideo;
     } catch (error) {
-      console.error("Error in Video.updateVid:", error);
+      console.error('Error in Video.updateVid:', error);
       throw error;
     }
   }
@@ -145,7 +143,7 @@ class Video extends ModelHelper {
       }
       next();
     } catch (error) {
-      console.error("Error in uploadVideoToLinode middleware:", error);
+      console.error('Error in uploadVideoToLinode middleware:', error);
       next(error);
     }
   }
@@ -154,5 +152,3 @@ class Video extends ModelHelper {
     return `admin/${modelName}s/template`;
   }
 }
-
-module.exports = Video;

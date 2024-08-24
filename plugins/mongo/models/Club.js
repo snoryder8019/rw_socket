@@ -1,8 +1,8 @@
-const ModelHelper = require('../helpers/models');
-const { upload, processImages } = require('../../multer/subscriptionSetup');
-const { uploadToLinode } = require('../../aws_sdk/setup');
+import ModelHelper from '../helpers/models.js';
+import { upload, processImages } from '../../multer/subscriptionSetup.js';
+import { uploadToLinode } from '../../aws_sdk/setup.js';
 
-class Club extends ModelHelper {
+export default class Club extends ModelHelper {
   constructor(clubData) {
     super('clubs');
     this.modelFields = {
@@ -25,11 +25,11 @@ class Club extends ModelHelper {
       premium: { type: 'boolean', value: false },
       cost: { type: 'number', value: null },
       duration: { type: 'text', value: null },
-      tags: { type: 'array', value: [] },  // Assuming comma-separated string for simplicity
-      links: { type: 'array', value: [] },  // Assuming comma-separated string for simplicity
-      blogs: { type: 'array', value: [] },  // Assuming comma-separated string for simplicity
-      vendors: { type: 'array', value: [] },  // Assuming comma-separated string for simplicity
-      members: { type: 'array', value: [] }  // Assuming comma-separated string for simplicity
+      tags: { type: 'array', value: [] }, // Assuming comma-separated string for simplicity
+      links: { type: 'array', value: [] }, // Assuming comma-separated string for simplicity
+      blogs: { type: 'array', value: [] }, // Assuming comma-separated string for simplicity
+      vendors: { type: 'array', value: [] }, // Assuming comma-separated string for simplicity
+      members: { type: 'array', value: [] }, // Assuming comma-separated string for simplicity
     };
 
     if (clubData) {
@@ -42,25 +42,33 @@ class Club extends ModelHelper {
   }
 
   static getModelFields() {
-    return Object.keys(new Club().modelFields).map(key => {
+    return Object.keys(new Club().modelFields).map((key) => {
       const field = new Club().modelFields[key];
       return { name: key, type: field.type };
     });
   }
 
   middlewareForCreateRoute() {
-    return [upload.fields(this.fileFields), processImages, this.uploadImagesToLinode.bind(this)];
+    return [
+      upload.fields(this.fileFields),
+      processImages,
+      this.uploadImagesToLinode.bind(this),
+    ];
   }
 
   middlewareForEditRoute() {
-    return [upload.fields(this.fileFields), processImages, this.uploadImagesToLinode.bind(this)];
+    return [
+      upload.fields(this.fileFields),
+      processImages,
+      this.uploadImagesToLinode.bind(this),
+    ];
   }
 
   get fileFields() {
     return [
       { name: 'mediumIcon', maxCount: 1 },
       { name: 'backgroundImg', maxCount: 1 },
-      { name: 'horizBkgd', maxCount: 1 }
+      { name: 'horizBkgd', maxCount: 1 },
     ];
   }
 
@@ -76,7 +84,7 @@ class Club extends ModelHelper {
       }
       next();
     } catch (error) {
-      console.error("Error in uploadImagesToLinode middleware:", error);
+      console.error('Error in uploadImagesToLinode middleware:', error);
       next(error);
     }
   }
@@ -85,5 +93,3 @@ class Club extends ModelHelper {
     return 'admin/clubs/template';
   }
 }
-
-module.exports = Club;

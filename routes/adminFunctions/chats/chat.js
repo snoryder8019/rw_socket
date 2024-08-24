@@ -1,11 +1,9 @@
-
-const express = require('express');
-const ChatRoom = require('../../../plugins/mongo/models/ChatRoom');
-const { generateFormFields } = require('../../../plugins/helpers/formHelper');
-const buildRoutes = require('../../helpers/routeBuilder');
-const Vendor = require('../../../plugins/mongo/models/Vendor');
+import express from 'express';
+import ChatRoom from '../../../plugins/mongo/models/ChatRoom.js';
+import generateFormFields from '../../../plugins/helpers/formHelper.js';
+import { buildRoutes } from '../../helpers/routeBuilder.js';
 const router = express.Router();
-const modelName = "chatRoom";
+
 // Route to render the form to add a new chatRoom
 router.get('/renderAddForm', (req, res) => {
   try {
@@ -16,7 +14,7 @@ router.get('/renderAddForm', (req, res) => {
     res.render('forms/generalForm', {
       title: 'Add New ChatRoom',
       action: '/chats/create',
-      formFields: formFields
+      formFields: formFields,
     });
   } catch (error) {
     console.error(error);
@@ -41,7 +39,7 @@ router.get('/renderEditForm/:id', async (req, res) => {
       routeSub: 'chats',
       method: 'post',
       formFields: formFields,
-      data: chatRoom
+      data: chatRoom,
     });
   } catch (error) {
     console.error(error);
@@ -54,7 +52,7 @@ router.get('/section', async (req, res) => {
     const data = await new ChatRoom().getAll();
     res.render('./layouts/section', {
       title: 'Section View',
-      data: data
+      data: data,
     });
   } catch (error) {
     console.error(error);
@@ -64,7 +62,7 @@ router.get('/section', async (req, res) => {
 
 buildRoutes(new ChatRoom(), router);
 
-module.exports = router;
+export default router;
 
 // const express = require('express');
 // const path = require('path');
@@ -74,8 +72,6 @@ module.exports = router;
 // const ChatRoom = require('../../../plugins/mongo/models/ChatRoom'); // Adjust the path to your models
 
 // const router = express.Router();
-
-
 
 // router.get('/load', async (req, res) => {
 //     try {
@@ -100,7 +96,7 @@ module.exports = router;
 //     try {
 //         const chatRoomData = req.body;
 //         await new ChatRoom().create(chatRoomData);
-        
+
 //         req.flash('success','created chatroom')
 //         res.send('Chat room created successfully');
 //     } catch (error) {

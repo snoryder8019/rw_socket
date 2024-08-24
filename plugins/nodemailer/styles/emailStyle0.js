@@ -1,5 +1,4 @@
-// /plugins/nodemailer/styles/emailStyle0.js
-const emailStyle0 = `
+export const emailStyle0 = `
 body {
 border:5px solid #9932432
   display: block;
@@ -53,5 +52,3 @@ button {
 }
 
 `;
-
-module.exports = emailStyle0;

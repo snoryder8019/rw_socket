@@ -1,20 +1,21 @@
-const express = require('express');
+import express from 'express';
+import { getDb } from '../../../plugins/mongo/mongo.js';
+import User from '../../../plugins/mongo/models/User.js';
+import Permission from '../../../plugins/mongo/models/Permission.js';
+import { buildRoutes } from '../../helpers/routeBuilder.js';
+import generateFormFields from '../../../plugins/helpers/formHelper.js';
+
 const router = express.Router();
-const User = require('../../../plugins/mongo/models/User')
-const Permission = require('../../../plugins/mongo/models/Permission')
-const { getDb } = require('../../../plugins/mongo/mongo');
-const buildRoutes = require('../../helpers/routeBuilder');
-const { generateFormFields } = require('../../../plugins/helpers/formHelper');
 
 ////////Version 1 Functions
-const modelName = "user";
+const modelName = 'user';
 // Route to render the form to add a new user
 router.get('/renderAddForm', (req, res) => {
   try {
     const model = User.getModelFields();
     const formFields = generateFormFields(model);
     console.log('renderAddForm');
-    
+
     res.render('forms/generalForm', {
       title: 'Add New User',
       action: '/users/create',
@@ -30,7 +31,7 @@ router.get('/renderAddForm', (req, res) => {
 router.get('/renderEditForm/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    const permissionsModel =new Permission().modelFields; // Ensure this is defined and returns an object
+    const permissionsModel = new Permission().modelFields; // Ensure this is defined and returns an object
     if (!permissionsModel) {
       throw new Error('Permissions model is undefined or null');
     }
@@ -47,14 +48,16 @@ router.get('/renderEditForm/:id', async (req, res) => {
     const formFields = generateFormFields(model, user); // Generate form fields as an array
 
     // Generate form fields for permissions
-    const permissionsFields = Object.keys(permissionsModel).map(permissionKey => {
-      return {
-        name: `permissions[${permissionKey}]`,
-        label: permissionKey,
-        type: 'boolean',
-        value: userPermissions[permissionKey] || false,
-      };
-    });
+    const permissionsFields = Object.keys(permissionsModel).map(
+      (permissionKey) => {
+        return {
+          name: `permissions[${permissionKey}]`,
+          label: permissionKey,
+          type: 'boolean',
+          value: userPermissions[permissionKey] || false,
+        };
+      }
+    );
 
     res.render('forms/generalEditForm', {
       title: 'Edit User',
@@ -63,9 +66,8 @@ router.get('/renderEditForm/:id', async (req, res) => {
       method: 'post',
       formFields: formFields, // Keep the original form fields separate
       permissionsFields: permissionsFields, // Handle permissions fields separately in the template
-      data: user
+      data: user,
     });
-    
   } catch (error) {
     console.error(error);
     res.status(500).send({ error: error.message });
@@ -78,7 +80,7 @@ router.get('/section', async (req, res) => {
     const data = await new User().getAll();
     res.render('./layouts/section', {
       title: 'Section View',
-      data: data
+      data: data,
     });
   } catch (error) {
     console.error(error);
@@ -86,30 +88,20 @@ router.get('/section', async (req, res) => {
   }
 });
 
-router.get('/getSearchForm', async(req,res)=>{
-  try{
-const users = await new User().getAll()
-console.log('getting Users Search')
-res.render('./forms/generalSearchForm',{
-  users:users,
-})
-  }
-  catch(error){
+router.get('/getSearchForm', async (req, res) => {
+  try {
+    const users = await new User().getAll();
+    console.log('getting Users Search');
+    res.render('./forms/generalSearchForm', {
+      users: users,
+    });
+  } catch (error) {
     console.error(error);
-    res.status(500).send({error:error.message})
-  
+    res.status(500).send({ error: error.message });
   }
-})
-
-
-
-
-
+});
 
 buildRoutes(new User(), router);
-
-
-
 
 //////// VERSION 0.9 functions
 router.get('/paginateUsers', async (req, res) => {
@@ -140,7 +132,9 @@ router.get('/paginateUsers', async (req, res) => {
     const totalUsers = await usersCollection.countDocuments(query);
     const totalPages = Math.ceil(totalUsers / parseInt(limit));
 
-    const userHtml = users.map(user => `
+    const userHtml = users
+      .map(
+        (user) => `
       <div class="user">
         <p>${user.firstName}</p>
         <p>${user.lastName}</p>
@@ -148,11 +142,16 @@ router.get('/paginateUsers', async (req, res) => {
         <p><button>contact</button></p>
         <p><button data-url="/users/edit">edit</button></p>
       </div>
-    `).join('');
+    `
+      )
+      .join('');
 
-    const paginationHtml = Array.from({ length: totalPages }, (_, i) => `
+    const paginationHtml = Array.from(
+      { length: totalPages },
+      (_, i) => `
       <a href="#" data-page="${i + 1}" ${i + 1 === parseInt(page) ? 'style="font-weight:bold"' : ''}>${i + 1}</a>
-    `).join(' ');
+    `
+    ).join(' ');
 
     const filterFormHtml = `
       <form id="filterForm">
@@ -208,8 +207,10 @@ router.get('/paginateUsers', async (req, res) => {
     `);
   } catch (error) {
     console.error(error);
-    res.status(500).send({ error: 'An error occurred while fetching user data' });
+    res
+      .status(500)
+      .send({ error: 'An error occurred while fetching user data' });
   }
 });
 
-module.exports = router;
+export default router;

@@ -1,22 +1,22 @@
-const express = require('express');
-const router = express.Router();
-const { connect } = require('./mongo/mongo');  // MongoDB connection logic
-const {exporter} = require('./puppeteer/setup')
-const {oauthCallbackHandler, emailOutGeneral} = require('./nodemailer/setup')
-const setupShopifyRoutes = require('./shopify-storefront/setup');
-const stripeRoutes = require('./stripe');
-connect().catch(err => console.error("Failed to connect to MongoDB:", err));
+import express from 'express';
+import { connect } from './mongo/mongo.js';
+import { exporter } from './puppeteer/setup.js';
+import { oauthCallbackHandler, emailOutGeneral } from './nodemailer/setup.js';
+import setupShopifyRoutes from './shopify-storefront/setup.js';
+import stripeRoutes from './stripe/index.js';
+import { router as passportRouter } from './passport/localStrat.js';
 
-router.post('/emailOutGeneral', emailOutGeneral)
+const router = express.Router();
+
+connect().catch((err) => console.error('Failed to connect to MongoDB:', err));
+
+router.post('/emailOutGeneral', emailOutGeneral);
 
 router.use('/stripe', stripeRoutes);
 router.get('/exporter', exporter);
-router.get('/oauth/callback',oauthCallbackHandler)
-router.use('/shopify-storefront',setupShopifyRoutes);
+router.get('/oauth/callback', oauthCallbackHandler);
+router.use('/shopify-storefront', setupShopifyRoutes);
 
-
-
-const { router: passportRouter } = require('./passport/localStrat');
 router.use(passportRouter);
 
-module.exports = router
+export default router;

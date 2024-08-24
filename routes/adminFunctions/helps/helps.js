@@ -1,10 +1,11 @@
-const express = require('express');
-const Help = require('../../../plugins/mongo/models/help/Help');
-const Faq = require('../../../plugins/mongo/models/help/Faq');
-const { generateFormFields } = require('../../../plugins/helpers/formHelper');
-const buildRoutes = require('../../helpers/routeBuilder');
+import express from 'express';
+import Help from '../../../plugins/mongo/models/help/Help.js';
+import Faq from '../../../plugins/mongo/models/help/Faq.js';
+import generateFormFields from '../../../plugins/helpers/formHelper.js';
+import { buildRoutes } from '../../helpers/routeBuilder.js';
+
 const router = express.Router();
-const modelName = "help";
+const modelName = 'help';
 // Route to render the form to add a new help
 router.get('/renderAddForm', (req, res) => {
   try {
@@ -15,7 +16,7 @@ router.get('/renderAddForm', (req, res) => {
     res.render('forms/generalForm', {
       title: 'Add New Help',
       action: '/helps/create',
-      formFields: formFields
+      formFields: formFields,
     });
   } catch (error) {
     console.error(error);
@@ -26,12 +27,12 @@ router.get('/faqs/renderAddForm', (req, res) => {
   try {
     const model = Faq.getModelFields();
     const formFields = generateFormFields(model);
-    console.log('renderAddForm formFields:',formFields);
+    console.log('renderAddForm formFields:', formFields);
 
     res.render('forms/generalForm', {
       title: 'Add New FAQ',
       action: '/faqs/create',
-      formFields: formFields
+      formFields: formFields,
     });
   } catch (error) {
     console.error(error);
@@ -56,7 +57,7 @@ router.get('/faqs/renderEditForm/:id', async (req, res) => {
       routeSub: 'faqs',
       method: 'post',
       formFields: formFields,
-      data: faq
+      data: faq,
     });
   } catch (error) {
     console.error(error);
@@ -79,7 +80,7 @@ router.get('/renderEditForm/:id', async (req, res) => {
       routeSub: 'helps',
       method: 'post',
       formFields: formFields,
-      data: help
+      data: help,
     });
   } catch (error) {
     console.error(error);
@@ -92,7 +93,7 @@ router.get('/section', async (req, res) => {
     const data = await new Help().getAll();
     res.render('./layouts/section', {
       title: 'Section View',
-      data: data
+      data: data,
     });
   } catch (error) {
     console.error(error);
@@ -102,4 +103,4 @@ router.get('/section', async (req, res) => {
 
 buildRoutes(new Help(), router);
 
-module.exports = router;
+export default router;

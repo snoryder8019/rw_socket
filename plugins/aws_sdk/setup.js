@@ -1,18 +1,18 @@
-const AWS = require('aws-sdk');
-const fs = require('fs');
+import AWS from 'aws-sdk';
+import fs from 'fs';
 
 // Configure AWS SDK for Linode Object Storage
 const s3 = new AWS.S3({
-    accessKeyId: process.env.LINODE_ACCESS,
-    secretAccessKey: process.env.LINODE_SEC,
-    endpoint: process.env.LINODE_URL,
-    s3ForcePathStyle: true,
-    signatureVersion: 'v4',
-    region: process.env.LINODE_REGION,
-    httpOptions: {
-        connectTimeout: 10000, // 10 seconds
-        timeout: 30000 // 30 seconds
-    }
+  accessKeyId: process.env.LINODE_ACCESS,
+  secretAccessKey: process.env.LINODE_SEC,
+  endpoint: process.env.LINODE_URL,
+  s3ForcePathStyle: true,
+  signatureVersion: 'v4',
+  region: process.env.LINODE_REGION,
+  httpOptions: {
+    connectTimeout: 10000, // 10 seconds
+    timeout: 30000, // 30 seconds
+  },
 });
 
 /**
@@ -21,23 +21,23 @@ const s3 = new AWS.S3({
  * @param {String} fileKey Key under which to store the file in the bucket
  * @returns {Promise<String>} URL of the uploaded file
  */
-const uploadToLinode = async (filePath, fileKey) => {
-    const fileContent = fs.readFileSync(filePath);
+export const uploadToLinode = async (filePath, fileKey) => {
+  const fileContent = fs.readFileSync(filePath);
 
-    const params = {
-        Bucket: process.env.LINODE_BUCKET,
-        Key: fileKey,
-        Body: fileContent,
-        ACL: 'public-read', // Adjust according to your privacy requirements
-    };
+  const params = {
+    Bucket: process.env.LINODE_BUCKET,
+    Key: fileKey,
+    Body: fileContent,
+    ACL: 'public-read', // Adjust according to your privacy requirements
+  };
 
-    try {
-        const uploadResult = await s3.upload(params).promise();
-        return uploadResult.Location; // URL of the uploaded file
-    } catch (error) {
-        console.error("Error uploading to Linode Object Storage:", error);
-        throw error; // Rethrow to handle it in the calling function
-    }
+  try {
+    const uploadResult = await s3.upload(params).promise();
+    return uploadResult.Location; // URL of the uploaded file
+  } catch (error) {
+    console.error('Error uploading to Linode Object Storage:', error);
+    throw error; // Rethrow to handle it in the calling function
+  }
 };
 
 /**
@@ -45,91 +45,94 @@ const uploadToLinode = async (filePath, fileKey) => {
  * @param {String} prefix (optional) Prefix to filter the videos (e.g., folder path)
  * @returns {Promise<Array>} List of video objects
  */
-const getVideos = async (prefix = '') => {
-    const params = {
-        Bucket: process.env.LINODE_BUCKET,
-        Prefix: prefix
-    };
+export const getVideos = async (prefix = '') => {
+  const params = {
+    Bucket: process.env.LINODE_BUCKET,
+    Prefix: prefix,
+  };
 
-    try {
-        const data = await s3.listObjectsV2(params).promise();
-        return data.Contents.map(item => ({
-            key: item.Key,
-            lastModified: item.LastModified,
-            size: item.Size,
-            url: `${process.env.LINODE_URL}/${process.env.LINODE_BUCKET}/${item.Key}`
-        }));
-    } catch (error) {
-        console.error("Error retrieving videos from Linode Object Storage:", error);
-        throw error; // Rethrow to handle it in the calling function
-    }
+  try {
+    const data = await s3.listObjectsV2(params).promise();
+    return data.Contents.map((item) => ({
+      key: item.Key,
+      lastModified: item.LastModified,
+      size: item.Size,
+      url: `${process.env.LINODE_URL}/${process.env.LINODE_BUCKET}/${item.Key}`,
+    }));
+  } catch (error) {
+    console.error('Error retrieving videos from Linode Object Storage:', error);
+    throw error; // Rethrow to handle it in the calling function
+  }
 };
-const getImageGrid = async (prefix = '') => {
-    const params = {
-        Bucket: process.env.LINODE_BUCKET,
-        Prefix: prefix
-    };
+export const getImageGrid = async (prefix = '') => {
+  const params = {
+    Bucket: process.env.LINODE_BUCKET,
+    Prefix: prefix,
+  };
 
-    try {
-        const data = await s3.listObjectsV2(params).promise();
-        
-        // Filter images based on common image extensions
-        const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.webp', '.svg'];
-        const images = data.Contents.filter(item => 
-            imageExtensions.some(ext => item.Key.toLowerCase().endsWith(ext))
-        );
+  try {
+    const data = await s3.listObjectsV2(params).promise();
 
-        // Generate HTML grid
-        let gridHtml = '<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px;">';
-        images.forEach(image => {
-            const imageUrl = `${process.env.LINODE_URL}/${process.env.LINODE_BUCKET}/${image.Key}`;
-            gridHtml += `
+    // Filter images based on common image extensions
+    const imageExtensions = [
+      '.jpg',
+      '.jpeg',
+      '.png',
+      '.gif',
+      '.bmp',
+      '.webp',
+      '.svg',
+    ];
+    const images = data.Contents.filter((item) =>
+      imageExtensions.some((ext) => item.Key.toLowerCase().endsWith(ext))
+    );
+
+    // Generate HTML grid
+    let gridHtml =
+      '<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px;">';
+    images.forEach((image) => {
+      const imageUrl = `${process.env.LINODE_URL}/${process.env.LINODE_BUCKET}/${image.Key}`;
+      gridHtml += `
                 <div style="text-align: center;">
                     <img src="${imageUrl}" alt="${image.Key}" style="width: 100%; height: auto;" />
                     <br />
                     <input type="text" value="${imageUrl}" readonly style="width: 100%;" />
                 </div>`;
-        });
-        gridHtml += '</div>';
+    });
+    gridHtml += '</div>';
 
-        return gridHtml;
-    } catch (error) {
-        console.error("Error retrieving images from Linode Object Storage:", error);
-        throw error; // Rethrow to handle it in the calling function
-    }
+    return gridHtml;
+  } catch (error) {
+    console.error('Error retrieving images from Linode Object Storage:', error);
+    throw error; // Rethrow to handle it in the calling function
+  }
 };
-async function uploadVideoToLinode(filePath, key) {
-        try {
-            if (!filePath || typeof filePath !== 'string') {
-                throw new TypeError('The "path" argument must be of type string or an instance of Buffer or URL.');
-            }
-            
-            const fileContent = fs.readFileSync(filePath); // Read the video file content from the path
-            
-            const params = {
-                Bucket: process.env.LINODE_BUCKET, // Replace with your Linode bucket name
-                Key: key, // File name you want to save as in S3
-                Body: fileContent,
-                ContentType: 'video/mp4', // Set ContentType for video
-                ACL: 'public-read' // Make the video publicly readable if required
-            };
-            
-            // Uploading video files to the bucket
-            const data = await s3.upload(params).promise();
-            return data.Location; // Return the URL of the uploaded video file
-        } catch (error) {
-            console.error("Error uploading video to Linode:", error);
-            throw error;
-        }
+export async function uploadVideoToLinode(filePath, key) {
+  try {
+    if (!filePath || typeof filePath !== 'string') {
+      throw new TypeError(
+        'The "path" argument must be of type string or an instance of Buffer or URL.'
+      );
     }
-module.exports = {
-    uploadToLinode,
-    getVideos,
-    getImageGrid,
-   // uploadVide
-};
 
+    const fileContent = fs.readFileSync(filePath); // Read the video file content from the path
 
+    const params = {
+      Bucket: process.env.LINODE_BUCKET, // Replace with your Linode bucket name
+      Key: key, // File name you want to save as in S3
+      Body: fileContent,
+      ContentType: 'video/mp4', // Set ContentType for video
+      ACL: 'public-read', // Make the video publicly readable if required
+    };
+
+    // Uploading video files to the bucket
+    const data = await s3.upload(params).promise();
+    return data.Location; // Return the URL of the uploaded video file
+  } catch (error) {
+    console.error('Error uploading video to Linode:', error);
+    throw error;
+  }
+}
 
 //plugins/aws_sdk/setup.js **NOTE GPT: DONT REMOVE THIS LINE**
 // const AWS = require('aws-sdk');
@@ -154,9 +157,9 @@ module.exports = {
 //         if (!filePath || typeof filePath !== 'string') {
 //             throw new TypeError('The "path" argument must be of type string or an instance of Buffer or URL.');
 //         }
-        
+
 //         const fileContent = fs.readFileSync(filePath); // Read the video file content from the path
-        
+
 //         const params = {
 //             Bucket: process.env.LINODE_BUCKET, // Replace with your Linode bucket name
 //             Key: key, // File name you want to save as in S3
@@ -164,7 +167,7 @@ module.exports = {
 //             ContentType: 'video/mp4', // Set ContentType for video
 //             ACL: 'public-read' // Make the video publicly readable if required
 //         };
-        
+
 //         // Uploading video files to the bucket
 //         const data = await s3.upload(params).promise();
 //         return data.Location; // Return the URL of the uploaded video file
@@ -184,15 +187,15 @@ module.exports = {
 //         if (!filePath || typeof filePath !== 'string') {
 //             throw new TypeError('The "path" argument must be of type string or an instance of Buffer or URL.');
 //         }
-        
+
 //         const fileContent = fs.readFileSync(filePath); // Read the file content from the path
-        
+
 //         const params = {
 //             Bucket: process.env.LINODE_BUCKET, // Replace with your Linode bucket name
 //             Key: key, // File name you want to save as in S3
 //             Body: fileContent
 //         };
-        
+
 //         // Uploading files to the bucket
 //         const data = await s3.upload(params).promise();
 //       return data.Location; // Return the URL of the uploaded file
@@ -249,7 +252,7 @@ module.exports = {
 
 //     try {
 //         const data = await s3.listObjectsV2(params).promise();
-        
+
 //         // Extract directories (common prefixes)
 //         const directories = data.CommonPrefixes.map(item => item.Prefix);
 
@@ -269,7 +272,6 @@ module.exports = {
 //     }
 // };
 
-
 // const getImageGrid = async (directory = '') => {
 //     const params = {
 //         Bucket: process.env.LINODE_BUCKET,
@@ -278,10 +280,10 @@ module.exports = {
 
 //     try {
 //         const data = await s3.listObjectsV2(params).promise();
-        
+
 //         // Filter images based on common image extensions
 //         const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.webp', '.svg'];
-//         const images = data.Contents.filter(item => 
+//         const images = data.Contents.filter(item =>
 //             imageExtensions.some(ext => item.Key.toLowerCase().endsWith(ext))
 //         );
 

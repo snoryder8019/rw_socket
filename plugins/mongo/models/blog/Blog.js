@@ -1,8 +1,8 @@
-const ModelHelper = require('../../helpers/models');
-const { upload, processImages } = require('../../../multer/subscriptionSetup');
-const { uploadToLinode } = require('../../../aws_sdk/setup');
+import ModelHelper from '../../helpers/models.js';
+import { upload, processImages } from '../../../multer/subscriptionSetup.js';
+import { uploadToLinode } from '../../../aws_sdk/setup.js';
 
-class Blog extends ModelHelper {
+export default class Blog extends ModelHelper {
   constructor(blogData) {
     super('blogs');
     this.modelFields = {
@@ -43,18 +43,26 @@ class Blog extends ModelHelper {
   }
 
   static getModelFields() {
-    return Object.keys(new Blog().modelFields).map(key => {
+    return Object.keys(new Blog().modelFields).map((key) => {
       const field = new Blog().modelFields[key];
       return { name: key, type: field.type };
     });
   }
 
   middlewareForCreateRoute() {
-    return [upload.fields(this.fileFields), processImages, this.uploadImagesToLinode.bind(this)];
+    return [
+      upload.fields(this.fileFields),
+      processImages,
+      this.uploadImagesToLinode.bind(this),
+    ];
   }
 
   middlewareForEditRoute() {
-    return [upload.fields(this.fileFields), processImages, this.uploadImagesToLinode.bind(this)];
+    return [
+      upload.fields(this.fileFields),
+      processImages,
+      this.uploadImagesToLinode.bind(this),
+    ];
   }
 
   get fileFields() {
@@ -78,7 +86,7 @@ class Blog extends ModelHelper {
       }
       next();
     } catch (error) {
-      console.error("Error in uploadImagesToLinode middleware:", error);
+      console.error('Error in uploadImagesToLinode middleware:', error);
       next(error);
     }
   }
@@ -87,5 +95,3 @@ class Blog extends ModelHelper {
     return 'admin/blogs/template';
   }
 }
-
-module.exports = Blog;

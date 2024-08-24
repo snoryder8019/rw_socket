@@ -1,9 +1,10 @@
-const ModelHelper = require('../../helpers/models');
-const { upload, processImages } = require('../../../multer/subscriptionSetup');
-const { uploadToLinode } = require('../../../aws_sdk/setup');
+import ModelHelper from '../../helpers/models.js';
+import { upload, processImages } from '../../../multer/subscriptionSetup.js';
+import { uploadToLinode } from '../../../aws_sdk/setup.js';
+
 const modelName = 'game';
 
-class Game extends ModelHelper {
+export default class Game extends ModelHelper {
   constructor(gameData) {
     super(`${modelName}s`);
     this.modelFields = {
@@ -13,7 +14,7 @@ class Game extends ModelHelper {
       developer: { type: 'text', value: null },
       releaseDate: { type: 'date', value: null },
       iconImage: { type: 'file', value: null },
-      backgroundImg: { type: 'file', value: null }
+      backgroundImg: { type: 'file', value: null },
     };
     if (gameData) {
       for (let key in this.modelFields) {
@@ -25,24 +26,32 @@ class Game extends ModelHelper {
   }
 
   static getModelFields() {
-    return Object.keys(new Game().modelFields).map(key => {
+    return Object.keys(new Game().modelFields).map((key) => {
       const field = new Game().modelFields[key];
       return { name: key, type: field.type };
     });
   }
 
   middlewareForCreateRoute() {
-    return [upload.fields(this.fileFields), processImages, this.uploadImagesToLinode.bind(this)];
+    return [
+      upload.fields(this.fileFields),
+      processImages,
+      this.uploadImagesToLinode.bind(this),
+    ];
   }
 
   middlewareForEditRoute() {
-    return [upload.fields(this.fileFields), processImages, this.uploadImagesToLinode.bind(this)];
+    return [
+      upload.fields(this.fileFields),
+      processImages,
+      this.uploadImagesToLinode.bind(this),
+    ];
   }
 
   get fileFields() {
     return [
       { name: 'iconImage', maxCount: 1 },
-      { name: 'backgroundImg', maxCount: 1 }
+      { name: 'backgroundImg', maxCount: 1 },
     ];
   }
 
@@ -58,7 +67,7 @@ class Game extends ModelHelper {
       }
       next();
     } catch (error) {
-      console.error("Error in uploadImagesToLinode middleware:", error);
+      console.error('Error in uploadImagesToLinode middleware:', error);
       next(error);
     }
   }
@@ -67,5 +76,3 @@ class Game extends ModelHelper {
     return `admin/${modelName}s/template`;
   }
 }
-
-module.exports = Game;

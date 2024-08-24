@@ -1,9 +1,10 @@
-const ModelHelper = require('../../helpers/models');
-const { upload, processImages } = require('../../../multer/subscriptionSetup');
-const { uploadToLinode } = require('../../../aws_sdk/setup');
+import ModelHelper from '../../helpers/models.js';
+import { upload, processImages } from '../../../multer/subscriptionSetup.js';
+import { uploadToLinode } from '../../../aws_sdk/setup.js';
+
 const modelName = 'notification';
 
-class Notification extends ModelHelper {
+export default class Notification extends ModelHelper {
   constructor(notificationData) {
     super(`${modelName}s`);
     this.modelFields = {
@@ -24,7 +25,7 @@ class Notification extends ModelHelper {
       actionBy: { type: 'array', value: [] },
       actionHookBy: { type: 'array', value: [] },
       unsubscribedBy: { type: 'array', value: [] },
-      recycle: { type: 'boolean', value: null }
+      recycle: { type: 'boolean', value: null },
     };
     if (notificationData) {
       for (let key in this.modelFields) {
@@ -36,24 +37,32 @@ class Notification extends ModelHelper {
   }
 
   static getModelFields() {
-    return Object.keys(new Notification().modelFields).map(key => {
+    return Object.keys(new Notification().modelFields).map((key) => {
       const field = new Notification().modelFields[key];
       return { name: key, type: field.type };
     });
   }
 
   middlewareForCreateRoute() {
-    return [upload.fields(this.fileFields), processImages, this.uploadImagesToLinode.bind(this)];
+    return [
+      upload.fields(this.fileFields),
+      processImages,
+      this.uploadImagesToLinode.bind(this),
+    ];
   }
 
   middlewareForEditRoute() {
-    return [upload.fields(this.fileFields), processImages, this.uploadImagesToLinode.bind(this)];
+    return [
+      upload.fields(this.fileFields),
+      processImages,
+      this.uploadImagesToLinode.bind(this),
+    ];
   }
 
   get fileFields() {
     return [
       { name: 'backgroundImg', maxCount: 1 },
-      { name: 'iconImage', maxCount: 1 }
+      { name: 'iconImage', maxCount: 1 },
     ];
   }
 
@@ -69,7 +78,7 @@ class Notification extends ModelHelper {
       }
       next();
     } catch (error) {
-      console.error("Error in uploadImagesToLinode middleware:", error);
+      console.error('Error in uploadImagesToLinode middleware:', error);
       next(error);
     }
   }
@@ -78,5 +87,3 @@ class Notification extends ModelHelper {
     return `admin/${modelName}s/template`;
   }
 }
-
-module.exports = Notification;

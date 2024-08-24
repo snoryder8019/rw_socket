@@ -1,12 +1,11 @@
-const multer = require('multer');
-const path = require('path');
-const sharp = require('sharp');
-const fs = require('fs');
-const { resizeAndCropImage } = require('../sharp/sharp');
+import multer from 'multer';
+import path from 'path';
+import sharp from 'sharp';
+import fs from 'fs';
 
 const storage = multer.memoryStorage();
 
-const upload = multer({
+export const upload = multer({
   storage: storage,
   fileFilter: (req, file, cb) => {
     if (file.mimetype.startsWith('image/')) {
@@ -14,10 +13,10 @@ const upload = multer({
     } else {
       cb(new Error('Not an image! Please upload only images.'), false);
     }
-  }
+  },
 });
 
-const processImages = async (req, res, next) => {
+export const processImages = async (req, res, next) => {
   if (!req.files) {
     return next();
   }
@@ -34,9 +33,7 @@ const processImages = async (req, res, next) => {
         fs.mkdirSync(outputDirectory, { recursive: true });
       }
 
-      await sharp(file.buffer)
-        .resize(500)
-        .toFile(outputPath);
+      await sharp(file.buffer).resize(500).toFile(outputPath);
 
       file.path = outputPath;
     }
@@ -46,5 +43,3 @@ const processImages = async (req, res, next) => {
     next(error);
   }
 };
-
-module.exports = { upload, processImages };

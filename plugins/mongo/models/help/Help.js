@@ -1,21 +1,21 @@
-const ModelHelper = require('../../helpers/models');
-const { upload, processImages } = require('../../../multer/subscriptionSetup');
-const { uploadToLinode } = require('../../../aws_sdk/setup');
+import ModelHelper from '../../helpers/models.js';
+import { upload, processImages } from '../../../multer/subscriptionSetup.js';
+import { uploadToLinode } from '../../../aws_sdk/setup.js';
 
-class Help extends ModelHelper {
+export default class Help extends ModelHelper {
   constructor(helpData) {
     super('helps');
     this.modelFields = {
       title: { type: 'text', value: null },
-      content: { type: 'textarea', value: null },           // Main help content
-      imageUrl: { type: 'text', value: null },              // URL to an image if any
-      videoUrl: { type: 'text', value: null },              // URL to a video if any
-      category: { type: 'text', value: null },              // Category for better organization
-      tags: { type: 'array', value: [] },                   // Tags for searching and filtering
+      content: { type: 'textarea', value: null }, // Main help content
+      imageUrl: { type: 'text', value: null }, // URL to an image if any
+      videoUrl: { type: 'text', value: null }, // URL to a video if any
+      category: { type: 'text', value: null }, // Category for better organization
+      tags: { type: 'array', value: [] }, // Tags for searching and filtering
       creationDate: { type: 'date', value: new Date() },
       lastUpdated: { type: 'date', value: null },
-      visible: { type: 'boolean', value: true },            // If the help content is currently visible
-      order: { type: 'number', value: null },               // For ordering content in the UI
+      visible: { type: 'boolean', value: true }, // If the help content is currently visible
+      order: { type: 'number', value: null }, // For ordering content in the UI
     };
 
     if (helpData) {
@@ -28,24 +28,30 @@ class Help extends ModelHelper {
   }
 
   static getModelFields() {
-    return Object.keys(new Help().modelFields).map(key => {
+    return Object.keys(new Help().modelFields).map((key) => {
       const field = new Help().modelFields[key];
       return { name: key, type: field.type };
     });
   }
 
   middlewareForCreateRoute() {
-    return [upload.fields(this.fileFields), processImages, this.uploadImagesToLinode.bind(this)];
+    return [
+      upload.fields(this.fileFields),
+      processImages,
+      this.uploadImagesToLinode.bind(this),
+    ];
   }
 
   middlewareForEditRoute() {
-    return [upload.fields(this.fileFields), processImages, this.uploadImagesToLinode.bind(this)];
+    return [
+      upload.fields(this.fileFields),
+      processImages,
+      this.uploadImagesToLinode.bind(this),
+    ];
   }
 
   get fileFields() {
-    return [
-      { name: 'imageUrl', maxCount: 1 }
-    ];
+    return [{ name: 'imageUrl', maxCount: 1 }];
   }
 
   async uploadImagesToLinode(req, res, next) {
@@ -58,7 +64,7 @@ class Help extends ModelHelper {
       }
       next();
     } catch (error) {
-      console.error("Error in uploadImagesToLinode middleware:", error);
+      console.error('Error in uploadImagesToLinode middleware:', error);
       next(error);
     }
   }
@@ -67,5 +73,3 @@ class Help extends ModelHelper {
     return 'admin/helps/template';
   }
 }
-
-module.exports = Help;

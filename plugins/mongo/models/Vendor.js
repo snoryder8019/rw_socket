@@ -1,29 +1,30 @@
-const ModelHelper = require('../helpers/models');
-const { upload, processImages } = require('../../multer/subscriptionSetup');
-const { uploadToLinode } = require('../../aws_sdk/setup');
+import ModelHelper from '../helpers/models.js';
+import { upload, processImages } from '../../multer/subscriptionSetup.js';
+import { uploadToLinode } from '../../aws_sdk/setup.js';
+
 const modelName = 'vendor';
 
-class Vendor extends ModelHelper {
+export default class Vendor extends ModelHelper {
   constructor(vendorData) {
     super(`${modelName}s`);
     this.modelFields = {
       name: { type: 'text', value: null },
       title: { type: 'text', value: null },
       subtitle: { type: 'text', value: null },
-      links: { type: 'array', value:[] },
-      promos: { type: 'array', value:[] },
-      clubs: { type: 'array', value:[] },
+      links: { type: 'array', value: [] },
+      promos: { type: 'array', value: [] },
+      clubs: { type: 'array', value: [] },
       description: { type: 'text', value: null },
       mediumIcon: { type: 'file', value: null },
       backgroundImg: { type: 'file', value: null },
       horizBkgd: { type: 'file', value: null },
-     // email, contact, dropship--nancyShip--eventBased
-     //conversion webhook
-     //shopify webhook
-     //shopify link
-     //active
-     //permissions
-     //login
+      // email, contact, dropship--nancyShip--eventBased
+      //conversion webhook
+      //shopify webhook
+      //shopify link
+      //active
+      //permissions
+      //login
     };
     if (vendorData) {
       for (let key in this.modelFields) {
@@ -35,18 +36,26 @@ class Vendor extends ModelHelper {
   }
 
   static getModelFields() {
-    return Object.keys(new Vendor().modelFields).map(key => {
+    return Object.keys(new Vendor().modelFields).map((key) => {
       const field = new Vendor().modelFields[key];
       return { name: key, type: field.type };
     });
   }
 
   middlewareForCreateRoute() {
-    return [upload.fields(this.fileFields), processImages, this.uploadImagesToLinode.bind(this)];
+    return [
+      upload.fields(this.fileFields),
+      processImages,
+      this.uploadImagesToLinode.bind(this),
+    ];
   }
 
   middlewareForEditRoute() {
-    return [upload.fields(this.fileFields), processImages, this.uploadImagesToLinode.bind(this)];
+    return [
+      upload.fields(this.fileFields),
+      processImages,
+      this.uploadImagesToLinode.bind(this),
+    ];
   }
 
   get fileFields() {
@@ -54,7 +63,6 @@ class Vendor extends ModelHelper {
       { name: 'mediumIcon', maxCount: 1 },
       { name: 'backgroundImg', maxCount: 1 },
       { name: 'horizBkgrd', maxCount: 1 },
-    
     ];
   }
 
@@ -70,7 +78,7 @@ class Vendor extends ModelHelper {
       }
       next();
     } catch (error) {
-      console.error("Error in uploadImagesToLinode middleware:", error);
+      console.error('Error in uploadImagesToLinode middleware:', error);
       next(error);
     }
   }
@@ -79,5 +87,3 @@ class Vendor extends ModelHelper {
     return `admin/${modelName}s/template`;
   }
 }
-
-module.exports = Vendor;
