@@ -1,7 +1,14 @@
 
 <div class="adminWindow">
     <div>User Data for the App</div>
+    <div id="usersOnline"></div>
+    <div id="latestSignups"></div>
+    <div id="activeChats"></div>
 </div>
 <div class="main"></div>
-    <button class="collapsible">Get Users<span class="carrot">&#9654;</span></button>
-    <div class="content" data-url="/users/paginateUsers"></div>
+<button class="collapsible">Create Users<span class="carrot">&#9654;</span></button>
+<div class="content" data-url="/users/renderAddForm"></div>
+<button class="collapsible">Browse Users<span class="carrot">&#9654;</span></button>
+<div class="content" data-url="/users/all"></div>
+<button class="collapsible">Search Users<span class="carrot">&#9654;</span></button>
+<div class="content" data-url="/users/getSearchForm"></div>

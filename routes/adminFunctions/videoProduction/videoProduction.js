@@ -3,6 +3,7 @@ const multer = require('multer');
 const path = require('path');
 const { uploadToLinode } = require('../../../plugins/aws_sdk/setup'); // Ensure this path is correct
 const Video = require('../../../plugins/mongo/models/Video'); // Model for storing video info
+const buildRoutes = require('../../helpers/routeBuilder');
 
 const router = express.Router();
 

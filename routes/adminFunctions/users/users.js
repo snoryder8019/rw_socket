@@ -1,7 +1,117 @@
 const express = require('express');
 const router = express.Router();
+const User = require('../../../plugins/mongo/models/User')
+const Permission = require('../../../plugins/mongo/models/Permission')
 const { getDb } = require('../../../plugins/mongo/mongo');
+const buildRoutes = require('../../helpers/routeBuilder');
+const { generateFormFields } = require('../../../plugins/helpers/formHelper');
 
+////////Version 1 Functions
+const modelName = "user";
+// Route to render the form to add a new user
+router.get('/renderAddForm', (req, res) => {
+  try {
+    const model = User.getModelFields();
+    const formFields = generateFormFields(model);
+    console.log('renderAddForm');
+    
+    res.render('forms/generalForm', {
+      title: 'Add New User',
+      action: '/users/create',
+      formFields: formFields,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ error: error.message });
+  }
+});
+
+// Route to render the form to edit an existing user
+router.get('/renderEditForm/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const permissionsModel =new Permission().modelFields; // Ensure this is defined and returns an object
+    if (!permissionsModel) {
+      throw new Error('Permissions model is undefined or null');
+    }
+
+    const user = await new User().getById(id);
+    if (!user) {
+      return res.status(404).send({ error: 'User not found' });
+    }
+
+    // Ensure user.permissions is an object
+    const userPermissions = user.permissions || {};
+
+    const model = User.getModelFields();
+    const formFields = generateFormFields(model, user); // Generate form fields as an array
+
+    // Generate form fields for permissions
+    const permissionsFields = Object.keys(permissionsModel).map(permissionKey => {
+      return {
+        name: `permissions[${permissionKey}]`,
+        label: permissionKey,
+        type: 'boolean',
+        value: userPermissions[permissionKey] || false,
+      };
+    });
+
+    res.render('forms/generalEditForm', {
+      title: 'Edit User',
+      action: `users/update/${id}`,
+      routeSub: 'users',
+      method: 'post',
+      formFields: formFields, // Keep the original form fields separate
+      permissionsFields: permissionsFields, // Handle permissions fields separately in the template
+      data: user
+    });
+    
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ error: error.message });
+  }
+});
+
+/////////////////
+router.get('/section', async (req, res) => {
+  try {
+    const data = await new User().getAll();
+    res.render('./layouts/section', {
+      title: 'Section View',
+      data: data
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ error: error.message });
+  }
+});
+
+router.get('/getSearchForm', async(req,res)=>{
+  try{
+const users = await new User().getAll()
+console.log('getting Users Search')
+res.render('./forms/generalSearchForm',{
+  users:users,
+})
+  }
+  catch(error){
+    console.error(error);
+    res.status(500).send({error:error.message})
+  
+  }
+})
+
+
+
+
+
+
+buildRoutes(new User(), router);
+
+
+
+
+//////// VERSION 0.9 functions
 router.get('/paginateUsers', async (req, res) => {
   try {
     const db = getDb();

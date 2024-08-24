@@ -1,0 +1,15 @@
+<div class="adminWindow">
+    <div class="adminStatsRow">
+      <% documents.forEach(user => { %>
+        <div class="adminStat">
+          <p><%= user.name %></p>
+          <img alt="User image" src="<%= user.mediumIcon %>">
+          <button class="collapsible">view: <span class="carrot">&#9654;</span></button>
+          <div class="content" data-url="/users/renderEditForm/<%= user._id %>"></div>
+        </div>
+      <% }) %>
+    </div>
+  </div>
+  
+  
+  

@@ -1,3 +1,5 @@
+//routes/helpers/routeBuilder.js **GPT NOTE: DONT REMOVE THIS LINE IN EXAMPLES**
+
 const { ObjectId } = require('mongodb');
 
 // model needs to be an instance of the model that you want routes built for.
@@ -33,6 +35,7 @@ const buildRoutes = (model, router) => {
       if (!ObjectId.isValid(id)) {
         return res.status(400).send({ error: 'Invalid ID format' });
       }
+      console.log(document)
       const document = await model.getById(id);
       res.status(200).send(document);
     } catch (error) {

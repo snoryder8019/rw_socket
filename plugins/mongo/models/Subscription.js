@@ -13,14 +13,10 @@ class Subscription extends ModelHelper {
       startDate: { type: 'date', value: new Date() },
       endDate: { type: 'date', value: null },
       mediumIcon: { type: 'file', value: null },
-      squareNonAuthBkgd: { type: 'file', value: null },
-      squareAuthBkgd: { type: 'file', value: null },
-      horizNonAuthBkgd: { type: 'file', value: null },
-      horizAuthBkgd: { type: 'file', value: null },
-      nonAuthTitle: { type: 'text', value: null },
-      nonAuthDescription: { type: 'text', value: null },
-      authTitle: { type: 'text', value: null },
-      authDescription: { type: 'text', value: null },
+      backgroundImg: { type: 'file', value: null },
+      horizBkgd: { type: 'file', value: null },
+      title: { type: 'text', value: null },
+      description: { type: 'text', value: null },
       daysSubscribed: { type: 'number', value: null },
       gemsType: { type: 'text', value: null },
       gemsCt: { type: 'number', value: null },
@@ -28,7 +24,8 @@ class Subscription extends ModelHelper {
       vendors: { type: 'array', value: [] },
       shopifyWebhook: { type: 'text', value: null },
       vendors: { type: 'array', value: [] },
-      gameTokens: { type: 'number', value: null }
+      gameTokens: { type: 'number', value: null },
+      active: { type: 'boolean', value: false },
     };
     if (subscriptionData) {
       for (let key in this.modelFields) {
@@ -57,10 +54,8 @@ class Subscription extends ModelHelper {
   get fileFields() {
     return [
       { name: 'mediumIcon', maxCount: 1 },
-      { name: 'squareNonAuthBkgd', maxCount: 1 },
-      { name: 'squareAuthBkgd', maxCount: 1 },
-      { name: 'horizNonAuthBkgd', maxCount: 1 },
-      { name: 'horizAuthBkgd', maxCount: 1 }
+      { name: 'horizBkgd', maxCount: 1 },
+      { name: 'backgroundImg', maxCount: 1 },
     ];
   }
 

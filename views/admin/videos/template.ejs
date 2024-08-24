@@ -1,0 +1,15 @@
+<div class="adminWindow">
+    <div class="adminStatsRow">
+      <% documents.forEach(video => { %>
+        <div class="adminStat">
+          <p><%= video.name %></p>
+          <img alt="Video image" src="<%= video.mediumIcon %>">
+          <button class="collapsible">view: <span class="carrot">&#9654;</span></button>
+          <div class="content" data-url="/videos/renderEditForm/<%= video._id %>"></div>
+        </div>
+      <% }) %>
+    </div>
+  </div>
+  
+  
+  
