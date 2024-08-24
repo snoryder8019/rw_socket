@@ -26,7 +26,7 @@ router.get('/faqs/renderAddForm', (req, res) => {
   try {
     const model = Faq.getModelFields();
     const formFields = generateFormFields(model);
-    console.log('renderAddForm');
+    console.log('renderAddForm formFields:',formFields);
 
     res.render('forms/generalForm', {
       title: 'Add New FAQ',
