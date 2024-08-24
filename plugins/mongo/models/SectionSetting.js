@@ -9,8 +9,15 @@ export default class SectionSetting extends ModelHelper {
     super(`${modelName}s`);
     this.modelFields = {
       name: { type: 'text', value: null },
+      order: { type: 'number', value: null },
       title: { type: 'text', value: null },
       subTitle: { type: 'text', value: null },
+      animation: { type: 'text', value: 'none' },
+      buttonDivStyle: { type: 'text', value: 'content' },
+      buttonStyle: { type: 'text', value: 'collapsable' },
+      linkStyle: { type: 'text', value: 'linkTable' },
+      style: { type: 'text', value: 'auth_view_true' },
+      innerStyle: { type: 'text', value: 'index-container' },
       description: { type: 'text', value: null },
       entryUrl: { type: 'text', value: null },
       entryText: { type: 'text', value: null },

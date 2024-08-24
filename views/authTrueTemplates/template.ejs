@@ -13,81 +13,109 @@
     display: none;
   }
 </style>
-
+<%- include('../videoChannels/channel_1') %>
+<!--HERAT ANIMATION WAS INCLUDED HERE-->
 <% if (typeof sectionSettings === 'object' && sectionSettings && sectionSettings.length > 0) { %>
   <% sectionSettings.forEach(function(setting) { %>
     <% if (setting.visible && setting.authView) { %>
-      <div class="auth_view_true" style="background-image: url('<%= setting.backgroundImg %>');">
-        <div class="index-container">
+      <div class="<%=setting.style%>" style="background-image: url('<%= setting.backgroundImg %>');" data-order="<%= setting.order %>">
+        <div class="<%=setting.innerStyle%>">
         <% if (setting.title) { %>
-  <h1><%= setting.title %></h1>
-<% } %>
+          <h1><%= setting.title %></h1>
+        <% } %>
 
-<% if (setting.subtitle) { %>
-  <h1><%= setting.subtitle %></h1>
-<% } %>
+        <% if (setting.subtitle) { %>
+          <h1><%= setting.subtitle %></h1>
+        <% } %>
 
-<% if (setting.description) { %>
-  <p><%= setting.description %></p>
-<% } %>
+        <% if (setting.description) { %>
+          <p><%= setting.description %></p>
+        <% } %>
 
-          <% if (Array.isArray(setting.links)) { %>
-            <div class="linkTable"><br>
-
-            <% setting.links.forEach(function(link) { %>
-              <a href="<%= link %>"  target="_blank" rel="noopener noreferrer"><%= link %></a>
-              <br>
-            <% }); %>
-          </div>
+          <% if (Array.isArray(setting.links) && setting.links[0]!=="") { %>
+            <div class="<%=setting.linkStyle%>"><br>
+              <% setting.links.forEach(function(link) { %>
+                <a href="<%= link %>" target="_blank" rel="noopener noreferrer"><%= link %></a>
+                <br>
+              <% }); %>
+            </div>
           <% } %>
           <br>
-          <button style="background-image: url('<%= setting.entryBackground %>');" class="collapsible"><%= setting.entryText %><span class="carrot">||</span></button>
-          <div class="content" data-url="<%= setting.entryUrl %>"></div>
+          <% if(setting.entryText !=="" && setting.entryText!=="") { %>
+            <button style="background-image: url('<%= setting.entryBackground %>');" class="<%=setting.buttonStyle%>"><%= setting.entryText %><span class="carrot">||</span></button>
+            <div class="<%=setting.buttonDivStyle%>" data-url="<%= setting.entryUrl %>"></div>
+          <% } %>
         </div>
       </div>
     <% } %>
   <% }); %>
 <% } %>
 
-<div class="auth_view_true" style="background-image: url('./images/hugeIcon.png');">
+
+<!--div class="auth_view_true" style="background-image: url('./images/hugeIcon.png');">
   <div class="index-container">
     <h1>The Parlor</h1>
     <div><p>Set up your parlor space below.</p></div>
 
     <div class="container-scrollbox-x">
-      <%- include('../videoChannels/userStream') %>
-      <%- include('../videoChannels/channel_1') %>
+       include('../videoChannels/userStream')
     </div>
     <div class="marquee">
       <span id="marquee-text"></span>
     </div>
   </div>
-</div>
+</div-->
 
 <script>
-  document.addEventListener('DOMContentLoaded', () => {
-    document.querySelectorAll('.auth_view_true').forEach(div => {
-      div.addEventListener('click', function () {
-        if (!this.classList.contains('expanded')) {
-          this.classList.add('expanded');
-          let closeButton = this.querySelector('.close-button');
-          if (!closeButton) {
-            closeButton = document.createElement('button');
-            closeButton.className = 'close-button';
-            closeButton.innerHTML = 'X';
-            this.appendChild(closeButton);
-          }
-          closeButton.style.display = 'block'; // Ensure the close button is visible
+// document.addEventListener('DOMContentLoaded', () => {
+//     const parentContainer = document.getElementById('parentContainer'); // Adjust the ID as needed
+//     const sections = Array.from(document.querySelectorAll('[data-order]'));
+//     const orderSort = parentContainer.getAttribute('data-order-sort');
 
-          closeButton.addEventListener('click', function (e) {
-            e.stopPropagation(); // Prevent click from propagating to the div
-            this.parentNode.classList.remove('expanded');
-            this.style.display = 'none'; // Hide button after collapsing
-          });
+//     if (orderSort !== "") {
+//         sections.sort((a, b) => {
+//             return parseInt(a.getAttribute('data-order')) - parseInt(b.getAttribute('data-order'));
+//         });
+
+//         sections.forEach(section => {
+//             parentContainer.appendChild(section);
+//         });
+//     }
+
+//     // Existing code for dynamic content loading or other functionalities...
+// });
+
+
+
+
+
+
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.auth_view_true').forEach(div => {
+    div.addEventListener('click', function () {
+      if (!this.classList.contains('expanded')) {
+        this.classList.add('expanded');
+
+        let closeButton = this.querySelector('.close-button');
+        if (!closeButton) {
+          closeButton = document.createElement('button');
+          closeButton.className = 'close-button';
+          closeButton.innerHTML = 'X';
+          this.appendChild(closeButton);
         }
-      });
+
+        closeButton.style.display = 'block'; // Ensure the close button is visible
+
+        closeButton.addEventListener('click', function (e) {
+          e.stopPropagation(); // Prevent click from propagating to the div
+          this.parentElement.classList.remove('expanded');
+          this.style.display = 'none'; // Hide button after collapsing
+        });
+      }
     });
   });
+});
+
 </script>
 
 <script src="/socket.io/socket.io.js"></script>

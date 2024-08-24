@@ -1,0 +1,89 @@
+
+    <style>
+
+        .heart-canvas {
+            display: block;
+            position: absolute;
+            pointer-events: none; /* Ensure canvas doesn't interfere with other click events */
+            z-index: 1000; /* Ensure the canvas is on top */
+        }
+    </style>
+
+    <script>
+        document.addEventListener('click', (event) => {
+            // Create the canvas and assign it a class
+            const canvas = document.createElement('canvas');
+            canvas.className = 'heartIcon';
+            document.body.appendChild(canvas);
+            const ctx = canvas.getContext('2d');
+
+            // Set canvas size and position based on the click event
+            canvas.width = 200;
+            canvas.height = 200;
+            canvas.style.top = `${event.clientY - 100}px`;
+            canvas.style.left = `${event.clientX - 100}px`;
+
+            let heartsArray = [];
+
+            class Heart {
+                constructor() {
+                    this.x = Math.random() * canvas.width;
+                    this.y = canvas.height + 20; // Start slightly below the canvas
+                    this.size = Math.random() * 5 + 2; // Heart size
+                    this.speed = Math.random() * 1 + 0.5; // Speed of floating up
+                    this.opacity = 1; // Initial opacity
+                    this.fade = Math.random() * 0.02 + 0.01; // Fade speed
+                    this.angle = Math.random() * 360; // Random angle for rotation
+                    this.rotationSpeed = Math.random() * 2 - 1; // Rotation speed
+                }
+
+                draw() {
+                    ctx.save();
+                    ctx.globalAlpha = this.opacity;
+                    ctx.translate(this.x, this.y);
+                    ctx.rotate(this.angle * Math.PI / 180);
+                    ctx.beginPath();
+                    ctx.moveTo(0, 0);
+                    ctx.arc(-this.size / 2, 0, this.size / 2, 0, Math.PI, true); // Left half of heart
+                    ctx.arc(this.size / 2, 0, this.size / 2, 0, Math.PI, true); // Right half of heart
+                    ctx.lineTo(0, this.size); // Bottom point of heart
+                    ctx.closePath();
+                    ctx.fillStyle = 'red';
+                    ctx.fill();
+                    ctx.restore();
+                }
+
+                update() {
+                    this.y -= this.speed; // Move heart up
+                    this.opacity -= this.fade; // Fade out
+                    this.angle += this.rotationSpeed; // Rotate
+                    if (this.opacity <= 0) {
+                        this.opacity = 0;
+                    }
+                }
+            }
+
+            function handleHearts() {
+                heartsArray.push(new Heart()); // Add new heart to the array
+                heartsArray = heartsArray.filter(heart => heart.opacity > 0); // Remove hearts that are fully faded
+                heartsArray.forEach(heart => {
+                    heart.update();
+                    heart.draw();
+                });
+            }
+
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                handleHearts();
+                if (heartsArray.length > 0) {
+                    requestAnimationFrame(animate);
+                } else {
+                    document.body.removeChild(canvas); // Remove the canvas after the animation ends
+                }
+            }
+
+            // Start the animation
+            animate();
+        });
+    </script>
+

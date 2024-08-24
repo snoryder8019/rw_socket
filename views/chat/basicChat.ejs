@@ -1,6 +1,5 @@
 <div id="chat-window-basic">
-    <%- include('../animations/confetti')%>
-<div id="marquee"></div>
+  
     <% if(typeof user === 'object' && user) { %>
         <script>var firstName = "<%= user.firstName %>"</script>
         <script>var chatStyle = "<%=user.chatStyle%>"</script>
@@ -24,14 +23,74 @@
         <div id="chat">
             <div id="messages"></div>
         </div>
+   
         <div class="inputBar">
-            <input id="chatInput" autocomplete="off" /><button id="submitChat">Send</button>
-        </div>
+            <div class="emojiSlider"></div>
+           
+            <input class="chatInput"id="chatInput" autocomplete="off" /> <span class="addImage">🖼️</span><button id="submitChat">Send</button>
+            </div>
     <% } else { %>
         <p>Please log in to join the chat.</p>
     <% } %>
 </div>
 <script>
+    document.addEventListener('DOMContentLoaded', function() {
+  const emojiSlider = document.querySelector('.emojiSlider');
+
+  // Create an Intersection Observer
+  const observer = new IntersectionObserver((entries, observer) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        // Element is in view, load the .ejs content
+        loadEmojiContent();
+        // Stop observing once the content is loaded
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 }); // Adjust the threshold as needed
+
+  // Observe the emojiSlider element
+  observer.observe(emojiSlider);
+
+  // Function to load the .ejs file content
+  function loadEmojiContent() {
+    fetch('/getEmojis')
+      .then(response => response.text())
+      .then(data => {
+        emojiSlider.innerHTML = data; // Insert the loaded content into the div
+        attachEmojiClickHandlers(); // Attach click handlers to the loaded emojis
+      })
+      .catch(error => console.error('Error loading the .ejs file:', error));
+  }
+
+  // Function to attach click handlers to each emoji
+  function attachEmojiClickHandlers() {
+    const emojis = emojiSlider.querySelectorAll('.emoji-option');
+    emojis.forEach(emoji => {
+      emoji.addEventListener('click', () => {
+        const emojiValue = emoji.getAttribute('data-emoji');
+        selectEmoji(emojiValue);
+      });
+    });
+  }
+
+  // Function to handle emoji selection
+  function selectEmoji(emoji) {
+    const inputField = document.querySelector('input'); // Select the input field (modify the selector as needed)
+    if (inputField) {
+      const currentValue = inputField.value; // Get the current value of the input field
+      inputField.value = currentValue + emoji; // Append the emoji to the current value
+    }
+  }
+});
+
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded',()=>{
+
+
+    })
         document.addEventListener('DOMContentLoaded', () => {
             const elements = document.querySelectorAll('.message');
             elements.forEach((element, index) => {
@@ -47,7 +106,78 @@
         const messagesPerPage = 12; 
         function requestInitialMessages() {
             socket.emit('fetch messages', { roomId: roomId, page: currentPage, messagesPerPage: messagesPerPage });
-        }        
+        }   
+        //////
+
+  socket.on('connect_error', (err) => {
+    console.error('Connection error:', err);
+  });
+
+  socket.on('broadcast', (videoUrl) => {
+    const finUrl = videoUrl.videoUrl.videoUrl;
+    console.log(`CHANNEL ONE BROADCAST NOTICED url: ${finUrl}`);
+    const containerVid = document.querySelector('.myVideo');
+    const statusText = document.getElementById('statusText');
+    
+    // Hide the "New videos here daily!" text
+    statusText.style.display = 'none';
+    
+    // Stop and remove the existing video if it exists
+    let existingVideo = document.getElementById('videoPlayer');
+    if (existingVideo) {
+      existingVideo.pause(); // Stop the video
+      existingVideo.src = ''; // Clear the source
+      existingVideo.load(); // Stop downloading the video
+      existingVideo.remove(); // Remove the video element from the DOM
+    }
+    
+    // Create a new video element and add it to the container
+    const videoPlayer = document.createElement('video');
+    videoPlayer.id = 'videoPlayer';
+    videoPlayer.autoplay = true;
+    videoPlayer.muted = true;
+    videoPlayer.controls = true;
+    videoPlayer.style.maxHeight = '200px';
+    videoPlayer.style.width = '100%';
+
+    const sourceElement = document.createElement('source');
+    sourceElement.src = `https://${finUrl}`;
+    sourceElement.type = 'video/mp4';
+
+    videoPlayer.appendChild(sourceElement);
+    containerVid.appendChild(videoPlayer);
+    
+    // Load and play the new video
+    videoPlayer.load();
+    videoPlayer.play();
+  });
+
+  socket.on('marquee', (data) => {
+    console.log('Received marquee message:', data.message);
+    const marqueeText = document.getElementById('marqueeText');
+    marqueeText.innerText = data.message;
+    marqueeText.style.display = 'block'; // Show the marquee
+  });
+  
+  document.addEventListener('click', (event) => {
+    if(event.target.classList.contains('play-video')){
+      const videoUrl = event.target.getAttribute('data-video');
+      console.log(`playVIDDDSS!!k ${videoUrl}`);
+      socket.emit('broadcast', { videoUrl: videoUrl });
+    }
+  });
+
+  document.addEventListener('click', (event) => {
+    if (event.target.classList.contains('marqueeButton')) {
+      const marqueeMessage = document.getElementById('marqueeMessage').value;
+      console.log('Button clicked', marqueeMessage);
+      socket.emit('marquee', { message: marqueeMessage });
+      console.log('Marquee event emitted');
+    }
+  });
+
+
+        ////////     
         socket.on('messages fetched', (messages) => {
             if (messages.length) {
                 const reversedMessages = messages.reverse();
@@ -58,48 +188,100 @@
                 currentPage++;
             }
         });
-        
+        let userId = "<%=user._id%>";
         function addMessage(messageObject, isOwnMessage = false) {
-            const messagesContainer = document.getElementById('chat');
-            const shouldScroll = messagesContainer.scrollTop + messagesContainer.clientHeight + 50 >= messagesContainer.scrollHeight;
-            
-            const messageDiv = document.createElement('div');
-            messageDiv.className = 'messages'
-            messageDiv.className = isOwnMessage ? 'message ownMessage' : 'message';
-            
-            const messageAvatar = document.createElement('img');
-            messageAvatar.className = 'usersOnline';
-            messageAvatar.src = messageObject.thumbnailUrl || `/images/userHeadshots/defaultThumbnail.png`;
-            
-            const messageTextSpan = document.createElement('span');
-            messageTextSpan.className = 'messageText';
-            messageTextSpan.textContent = messageObject.message || 'No message text.';
-            
-            const actionsDiv = document.createElement('div');
-            actionsDiv.className = 'messageActions';
-            actionsDiv.id = `${messageObject.id}_actions`;
-            
-            const heartIcon = document.createElement('span');
-            heartIcon.textContent = '❤️';
-            // const flagIcon = document.createElement('span');
-            // flagIcon.textContent = '🚩';
-            const threeDotsIcon = document.createElement('span');
-            threeDotsIcon.textContent = '⋮';
+    const messagesContainer = document.getElementById('chat');
+    const shouldScroll = messagesContainer.scrollTop + messagesContainer.clientHeight + 50 >= messagesContainer.scrollHeight;
     
-            actionsDiv.appendChild(heartIcon);
-            //  actionsDiv.appendChild(flagIcon);
-            actionsDiv.appendChild(threeDotsIcon);
-            
-            messageDiv.appendChild(messageAvatar);
-            messageDiv.appendChild(messageTextSpan);
-            messageDiv.appendChild(actionsDiv);
-            messagesContainer.appendChild(messageDiv);
-            
-            if (shouldScroll) {
-                messagesContainer.scrollTop = messagesContainer.scrollHeight;
-            }
+    const messageDiv = document.createElement('div');
+    messageDiv.className = isOwnMessage ? 'message ownMessage' : 'message';
+
+    const messageAvatar = document.createElement('img');
+    messageAvatar.className = 'usersOnline';
+    messageAvatar.src = messageObject.thumbnailUrl || `/images/userHeadshots/defaultThumbnail.png`;
+
+    const messageTextSpan = document.createElement('span');
+    messageTextSpan.className = 'messageText';
+    messageTextSpan.textContent = messageObject.message || 'No message text.';
+
+    const actionsDiv = document.createElement('div');
+    actionsDiv.className = 'messageActions';
+    actionsDiv.id = `${messageObject._id}_actions`;
+
+    const heartIcon = document.createElement('span');
+    heartIcon.textContent = '❤️';
+    heartIcon.className = 'heartIcon unliked-icon';
+    heartIcon.style.filter = "grayscale(50%)";
+    heartIcon.dataset.isLiked = "false";  // Set initial state to "unliked"
+
+    const replyIcon = document.createElement('span');
+    replyIcon.textContent = '↩️';
+    replyIcon.className = 'replyIcon';
+    replyIcon.style.filter = "grayscale(5%)";
+
+    actionsDiv.appendChild(heartIcon);
+    actionsDiv.appendChild(replyIcon);
+
+    messageDiv.appendChild(messageAvatar);
+    messageDiv.appendChild(messageTextSpan);
+    messageDiv.appendChild(actionsDiv);
+    messagesContainer.appendChild(messageDiv);
+
+    if (shouldScroll) {
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
+
+    const postId = messageObject._id;  // Assuming messageObject._id is the postId
+    const userId = messageObject.userId; // Assuming messageObject contains userId
+
+    heartIcon.addEventListener('click', (e) => {
+        const isLiked = e.target.dataset.isLiked === "true";
+        handleIconClick('heart', postId, userId, e, isLiked);
+    });
+
+    replyIcon.addEventListener('click', () => {
+        handleIconClick('reply', postId, userId);
+    });
+}
+
+function handleIconClick(action, postId, userId, e, isLiked) {
+    console.log(`Action: ${action}, Post ID: ${postId}, User ID: ${userId}`);
+
+    const newAction = isLiked ? 'unlike' : 'like';
+    const tally = isLiked ? '--' : '++'; // Correct the tally increment/decrement
+
+    console.log(`New Action: ${newAction}`);
+    console.log(`Tally: ${tally}`);
+
+    fetch(`/users/chat/like`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ userId, postId, tally })
+    })
+    .then(response => response.json())
+    .then(data => {
+        const newTally = data.tally;
+
+        // Toggle the icon state
+        if (!isLiked) {
+            e.target.textContent = '❤️'; // Like icon (filled heart)
+            e.target.className = 'heartIcon liked-icon'; // Apply liked class
+            e.target.style.filter = 'grayscale(0%)'; // Remove grayscale
+            e.target.dataset.isLiked = "true"; // Set isLiked to true
+        } else {
+            e.target.textContent = '❤️'; // Unlike icon (empty heart)
+            e.target.className = 'heartIcon unliked-icon'; // Apply unliked class
+            e.target.style.filter = 'grayscale(50%)'; // Apply grayscale
+            e.target.dataset.isLiked = "false"; // Set isLiked to false
         }
-        
+    })
+    .catch(error => {
+        console.error('Error updating tally:', error);
+    });
+}
+
         socket.on('chat message', (msg,roomyId) => {
             console.log(`chatting..${msg.user} room:${roomId}`)
         console.log(roomId == msg.roomId)

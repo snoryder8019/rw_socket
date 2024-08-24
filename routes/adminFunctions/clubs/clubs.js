@@ -2,6 +2,7 @@ import express from 'express';
 import Club from '../../../plugins/mongo/models/Club.js';
 import generateFormFields from '../../../plugins/helpers/formHelper.js';
 import { buildRoutes } from '../../helpers/routeBuilder.js';
+import Vendor from '../../../plugins/mongo/models/Vendor.js';
 
 const router = express.Router();
 

@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -71,15 +72,6 @@
     <button type="submit">Submit</button>
   </form>
 
-  <script>
-    function addArrayField(name) {
-      const container = document.querySelectorAll(`input[name="${name}[]"]`)[0].parentElement;
-      const index = container.querySelectorAll(`input[name="${name}[]"]`).length;
-      const newField = document.createElement('div');
-      newField.className = 'array-field';
-      newField.innerHTML = `<input type="text" name="${name}[]" id="${name}-${index}">`;
-      container.appendChild(newField);
-    }
-  </script>
+
 </body>
 </html>

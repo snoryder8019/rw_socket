@@ -1,6 +1,6 @@
 {
   "name": "rw-socket",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
   "private": true,
   "scripts": {
@@ -16,6 +16,7 @@
     "aws-sdk": "^2.1577.0",
     "axios": "^1.6.7",
     "bcrypt": "^5.1.1",
+    "ckeditor": "^4.12.1",
     "connect-flash": "^0.1.1",
     "connect-mongo": "^5.1.0",
     "cookie-parser": "~1.4.4",
@@ -45,7 +46,7 @@
     "passport-google-oauth20": "^2.0.0",
     "passport-local": "^1.0.0",
     "passport-yahoo-oauth": "^0.2.0",
-    "puppeteer": "^22.12.1",
+    "puppeteer": "^22.15.0",
     "session": "^0.1.0",
     "sharp": "^0.33.4",
     "sinon": "^18.0.0",

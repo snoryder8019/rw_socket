@@ -1,0 +1,28 @@
+<script>
+    document.addEventListener('click', async (event) => {
+    if (event.target.matches('button[data-url]')) {
+        const button = event.target;
+        const key = button.getAttribute('data-key');
+        const url = button.getAttribute('data-url');
+
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ key })
+            });
+
+            if (response.ok) {
+                button.closest('.uploadedVideo').remove(); // Remove the video element from the DOM
+            } else {
+                console.error('Failed to delete video:', response.statusText);
+            }
+        } catch (error) {
+            console.error('Error deleting video:', error);
+        }
+    }
+});
+
+</script>

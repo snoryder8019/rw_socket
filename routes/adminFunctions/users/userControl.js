@@ -1,4 +1,3 @@
-import express from 'express';
 import { getDb } from '../../../plugins/mongo/mongo.js';
 import { ObjectId } from 'mongodb';
 

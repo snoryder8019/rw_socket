@@ -12,7 +12,6 @@ import {
 } from '../plugins/passport/passwordReset.js';
 import {
   userDataUpload,
-  submitTicket,
   saveRotation,
   assignAvatar,
   deleteAvatar,
@@ -21,6 +20,7 @@ import { updateBanned } from './securityFunctions/updateBanned.js';
 import userBucketRouter from './userFunctions/userBucketFunctions.js';
 import { getNotifications } from './userFunctions/userNotifications.js';
 import gamesRouter from './gamesFunctions/index.js';
+import users from './userFunctions/index.js';
 
 const router = express.Router();
 // Middleware to use cookieParser
@@ -28,6 +28,7 @@ router.use(cookieParser());
 
 router.use(pluginsRouter);
 router.use('/', adminFunctionsRouter);
+router.use('/users', users);
 router.use('/', cookiesRouter);
 router.use(userBucketRouter);
 router.use('/games', gamesRouter);
@@ -36,7 +37,6 @@ router.get('/getNotifications', getNotifications);
 router.post('/deleteAvatar', deleteAvatar);
 router.post('/assignAvatar', assignAvatar);
 
-router.post('/submitTicket', submitTicket);
 router.post('/reset-password-request', resetPasswordRequest);
 router.post('/passwordReset/:token', resetPassword);
 router.get('/reset-password/:token', handleResetPasswordGet);
