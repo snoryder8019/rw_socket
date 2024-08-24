@@ -12,6 +12,13 @@ import session from 'express-session';
 import createError from 'http-errors';
 import MongoStore from 'connect-mongo';
 import noNos from './routes/securityFunctions/forbiddens.js';
+import { setupPassport, authRouter } from './plugins/passport/index.js';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+import cors from 'cors';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 const app = express();
 const sessionMiddleware = session({
@@ -32,12 +39,11 @@ async function startApp() {
   // Connect to MongoDB first
   await connect();
   // Initialize Passport
-  const { setupPassport, authRoutes } = require('./plugins/passport');
   setupPassport(app, process);
   app.use(flash());
 
   // Use auth routes
-  app.use(authRoutes);
+  app.use(authRouter);
 
   global.config = config;
 
@@ -52,7 +58,6 @@ async function startApp() {
   app.use(cookieParser());
   app.use(express.static(path.join(__dirname, 'public')));
 
-  const cors = require('cors');
   const corsOptions = {
     origin: 'https://games.w2marketing.biz',
     methods: ['GET', 'POST'],

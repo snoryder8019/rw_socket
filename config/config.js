@@ -1,3 +1,6 @@
+import dotenv from 'dotenv';
+dotenv.config();
+
 export const config = {
   // Breaking changes below
   app_name: 'rw_socket',

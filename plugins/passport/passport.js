@@ -68,20 +68,20 @@ export const newUser = async (profile, provider) => {
 // catch{}
 // }
 
-passport.use(
-  new YahooStrategy(
-    {
-      consumerKey: process.env.YHO_CID,
-      consumerSecret: process.env.YHO_SEC,
-      callbackURL: 'http://www.example.com/auth/yahoo/callback',
-    },
-    function (token, tokenSecret, profile, done) {
-      User.findOrCreate({ yahooId: profile.id }, function (err, user) {
-        return done(err, user);
-      });
-    }
-  )
-);
+// passport.use(
+//   new YahooStrategy(
+//     {
+//       consumerKey: process.env.YHO_CID,
+//       consumerSecret: process.env.YHO_SEC,
+//       callbackURL: 'http://www.example.com/auth/yahoo/callback',
+//     },
+//     function (token, tokenSecret, profile, done) {
+//       User.findOrCreate({ yahooId: profile.id }, function (err, user) {
+//         return done(err, user);
+//       });
+//     }
+//   )
+// );
 
 passport.use(
   new LocalStrategy(
@@ -193,5 +193,7 @@ passport.deserializeUser(async (id, done) => {
     done(err);
   }
 });
+
+export default passport;
 
 // lib('login error: ', 'error: Password Does Not Match',  `Login Error:'bad password' , attempted email :${email} `,'errors.txt')

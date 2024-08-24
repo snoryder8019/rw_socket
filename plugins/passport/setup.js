@@ -1,5 +1,5 @@
 import { config } from '../../config/config.js';
-import { passport } from './passport.js';
+import passport from './passport.js';
 import session from 'express-session';
 import MongoStore from 'connect-mongo';
 
