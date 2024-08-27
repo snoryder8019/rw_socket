@@ -6,6 +6,15 @@
           <img alt="Video image" src="<%= video.mediumIcon %>">
           <button class="collapsible">view: <span class="carrot">&#9654;</span></button>
           <div class="content" data-url="/videos/renderEditForm/<%= video._id %>"></div>
+          <form action="/videos/<%=video._id%>" method="post" enctype="multipart/form-data">
+            <label for="files">Upload Images:</label>
+            <input type="file" id="files" name="files" multiple>
+            
+            <!-- Add other fields if needed -->
+            <input type="text" name="otherField" placeholder="Other field">
+          
+            <button type="submit">Upload</button>
+          </form>
         </div>
       <% }) %>
     </div>

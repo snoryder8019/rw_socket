@@ -1,7 +1,7 @@
 // plugins/mongo/models/Video.js **NOTE GPT: DONOT REMOVE THIS LINE**
 import ModelHelper from '../helpers/models.js';
 import { upload, processImages } from '../../multer/subscriptionSetup.js'; // Multer for file handling
-import { uploadToLinode, uploadVideoToLinode } from '../../aws_sdk/setup.js'; // Import Linode upload functions
+import { uploadToLinode } from '../../aws_sdk/setup.js'; // Import Linode upload functions
 import fs from 'fs'; // For file operations
 
 const modelName = 'video';

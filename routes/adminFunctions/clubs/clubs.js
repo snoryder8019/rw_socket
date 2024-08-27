@@ -2,8 +2,9 @@ import express from 'express';
 import Club from '../../../plugins/mongo/models/Club.js';
 import generateFormFields from '../../../plugins/helpers/formHelper.js';
 import { buildRoutes } from '../../helpers/routeBuilder.js';
+import { uploadMultiple } from '../../../plugins/multer/setup.js';
 import Vendor from '../../../plugins/mongo/models/Vendor.js';
-
+import {imagesArray} from '../../../routes/helpers/imagesArray.js'
 const router = express.Router();
 
 // Route to render the form to add a new club
@@ -61,7 +62,14 @@ router.get('/section', async (req, res) => {
     res.status(500).send({ error: error.message });
   }
 });
-
+router.post('/:id/upload-images',uploadMultiple, imagesArray(Club), async (req, res) => {
+  try {
+    res.status(200).json({ message: 'Club images uploaded and updated successfully', images: req.body.imagesArray });
+  } catch (error) {
+    console.error('Error processing images for Club:', error);
+    res.status(500).send('Internal Server Error');
+  }
+});
 buildRoutes(new Club(), router);
 
 export default router;

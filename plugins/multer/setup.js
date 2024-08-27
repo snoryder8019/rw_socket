@@ -16,6 +16,18 @@ export const upload = multer({
   },
 }).single('image'); // 'image' should match the field name in your form
 
+export const uploadMultiple = multer({
+  storage: storage,
+  fileFilter: (req, file, cb) => {
+    if (file.mimetype.startsWith('image/')) {
+      cb(null, true);
+    } else {
+      cb(new Error('Not an image! Please upload only images.'), false);
+    }
+  },
+}).array('images', 10); // 'images' should match the field name in your form for multiple files
+
+
 // Middleware to process image after uploading and before saving
 export const processImage = (req, res, next) => {
   if (!req.file) {

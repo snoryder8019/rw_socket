@@ -1,9 +1,9 @@
 import express from 'express';
 import {
   uploadToLinode,
-  getVideos,
+ // getVideos,
   //   getDirectories,
-  getImageGrid,
+ // getImageGrid,
 } from '../../../plugins/aws_sdk/setup.js';
 import multer from 'multer';
 import path from 'path';

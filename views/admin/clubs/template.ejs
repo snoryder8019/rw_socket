@@ -6,7 +6,12 @@
         <img alt="Club image" src="<%= club.mediumIcon %>">
         <button class="collapsible">view: <span class="carrot">&#9654;</span></button>
         <div class="content" data-url="/clubs/renderEditForm/<%= club._id %>"></div>
-      </div>
+     <h3>add multiple images to slides</h3>
+        <form action="/clubs/<%=club._id%>/upload-images" method="post" enctype="multipart/form-data">
+          <input type="file" name="images" multiple>
+          <button type="submit">Upload</button>
+      </form>
+            </div>
     <% }) %>
   </div>
 </div>

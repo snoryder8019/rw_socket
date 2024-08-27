@@ -5,7 +5,7 @@ import path from 'path';
 import Video from '../../../plugins/mongo/models/Video.js'; // Model for storing video info
 import { buildRoutes } from '../../helpers/routeBuilder.js';
 import generateFormFields from '../../../plugins/helpers/formHelper.js';
-
+import {imagesArray} from '../../helpers/imagesArray.js'
 const router = express.Router();
 
 // Configure multer for file uploads
@@ -123,6 +123,18 @@ router.get('/section', async (req, res) => {
     res.status(500).send({ error: error.message });
   }
 });
+router.post('/:id/upload-images', imagesArray(Video), async (req, res) => {
+  try {
+    res.status(200).json({ message: 'Video images uploaded and updated successfully', images: req.body.imagesArray });
+  } catch (error) {
+    console.error('Error processing images for Video:', error);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+
+
+
 
 buildRoutes(new Video(), router);
 

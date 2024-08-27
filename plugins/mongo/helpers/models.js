@@ -55,12 +55,12 @@ export default class ModelHelper {
     return await collection.findOne({ _id: new ObjectId(id) });
   }
   async pushById(id, updateObject) {
+    console.log(id)
     if (!ObjectId.isValid(id)) {
       throw new Error('Invalid ID format');
     }
     const db = getDb();
     const collection = db.collection(this.collectionName);
-
     // Use $push operation with the provided updateObject
     const result = await collection.updateOne(
       { _id: new ObjectId(id) },
