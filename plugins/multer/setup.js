@@ -25,7 +25,7 @@ export const processImage = (req, res, next) => {
   // Extract type from request; default to 'general' if not specified
   const type = req.body.type || 'general';
   const originalFilePath = req.file.buffer;
-  const outputDirectory = path.join(__dirname, '../../uploads'); // Adjust the path as necessary
+  const outputDirectory = path.dirname('../../uploads'); // Adjust the path as necessary
   const filename = `${Date.now()}-${req.file.originalname}`;
 
   // Call the resizeAndCropImage function with the buffer

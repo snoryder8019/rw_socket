@@ -2,7 +2,6 @@
 import express from 'express';
 import multer from 'multer';
 import path from 'path';
-import { uploadToLinode } from '../../../plugins/aws_sdk/setup.js'; // Ensure this path is correct
 import Video from '../../../plugins/mongo/models/Video.js'; // Model for storing video info
 import { buildRoutes } from '../../helpers/routeBuilder.js';
 import generateFormFields from '../../../plugins/helpers/formHelper.js';
@@ -78,7 +77,7 @@ router.get('/renderAddForm', (req, res) => {
 
     res.render('forms/generalForm', {
       title: 'Add New Video',
-      action: '/videos/upload',
+      action: '/videos/create',
       formFields: formFields,
     });
   } catch (error) {
@@ -100,7 +99,7 @@ router.get('/renderEditForm/:id', async (req, res) => {
 
     res.render('forms/generalEditForm', {
       title: 'Edit Video',
-      action: `videos/updateVid/${id}`,
+      action: `videos/update/${id}`,
       routeSub: 'videos',
       method: 'post',
       formFields: formFields,

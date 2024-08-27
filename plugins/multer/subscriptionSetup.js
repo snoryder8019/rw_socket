@@ -22,7 +22,7 @@ export const processImages = async (req, res, next) => {
   }
 
   try {
-    const outputDirectory = path.join(__dirname, '../../uploads');
+    const outputDirectory = path.dirname('../../uploads');
 
     for (const [key, files] of Object.entries(req.files)) {
       const file = files[0];
