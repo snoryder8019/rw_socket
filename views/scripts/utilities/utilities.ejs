@@ -11,3 +11,66 @@
             });
     }
     </script>
+    
+  <script>
+document.addEventListener("DOMContentLoaded", function () {
+  // Function to add a new field dynamically
+  function addField(name) {
+    const container = document.getElementById(`${name}-container`);
+    const index = container.querySelectorAll(`input[name="${name}[]"]`).length;
+    const newField = document.createElement("div");
+    newField.className = "array-item";
+    newField.innerHTML = `
+      <input type="text" name="${name}[]" id="${name}-${index}">
+      <button type="button" class="remove-btn">Remove</button>
+    `;
+    container.appendChild(newField);
+  }
+
+  // Function to remove a field
+  function removeField(element) {
+    if (element) {
+      element.parentElement.remove();
+    }
+  }
+
+  // MutationObserver callback to observe changes in the container
+  const observerCallback = function (mutationsList) {
+    for (const mutation of mutationsList) {
+      if (mutation.type === "childList" && mutation.addedNodes.length) {
+        mutation.addedNodes.forEach(node => {
+          if (node.nodeType === 1) { // Ensure the added node is an element
+            const removeButton = node.querySelector(".remove-btn");
+            if (removeButton) {
+              removeButton.addEventListener("click", function () {
+                removeField(removeButton);
+              });
+            }
+          }
+        });
+      }
+    }
+  };
+
+  // Function to initialize the observer on all containers
+  function initializeObserver() {
+    const containers = document.querySelectorAll("[id$='-container']");
+    containers.forEach(container => {
+      const observer = new MutationObserver(observerCallback);
+      observer.observe(container, { childList: true });
+    });
+  }
+
+  // Call the observer initialization function
+  initializeObserver();
+
+  // Attach the add field functionality
+  document.querySelectorAll("[data-add-field]").forEach(button => {
+    button.addEventListener("click", function () {
+      const name = button.getAttribute("data-add-field");
+      addField(name);
+    });
+  });
+});
+
+  </script>

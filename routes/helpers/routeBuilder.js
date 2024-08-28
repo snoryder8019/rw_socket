@@ -32,6 +32,16 @@ export const buildRoutes = (model, router) => {
       res.status(500).send({ error: error.message });
     }
   });
+  router.get('/allData', async (req, res) => {
+    try {
+      const documents = await model.getAll();
+      // NOTE: Right now the below model method will return a string with the location of your view. If you always have the same file name and location relative to your router files we can set this instead using path.join(__dirname, ...). This would prevent us from having to define the path in the model file.
+      res.send(documents);
+    } catch (error) {
+      console.error(error);
+      res.status(500).send({ error: error.message });
+    }
+  });
 
   router.get('/:id', [...model.middlewareForGetRoute()], async (req, res) => {
     try {

@@ -22,6 +22,7 @@ import { getNotifications } from './userFunctions/userNotifications.js';
 import gamesRouter from './gamesFunctions/index.js';
 import users from './userFunctions/index.js';
 import Footer from '../plugins/mongo/models/footer/Footer.js';
+import Marquee from '../plugins/mongo/models/Marquee.js';
 
 const router = express.Router();
 // Middleware to use cookieParser
@@ -58,6 +59,7 @@ router.get('/', noNos, async (req, res) => {
 
   try {
     const footer = await new Footer().getAll();
+    const marquee = await new Marquee().getAll();
     const webappSettings = await collection.find().toArray();
     const sectionSettings = await collection1.find().toArray();
     const chatRooms = await collection2.find().toArray();
@@ -73,6 +75,7 @@ router.get('/', noNos, async (req, res) => {
     res.render('index', {
       user: user,
       footer:footer,
+      marquee:marquee,
       cookieData: cookieData,
       webappSettings: webappSettings,
       sectionSettings: sectionSettings,

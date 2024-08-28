@@ -6,6 +6,11 @@
     .array-item {
       margin-bottom: 10px;
     }
+    .thumbnail {
+      width: 50px;
+      height: 50px;
+      display: inline-block;
+    }
   </style>
 </head>
 <body>
@@ -21,6 +26,11 @@
             <textarea name="<%= field.name %>" id="<%= field.name %>"><%= field.value %></textarea>
           
           <% } else if (field.type === 'file') { %>
+            <% if (field.value) { %>
+              <div>
+                <img src="<%= field.value %>" alt="<%= field.label %>" style="width: 50px; height: 50px;">
+              </div>
+            <% } %>
             <input type="file" name="<%= field.name %>" id="<%= field.name %>">
           
           <% } else if (field.type === 'dropdown') { %>
@@ -50,6 +60,9 @@
                     <% if (item.thumbnailUrl) { %>
                       <label for="<%= field.name %>[<%= index %>].thumbnailUrl">Thumbnail URL:</label>
                       <input type="text" name="<%= field.name %>[<%= index %>].thumbnailUrl" id="<%= field.name %>-<%= index %>-thumbnailUrl" value="<%= item.thumbnailUrl %>">
+                      <% if (item.thumbnailUrl) { %>
+                        <img src="<%= item.thumbnailUrl %>" alt="Thumbnail" style="width: 50px; height: 50px;">
+                      <% } %>
                     <% } %>
                     <% if (item.avatarTag !== undefined) { %>
                       <label for="<%= field.name %>[<%= index %>].avatarTag">Avatar Tag:</label>
@@ -103,25 +116,5 @@
     <button type="submit" style="background-color: red; color: white;">Delete</button>
   </form>
 
-  <script>
-    function addField(name) {
-      const container = document.getElementById(`${name}-container`);
-      const index = container.querySelectorAll(`input[name="${name}[]"]`).length;
-      const newField = document.createElement('div');
-      newField.className = 'array-item';
-      newField.innerHTML = `
-        <input type="text" name="${name}[]" id="${name}-${index}">
-        <button type="button" onclick="removeField('${name}-${index}')">Remove</button>
-      `;
-      container.appendChild(newField);
-    }
-
-    function removeField(id) {
-      const field = document.getElementById(id);
-      if (field) {
-        field.parentElement.remove();
-      }
-    }
-  </script>
 </body>
 </html>

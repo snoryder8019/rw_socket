@@ -5,13 +5,10 @@
 
 <% if (typeof videos == 'object' && videos) { %>
   <style>
-    .video_container { margin: 20px; }
-    .video-card { margin-bottom: 20px; padding: 10px; border: 1px solid #ccc; }
-    .btn { padding: 10px 20px; background-color: #007bff; color: #fff; border: none; cursor: pointer; }
   </style>
-  <div class="video_container">
     <h1>Broadcast Videos</h1>
     <p>Video will play to all connected user on the Webapp.</p>
+  <div class="video_container">
     <% videos.forEach(video => { %>
       <div class="video-card">
         <div class="videoTitle"><%= video.name %></div>
@@ -28,14 +25,7 @@
 <h2>create a Parlor Room:</h2>
 <input id="roomName" name="name" type="text" placeholder="Room Name">
 <button class="good" onclick="createRoom()">Create Room</button>
-<div id="sendMarquee">
-  <h1>Send a Marquee</h1>
-  <select name="marqueeMessage" id="marqueeMessage">
-    <option value="hi from the marquee">Hi from the marquee</option>
-    <option value="new video just dropped">New video just dropped</option>
-  </select>
-  <button class="marqueeButton">Send Marquee</button>
-</div>
+
 
 <script src="/socket.io/socket.io.js"></script>
 <script>

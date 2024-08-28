@@ -1432,10 +1432,29 @@ max-width: 75px;
         box-sizing: border-box;
         padding: 10px 0;
       }
+      #marquee {
+        position: relative;
+        height: 100px; /* Adjust based on content */
+        overflow: hidden;
+      }
+      
+      .marquee-item {
+          display: inline-block;
+        white-space: nowrap;
+        transition: transform 30s linear; /* Smooth scrolling effect */
+        a, p, h3{
+          color:$gold;
+          font-size: 1.2rem;
+          margin: 2%;
+          padding: 2%;
+          
+        }
+      }
       .marquee span {
         display: inline-block;
         padding-left: 100%;
         animation: marquee 15s linear infinite;
+        vertical-align: middle;
       }
       @keyframes marquee {
         0% {
@@ -1445,6 +1464,15 @@ max-width: 75px;
           transform: translate(-100%, 0);
         }
       }
+      .video_container { 
+        margin: 20px; 
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+    
+      }
+      .video-card { margin-bottom: 20px; padding: 10px; border: 1px solid #ccc; }
+      .btn { padding: 10px 20px; background-color: #007bff; color: #fff; border: none; cursor: pointer; }
+  
       .videoControls{
     width: 100%;
             padding:2%;

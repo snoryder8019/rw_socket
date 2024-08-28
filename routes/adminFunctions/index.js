@@ -24,6 +24,7 @@ import blogs from './blogs/blogs.js';
 import helps from './helps/helps.js';
 import faqs from './helps/faqs.js';
 import footers from './footers/footers.js';
+import marquees from './marquees/marquees.js';
 
 const router = express.Router();
 
@@ -49,6 +50,7 @@ const permissionsChecker = async (req, res, next) => {
   }
 };
 
+router.use('/marquees', permissionsChecker, marquees);
 router.use('/chat', permissionsChecker, chat);
 router.use('/footers', permissionsChecker, footers);
 

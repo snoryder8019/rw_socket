@@ -12,6 +12,10 @@
     <div class="content"><%-include("./videoLead/videoLead")%>>
        </div>
 
+       <button class="collapsible">Marquees Admin<span class="carrot">&#9654;</span></button>
+<div class="content"><%- include('./marquees/index') %></div>
+
+
     <button class="collapsible">VideoProduction<span class="carrot">&#9654;</span></button>
     <div class="content" ><%-include('./videoLead/videoProduction')%></div>
 
@@ -36,6 +40,8 @@
 
     <button class="collapsible">WebApp Settings<span class="carrot">&#9654;</span></button>
     <div class="content" ><%-include('./webapp/index',{webappSettings:webappSettings})%></div>
+
+
 
     <button class="collapsible">Footers Admin<span class="carrot">&#9654;</span></button>
 <div class="content"><%- include('./footers/index') %></div>

@@ -1,0 +1,82 @@
+
+<script>
+let marqueeArray = [];
+
+document.addEventListener('DOMContentLoaded', () => {
+    // Fetch marquee data from the server
+    fetchMarquees().then(() => {
+        // Start the marquee display after fetching data
+        renderMarquees();
+    });
+});
+
+// Function to fetch marquees from the server
+async function fetchMarquees() {
+    try {
+        const response = await fetch('/marquees/allData');
+        const data = await response.json();
+        marqueeArray = data; // Assume data is an array of marquees
+    } catch (error) {
+        console.error('Error fetching marquees:', error);
+    }
+}
+
+// Function to render marquees with smooth scroll and push-pop effect
+function renderMarquees() {
+    let index = 0;
+
+    function displayNextMarquee() {
+        if (index >= marqueeArray.length) {
+            index = 0; // Reset to the first marquee
+        }
+
+        const marquee = marqueeArray[index];
+
+        // Render marquee with animation
+        animateMarquee(marquee);
+
+        index++;
+
+        // Set timeout for the next marquee
+        setTimeout(displayNextMarquee, 35000); // Adjust time for display duration + transition
+    }
+
+    // Start the display cycle
+    displayNextMarquee();
+}
+
+// Function to animate the marquee display
+function animateMarquee(marquee) {
+    const marqueeContainer = document.getElementById('marquee');
+
+    if (!marqueeContainer) return;
+
+    // Create a marquee item element
+    const marqueeItem = document.createElement('div');
+    marqueeItem.className = 'marquee-item';
+    marqueeItem.style.position = 'absolute';
+    marqueeItem.style.whiteSpace = 'nowrap';
+    marqueeItem.style.transform = 'translateX(150%)'; // Start outside of view
+    marqueeItem.style.transition = 'transform 30s linear'; // Slow scroll effect
+
+    marqueeItem.innerHTML = `
+        <h3>${marquee.title}</h3>
+        <h3>${marquee.description}</h3>
+        <a href="${marquee.linkUrl}"><h3>Learn more</h3></a>
+        <img src="${marquee.mediumIcon}" alt="${marquee.title}" style="width: 20%; height: auto;">
+    `;
+
+    marqueeContainer.appendChild(marqueeItem);
+
+    // Trigger the animation after appending
+    requestAnimationFrame(() => {
+        marqueeItem.style.transform = 'translateX(-200%)'; // Move into view and slowly scroll out
+    });
+
+    // Remove the item smoothly after it's fully visible and wait for it to disappear
+    setTimeout(() => {
+        marqueeContainer.removeChild(marqueeItem); // Clean up after animation
+    }, 30000); // Time to match the transition duration
+}
+</script>
+
