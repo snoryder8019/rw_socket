@@ -1,0 +1,51 @@
+<!-- /views/scripts/popButtons.ejs **NOTE GPT: DONT REMOVE THIS LINE** -->
+<script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      // Function to handle image removal
+      const removeImage = async (index, imageUrl) => {
+        try {
+          const response = await fetch(`/remove-image/${index}`, {
+            method: 'DELETE',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ imageUrl })
+          });
+  
+          if (!response.ok) {
+            throw new Error('Failed to remove image: ' + response.statusText);
+          }
+  
+          const data = await response.json();
+          console.log('Image removed:', data);
+  
+          // Remove the image item from the DOM
+          document.querySelector(`.image-item[data-url="${imageUrl}"]`).remove();
+        } catch (error) {
+          console.error('Error removing image:', error);
+        }
+      };
+  
+      // Attach event listeners to all remove buttons
+      document.querySelectorAll('.pop-button').forEach(button => {
+        button.addEventListener('click', (event) => {
+          const index = event.target.getAttribute('data-index');
+          const imageUrl = event.target.closest('.image-item').getAttribute('data-url');
+          console.log('Remove button clicked for index:', index, 'Image URL:', imageUrl);
+  
+          // Call removeImage function to handle the image removal
+          removeImage(index, imageUrl);
+        });
+      });
+  
+      // Optionally, handle adding new URLs if you want to implement that functionality
+      document.querySelectorAll('.add-button').forEach(button => {
+        button.addEventListener('click', (event) => {
+          const newUrl = event.target.previousElementSibling.value;
+          console.log('New URL to add:', newUrl);
+          // Implement the logic to add new URLs to the server or update the UI as needed
+        });
+      });
+    });
+  </script>
+  

@@ -2,7 +2,8 @@ import express from 'express';
 import Travel from '../../../plugins/mongo/models/Travel.js';
 import generateFormFields from '../../../plugins/helpers/formHelper.js';
 import { buildRoutes } from '../../helpers/routeBuilder.js';
-
+import {imagesArray} from '../../helpers/imagesArray.js'
+import { uploadMultiple } from '../../../plugins/multer/setup.js';
 const router = express.Router();
 const modelName = 'travel';
 // Route to render the form to add a new travel
@@ -60,7 +61,14 @@ router.get('/section', async (req, res) => {
     res.status(500).send({ error: error.message });
   }
 });
-
+router.post('/:id/upload-images',uploadMultiple, imagesArray(Travel), async (req, res) => {
+  try {
+    res.status(200).json({ message: 'Tavels images uploaded and updated successfully', images: req.body.imagesArray });
+  } catch (error) {
+    console.error('Error processing images for Club:', error);
+    res.status(500).send('Internal Server Error');
+  }
+});
 buildRoutes(new Travel(), router);
 
 export default router;

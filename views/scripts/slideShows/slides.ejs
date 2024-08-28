@@ -1,11 +1,100 @@
-<!-- <script>
-document.addEventListener('DOMContentLoaded', () => {
-    const slideArray = [];
-    const slideContainers = document.getElementsByClassName('slide_view');
-    
-    // Convert HTMLCollection to an Array
-  slideContainers[0].
-});
+<script>
+    document.addEventListener('DOMContentLoaded', async () => {
+        const slideContainers = document.getElementsByClassName('slide_view');
 
+        // Function to fetch images from the server
+        const fetchImages = async (modelType, modelId) => {
+            try {
+                const url = `/${modelType}s/imagesArray/${modelId}`; // Construct the URL dynamically
+                const response = await fetch(url);
+                if (!response.ok) {
+                    throw new Error('Network response was not ok: ' + response.statusText);
+                }
+                const data = await response.json();
+                return data.imagesArray; // Assuming the server returns an object with an 'imagesArray' property
+            } catch (error) {
+                console.error('Error fetching images:', error);
+                return [];
+            }
+        };
 
-</script> -->
+        // Initialize a single slideshow for a given slide container
+        const initSlideshow = async (slideContainer) => {
+            const modelInfoElement = slideContainer.querySelector('.modelInfo');
+            const collectionIdElement = slideContainer.querySelector('.collectionId');
+            
+            if (!modelInfoElement || !collectionIdElement) {
+                console.error('Model information or collection ID element is missing.');
+                return;
+            }
+
+            const modelType = modelInfoElement.getAttribute('model-info'); // Extract model type
+            const modelId = collectionIdElement.getAttribute('collection-id'); // Extract collection ID
+
+            if (!modelType || !modelId) {
+                console.error('Model type or model ID is missing.');
+                return;
+            }
+
+            const images = await fetchImages(modelType, modelId);
+
+            if (images.length === 0) {
+                console.warn('No images found for slideshow.');
+                return;
+            }
+
+            const slideArray = [...images]; // Copy images to slideArray
+            let currentIndex = 0;
+            const slideDuration = 8000; // Longer duration for each slide in milliseconds
+            const transitionDuration = 2000; // Longer duration of slide transition in milliseconds
+
+            // Function to change the slide with sliding effect
+            const changeSlide = (nextIndex) => {
+                // Create a new div for the incoming image
+                const newSlide = document.createElement('div');
+                newSlide.classList.add('slide');
+                newSlide.style.backgroundImage = `url('${slideArray[nextIndex]}')`;
+                newSlide.style.backgroundSize = 'cover';
+                newSlide.style.backgroundPosition = 'center';
+                newSlide.classList.add('slide-in'); // Add slide-in animation class
+
+                // Append the new slide to the container
+                slideContainer.appendChild(newSlide);
+
+                // Fade text in and out smoothly
+                const textContent = slideContainer.querySelector('.text-content');
+                if (textContent) {
+                    textContent.style.opacity = 0; // Start by fading out the text
+                    setTimeout(() => {
+                        textContent.style.opacity = 1; // Fade the text back in
+                    }, transitionDuration / 2);
+                }
+
+                // Remove the old slide after the new slide is fully in place
+                setTimeout(() => {
+                    const oldSlide = slideContainer.querySelector('.slide-current');
+                    if (oldSlide) {
+                        oldSlide.remove();
+                    }
+                    newSlide.classList.remove('slide-in'); // Remove the slide-in class to reset for next use
+                    newSlide.classList.add('slide-current'); // Mark the new slide as the current slide
+                }, transitionDuration + 400); // Slightly longer than the transition duration
+            };
+
+            // Display the first image initially
+            changeSlide(currentIndex);
+
+            // Set up a timer to change slides
+            setInterval(() => {
+                const nextIndex = (currentIndex + 1) % slideArray.length; // Loop back to the first image after the last one
+                changeSlide(nextIndex);
+                currentIndex = nextIndex; // Update the current index
+            }, slideDuration); // Change slide every 8 seconds (adjust as needed)
+        };
+
+        // Start a slideshow for each slide container
+        for (const slideContainer of slideContainers) {
+            initSlideshow(slideContainer);
+        }
+    });
+</script>

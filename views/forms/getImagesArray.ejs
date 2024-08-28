@@ -1,0 +1,16 @@
+<!-- /views/forms/getImagesArray.ejs **NOTE GPT: DONT REMOVE THIS LINE** -->
+
+<% if (imagesArray && imagesArray.length > 0) { %> <!-- Check if imagesArray is defined and not empty -->
+    <% imagesArray.forEach((image, index) => { %>
+      <div class="image-item" data-index="<%= index %>" data-url="<%= image %>">
+        <img style="max-width:75px" src="<%= image %>" alt="Image" />
+        <button class="pop-button" data-index="<%= index %>">Remove</button>
+    </div>
+    <% }) %>
+    <% } else { %> <!-- If imagesArray is empty or undefined -->
+        <div>
+            <h2>ℹ️ There are no Slideshow images saved for this set! ℹ️</h2>
+        </div>
+        <% } %>
+        <input type="text" placeholder="Enter new URL" /><button class="add-button">Add New URL</button>
+  

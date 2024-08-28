@@ -2,7 +2,8 @@ import express from 'express';
 import SectionSetting from '../../../plugins/mongo/models/SectionSetting.js';
 import generateFormFields from '../../../plugins/helpers/formHelper.js';
 import { buildRoutes } from '../../helpers/routeBuilder.js';
-
+import {imagesArray,getImagesArray,popImagesArray,updateImagesArray} from '../../helpers/imagesArray.js'
+import { uploadMultiple } from '../../../plugins/multer/setup.js';
 const router = express.Router();
 const modelName = 'sectionSetting';
 // Route to render the form to add a new section setting
@@ -59,7 +60,9 @@ router.get('/section', async (req, res) => {
     res.status(500).send({ error: error.message });
   }
 });
-
+router.post('/:id/upload-images',uploadMultiple, imagesArray(SectionSetting));
+router.get('/renderImagesArray/:id', getImagesArray(SectionSetting))
+router.get('/popImagesArray/:id/:url', popImagesArray(SectionSetting))
 buildRoutes(new SectionSetting(), router);
 
 export default router;

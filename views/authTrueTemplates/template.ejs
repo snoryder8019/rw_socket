@@ -17,8 +17,12 @@
 <!--HERAT ANIMATION WAS INCLUDED HERE-->
 <% if (typeof sectionSettings === 'object' && sectionSettings && sectionSettings.length > 0) { %>
   <% sectionSettings.forEach(function(setting) { %>
+
+
     <% if (setting.visible && setting.authView) { %>
       <div class="<%=setting.style%>" style="background-image: url('<%= setting.backgroundImg %>');" data-order="<%= setting.order %>">
+        <div class="collectionId" hidden collection-id="<%=setting._id%>"></div>
+        <div class="modelInfo" hidden model-info="<%=setting.mane%>"></div>
         <div class="<%=setting.innerStyle%>">
         <% if (setting.title) { %>
           <h1><%= setting.title %></h1>
@@ -90,31 +94,31 @@
 
 
 
-document.addEventListener('DOMContentLoaded', () => {
-  document.querySelectorAll('.auth_view_true').forEach(div => {
-    div.addEventListener('click', function () {
-      if (!this.classList.contains('expanded')) {
-        this.classList.add('expanded');
+// document.addEventListener('DOMContentLoaded', () => {
+//   document.querySelectorAll('.auth_view_true').forEach(div => {
+//     div.addEventListener('click', function () {
+//       if (!this.classList.contains('expanded')) {
+//         this.classList.add('expanded');
 
-        let closeButton = this.querySelector('.close-button');
-        if (!closeButton) {
-          closeButton = document.createElement('button');
-          closeButton.className = 'close-button';
-          closeButton.innerHTML = 'X';
-          this.appendChild(closeButton);
-        }
+//         let closeButton = this.querySelector('.close-button');
+//         if (!closeButton) {
+//           closeButton = document.createElement('button');
+//           closeButton.className = 'close-button';
+//           closeButton.innerHTML = 'X';
+//           this.appendChild(closeButton);
+//         }
 
-        closeButton.style.display = 'block'; // Ensure the close button is visible
+//         closeButton.style.display = 'block'; // Ensure the close button is visible
 
-        closeButton.addEventListener('click', function (e) {
-          e.stopPropagation(); // Prevent click from propagating to the div
-          this.parentElement.classList.remove('expanded');
-          this.style.display = 'none'; // Hide button after collapsing
-        });
-      }
-    });
-  });
-});
+//         closeButton.addEventListener('click', function (e) {
+//           e.stopPropagation(); // Prevent click from propagating to the div
+//           this.parentElement.classList.remove('expanded');
+//           this.style.display = 'none'; // Hide button after collapsing
+//         });
+//       }
+//     });
+//   });
+// });
 
 </script>
 

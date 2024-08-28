@@ -76,7 +76,7 @@ export const getProducts = async () => {
 };
 
 const getHtmlTemplate = (templateName) => {
-  const templatePath = path.join(__dirname, '../html-templates', templateName);
+  const templatePath = path.dirname('../html-templates', templateName);
   return fs.readFileSync(templatePath, 'utf-8');
 };
 

@@ -6,6 +6,13 @@
           <img alt="SectionSetting image" src="<%= sectionSetting.mediumIcon %>">
           <button class="collapsible">view: <span class="carrot">&#9654;</span></button>
           <div class="content" data-url="/sectionSettings/renderEditForm/<%= sectionSetting._id %>"></div>
+          <button class="collapsible">Get SlideShows <span class="carrot">&#9654;</span></button>
+          <div class="content" data-url="/sectionSettings/renderImagesArray/<%= sectionSetting._id %>"></div>
+
+          <form action="/sectionSettings/<%=sectionSetting._id%>/upload-images" method="post" enctype="multipart/form-data">
+            <input type="file" name="images" multiple>
+            <button type="submit">Upload</button>
+        </form>
         </div>
       <% }) %>
     </div>

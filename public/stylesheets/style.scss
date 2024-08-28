@@ -934,8 +934,14 @@ font-weight: 800;
     }
   }
   .adminWindow{
-    @include authViewSetup()
-  }
+    @include authViewSetup();
+ 
+        @media (min-width: 768px) {
+        display: block;
+        width: 96%;
+      }
+    }
+  
   .auth_view_true {
     @include authViewSetup();
   }
@@ -943,20 +949,92 @@ font-weight: 800;
   .auth_view_false {
     @include authViewSetup();
   }
-  .slide_view{
-    
-border-radius: 50px;
-padding:2%;
-margin:3% 1%;
-box-shadow: 0px 0px 3px rgba(255, 217, 0, 0.372);
-h1{
-  text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.65);
-  
+/* Styling for the slideshow container */
+.slide_view {
+  position: relative;
+  height: 400px;
+  overflow: hidden;
+  border-radius: 50px;
+  padding: 2%;
+  margin: 3% 1%;
+  box-shadow: 0px 0px 3px rgba(255, 217, 0, 0.372);
+ // width: 100%; /* Adjust width for different screen sizes */
 }
-@media (min-width:768px) {
-  width:52%;
-}
+
+@media (max-width: 768px) {
+  .slide_view {
+    width: 94%;
   }
+}
+
+/* General slide styling */
+.slide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  transition: transform 2s ease-in-out;
+  z-index: 1;
+}
+
+/* Animation for sliding in from the right */
+.slide-in {
+  z-index: 1;
+  transform: translateX(100%);
+  animation: slideIn 1.2s forwards;
+}
+
+/* Mark the current slide */
+.slide-current {
+  transform: translateX(0);
+}
+
+/* Keyframes for sliding in animation */
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+/* Styling for text content inside the slideshow */
+.slideShowInner {
+  
+  position: absolute; /* Ensure content is positioned over slides */
+  top: 50%; /* Center vertically */
+  left: 50%; /* Center horizontally */
+  transform: translate(-50%, -50%); /* Center the content */
+  z-index: 2; /* Ensure text content is above the slides */
+  text-align: center;
+  background-color: rgba(0, 0, 0, 0.5); /* Optional: Background for text to enhance readability */
+  padding: 12%;
+  border-radius: 8px;
+
+  width: 100%;
+  max-width: 90%;
+  transition: opacity 1s ease; /* Fade effect for text */
+  p{
+    color: white;
+  }
+}
+
+@media (min-width: 768px) {
+  .slideShowInner {
+    max-width: 52%;
+  }
+}
+
+.slide_view h1 {
+  text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.65);
+}
+
+  ////////
   .linkTable_alt{
     a{
     color:$gold;
@@ -970,7 +1048,7 @@ h1{
     position: fixed;
     top:18vh;
     left: 0;
-    min-height: 79vh;
+    min-height: 65vh;
    // width: 94%;
   
     z-index:8000;
@@ -978,7 +1056,7 @@ h1{
     overflow-y: scroll;
 //margin-bottom: 50px;
     @media (min-width:768px) {
-      min-height: 73vh;
+      min-height: 65vh;
       top:17%
     }
   }
@@ -997,7 +1075,12 @@ h1{
     cursor: pointer;
     display: none; // initially hidden
   }
-  
+  .buttonDefault{
+
+  }
+  .buttonStyleDefault{
+    
+  }
 
 #notifications{
     border: 1px solid $gold;
@@ -1044,7 +1127,9 @@ animation:flashMsg 2.8s ease-in-out 0s 1 ;
 #remoteVideo{
   width:100%;
 }
+.innerContainer{
 
+}
 #game-container, .index-container {
   color: black;
   width: 90%;
@@ -1134,7 +1219,8 @@ animation:flashMsg 2.8s ease-in-out 0s 1 ;
 }
 
 .sectionView {
-  min-width: 98%;
+  width: 98%;
+  height: auto;
   margin: 1%;
   background-size: cover;
   background-repeat: no-repeat;

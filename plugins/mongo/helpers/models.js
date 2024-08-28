@@ -73,7 +73,29 @@ export default class ModelHelper {
     // Return the updated document
     return await collection.findOne({ _id: new ObjectId(id) });
   }
-
+  async popById(id, imageUrl) {
+    console.log(id);
+    if (!ObjectId.isValid(id)) {
+      throw new Error('Invalid ID format');
+    }
+    
+    const db = getDb();
+    const collection = db.collection(this.collectionName);
+  
+    // Use $pull operation to remove the image URL from imagesArray
+    const result = await collection.updateOne(
+      { _id: new ObjectId(id) },
+      { $pull: { imagesArray: imageUrl } } // Pull the image URL from the imagesArray
+    );
+  
+    if (result.matchedCount === 0) {
+      throw new Error('No document found with that ID');
+    }
+  
+    // Return the updated document
+    return await collection.findOne({ _id: new ObjectId(id) });
+  }
+  
   async deleteById(id) {
     if (!ObjectId.isValid(id)) {
       throw new Error('Invalid ID format');

@@ -47,7 +47,36 @@ export const buildRoutes = (model, router) => {
       res.status(500).send({ error: error.message });
     }
   });
-
+  router.get('/imagesArray/:id', [...model.middlewareForGetRoute()], async (req, res) => {
+    try {
+      const { id } = req.params;
+      
+      // Check if the provided ID is a valid MongoDB ObjectId
+      if (!ObjectId.isValid(id)) {
+        return res.status(400).json({ error: 'Invalid ID format' });
+      }
+  
+      // Fetch the document from the database using the model's getById method
+      const document = await model.getById(id);
+  
+      // Check if the document was found
+      if (!document) {
+        return res.status(404).json({ error: 'Document not found' });
+      }
+  
+      // Extract the images array from the document
+      const imagesArray = document.imagesArray;
+  
+      // Send a structured response
+      res.status(200).json({ imagesArray });
+  
+      console.log(`Array of Images: ${imagesArray}`);
+    } catch (error) {
+      console.error('Error fetching images array:', error);
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  });
+  
   router.post(
     '/update/:id',
     [...model.middlewareForEditRoute()],

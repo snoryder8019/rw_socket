@@ -9,6 +9,7 @@ export default class SectionSetting extends ModelHelper {
     super(`${modelName}s`);
     this.modelFields = {
       name: { type: 'text', value: null },
+      modelName: { type: 'text', value: null },
       order: { type: 'number', value: null },
       title: { type: 'text', value: null },
       subTitle: { type: 'text', value: null },
@@ -32,6 +33,7 @@ export default class SectionSetting extends ModelHelper {
       secondaryBackgroundImg: { type: 'file', value: null },
       mediumIcon: { type: 'file', value: null },
       links: { type: 'array', value: [] },
+      imagesArray: { type: 'array', value: [] },
       tags: { type: 'array', value: [] },
     };
     if (sectionSettingData) {
