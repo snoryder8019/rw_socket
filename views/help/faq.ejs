@@ -1,10 +1,9 @@
 <%if(typeof faqs =='object'&& faqs){%>
-
 <%faqs.forEach(faq =>{%>
 <div class="index-container">
-    <%faq.question%>
+    <%=faq.question%>
     <br>
-    <%faq.answer%>
+    <%=faq.answer%>
 </div>
     <%})%>
     <%}%>

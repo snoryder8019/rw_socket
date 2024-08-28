@@ -1,0 +1,16 @@
+<div class="adminWindow">
+  <div class="adminStatsRow">
+    <% documents.forEach(faq => { %>
+      <div class="adminStat">
+        <p><%= faq.question %></p>
+        <button class="collapsible">view: <span class="carrot">&#9654;</span></button>
+        <div class="content" data-url="/faqs/renderEditForm/<%= faq._id %>"></div>
+        <h3>Add Multiple Attachments</h3>
+        <form action="/faqs/<%=faq._id%>/upload-attachments" method="post" enctype="multipart/form-data">
+          <input type="file" name="attachments" multiple>
+          <button type="submit">Upload</button>
+        </form>
+      </div>
+    <% }) %>
+  </div>
+</div>

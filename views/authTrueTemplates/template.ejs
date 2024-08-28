@@ -16,27 +16,27 @@
 <%- include('../videoChannels/channel_1') %>
 <!--HERAT ANIMATION WAS INCLUDED HERE-->
 <% if (typeof sectionSettings === 'object' && sectionSettings && sectionSettings.length > 0) { %>
+  <% let iterationCount = 0; %> <!-- Initialize a counter outside the loop -->
+
   <% sectionSettings.forEach(function(setting) { %>
-
-
     <% if (setting.visible && setting.authView) { %>
       <div class="<%=setting.style%>" style="background-image: url('<%= setting.backgroundImg %>');" data-order="<%= setting.order %>">
         <div class="collectionId" hidden collection-id="<%=setting._id%>"></div>
         <div class="modelInfo" hidden model-info="<%=setting.mane%>"></div>
         <div class="<%=setting.innerStyle%>">
-        <% if (setting.title) { %>
-          <h1><%= setting.title %></h1>
-        <% } %>
+          <% if (setting.title) { %>
+            <h1><%= setting.title %></h1>
+          <% } %>
 
-        <% if (setting.subtitle) { %>
-          <h1><%= setting.subtitle %></h1>
-        <% } %>
+          <% if (setting.subtitle) { %>
+            <h1><%= setting.subtitle %></h1>
+          <% } %>
 
-        <% if (setting.description) { %>
-          <p><%= setting.description %></p>
-        <% } %>
+          <% if (setting.description) { %>
+            <p><%= setting.description %></p>
+          <% } %>
 
-          <% if (Array.isArray(setting.links) && setting.links[0]!=="") { %>
+          <% if (Array.isArray(setting.links) && setting.links[0] !== "") { %>
             <div class="<%=setting.linkStyle%>"><br>
               <% setting.links.forEach(function(link) { %>
                 <a href="<%= link %>" target="_blank" rel="noopener noreferrer"><%= link %></a>
@@ -45,12 +45,19 @@
             </div>
           <% } %>
           <br>
-          <% if(setting.entryText !=="" && setting.entryText!=="") { %>
+          <% if (setting.entryText !== "" && setting.entryText !== "") { %>
             <button style="background-image: url('<%= setting.entryBackground %>');" class="<%=setting.buttonStyle%>"><%= setting.entryText %><span class="carrot">||</span></button>
             <div class="<%=setting.buttonDivStyle%>" data-url="<%= setting.entryUrl %>"></div>
           <% } %>
         </div>
       </div>
+      
+      <% iterationCount++; %> <!-- Increment the counter after each iteration -->
+
+      <!-- Insert the marquee div only after the second iteration -->
+      <% if (iterationCount === 2) { %>
+        <div id="marquee" style="overflow: hidden; white-space: nowrap; width: 100%; position: relative;"></div>
+      <% } %>
     <% } %>
   <% }); %>
 <% } %>

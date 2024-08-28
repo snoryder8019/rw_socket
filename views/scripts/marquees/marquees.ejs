@@ -37,8 +37,8 @@ function renderMarquees() {
 
         index++;
 
-        // Set timeout for the next marquee
-        setTimeout(displayNextMarquee, 35000); // Adjust time for display duration + transition
+        // Set timeout for the next marquee with reduced initiation length
+        setTimeout(displayNextMarquee, 15000); // Shorter interval for next display
     }
 
     // Start the display cycle
@@ -57,7 +57,7 @@ function animateMarquee(marquee) {
     marqueeItem.style.position = 'absolute';
     marqueeItem.style.whiteSpace = 'nowrap';
     marqueeItem.style.transform = 'translateX(150%)'; // Start outside of view
-    marqueeItem.style.transition = 'transform 30s linear'; // Slow scroll effect
+    marqueeItem.style.transition = 'transform 12s linear'; // Faster scroll effect
 
     marqueeItem.innerHTML = `
         <h3>${marquee.title}</h3>
@@ -70,13 +70,13 @@ function animateMarquee(marquee) {
 
     // Trigger the animation after appending
     requestAnimationFrame(() => {
-        marqueeItem.style.transform = 'translateX(-200%)'; // Move into view and slowly scroll out
+        marqueeItem.style.transform = 'translateX(-200%)'; // Move into view and scroll out
     });
 
     // Remove the item smoothly after it's fully visible and wait for it to disappear
     setTimeout(() => {
         marqueeContainer.removeChild(marqueeItem); // Clean up after animation
-    }, 30000); // Time to match the transition duration
+    }, 12000); // Time to match the transition duration
 }
 </script>
 

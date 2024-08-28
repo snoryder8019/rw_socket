@@ -22,9 +22,10 @@ import vendors from './vendors/vendors.js';
 import videos from './videoProduction/videos.js';
 import blogs from './blogs/blogs.js';
 import helps from './helps/helps.js';
-import faqs from './helps/faqs.js';
+import faqs from './faqs/faqs.js';
 import footers from './footers/footers.js';
 import marquees from './marquees/marquees.js';
+import tickets from './tickets/tickets.js';
 
 const router = express.Router();
 
@@ -52,6 +53,7 @@ const permissionsChecker = async (req, res, next) => {
 
 router.use('/marquees', permissionsChecker, marquees);
 router.use('/chat', permissionsChecker, chat);
+router.use('/tickets', permissionsChecker, tickets);
 router.use('/footers', permissionsChecker, footers);
 
 router.use('/users', permissionsChecker, users);

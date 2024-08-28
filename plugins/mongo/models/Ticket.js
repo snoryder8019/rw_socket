@@ -1,35 +1,34 @@
-import ModelHelper from '../../helpers/models.js';
-import { upload, processImages } from '../../../multer/subscriptionSetup.js';
-import { uploadToLinode } from '../../../aws_sdk/setup.js';
+import ModelHelper from '../helpers/models.js';
+import { upload, processImages } from '../../multer/subscriptionSetup.js';
+import { uploadToLinode } from '../../aws_sdk/setup.js';
 
-export default class Faq extends ModelHelper {
-  constructor(faqData) {
-    super('faqs');
+export default class Ticket extends ModelHelper {
+  constructor(ticketData) {
+    super('tickets');
     this.modelFields = {
-      question: { type: 'text', value: null },
-      answer: { type: 'textarea', value: null },
-      category: { type: 'text', value: null }, // Optional: categorize FAQs
-      isVisible: { type: 'boolean', value: true }, // FAQ visibility toggle
-      order: { type: 'number', value: 0 }, // Order of display
+      subject: { type: 'text', value: null },
+      description: { type: 'textarea', value: null },
+      status: { type: 'text', value: 'open' }, // 'open', 'in progress', 'closed'
+      priority: { type: 'text', value: 'medium' }, // 'low', 'medium', 'high'
+      assignedTo: { type: 'text', value: null }, // User ID or name
       createdDate: { type: 'date', value: new Date() },
       updatedDate: { type: 'date', value: null },
-      mediumIcon: { type: 'file', value: null },
-      backgroundImg: { type: 'file', value: null },
-      horizBkgd: { type: 'file', value: null },
+      attachments: { type: 'array', value: [] }, // Array of file URLs
+      mediumIcon: { type: 'file', value: null }, // Optional: a specific icon for ticket type
     };
 
-    if (faqData) {
+    if (ticketData) {
       for (let key in this.modelFields) {
-        if (faqData[key] !== undefined) {
-          this.modelFields[key].value = faqData[key];
+        if (ticketData[key] !== undefined) {
+          this.modelFields[key].value = ticketData[key];
         }
       }
     }
   }
 
   static getModelFields() {
-    return Object.keys(new Faq().modelFields).map((key) => {
-      const field = new Faq().modelFields[key];
+    return Object.keys(new Ticket().modelFields).map((key) => {
+      const field = new Ticket().modelFields[key];
       return { name: key, type: field.type };
     });
   }
@@ -49,19 +48,20 @@ export default class Faq extends ModelHelper {
       this.uploadImagesToLinode.bind(this),
     ];
   }
+
   get fileFields() {
     return [
+      { name: 'attachments', maxCount: 5 },
       { name: 'mediumIcon', maxCount: 1 },
-      { name: 'backgroundImg', maxCount: 1 },
-      { name: 'horizBkgd', maxCount: 1 },
     ];
   }
+
   async uploadImagesToLinode(req, res, next) {
     try {
       if (req.files) {
         for (const key in req.files) {
           const file = req.files[key][0];
-          const fileKey = `clubs/${Date.now()}-${file.originalname}`;
+          const fileKey = `tickets/${Date.now()}-${file.originalname}`;
           const url = await uploadToLinode(file.path, fileKey);
           req.body[key] = url; // Save the URL in the request body
         }
@@ -72,8 +72,8 @@ export default class Faq extends ModelHelper {
       next(error);
     }
   }
-  pathForGetRouteView() {
-    return 'admin/faqs/template';
-  }
 
+  pathForGetRouteView() {
+    return 'admin/tickets/template';
+  }
 }

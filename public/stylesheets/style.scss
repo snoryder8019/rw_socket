@@ -1229,8 +1229,8 @@ animation:flashMsg 2.8s ease-in-out 0s 1 ;
 .sectionContainer {
   flex-shrink: 0;
   margin: 7% 48% 0% 37%;
-  min-height: 99%;
-  width: 57%; /* Adjust the width to be larger than .sectionWindow */
+//height:300px;
+  width: 100%; /* Adjust the width to be larger than .sectionWindow */
   background-color: #f3edd6;
   overflow: visible;
 }
@@ -1439,16 +1439,9 @@ max-width: 75px;
       }
       
       .marquee-item {
-          display: inline-block;
+        display: inline-block;
         white-space: nowrap;
-        transition: transform 30s linear; /* Smooth scrolling effect */
-        a, p, h3{
-          color:$gold;
-          font-size: 1.2rem;
-          margin: 2%;
-          padding: 2%;
-          
-        }
+        transition: transform 12s linear; /* Faster scroll effect */
       }
       .marquee span {
         display: inline-block;
