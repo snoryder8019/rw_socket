@@ -1,20 +1,16 @@
 <script>
-    function getDirImages(directory) {
-        fetch(`/media/images/${directory}`)
-            .then(response => response.text())
-            .then(imageGridHtml => {
-                // Assuming you have a div with id="imageGrid" to display the images
-                document.getElementById('imageGrid').innerHTML = imageGridHtml;
-            })
-            .catch(error => {
-                console.error('Error fetching images:', error);
-            });
-    }
-    </script>
-    
-  <script>
-document.addEventListener("DOMContentLoaded", function () {
-  // Function to add a new field dynamically
+    // function getDirImages(directory) {
+    //     fetch(`/media/images/${directory}`)
+    //         .then(response => response.text())
+    //         .then(imageGridHtml => {
+    //             // Assuming you have a div with id="imageGrid" to display the images
+    //             document.getElementById('imageGrid').innerHTML = imageGridHtml;
+    //         })
+    //         .catch(error => {
+    //             console.error('Error fetching images:', error);
+    //         });
+    // }
+
   function addField(name) {
     const container = document.getElementById(`${name}-container`);
     const index = container.querySelectorAll(`input[name="${name}[]"]`).length;
@@ -28,79 +24,29 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   // Function to remove a field
-  function removeField(element) {
-    if (element) {
-      element.parentElement.remove();
+  function removeField(elementId, routeSub,id,index) {
+  // Find the element by its ID
+  const element = document.getElementById(elementId);
+  
+  if (element) {
+    // Log the child nodes of the element's parent node
+    console.log(element.parentNode.childNodes);
+
+    // Find the input field within the parent node
+    const inputField = element.querySelector('input');
+
+    if (inputField) {
+      // Capture the value of the input field
+      const inputValue = inputField.value;
+      console.log('Input value to be removed:', inputValue);
+//fetch(`${routeSub}/popImagesArrayIndex/${id}/${index}`)
+      // Remove the parent element from the DOM
+     element.remove();
     }
   }
-
-  // MutationObserver callback to observe changes in the container
-  const observerCallback = function (mutationsList) {
-    for (const mutation of mutationsList) {
-      if (mutation.type === "childList" && mutation.addedNodes.length) {
-        mutation.addedNodes.forEach(node => {
-          if (node.nodeType === 1) { // Ensure the added node is an element
-            const removeButton = node.querySelector(".remove-btn");
-            if (removeButton) {
-              removeButton.addEventListener("click", function () {
-                removeField(removeButton);
-              });
-            }
-          }
-        });
-      }
-    }
-  };
+}
 
   // Function to initialize the observer on all containers
-  function initializeObserver() {
-    const containers = document.querySelectorAll("[id$='-container']");
-    containers.forEach(container => {
-      const observer = new MutationObserver(observerCallback);
-      observer.observe(container, { childList: true });
-    });
-  }
 
-  // Call the observer initialization function
-  initializeObserver();
-
-  // Attach the add field functionality
-  document.querySelectorAll("[data-add-field]").forEach(button => {
-    button.addEventListener("click", function () {
-      const name = button.getAttribute("data-add-field");
-      addField(name);
-    });
-  });
-});
 
   </script>
-<script>
-  document.addEventListener('DOMContentLoaded', () => {
-    // Get all radio buttons within the form
-    const radios = document.querySelectorAll('form input[type="radio"]');
-
-    radios.forEach(radio => {
-      // Add a change event listener to each radio button
-      radio.addEventListener('change', (event) => {
-        const selectedRadio = event.target;
-        const form = selectedRadio.closest('form');
-        
-        // Optionally, update a specific field in the form
-        console.log(`Radio button changed: Name=${selectedRadio.name}, Value=${selectedRadio.value}`);
-
-        // Example: Update an input field with the selected radio's name and value (if needed)
-        const hiddenInput = form.querySelector(`input[name="${selectedRadio.name}_value"]`);
-        if (hiddenInput) {
-          hiddenInput.value = selectedRadio.value;
-        } else {
-          // Alternatively, dynamically create a hidden input field if not existing
-          const newInput = document.createElement('input');
-          newInput.type = 'hidden';
-          newInput.name = `${selectedRadio.name}_value`;
-          newInput.value = selectedRadio.value;
-          form.appendChild(newInput);
-        }
-      });
-    });
-  });
-</script>

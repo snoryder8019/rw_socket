@@ -85,7 +85,7 @@ export const popImagesArray = (Model) => async (req, res) => {
     }
 
     // Use $pull to remove the image URL from imagesArray
-    const result = await new Model().findByIdAndUpdate(
+    const result = await new Model().updateById(
       new ObjectId(id),
       { $pull: { imagesArray: url } }, // Remove image URL from the imagesArray
       { new: true } // Return the updated document
@@ -101,7 +101,48 @@ export const popImagesArray = (Model) => async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 };
+export const popImagesArrayIndex = (Model) => async (req, res) => {
+  try {
+    const { id, index } = req.params; // Get the document ID and index from request parameters
+    
+    if (!ObjectId.isValid(id)) {
+      return res.status(400).json({ error: 'Invalid ID format' });
+    }
 
+    // Convert index to an integer
+    const indexToRemove = parseInt(index, 10);
+    
+    // Validate index
+    if (isNaN(indexToRemove) || indexToRemove < 0) {
+      return res.status(400).json({ error: 'Invalid index' });
+    }
+
+    // Remove the image at the specified index
+    const result = await new Model().updateById(
+      new ObjectId(id),
+      { 
+        $unset: { [`imagesArray.${indexToRemove}`]: 1 }  // Unset the specific index
+      },
+      { new: true }
+    );
+
+    if (!result) {
+      return res.status(404).json({ error: 'Document not found' });
+    }
+
+    // Remove the `null` element from the array
+    await new Model().updateById(
+      new ObjectId(id),
+      { $pull: { imagesArray: null } },
+      { new: true }
+    );
+
+    res.status(200).json({ message: 'Image removed successfully', imagesArray: result.imagesArray });
+  } catch (error) {
+    console.error('Error removing image from images array:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
 
 export const updateImagesArray = (Model) => async (req, res) => {
   try {
@@ -112,7 +153,7 @@ export const updateImagesArray = (Model) => async (req, res) => {
       return res.status(400).json({ error: 'Invalid ID format' });
     }
 
-    const updatedInstance = await new Model().findByIdAndUpdate(
+    const updatedInstance = await new Model().updateById(
       new ObjectId(id),
       { $set: { imagesArray } },
       { new: true }

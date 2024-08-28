@@ -113,6 +113,7 @@ router.get('/renderEditForm/:id', async (req, res) => {
 /////////////////
 router.get('/section', async (req, res) => {
   try {
+    
     const data = await neVideo().getAll();
     res.render('./layouts/section', {
       title: 'Section View',
