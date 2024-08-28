@@ -65,7 +65,22 @@ export default class Video extends ModelHelper {
       { name: 'videoFile', maxCount: 1 },
     ];
   }
-
+  async uploadImagesToLinode(req, res, next) {
+    try {
+      if (req.files) {
+        for (const key in req.files) {
+          const file = req.files[key][0];
+          const fileKey = `videos/${Date.now()}-${file.originalname}`;
+          const url = await uploadToLinode(file.path, fileKey);
+          req.body[key] = url; // Save the URL in the request body
+        }
+      }
+      next();
+    } catch (error) {
+      console.error('Error in uploadImagesToLinode middleware:', error);
+      next(error);
+    }
+  }
   async handleFileUpload(req, res, next) {
     try {
       if (req.file) {

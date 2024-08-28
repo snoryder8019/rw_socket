@@ -46,7 +46,6 @@ router.get('/reset-password/:token', handleResetPasswordGet);
 router.post('/updateBanned', updateBanned);
 router.post('/userDataUpload', userDataUpload);
 router.post('/saveRotation', saveRotation);
-
 router.get('/', noNos, async (req, res) => {
   let user = req.user;
 
@@ -61,7 +60,15 @@ router.get('/', noNos, async (req, res) => {
     const footer = await new Footer().getAll();
     const marquee = await new Marquee().getAll();
     const webappSettings = await collection.find().toArray();
+    
+    // Fetch and sort sectionSettings by `order`, placing undefined or 0 last
     const sectionSettings = await collection1.find().toArray();
+    sectionSettings.sort((a, b) => {
+      if (!a.order || a.order === 0) return 1; // Place undefined or 0 values last
+      if (!b.order || b.order === 0) return -1;
+      return a.order - b.order; // Ascending order
+    });
+
     const chatRooms = await collection2.find().toArray();
     const videos = await collection3.find().toArray();
     const p2p_rooms = await collection4.find().toArray();
@@ -74,8 +81,8 @@ router.get('/', noNos, async (req, res) => {
 
     res.render('index', {
       user: user,
-      footer:footer,
-      marquee:marquee,
+      footer: footer,
+      marquee: marquee,
       cookieData: cookieData,
       webappSettings: webappSettings,
       sectionSettings: sectionSettings,

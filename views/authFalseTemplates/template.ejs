@@ -16,7 +16,7 @@
   
   <% if (typeof sectionSettings === 'object' && sectionSettings && sectionSettings.length > 0) { %>
     <% sectionSettings.forEach(function(setting) { %>
-      <% if (setting.visible && setting.nonAuthView) { %>
+      <% if (setting.visible && setting.nonAuthView&& !setting.draft) { %>
         <div class="<%=setting.style%>" style="background-image: url('<%= setting.backgroundImg %>');" data-order="<%= setting.order %>">
           <div class="<%=setting.innerStyle%>">
           <% if (setting.title) { %>

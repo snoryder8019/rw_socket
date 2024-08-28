@@ -23,6 +23,7 @@ export default class SectionSetting extends ModelHelper {
       description: { type: 'text', value: null },
       entryUrl: { type: 'text', value: null },
       entryText: { type: 'text', value: null },
+      draft: { type: 'boolean', value: false },
       visible: { type: 'boolean', value: false },
       authView: { type: 'boolean', value: false },
       nonAuthView: { type: 'boolean', value: false },

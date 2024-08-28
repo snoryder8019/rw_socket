@@ -74,3 +74,33 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
   </script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    // Get all radio buttons within the form
+    const radios = document.querySelectorAll('form input[type="radio"]');
+
+    radios.forEach(radio => {
+      // Add a change event listener to each radio button
+      radio.addEventListener('change', (event) => {
+        const selectedRadio = event.target;
+        const form = selectedRadio.closest('form');
+        
+        // Optionally, update a specific field in the form
+        console.log(`Radio button changed: Name=${selectedRadio.name}, Value=${selectedRadio.value}`);
+
+        // Example: Update an input field with the selected radio's name and value (if needed)
+        const hiddenInput = form.querySelector(`input[name="${selectedRadio.name}_value"]`);
+        if (hiddenInput) {
+          hiddenInput.value = selectedRadio.value;
+        } else {
+          // Alternatively, dynamically create a hidden input field if not existing
+          const newInput = document.createElement('input');
+          newInput.type = 'hidden';
+          newInput.name = `${selectedRadio.name}_value`;
+          newInput.value = selectedRadio.value;
+          form.appendChild(newInput);
+        }
+      });
+    });
+  });
+</script>

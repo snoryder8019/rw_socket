@@ -28,12 +28,18 @@ import marquees from './marquees/marquees.js';
 import tickets from './tickets/tickets.js';
 
 const router = express.Router();
-
 const permissionsChecker = async (req, res, next) => {
+  // Check if user exists
+  if (!req.user) {
+    console.log('Permission denied: No user found');
+    return res.status(403).json({ message: 'Forbidden: No user found' });
+  }
+
   const pathSplit = req.originalUrl.split('/');
   const permission = pathSplit[1]; // Grab the first part of the path after '/'
   const userPermissions = req.user.permissions;
   const user = req.user.firstName + ' ' + req.user.lastName;
+
   // Check if the permission exists and is granted
   if (
     userPermissions.full ||
