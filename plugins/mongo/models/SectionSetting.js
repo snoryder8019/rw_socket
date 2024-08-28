@@ -18,6 +18,7 @@ export default class SectionSetting extends ModelHelper {
       buttonStyle: { type: 'text', value: 'collapsable' },
       linkStyle: { type: 'text', value: 'linkTable' },
       style: { type: 'text', value: 'auth_view_true' },
+      
       innerStyle: { type: 'text', value: 'index-container' },
       description: { type: 'text', value: null },
       entryUrl: { type: 'text', value: null },

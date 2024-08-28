@@ -14,7 +14,7 @@ export const config = {
   // Custom changes below
   title: 'Royal World Socket Platform',
   headline: 'Welcome to our Test Platform!',
-  footerMessage: 'config footer message',
+
   companyPaypal: process.env.PPAL_CID,
 };
 

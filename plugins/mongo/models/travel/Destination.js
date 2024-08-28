@@ -2,20 +2,27 @@ import ModelHelper from '../../helpers/models.js';
 import { upload, processImages } from '../../../multer/subscriptionSetup.js';
 import { uploadToLinode } from '../../../aws_sdk/setup.js';
 
-const modelName = 'destination';
 
 export default class Destination extends ModelHelper {
   constructor(destinationData) {
-    super(`${modelName}s`);
+    super('destinations');
     this.modelFields = {
       name: { type: 'text', value: null },
-      title: { type: 'text', value: null },
-      subtitle: { type: 'text', value: null },
-      links: { type: 'array', value: [] },
-      mediumIcon: { type: 'file', value: null },
-      backgroundImg: { type: 'file', value: null },
-      horizBkgd: { type: 'file', value: null },
+      description: { type: 'textarea', value: null },
+      location: { type: 'text', value: null },
+      country: { type: 'text', value: null },
+      attractions: { type: 'array', value: [] }, // List of major attractions at the destination
+      bestTimeToVisit: { type: 'text', value: null }, // Best time of the year to visit
+      activities: { type: 'array', value: [] }, // Popular activities at the destination
+      averageCost: { type: 'number', value: null }, // Average cost for visiting
+      travelTips: { type: 'textarea', value: null }, // Travel tips and recommendations
+      status: { type: 'text', value: null }, // e.g., 'Active', 'Inactive'
+      mediumIcon: { type: 'file', value: null }, // Custom image field for medium-sized icons
+      backgroundImg: { type: 'file', value: null }, // Background image for the destination
+      horizBkgd: { type: 'file', value: null }, // Horizontal background image
+      featuredImg: { type: 'file', value: null }, // Horizontal background image
     };
+
     if (destinationData) {
       for (let key in this.modelFields) {
         if (destinationData[key] !== undefined) {
@@ -52,7 +59,8 @@ export default class Destination extends ModelHelper {
     return [
       { name: 'mediumIcon', maxCount: 1 },
       { name: 'backgroundImg', maxCount: 1 },
-      { name: 'horizBkgrd', maxCount: 1 },
+      { name: 'horizBkgd', maxCount: 1 },
+      { name: 'featuredImg', maxCount: 1 },
     ];
   }
 
@@ -61,7 +69,7 @@ export default class Destination extends ModelHelper {
       if (req.files) {
         for (const key in req.files) {
           const file = req.files[key][0];
-          const fileKey = `${modelName}s/${Date.now()}-${file.originalname}`;
+          const fileKey = `destinations/${Date.now()}-${file.originalname}`;
           const url = await uploadToLinode(file.path, fileKey);
           req.body[key] = url; // Save the URL in the request body
         }
@@ -74,6 +82,6 @@ export default class Destination extends ModelHelper {
   }
 
   pathForGetRouteView() {
-    return `admin/${modelName}s/template`;
+    return 'admin/destinations/template';
   }
 }

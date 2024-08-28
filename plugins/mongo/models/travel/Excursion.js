@@ -2,17 +2,26 @@ import ModelHelper from '../../helpers/models.js';
 import { upload, processImages } from '../../../multer/subscriptionSetup.js';
 import { uploadToLinode } from '../../../aws_sdk/setup.js';
 
-const modelName = 'excursion';
-
 export default class Excursion extends ModelHelper {
   constructor(excursionData) {
-    super(`${modelName}s`);
+    super('excursions');
     this.modelFields = {
-      name: { type: 'text', value: null },
       title: { type: 'text', value: null },
-      subtitle: { type: 'text', value: null },
-      links: { type: 'array', value: [] },
+      description: { type: 'textarea', value: null },
+      location: { type: 'text', value: null },
+      duration: { type: 'number', value: null }, // Duration in hours/days
+      cost: { type: 'number', value: null },
+      itinerary: { type: 'array', value: [] }, // Array of itinerary items
+      departureDate: { type: 'date', value: null },
+      returnDate: { type: 'date', value: null },
+      meetingPoint: { type: 'text', value: null },
+      includedItems: { type: 'array', value: [] }, // Array of items included in the excursion (e.g., meals, equipment)
+      notIncludedItems: { type: 'array', value: [] }, // Array of items not included
+      images: { type: 'array', value: [] }, // Array of image URLs
+      availableSpots: { type: 'number', value: null },
+      status: { type: 'text', value: null }, // e.g., 'Available', 'Fully Booked', 'Cancelled'
     };
+
     if (excursionData) {
       for (let key in this.modelFields) {
         if (excursionData[key] !== undefined) {
@@ -47,11 +56,7 @@ export default class Excursion extends ModelHelper {
 
   get fileFields() {
     return [
-      { name: 'mediumIcon', maxCount: 1 },
-      { name: 'squareNonAuthBkgd', maxCount: 1 },
-      { name: 'squareAuthBkgd', maxCount: 1 },
-      { name: 'horizNonAuthBkgd', maxCount: 1 },
-      { name: 'horizAuthBkgd', maxCount: 1 },
+      { name: 'images', maxCount: 10 },
     ];
   }
 
@@ -60,7 +65,7 @@ export default class Excursion extends ModelHelper {
       if (req.files) {
         for (const key in req.files) {
           const file = req.files[key][0];
-          const fileKey = `${modelName}s/${Date.now()}-${file.originalname}`;
+          const fileKey = `excursions/${Date.now()}-${file.originalname}`;
           const url = await uploadToLinode(file.path, fileKey);
           req.body[key] = url; // Save the URL in the request body
         }
@@ -73,6 +78,6 @@ export default class Excursion extends ModelHelper {
   }
 
   pathForGetRouteView() {
-    return `admin/${modelName}s/template`;
+    return 'admin/excursions/template';
   }
 }

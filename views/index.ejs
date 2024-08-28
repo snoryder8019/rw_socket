@@ -79,14 +79,7 @@
 </body>
 <%if(typeof webappSettings === 'object'&& webappSettings){%>
 <style>
-  @font-face {
-    font-family: 'backslash';
-    src: url('/fonts/backslash.otf');
-  }
-  :root h1 {
-    font-family: <%= webappSettings[0].mainFont %>;
-    color: <%= webappSettings[0].mainFontColor %>
-  }
+
   #dashToggle {
     background-image: url(<%=webappSettings[0].dashboardIcon%>);
   }

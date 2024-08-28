@@ -21,6 +21,7 @@ import userBucketRouter from './userFunctions/userBucketFunctions.js';
 import { getNotifications } from './userFunctions/userNotifications.js';
 import gamesRouter from './gamesFunctions/index.js';
 import users from './userFunctions/index.js';
+import Footer from '../plugins/mongo/models/footer/Footer.js';
 
 const router = express.Router();
 // Middleware to use cookieParser
@@ -56,6 +57,7 @@ router.get('/', noNos, async (req, res) => {
   const collection4 = db.collection('p2p_rooms');
 
   try {
+    const footer = await new Footer().getAll();
     const webappSettings = await collection.find().toArray();
     const sectionSettings = await collection1.find().toArray();
     const chatRooms = await collection2.find().toArray();
@@ -70,6 +72,7 @@ router.get('/', noNos, async (req, res) => {
 
     res.render('index', {
       user: user,
+      footer:footer,
       cookieData: cookieData,
       webappSettings: webappSettings,
       sectionSettings: sectionSettings,

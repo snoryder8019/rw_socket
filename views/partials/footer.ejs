@@ -1,31 +1,35 @@
 
-<h4>Heres the Footer</h4>
-<div><h3><%=config.footerMessage%></h3></div>
-<div class="footerContainer">
-<div class="footerDiv">
-    <div class="footImg">
-     <img src="" alt="img1">
-    </div>
-</div>
+<%if(typeof footer =='object'&& footer){%>
+    <div class="footerContainer">
+        <div class="footerDiv">
+            <h1> <%=footer[0].companyName%> </h1>
+  
+            <h3>  <%=footer[0].address%></h3>
+            <h3>  <%=footer[0].phoneNumber%></h3>
+            
+            <h4>    <%=footer[0].copyrightText%></h4>
+        </div>
 
-<div class="footerDiv">
-    <div class="linksBlock">
-        <div class="linkBlock">
-            <div class="blockLink">link1</div>
-            <div class="blockLink">link2</div>
-            <div class="blockLink">link3</div>
-            <div class="blockLink">link4</div>
+        <div class="footerDiv">
+            <div class="linksBlock">
+                <div class="linkBlock">
+                    
+                </div>
+            </div>
+        </div>
+        
+        <div class="footerImg">
+            <img src="<%=footer[0].footerImage%>">
         </div>
     </div>
-</div>
+    
 
+        
 <div class="footerDiv">
-    <div class="footImg">
-       <img src="" alt="img2">
-    </div>
-</div>
+            <h6>This progressive web application is developed by <a style="color:rgb(255, 225, 230)" href="https://w2marketing.biz">W2 Marketing LLC </a>, and is licensed for exclusive use of their operating partners. All rights reserved.</h6>
 
 </div>
+<%}%>
 
-<h6>This progressive web application is developed by <a style="color:rgb(255, 225, 230)" href="https://w2marketing.biz">W2 Marketing LLC </a>, and is licensed for exclusive use of their operating partners. All rights reserved.</h6>
+
 

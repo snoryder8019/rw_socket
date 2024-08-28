@@ -23,6 +23,7 @@ import videos from './videoProduction/videos.js';
 import blogs from './blogs/blogs.js';
 import helps from './helps/helps.js';
 import faqs from './helps/faqs.js';
+import footers from './footers/footers.js';
 
 const router = express.Router();
 
@@ -49,6 +50,7 @@ const permissionsChecker = async (req, res, next) => {
 };
 
 router.use('/chat', permissionsChecker, chat);
+router.use('/footers', permissionsChecker, footers);
 
 router.use('/users', permissionsChecker, users);
 router.use('/permissions', permissionsChecker, permissions);
