@@ -6,6 +6,13 @@
           <img alt="Destination image" src="<%= destination.mediumIcon %>">
           <button class="collapsible">view: <span class="carrot">&#9654;</span></button>
           <div class="content" data-url="/destinations/renderEditForm/<%= destination._id %>"></div>
+         <button class="collapsible">Get SlideShows <span class="carrot">&#9654;</span></button>
+          <div class="content" data-url="/destinations/renderImagesArray/<%= destination._id %>"></div>
+
+          <form action="/destinations/<%=destination._id%>/upload-images" method="post" enctype="multipart/form-data">
+            <input type="file" name="images" multiple>
+            <button type="submit">Upload</button>
+        </form>
         </div>
       <% }) %>
     </div>

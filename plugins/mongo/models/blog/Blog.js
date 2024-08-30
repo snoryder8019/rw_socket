@@ -15,7 +15,7 @@ export default class Blog extends ModelHelper {
       status: { type: 'text', value: 'draft' },
       publishDate: { type: 'date', value: null },
       lastUpdated: { type: 'date', value: null },
-      featuredImage: { type: 'file', value: null },
+      featureImage: { type: 'file', value: null },
       horizBkgrd: { type: 'file', value: null },
       mediumIcon: { type: 'file', value: null },
       backgroundImg: { type: 'file', value: null },

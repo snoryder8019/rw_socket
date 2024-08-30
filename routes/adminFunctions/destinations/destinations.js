@@ -1,6 +1,9 @@
 import express from 'express';
 import Destination from '../../../plugins/mongo/models/travel/Destination.js';
 import generateFormFields from '../../../plugins/helpers/formHelper.js';
+import {imagesArray,getImagesArray,popImagesArray,popImagesArrayIndex,updateImagesArray} from '../../helpers/imagesArray.js'
+import { uploadMultiple } from '../../../plugins/multer/setup.js';
+
 import { buildRoutes } from '../../helpers/routeBuilder.js';
 
 const router = express.Router();
@@ -13,7 +16,7 @@ router.get('/renderAddForm', (req, res) => {
     console.log('renderAddForm');
 
     res.render('forms/generalForm', {
-      title: 'ADestination',
+      title: 'Destination',
       action: '/destinations/create',
       formFields: formFields,
     });
@@ -60,7 +63,10 @@ router.get('/section', async (req, res) => {
     res.status(500).send({ error: error.message });
   }
 });
-
+router.post('/:id/upload-images',uploadMultiple, imagesArray(Destination));
+router.get('/renderImagesArray/:id', getImagesArray(Destination))
+router.get('/popImagesArray/:id/:url', popImagesArray(Destination))
+router.get('/popImagesArrayIndex/:id/:index', popImagesArrayIndex(Destination))
 buildRoutes(new Destination(), router);
 
 export default router;

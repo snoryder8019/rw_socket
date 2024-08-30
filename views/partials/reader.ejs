@@ -1,0 +1,27 @@
+<% if (Array.isArray(models) && models.length > 0) { %>
+    <div class="readerGrid">
+      <% models.forEach((model) => { %>
+        <div class="readerContainer" data-id="<%= model._id %>" data-title="<%= model.title %>" data-content="<%= model.content %>">
+          <% if (model.backgroundImg) { %>
+            <div class="image-container">
+              <img src="<%= model.backgroundImg %>" alt="Background Image" class="background-img">
+            </div>
+          <% } %>
+  
+          <h2><%= model.title %></h2>
+          <p><%= model.subtitle %></p>
+          <!-- Add more content display here as needed -->
+        </div>
+      <% }) %>
+    </div>
+  
+    <!-- The "reader" view overlay -->
+    <div id="readerOverlay" class="reader-overlay">
+      <div class="reader-content">
+        <button id="closeReader" class="close-button">Close</button>
+        <div id="readerInnerContent" class="reader-inner-content"></div>
+      </div>
+    </div>
+  <% } else { %>
+    <p>No data available.</p>
+  <% } %>

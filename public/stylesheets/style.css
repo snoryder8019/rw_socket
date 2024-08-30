@@ -854,6 +854,11 @@ form h1 {
   display: flex;
 }
 
+.auth_view_true.expanded {
+  transform: scale(1.05);
+  z-index: 1;
+}
+
 .adminWindow {
   display: flex;
   justify-content: center;
@@ -1581,6 +1586,83 @@ button good {
   cursor: pointer;
   opacity: 0;
   transition: opacity 0.5s ease;
+}
+
+/* SCSS styling */
+.readerGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  padding: 20px;
+  overflow-y: scroll;
+}
+
+.background-img {
+  width: 100%;
+}
+
+.readerContainer {
+  color: #711881;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 15px;
+  background-color: #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: transform 0.3s;
+  min-width: 225px;
+}
+.readerContainer:hover {
+  transform: translateY(-5px);
+}
+
+.reader-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+  z-index: 1000;
+  display: none;
+  overflow-y: auto;
+}
+
+.reader-content {
+  position: relative;
+  max-width: 800px;
+  margin: 50px auto;
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.close-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 5px 10px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.close-button:hover {
+  background-color: #0056b3;
+}
+
+.reader-inner-content {
+  padding: 20px;
+}
+
+.ghostButton {
+  background-color: green;
+}
+
+.ghostDiv {
+  background-color: green;
 }
 
 /*# sourceMappingURL=style.css.map */

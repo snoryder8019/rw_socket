@@ -1,5 +1,10 @@
-import fs from 'fs';
+import { fileURLToPath } from 'url';
 import path from 'path';
+import fs from 'fs';
+
+// Mimic __dirname in ES6
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // Storefront API credentials
 const API_KEY = process.env.SHOP_API;
@@ -75,8 +80,10 @@ export const getProducts = async () => {
   }
 };
 
+// Corrected function to get HTML template
 const getHtmlTemplate = (templateName) => {
-  const templatePath = path.dirname('../html-templates', templateName);
+  // Construct the correct path to the template file
+  const templatePath = path.join(__dirname,'../html-templates', templateName); // Corrected this line
   return fs.readFileSync(templatePath, 'utf-8');
 };
 

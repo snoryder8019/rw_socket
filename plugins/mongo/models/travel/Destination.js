@@ -8,6 +8,8 @@ export default class Destination extends ModelHelper {
     super('destinations');
     this.modelFields = {
       name: { type: 'text', value: null },
+      title: { type: 'text', value: null },
+      subTitle: { type: 'text', value: null },
       description: { type: 'textarea', value: null },
       location: { type: 'text', value: null },
       country: { type: 'text', value: null },
@@ -20,7 +22,7 @@ export default class Destination extends ModelHelper {
       mediumIcon: { type: 'file', value: null }, // Custom image field for medium-sized icons
       backgroundImg: { type: 'file', value: null }, // Background image for the destination
       horizBkgd: { type: 'file', value: null }, // Horizontal background image
-      featuredImg: { type: 'file', value: null }, // Horizontal background image
+      featureImg: { type: 'file', value: null }, // Horizontal background image
     };
 
     if (destinationData) {
@@ -60,7 +62,7 @@ export default class Destination extends ModelHelper {
       { name: 'mediumIcon', maxCount: 1 },
       { name: 'backgroundImg', maxCount: 1 },
       { name: 'horizBkgd', maxCount: 1 },
-      { name: 'featuredImg', maxCount: 1 },
+      { name: 'featureImg', maxCount: 1 },
     ];
   }
 

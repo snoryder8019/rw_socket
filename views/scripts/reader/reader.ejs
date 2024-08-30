@@ -1,0 +1,42 @@
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+      // Function to open the reader overlay
+      function openReader(modelData) {
+        const readerOverlay = document.getElementById('readerOverlay');
+        const readerInnerContent = document.getElementById('readerInnerContent');
+  
+        // Populate the reader content with model data
+        readerInnerContent.innerHTML = `
+          <h2>${modelData.title}</h2>
+          <div>${modelData.content}</div>
+          <!-- You can dynamically append more content here based on your model structure -->
+        `;
+  
+        // Show the overlay
+        readerOverlay.style.display = 'block';
+      }
+  
+      // Function to close the reader overlay
+      function closeReader() {
+        const readerOverlay = document.getElementById('readerOverlay');
+        readerOverlay.style.display = 'none';
+      }
+  
+      // Attach click event to each grid container
+      const readerContainers = document.querySelectorAll('.readerContainer');
+      readerContainers.forEach(container => {
+        container.addEventListener('click', function () {
+          const modelData = {
+            id: container.getAttribute('data-id'),
+            title: container.getAttribute('data-title'),
+            content: container.getAttribute('data-content')
+          };
+          openReader(modelData);
+        });
+      });
+  
+      // Attach click event to close button
+      document.getElementById('closeReader').addEventListener('click', closeReader);
+    });
+  </script>
+  
