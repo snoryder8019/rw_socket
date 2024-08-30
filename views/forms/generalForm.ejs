@@ -1,21 +1,9 @@
+<h1><%= title %></h1>
+<form action="<%= action %>" method="POST" enctype="multipart/form-data">
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title><%= title %></title>
-  <style>
-    .array-field, .object-field {
-      margin-bottom: 10px;
-    }
-  </style>
-</head>
-<body>
-  <h1><%= title %></h1>
-  <!-- Dynamically bring the model keys as inputs -->
-  <form action="<%= action %>" method="post" enctype="multipart/form-data">
-    <% formFields.forEach(field => { %>
+  <!-- Render standard form fields -->
+  <% formFields.forEach(field => { %>
+    <% if (typeof field.value !== 'object' || Array.isArray(field.value)) { %>
       <div>
         <label for="<%= field.name %>"><%= field.label %>:</label>
         <% if (field.type === 'textarea') { %>
@@ -30,48 +18,51 @@
           </select>
         <% } else if (field.type === 'radio') { %>
           <% field.options.forEach(option => { %>
-            <input type="radio" name="<%= field.name %>" id="<%= field.name %>-<%= option %>" value="<%= option %>" <%= field.value === option ? 'checked' : '' %>>
+            <input type="radio" name="<%= field.name %>" id="<%= field.name %>-<%= option %>" value="<%= option %>">
             <label for="<%= field.name %>-<%= option %>"><%= option %></label>
           <% }) %>
         <% } else if (field.type === 'boolean') { %>
-          <input type="radio" name="<%= field.name %>" id="<%= field.name %>-true" value="true" <%= field.value === 'true' ? 'checked' : '' %>>
-          <label for="<%= field.name %>-true">True</label>
-          <input type="radio" name="<%= field.name %>" id="<%= field.name %>-false" value="false" <%= field.value === 'false' ? 'checked' : '' %>>
-          <label for="<%= field.name %>-false">False</label>
-        <% } else if (field.type === 'array') { %>
-          <% if (Array.isArray(field.value)) { %>
+          <!-- Dropdown for boolean type -->
+          <select name="<%= field.name %>" id="<%= field.name %>">
+            <option value="true" <%= field.value === true ? 'selected' : '' %>>True</option>
+            <option value="false" <%= field.value === false ? 'selected' : '' %>>False</option>
+          </select>
+        <% } else if (field.type === 'array' && Array.isArray(field.value)) { %>
+          <div id="<%= field.name %>-container">
             <% field.value.forEach((item, index) => { %>
-              <div class="array-field">
-                <input type="text" name="<%= field.name %>[]"
-                       id="<%= field.name %>-<%= index %>"
-                       value="<%= item %>">
+              <div class="array-item" id="<%= field.name %>-<%= index %>">
+                <input type="text" name="<%= field.name %>[]" id="<%= field.name %>-<%= index %>" value="<%= item %>">
+                <button type="button" onclick="removeField('<%= field.name %>-<%= index %>', '<%=routeSub%>', '<%= data ? data._id : '' %>', '<%= index %>')">Remove</button>
               </div>
             <% }); %>
-          <% } else { %>
-            <div class="array-field">
-              <input type="text" name="<%= field.name %>[]"
-                     id="<%= field.name %>-0"
-                     value="<%= field.value %>">
-            </div>
-          <% } %>
-          <button type="button" onclick="addArrayField('<%= field.name %>')">Add more</button>
+          </div>
+          <button type="button" onclick="addField('<%= field.name %>')">Add more</button>
         <% } else if (field.type === 'object') { %>
           <% for (const key in field.value) { %>
-            <div class="object-field">
+            <% if (typeof field.value[key] !== 'object') { %>
               <label for="<%= field.name %>_<%= key %>"><%= key %>:</label>
-              <input type="text" name="<%= field.name %>[<%= key %>]"
-                     id="<%= field.name %>_<%= key %>"
-                     value="<%= field.value[key] %>">
-            </div>
+              <input type="text" name="<%= field.name %>[<%= key %>]" id="<%= field.name %>_<%= key %>" value="<%= field.value[key] %>">
+            <% } %>
           <% } %>
         <% } else { %>
           <input type="<%= field.type %>" name="<%= field.name %>" id="<%= field.name %>" value="<%= field.value %>">
         <% } %>
       </div>
-    <% }) %>
-    <button type="submit">Submit</button>
-  </form>
+    <% } %>
+  <% }) %>
 
+  <% if (typeof permissionsFields == 'object' && permissionsFields) { %>
+  <!-- Render permissions fields separately -->
+  <h2>Permissions</h2>
+  <% permissionsFields.forEach(field => { %>
+    <div>
+      <label for="<%= field.name %>"><%= field.label %>:</label>
+      <input type="radio" name="<%= field.name %>" id="<%= field.name %>-true" value="true" <%= field.value === true ? 'checked' : '' %>> True
+      <input type="radio" name="<%= field.name %>" id="<%= field.name %>-false" value="false" <%= field.value === false ? 'checked' : '' %>> False
+    </div>
+  <% }) %>
+  <% } %>
 
-</body>
-</html>
+  <button type="submit">Save</button>
+</form>
+

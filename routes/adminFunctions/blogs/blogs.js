@@ -1,6 +1,9 @@
 import express from 'express';
 import Blog from '../../../plugins/mongo/models/blog/Blog.js';
 import generateFormFields from '../../../plugins/helpers/formHelper.js';
+import {imagesArray,getImagesArray,popImagesArray,popImagesArrayIndex,updateImagesArray} from '../../helpers/imagesArray.js'
+import { uploadMultiple } from '../../../plugins/multer/setup.js';
+
 import { buildRoutes } from '../../helpers/routeBuilder.js';
 
 const router = express.Router();
@@ -51,7 +54,10 @@ router.get('/renderEditForm/:id', async (req, res) => {
 });
 
 // Other routes...
-
+router.post('/:id/upload-images',uploadMultiple, imagesArray(Blog));
+router.get('/renderImagesArray/:id', getImagesArray(Blog))
+router.get('/popImagesArray/:id/:url', popImagesArray(Blog))
+router.get('/popImagesArrayIndex/:id/:index', popImagesArrayIndex(Blog))
 buildRoutes(new Blog(), router);
 
 export default router;
