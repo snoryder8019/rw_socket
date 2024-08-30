@@ -1,8 +1,11 @@
 <div id="sendMarquee">
     <h1>Send a Marquee</h1>
     <select name="marqueeMessage" id="marqueeMessage">
-      <option value="hi from the marquee">Hi from the marquee</option>
-      <option value="new video just dropped">New video just dropped</option>
+<%if(typeof marquee == 'object'){%>
+  <% marquee.forEach(msg =>{%>
+    <option name="id" value="<%=msg.title%> ~~ <%=msg.description%> ~~ <%=msg.linkUrl%>"><%= msg.title%></option>
+    <%})%>
+  <%}%>
     </select>
     <button class="marqueeButton">Send Marquee</button>
   </div>

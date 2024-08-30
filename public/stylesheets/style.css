@@ -242,6 +242,13 @@
   background-color: #f1f1f1;
 }
 
+form {
+  color: #711881;
+}
+form h1 {
+  color: #711881;
+}
+
 .carrot {
   float: right;
   transition: transform 0.3s;
