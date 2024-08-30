@@ -1,20 +1,17 @@
-const ModelHelper = require('../../helpers/models');
-const { upload, processImages } = require('../../../multer/subscriptionSetup');
-const { uploadToLinode } = require('../../../aws_sdk/setup');
-const modelName = 'item';
+import ModelHelper from '../../helpers/models.js';
 
-class Item extends ModelHelper {
+export default class Item extends ModelHelper {
   constructor(itemData) {
-    super(`${modelName}s`);
+    super('items');
     this.modelFields = {
-      name: { type: 'text', value: null },                  // Name of the item
-      description: { type: 'textarea', value: null },       // Description of the item
-      imageUrl: { type: 'text', value: null },              // URL of the item's image
-      priceInGems: { type: 'number', value: null },         // Price of the item in gems
-      category: { type: 'text', value: null },              // Category of the item
-      available: { type: 'boolean', value: true },          // Availability status
-      creationDate: { type: 'date', value: new Date() },    // Date the item was created
-      lastUpdated: { type: 'date', value: null },           // Date the item was last updated
+      name: { type: 'text', value: null },
+      description: { type: 'textarea', value: null },
+      price: { type: 'number', value: 0 },
+      stock: { type: 'number', value: 0 },
+      category: { type: 'text', value: null },
+      images: { type: 'array', value: [] }, // Array of image URLs
+      createdAt: { type: 'date', value: new Date() },
+      updatedAt: { type: 'date', value: new Date() }
     };
 
     if (itemData) {
@@ -27,44 +24,68 @@ class Item extends ModelHelper {
   }
 
   static getModelFields() {
-    return Object.keys(new Item().modelFields).map(key => {
+    return Object.keys(new Item().modelFields).map((key) => {
       const field = new Item().modelFields[key];
       return { name: key, type: field.type };
     });
   }
 
   middlewareForCreateRoute() {
-    return [upload.fields(this.fileFields), processImages, this.uploadImagesToLinode.bind(this)];
-  }
-
-  middlewareForEditRoute() {
-    return [upload.fields(this.fileFields), processImages, this.uploadImagesToLinode.bind(this)];
-  }
-
-  get fileFields() {
     return [
-      { name: 'imageUrl', maxCount: 1 }
+      this.validateItem.bind(this),
+      this.checkStockAvailability.bind(this),
     ];
   }
 
-  async uploadImagesToLinode(req, res, next) {
+  middlewareForEditRoute() {
+    return [
+      this.validateItem.bind(this),
+    ];
+  }
+
+  async validateItem(req, res, next) {
     try {
-      if (req.files && req.files.imageUrl) {
-        const file = req.files.imageUrl[0];
-        const fileKey = `${modelName}s/${Date.now()}-${file.originalname}`;
-        const url = await uploadToLinode(file.path, fileKey);
-        req.body.imageUrl = url; // Save the URL in the request body
+      const { name, price, stock } = req.body;
+      if (!name || price < 0 || stock < 0) {
+        throw new Error('Invalid item data: Name, positive price, and stock are required.');
       }
       next();
     } catch (error) {
-      console.error("Error in uploadImagesToLinode middleware:", error);
-      next(error);
+      console.error('Error in validateItem middleware:', error);
+      res.status(400).json({ error: error.message });
+    }
+  }
+
+  async checkStockAvailability(req, res, next) {
+    try {
+      const { stock } = req.body;
+      if (stock < 0) {
+        throw new Error('Invalid stock value: Stock cannot be negative.');
+      }
+      next();
+    } catch (error) {
+      console.error('Error in checkStockAvailability middleware:', error);
+      res.status(400).json({ error: error.message });
     }
   }
 
   pathForGetRouteView() {
-    return `admin/${modelName}s/template`;
+    return 'admin/items/template';
+  }
+
+  async updateStock(itemId, quantity) {
+    try {
+      const item = await this.getById(itemId);
+      if (!item) {
+        throw new Error('Item not found.');
+      }
+
+      item.stock = Math.max(0, item.stock - quantity);
+      item.updatedAt = new Date();
+      await this.update(itemId, item);
+    } catch (error) {
+      console.error('Error in updateStock method:', error);
+      throw error;
+    }
   }
 }
-
-module.exports = Item;

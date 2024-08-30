@@ -1,16 +1,16 @@
-const ModelHelper = require('../helpers/models');
+import ModelHelper from '../../helpers/models.js';
 
-class Vote extends ModelHelper {
+export default class Vote extends ModelHelper {
   constructor(voteData) {
     super('votes');
     this.modelFields = {
-      userId: { type: 'text', value: null },             // ID of the user who cast the vote
-      contentId: { type: 'text', value: null },          // ID of the content being voted on (e.g., blog post)
-      contentType: { type: 'text', value: 'blog' },      // Type of content (e.g., blog, comment, etc.)
-      voteType: { type: 'text', value: 'upvote' },       // Type of vote ('upvote', 'downvote', etc.)
-      voteDate: { type: 'date', value: new Date() },     // Date when the vote was cast
-      ipAddress: { type: 'text', value: null },          // IP address of the user for tracking (optional)
-      userAgent: { type: 'text', value: null },          // User agent string for tracking (optional)
+
+      question: { type: 'text', value: null },
+      options: { type: 'array', value: [] },
+      voteType: { type: 'text', value: null },
+      records: { type: 'array', value: [] },//users id#
+      createdAt: { type: 'date', value: new Date() },
+      updatedAt: { type: 'date', value: new Date() }
     };
 
     if (voteData) {
@@ -23,30 +23,57 @@ class Vote extends ModelHelper {
   }
 
   static getModelFields() {
-    return Object.keys(new Vote().modelFields).map(key => {
+    return Object.keys(new Vote().modelFields).map((key) => {
       const field = new Vote().modelFields[key];
       return { name: key, type: field.type };
     });
   }
 
-  async countVotes(contentId, contentType = 'blog') {
-    const db = getDb();
-    const collection = db.collection(this.collectionName);
-    const upvotes = await collection.countDocuments({ contentId, contentType, voteType: 'upvote' });
-    const downvotes = await collection.countDocuments({ contentId, contentType, voteType: 'downvote' });
-    return { upvotes, downvotes };
+  middlewareForCreateRoute() {
+    return [
+      this.validateVote.bind(this),
+      this.checkIfAlreadyVoted.bind(this),
+    ];
   }
 
-  async userHasVoted(userId, contentId, contentType = 'blog') {
-    const db = getDb();
-    const collection = db.collection(this.collectionName);
-    const vote = await collection.findOne({ userId, contentId, contentType });
-    return vote !== null;
+  middlewareForEditRoute() {
+    return [
+      this.validateVote.bind(this),
+    ];
+  }
+
+  async validateVote(req, res, next) {
+    try {
+      const { voterId, blogId, voteType } = req.body;
+      if (!voterId || !blogId || !['upvote', 'downvote'].includes(voteType)) {
+        throw new Error('Invalid vote data');
+      }
+      next();
+    } catch (error) {
+      console.error('Error in validateVote middleware:', error);
+      res.status(400).json({ error: error.message });
+    }
+  }
+
+  async checkIfAlreadyVoted(req, res, next) {
+    try {
+      const { voterId, blogId } = req.body;
+      const existingVote = await this.findOne({ voterId, blogId });
+      if (existingVote) {
+        throw new Error('User has already voted on this blog');
+      }
+      next();
+    } catch (error) {
+      console.error('Error in checkIfAlreadyVoted middleware:', error);
+      res.status(400).json({ error: error.message });
+    }
   }
 
   pathForGetRouteView() {
     return 'admin/votes/template';
   }
+  
+  async updateVoteCount(blogId, voteType) {
+    // Logic to update the vote count for a blog
+  }
 }
-
-module.exports = Vote;

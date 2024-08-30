@@ -1,18 +1,17 @@
-const ModelHelper = require('../../helpers/models');
-const modelName = 'transaction';
+import ModelHelper from '../../helpers/models.js';
 
-class Transaction extends ModelHelper {
+export default class Transaction extends ModelHelper {
   constructor(transactionData) {
-    super(`${modelName}s`);
+    super('transactions');
     this.modelFields = {
-      userId: { type: 'text', value: null },               // ID of the user making the transaction
-      itemId: { type: 'text', value: null },               // ID of the item being purchased
-      itemName: { type: 'text', value: null },             // Name of the item
-      priceInGems: { type: 'number', value: null },        // Amount of gems spent
-      transactionDate: { type: 'date', value: new Date() },// Date of the transaction
-      status: { type: 'text', value: 'pending' },          // Status of the transaction (e.g., pending, completed)
-      userBalanceBefore: { type: 'number', value: null },  // User's gem balance before the transaction
-      userBalanceAfter: { type: 'number', value: null },   // User's gem balance after the transaction
+      userId: { type: 'text', value: null },
+      itemIds: { type: 'array', value: [] }, // Array of item IDs involved in the transaction
+      totalAmount: { type: 'number', value: 0 },
+      status: { type: 'text', value: 'pending' }, // e.g., 'pending', 'completed', 'cancelled'
+      paymentMethod: { type: 'text', value: null },
+      transactionDate: { type: 'date', value: new Date() },
+      createdAt: { type: 'date', value: new Date() },
+      updatedAt: { type: 'date', value: new Date() }
     };
 
     if (transactionData) {
@@ -25,37 +24,75 @@ class Transaction extends ModelHelper {
   }
 
   static getModelFields() {
-    return Object.keys(new Transaction().modelFields).map(key => {
+    return Object.keys(new Transaction().modelFields).map((key) => {
       const field = new Transaction().modelFields[key];
       return { name: key, type: field.type };
     });
   }
 
-  async recordTransaction(userId, itemId, priceInGems, userBalanceBefore) {
-    const db = getDb();
-    const collection = db.collection(this.collectionName);
+  middlewareForCreateRoute() {
+    return [
+      this.validateTransaction.bind(this),
+      this.calculateTotalAmount.bind(this),
+    ];
+  }
 
-    const transactionData = {
-      userId,
-      itemId,
-      priceInGems,
-      userBalanceBefore,
-      userBalanceAfter: userBalanceBefore - priceInGems,
-      transactionDate: new Date(),
-      status: 'completed'
-    };
+  middlewareForEditRoute() {
+    return [
+      this.validateTransaction.bind(this),
+    ];
+  }
 
-    const result = await collection.insertOne(transactionData);
-    if (result.insertedId) {
-      return await collection.findOne({ _id: result.insertedId });
-    } else {
-      throw new Error('Failed to record transaction');
+  async validateTransaction(req, res, next) {
+    try {
+      const { userId, itemIds, paymentMethod } = req.body;
+      if (!userId || !Array.isArray(itemIds) || itemIds.length === 0 || !paymentMethod) {
+        throw new Error('Invalid transaction data: User ID, items, and payment method are required.');
+      }
+      next();
+    } catch (error) {
+      console.error('Error in validateTransaction middleware:', error);
+      res.status(400).json({ error: error.message });
+    }
+  }
+
+  async calculateTotalAmount(req, res, next) {
+    try {
+      const { itemIds } = req.body;
+      let totalAmount = 0;
+
+      for (let itemId of itemIds) {
+        const item = await new Item().getById(itemId);
+        if (item) {
+          totalAmount += item.price;
+        }
+      }
+
+      req.body.totalAmount = totalAmount;
+      next();
+    } catch (error) {
+      console.error('Error in calculateTotalAmount middleware:', error);
+      res.status(400).json({ error: error.message });
     }
   }
 
   pathForGetRouteView() {
-    return `admin/${modelName}s/template`;
+    return 'admin/transactions/template';
+  }
+
+  async updateTransactionStatus(transactionId, status) {
+    try {
+      const transaction = await this.getById(transactionId);
+      if (!transaction) {
+        throw new Error('Transaction not found.');
+      }
+
+      transaction.status = status;
+      transaction.updatedAt = new Date();
+      await this.update(transactionId, transaction);
+    } catch (error) {
+      console.error('Error in updateTransactionStatus method:', error);
+      throw error;
+    }
   }
 }
-
-module.exports = Transaction;

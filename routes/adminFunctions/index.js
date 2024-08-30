@@ -20,12 +20,16 @@ import travels from './travels/travels.js';
 import gems from './gems/gems.js';
 import vendors from './vendors/vendors.js';
 import videos from './videoProduction/videos.js';
+import votes from './votes/votes.js';
 import blogs from './blogs/blogs.js';
 import helps from './helps/helps.js';
 import faqs from './faqs/faqs.js';
+import events from './events/events.js';
 import footers from './footers/footers.js';
 import marquees from './marquees/marquees.js';
 import tickets from './tickets/tickets.js';
+import transactions from './transactions/transactions.js';
+import items from './items/items.js';
 
 const router = express.Router();
 const permissionsChecker = async (req, res, next) => {
@@ -59,9 +63,13 @@ const permissionsChecker = async (req, res, next) => {
 
 router.use('/marquees', permissionsChecker, marquees);
 router.use('/chat', permissionsChecker, chat);
+router.use('/transactions', permissionsChecker, transactions);
+router.use('/items', permissionsChecker, items);
+router.use('/events', permissionsChecker, events);
 router.use('/tickets', permissionsChecker, tickets);
 router.use('/footers', permissionsChecker, footers);
 
+router.use('/votes', permissionsChecker, votes);
 router.use('/users', permissionsChecker, users);
 router.use('/permissions', permissionsChecker, permissions);
 router.use('/videoLead', permissionsChecker, videoLead);

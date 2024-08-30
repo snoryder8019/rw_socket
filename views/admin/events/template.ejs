@@ -1,0 +1,19 @@
+<div class="adminWindow">
+    <div class="adminStatsRow">
+      <% documents.forEach(event => { %>
+        <div class="adminStat">
+          <p><%= event.name %></p>
+          <img alt="Event image" src="<%= event.mediumIcon %>">
+          <button class="collapsible">view: <span class="carrot">&#9654;</span></button>
+          <div class="content" data-url="/events/renderEditForm/<%= event._id %>"></div>
+       <h3>add multiple images to slides</h3>
+          <form action="/events/<%=event._id%>/upload-images" method="post" enctype="multipart/form-data">
+            <input type="file" name="images" multiple>
+            <button type="submit">Upload</button>
+        </form>
+              </div>
+      <% }) %>
+    </div>
+  </div>
+  
+  
