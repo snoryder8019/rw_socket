@@ -21,10 +21,10 @@ export default class ModelHelper {
     }
   }
 
-  async getAll() {
+  async getAll(arg) {
     const db = getDb();
     const collection = db.collection(this.collectionName);
-    const documents = await collection.find().toArray();
+    const documents = await collection.find(arg).toArray();
     return documents;
   }
 

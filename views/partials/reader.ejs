@@ -1,7 +1,7 @@
 <% if (Array.isArray(models) && models.length > 0) { %>
     <div class="readerGrid">
       <% models.forEach((model) => { %>
-        <div class="readerContainer" data-id="<%= model._id %>" data-title="<%= model.title %>" data-content="<%= model.content %>">
+        <div class="readerContainer" data-id="<%= model._id %>" data-title="<%= model.title %>" data-content="<%= model.content %>" data-model="ModelName">
           <% if (model.backgroundImg) { %>
             <div class="image-container">
               <img src="<%= model.backgroundImg %>" alt="Background Image" class="background-img">

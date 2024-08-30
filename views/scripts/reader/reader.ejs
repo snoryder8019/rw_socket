@@ -1,42 +1,79 @@
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-      // Function to open the reader overlay
       function openReader(modelData) {
         const readerOverlay = document.getElementById('readerOverlay');
         const readerInnerContent = document.getElementById('readerInnerContent');
-  
-        // Populate the reader content with model data
         readerInnerContent.innerHTML = `
           <h2>${modelData.title}</h2>
           <div>${modelData.content}</div>
-          <!-- You can dynamically append more content here based on your model structure -->
         `;
-  
-        // Show the overlay
         readerOverlay.style.display = 'block';
       }
   
-      // Function to close the reader overlay
       function closeReader() {
-        const readerOverlay = document.getElementById('readerOverlay');
-        readerOverlay.style.display = 'none';
+        document.getElementById('readerOverlay').style.display = 'none';
       }
   
-      // Attach click event to each grid container
-      const readerContainers = document.querySelectorAll('.readerContainer');
-      readerContainers.forEach(container => {
-        container.addEventListener('click', function () {
-          const modelData = {
-            id: container.getAttribute('data-id'),
-            title: container.getAttribute('data-title'),
-            content: container.getAttribute('data-content')
-          };
+      async function fetchAndOpenReader(container) {
+        const model = container.getAttribute('data-model');
+        const id = container.getAttribute('data-id');
+        try {
+          const response = await fetch(`/users/reader/readerOverlay/${model}/${id}`);
+          if (!response.ok) throw new Error('Network response was not ok');
+          const modelData = await response.json();
           openReader(modelData);
+        } catch (error) {
+          console.error('Error fetching data:', error);
+          alert('Error loading content. Please try again.');
+        }
+      }
+  
+      function handleIntersection(entries, observer) {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const container = entry.target;
+            container.addEventListener('click', function () {
+              fetchAndOpenReader(container);
+            });
+            // Unobserve after adding the event listener to avoid redundant checks
+            observer.unobserve(container);
+            console.log('Event listener added for:', container);
+          }
         });
+      }
+  
+      const observerOptions = {
+        root: null, // Observing within the viewport
+        rootMargin: '0px',
+        threshold: 0.1 // Trigger when 10% of the element is visible
+      };
+  
+      const observer = new IntersectionObserver(handleIntersection, observerOptions);
+  
+      // Function to start observing dynamically rendered elements
+      function observeReaderContainers() {
+        const readerContainers = document.querySelectorAll('.readerContainer');
+        readerContainers.forEach(container => {
+          observer.observe(container);
+        });
+      }
+  
+      observeReaderContainers();
+      document.getElementById('closeReader').addEventListener('click', closeReader);
+  
+      // Mutation Observer to observe changes in the DOM
+      const mutationObserver = new MutationObserver((mutationsList) => {
+        for (let mutation of mutationsList) {
+          if (mutation.type === 'childList') {
+            console.log('DOM mutation detected:', mutation);
+            observeReaderContainers(); // Re-observe any newly added elements
+          }
+        }
       });
   
-      // Attach click event to close button
-      document.getElementById('closeReader').addEventListener('click', closeReader);
+      // Start observing the document body for added nodes
+      mutationObserver.observe(document.body, { childList: true, subtree: true });
+      console.log('MutationObserver started observing for DOM changes.');
     });
   </script>
   
