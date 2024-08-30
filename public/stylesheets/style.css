@@ -61,7 +61,7 @@
   font-size: 1rem;
   text-align: center;
   background: linear-gradient(to right, #410b4b, #711881, #711881, #410b4b);
-  color: #d7b436;
+  color: #ffde68;
   padding: 1%;
 }
 
@@ -92,7 +92,7 @@
 #footer {
   padding: 2%;
   background-color: #711881;
-  color: #d7b436;
+  color: #ffde68;
   width: 90%;
   margin-left: 3%;
   box-shadow: inset 5px 5px 12px #1a0a1b;
@@ -126,7 +126,7 @@
   font-family: Arial, sans-serif;
   padding: 20px;
   background-color: #711881;
-  border: 1px solid #d7b436;
+  border: 1px solid #ffde68;
   border-radius: 8px;
   overflow: hidden;
   position: relative;
@@ -198,7 +198,7 @@
   bottom: 1%;
   right: 5%;
   background-color: #711881;
-  color: #d7b436;
+  color: #ffde68;
   padding: 10px;
   border-top-left-radius: 8px;
   border-bottom-right-radius: 8px;
@@ -207,7 +207,7 @@
 }
 
 .buyNowButton {
-  background-color: #d7b436;
+  background-color: #ffde68;
   color: #1a0a1b;
   padding: 5px 10px;
   border: none;
@@ -232,7 +232,7 @@
 
 .active, .collapsible:hover {
   background-color: #711881;
-  color: #d7b436;
+  color: #ffde68;
 }
 
 .content {
@@ -382,7 +382,7 @@ form h1 {
   flex-shrink: 0;
   min-height: 40px;
   min-width: 40px;
-  border-top: 5px solid #d7b436;
+  border-top: 5px solid #ffde68;
   border-block-width: 1px;
   border-radius: 50%;
   transform: rotate(0deg);
@@ -390,7 +390,7 @@ form h1 {
 }
 
 #chat-window-basic {
-  border: 3px solid #d7b436;
+  border: 3px solid #ffde68;
   box-shadow: 3px 3px 3px #711881, inset 5px 5px 5px #1a0a1b;
   margin: 2%;
   position: fixed;
@@ -428,7 +428,7 @@ form h1 {
 }
 
 #userDash {
-  border: 3px solid #d7b436;
+  border: 3px solid #ffde68;
   box-shadow: 3px 3px 3px #711881, inset 5px 5px 5px #1a0a1b;
   margin: 2%;
   position: fixed;
@@ -534,8 +534,8 @@ form h1 {
   background: linear-gradient(to right, purple, rgb(154, 1, 154));
   box-shadow: inset 2px 2px 2px #1a0a1b;
   padding: 1%;
-  border-top: 1px solid #d7b436;
-  border-bottom: 1px solid #d7b436;
+  border-top: 1px solid #ffde68;
+  border-bottom: 1px solid #ffde68;
 }
 
 .wallet {
@@ -555,7 +555,7 @@ form h1 {
 
 .user {
   min-width: 100px;
-  border: 1px solid #d7b436;
+  border: 1px solid #ffde68;
   overflow: hidden;
   margin: 1px;
   padding: 1;
@@ -563,7 +563,7 @@ form h1 {
 
 .userNavLink {
   filter: invert(1);
-  color: #d7b436;
+  color: #ffde68;
   justify-content: space-around;
   align-items: center;
   align-self: center;
@@ -950,6 +950,10 @@ form h1 {
   margin: 3% 1%;
   box-shadow: 0px 0px 3px rgba(255, 217, 0, 0.372);
 }
+.slide_view h1, .slide_view a {
+  text-shadow: 5px 5px 8px black;
+  color: white;
+}
 
 @media (max-width: 768px) {
   .slide_view {
@@ -1016,18 +1020,18 @@ form h1 {
   }
 }
 .slide_view h1 {
-  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.85);
-  font-size: 2rem;
-  font-weight: 900;
-  color: #d7b436;
-  font-family: "aquarelle";
+  text-shadow: 4px 4px 12px rgba(0, 0, 0, 0.85); /* Stronger shadow */
+  font-size: 2.5rem; /* Slightly larger size for more impact */
+  font-weight: 900; /* Extra bold for maximum emphasis */
+  color: #ffde68; /* Bold color */
+  font-family: "satisfy"; /* Distinctive typeface */
 }
 
 .linkTable_alt a {
-  color: #d7b436;
+  color: #ffde68;
   font-size: 1.2rem;
-  background-color: black;
-  box-shadow: inset 2px 2px 3px rgba(255, 217, 0, 0.454);
+  font-weight: 900;
+  text-shadow: #1a0a1b;
   padding: 2% 8%;
 }
 
@@ -1064,7 +1068,7 @@ form h1 {
 }
 
 #notifications {
-  border: 1px solid #d7b436;
+  border: 1px solid #ffde68;
 }
 
 #regWindow, #loginWindow, #resetEmailInput, #emailLoginForm {
@@ -1243,7 +1247,7 @@ form h1 {
 }
 
 .tab_section {
-  color: #d7b436;
+  color: #ffde68;
   background-color: #410b4b;
   flex: 1; /* Ensures tabs are equally spaced */
   border: 1px solid #ccc; /* Border around each tab */
@@ -1268,7 +1272,7 @@ form h1 {
 }
 
 .tab_section.join {
-  color: #d7b436;
+  color: #ffde68;
   background-color: #8a3898;
 }
 
@@ -1277,7 +1281,7 @@ form h1 {
   border-bottom-left-radius: 0;
   border-top-right-radius: 8px;
   border-top-left-radius: 8px;
-  background-color: #d7b436; /* Active tab background color */
+  background-color: #ffde68; /* Active tab background color */
   color: #711881; /* Active tab text color */
   border-bottom: 2px solid #410b4b; /* Match the bottom border with background color */
 }
@@ -1289,7 +1293,7 @@ form h1 {
 
 .statContainer {
   margin: 3%;
-  border: 1px dotted #d7b436;
+  border: 1px dotted #ffde68;
   border-radius: 50px;
   box-shadow: 2px 2px 2px #711881;
 }
@@ -1361,7 +1365,7 @@ form h1 {
 
 .shopifyStorefront li p {
   margin: 0;
-  color: #d7b436;
+  color: #ffde68;
 }
 
 .shopifyStorefront li img {
@@ -1485,9 +1489,14 @@ button good {
 .noStyle {
   border-radius: 5px;
 }
+.noStyle h1 {
+  text-shadow: 8px 5px 8px #000000;
+  font-family: "minonPro";
+  color: white;
+}
 
 .client_window, .noStyle {
-  border: 4px solid #d7b436;
+  border: 4px solid #ffde68;
   background-color: rgba(113, 73, 111, 0.666);
   box-shadow: inset 2px 2px 2px rgba(128, 128, 128, 0.878);
   color: white;
@@ -1563,7 +1572,7 @@ button good {
   width: 100vw;
 }
 .lightbox_content p {
-  color: #d7b436;
+  color: #ffde68;
 }
 .lightbox_content canvas {
   position: absolute;
@@ -1590,8 +1599,7 @@ button good {
 
 /* SCSS styling */
 .readerGrid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  display: flex;
   gap: 20px;
   padding: 20px;
   overflow-y: scroll;
@@ -1658,10 +1666,7 @@ button good {
 }
 
 .ghostButton {
-  background-color: green;
-}
-
-.ghostDiv {
+  border-radius: 20px;
   background-color: green;
 }
 

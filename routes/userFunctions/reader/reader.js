@@ -30,19 +30,20 @@ router.get('/grid/:model', async (req, res) => {
     console.log(`Model: ${modelParam}, Data: ${Object.values(models[0])[1]}`);
 
     // Render the partial with the data
-    res.render('partials/reader', { models, modelName: modelParam });
+    res.render('partials/reader', { models, modelName: modelParam ,modelClass:modelParam});
 
   } catch (error) {
     console.error('Error fetching data:', error);
     res.status(500).send({ error: 'Internal Server Error' });
   }
 });
-router.get('/users/reader/readerOverlay/:model/:id', async (req, res) => {
+router.get('/overlay/:model/:id', async (req, res) => {
   try {
     const { model, id } = req.params;
+    const modelParam = model.toLowerCase(); // Normalize to lowercase
 
-    // Check if the requested model exists
-    const Model = models[model];
+    // Check if the requested model exists in readerOptions
+    const Model = readerOptions[modelParam];
     if (!Model) {
       return res.status(400).json({ message: 'Invalid model type' });
     }
@@ -51,22 +52,19 @@ router.get('/users/reader/readerOverlay/:model/:id', async (req, res) => {
     const record = await new Model().getById(id); // Adjust method based on your ORM/ODM
 
     if (record) {
-      // Prepare the data you want to send back
-      const responseData = {
-        id: record._id, // Replace with actual fields from your model
-        title: record.title, // Replace with actual fields from your model
-        content: record.content // Replace with actual fields from your model
-      };
-
-      // Send the data as JSON
-      res.json(responseData);
+      // Render the EJS template to a string
+      res.render('partials/readerPopup', { record })
+       
     } else {
       // Send a 404 response if data is not found
-      res.status(404).json({ message: 'Data not found' });
+      res.status(404).send('<p>Data not found</p>'); // Send a simple HTML response for not found
     }
   } catch (error) {
     // Handle errors, such as invalid ID format or database errors
-    res.status(500).json({ message: 'Internal server error', error: error.message });
+    console.error('Error fetching data:', error);
+    res.status(500).send('<p>Internal server error</p>'); // Send a simple HTML response for server error
   }
 });
+
+
 export default router;

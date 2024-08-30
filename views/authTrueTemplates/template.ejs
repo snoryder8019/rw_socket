@@ -7,7 +7,7 @@
   <% let iterationCount = 0; %> <!-- Initialize a counter outside the loop -->
 
   <% sectionSettings.forEach(function(setting) { %>
-    <% if (setting.visible && setting.authView && !setting.draft) { %>
+    <% if (setting.visible && setting.authView) { %>
       <div class="<%=setting.style%>" style="background-image: url('<%= setting.backgroundImg %>');" data-order="<%= setting.order %>">
         <div class="collectionId" hidden collection-id="<%=setting._id%>"></div>
         <div class="modelInfo" hidden model-info="<%=setting.mane%>"></div>
@@ -54,53 +54,7 @@
 <!---ADMINVIEW-->
 <!---ADMINVIEW-->
 <!---ADMINVIEW-->
-<%if(typeof user =='object'&&user.isAdmin){%>
-  <h1 style="color:red">ADMIN VIEW: DRAFTS</h1>
 
-
-  <% sectionSettings.forEach(function(setting) { %>
-    <% if (setting.draft) { %>
-      <div class="<%=setting.style%>" style="background-image: url('<%= setting.backgroundImg %>');" data-order="<%= setting.order %>">
-        <div class="collectionId" hidden collection-id="<%=setting._id%>"></div>
-        <div class="modelInfo" hidden model-info="<%=setting.mane%>"></div>
-        <div class="<%=setting.innerStyle%>">
-          <% if (setting.title) { %>
-            <h1><%= setting.title %></h1>
-          <% } %>
-
-          <% if (setting.subtitle) { %>
-            <h1><%= setting.subtitle %></h1>
-          <% } %>
-
-          <% if (setting.description) { %>
-            <p><%= setting.description %></p>
-          <% } %>
-
-          <% if (Array.isArray(setting.links) && setting.links[0] !== "") { %>
-            <div class="<%=setting.linkStyle%>"><br>
-              <% setting.links.forEach(function(link) { %>
-                <a href="<%= link %>" target="_blank" rel="noopener noreferrer"><%= link %></a>
-                <br>
-              <% }); %>
-            </div>
-          <% } %>
-          <br>
-          <% if (setting.entryText !== "" && setting.entryText !== "") { %>
-            <button style="background-image: url('<%= setting.entryBackground %>');" class="<%=setting.buttonStyle%>"><%= setting.entryText %><span class="carrot">||</span></button>
-            <div class="<%=setting.buttonDivStyle%>" data-url="<%= setting.entryUrl %>"></div>
-          <% } %>
-        </div>
-      </div>
-      
-    <% } %>
-  <% }); %>
-
-
-
-
-
-  
-  <%}%>
 <!---ADMINVIEW-->
 <!---ADMINVIEW-->
 <!---ADMINVIEW-->

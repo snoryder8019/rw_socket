@@ -1,4 +1,4 @@
-$gold : #d7b436;
+$gold : #ffde68;
 $goldDim : #695f38;
 $white:white;
 $black:#1a0a1b;
@@ -975,8 +975,11 @@ font-weight: 800;
   padding: 2%;
   margin: 3% 1%;
   box-shadow: 0px 0px 3px rgba(255, 217, 0, 0.372);
- // width: 100%; /* Adjust width for different screen sizes */
-
+  // width: 100%; /* Adjust width for different screen sizes */
+  h1, a{
+    text-shadow: 5px 5px 8px black;
+color: white;
+  }
 }
 
 @media (max-width: 768px) {
@@ -1050,11 +1053,12 @@ font-weight: 800;
 }
 
 .slide_view h1 {
-  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.85);
-   font-size: 2rem;
-   font-weight: 900;
-    color:$gold;
-    font-family: $aqua;
+  text-shadow: 4px 4px 12px rgba(0, 0, 0, 0.85); /* Stronger shadow */
+  font-size: 2.5rem; /* Slightly larger size for more impact */
+  font-weight: 900; /* Extra bold for maximum emphasis */
+  color: $gold; /* Bold color */
+  font-family: $sati; /* Distinctive typeface */
+  
   
 }
 
@@ -1063,8 +1067,8 @@ font-weight: 800;
     a{
     color:$gold;
     font-size: 1.2rem;
-    background-color: black;
-    box-shadow: inset 2px 2px 3px rgba(255, 217, 0, 0.454);
+    font-weight: 900;
+text-shadow: #1a0a1b;
     padding: 2% 8%;
     }
   }
@@ -1493,6 +1497,14 @@ max-width: 75px;
         color: white;
       }
       .noStyle{
+        h1{
+          text-shadow:8px 5px 8px #000000;
+          font-family: $mini;
+        color:$white;
+
+      
+      }
+
         border-radius: 5px;
       }
       .client_window, .noStyle{
@@ -1600,8 +1612,8 @@ left:2%;
 /* SCSS styling */
 
 .readerGrid {
-  display: grid;
-  grid-template-columns: 1fr 1fr; // Two columns
+  display: flex;
+ // grid-template-columns: 1fr 1fr; // Two columns
   gap: 20px;
   padding: 20px;
   overflow-y: scroll;
@@ -1668,8 +1680,9 @@ left:2%;
 }
 
 .ghostButton{
+  border-radius: 20px;
 background-color: green;
 }
 .ghostDiv{
-  background-color: green;
+
 }
