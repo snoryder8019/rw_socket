@@ -36,26 +36,12 @@
         <h2>Travel Tips for:    
            <%=record.title%>
           <%if(!record.title){%>
-            <%=record.name%>
+            <h1><%=record.name%>
            <%}%>  
            </h2>
         <ul>
       <%record.travelTips.forEach((travelTip)=>{%>
         <li><%=travelTip%></li>
-        <%})%>
-      </ul>
-        <%}%>
-
-      <%if(record.vendors.length>0){%>
-        <h2>Our Partners:    
-           <%=record.title%>
-          <%if(!record.title){%>
-            <%=record.name%>
-           <%}%>  
-           </h2>
-        <ul>
-      <%record.vendors.forEach((vendor)=>{%>
-        <li><%=vendor.name%></li>
         <%})%>
       </ul>
         <%}%>
