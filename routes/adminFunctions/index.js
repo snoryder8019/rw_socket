@@ -30,6 +30,7 @@ import marquees from './marquees/marquees.js';
 import tickets from './tickets/tickets.js';
 import transactions from './transactions/transactions.js';
 import items from './items/items.js';
+import calendars from './calendars/calendars.js';
 
 const router = express.Router();
 const permissionsChecker = async (req, res, next) => {
@@ -63,6 +64,7 @@ const permissionsChecker = async (req, res, next) => {
 
 router.use('/marquees', permissionsChecker, marquees);
 router.use('/chat', permissionsChecker, chat);
+router.use('/calendars', permissionsChecker, calendars);
 router.use('/transactions', permissionsChecker, transactions);
 router.use('/items', permissionsChecker, items);
 router.use('/events', permissionsChecker, events);

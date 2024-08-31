@@ -1013,11 +1013,6 @@ form h1 {
   color: white;
 }
 
-@media (min-width: 768px) {
-  .slideShowInner {
-    max-width: 52%;
-  }
-}
 .slide_view h1 {
   text-shadow: 4px 4px 12px rgba(0, 0, 0, 0.85); /* Stronger shadow */
   font-size: 2.5rem; /* Slightly larger size for more impact */
@@ -1680,6 +1675,11 @@ button good {
 .readerpopupDiv p {
   font-size: 1rem;
 }
+@media (min-width: 768px) {
+  .readerpopupDiv p {
+    font-size: 1.2rem;
+  }
+}
 
 .readerpopupDiv {
   display: block;
@@ -1698,6 +1698,13 @@ button good {
 .readerpopupDiv h1 {
   color: black;
 }
+@media (min-width: 768px) {
+  .readerpopupDiv {
+    width: 51%;
+    margin: 1%;
+    padding: 1%;
+  }
+}
 
 .readerpopupSection {
   display: flex; /* Enables Flexbox layout */
@@ -1711,8 +1718,30 @@ button good {
   box-sizing: border-box; /* Include padding in the height calculation */
   max-width: 100%; /* Ensure the section does not exceed the screen width */
 }
+.readerpopupSection h2 {
+  color: black;
+}
 .readerpopupSection h1 {
   font-family: "mayphylla";
+}
+.readerpopupSection li {
+  color: black;
+  text-align: left;
+  font-size: 1.2rem;
+}
+
+.readerHeader {
+  background-repeat: no-repeat;
+  background-size: cover;
+  min-width: 100%;
+  min-height: 35%;
+}
+@media (min-width: 768px) {
+  .readerHeader h1 {
+    color: White;
+    font-size: 3rem;
+    text-align: center;
+  }
 }
 
 .readerCloseButton {
@@ -1726,6 +1755,7 @@ button good {
 
 .readerHorizBkgrd {
   width: 100%;
+  filter: brightness(0.6);
 }
 
 .readerImagesArray img {

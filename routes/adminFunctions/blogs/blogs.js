@@ -35,23 +35,61 @@ router.get('/renderEditForm/:id', async (req, res) => {
     if (!blog) {
       return res.status(404).send({ error: 'Blog not found' });
     }
-    const model = Blog.getModelFields();
-    const formFields = generateFormFields(model, blog);
 
-    res.render('forms/generalEditBlogForm', {
-      title: 'Edit Blog',
-      action: `/blogs/update/${id}`,
-      routeSub: 'blogs',
+    const model = Blog.getModelFields(); // This should return an object that defines field types
+    const formFields = generateFormFields(model, blog); // Generate form fields as an array
+
+    // Iterate over form fields to ensure proper handling for arrays, objects, booleans
+    const enhancedFormFields = formFields.map(field => {
+      if (Array.isArray(field.value)) {
+        // Handle array fields
+        return {
+          ...field,
+          type: 'array',
+          value: field.value, // Array of values to be iterated in the form
+        };
+      } else if (typeof field.value === 'object' && field.value !== null) {
+        // Handle object fields
+        return {
+          ...field,
+          type: 'object',
+          value: Object.entries(field.value).map(([key, val]) => ({
+            key,
+            val,
+          })),
+        };
+      } else if (typeof field.value === 'boolean') {
+        // Handle boolean fields
+        return {
+          ...field,
+          type: 'boolean',
+          value: field.value,
+        };
+      }
+      // Handle other types (string, number, etc.)
+      return field;
+    });
+
+    res.render('forms/generalEditForm', {
+      title: `Edit Blog`,
+      action: `blogs/update/${id}`,
+      routeSub: `blogs`,
       method: 'post',
-      formFields: formFields,
+      formFields: enhancedFormFields, // Use enhanced form fields
       data: blog,
-      wysiwyg: true, // Indicate to initialize WYSIWYG editor
+      script:`<script>
+          document.addEventListener('DOMContentLoaded', function () {
+            // Your dynamic JS code here
+            console.log('Page-specific JS loaded for Edit Form');
+          });
+        </script>`
     });
   } catch (error) {
     console.error(error);
     res.status(500).send({ error: error.message });
   }
 });
+
 
 // Other routes...
 router.post('/:id/upload-images',uploadMultiple, imagesArray(Blog));

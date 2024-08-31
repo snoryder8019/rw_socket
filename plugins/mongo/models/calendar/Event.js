@@ -9,6 +9,7 @@ export default class Event extends ModelHelper {
       location: { type: 'text', value: null },
       startDate: { type: 'date', value: null },
       endDate: { type: 'date', value: null },
+      draft: { type: 'boolean', value: false },
       attendees: { type: 'array', value: [] }, // Array of user IDs
       maxAttendees: { type: 'number', value: null },
       status: { type: 'text', value: 'upcoming' }, // e.g., 'upcoming', 'ongoing', 'completed'
@@ -48,6 +49,7 @@ export default class Event extends ModelHelper {
   async validateEvent(req, res, next) {
     try {
       const { title, startDate, endDate, location } = req.body;
+      console.log(`${title}`)
       if (!title || !startDate || !endDate || !location) {
         throw new Error('Invalid event data: Title, start date, end date, and location are required.');
       }
@@ -56,7 +58,7 @@ export default class Event extends ModelHelper {
       }
       next();
     } catch (error) {
-      console.error('Error in validateEvent middleware:', error);
+      console.error('Error in validateEvent middleware:', error, req.body);
       res.status(400).json({ error: error.message });
     }
   }

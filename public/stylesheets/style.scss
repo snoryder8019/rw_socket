@@ -1046,9 +1046,9 @@ color: white;
   }
 }
 
-@media (min-width: 768px) {
-  .slideShowInner {
-    max-width: 52%;
+.slideShowInner {
+    @media (min-width: 768px) {
+   // max-width: 52%;
   }
 }
 
@@ -1696,6 +1696,10 @@ background-color: green;
 }
 .readerpopupDiv p {
   font-size: 1rem;
+  @media (min-width:768px) {
+    font-size: 1.2rem;
+    
+  }
 }
 .readerpopupDiv{
   display: block;
@@ -1711,8 +1715,14 @@ top: 0;
 left:0;
 z-index: 200;
 h1{color:black}
+@media (min-width:768px) {
+  width: 51%;
+  margin: 1%;
+  padding: 1%;;
+}
 }
 .readerpopupSection {
+  h2{color: black;}
 display: flex; /* Enables Flexbox layout */
 flex-direction: column; /* Align children vertically */
 align-items: center; /* Centers content horizontally */
@@ -1726,10 +1736,30 @@ max-width: 100%; /* Ensure the section does not exceed the screen width */
 h1{
   font-family: $maph;
 }
+li{color:black;text-align: left;font-size: 1.2rem;}
+}
+.readerHeader{
+  background-repeat: no-repeat;
+background-size: cover;
+  min-width: 100%;
+  min-height: 35%;
+  @media (min-width:768px) {
+    h1{
+ 
+  color: White;
+  font-size: 3rem;
+  text-align: center;
+  }
+
+  }
+  
 }
 .readerCloseButton{background-color: pink; color: black;}
 .readerMediumIcon{width:30%}
-.readerHorizBkgrd{width:100%}
+.readerHorizBkgrd{
+  width:100%;
+  filter:brightness(.6);
+}
 .readerImagesArray img{width: 40%;}
 .readerImagesArray {
   display: flex; /* Enables Flexbox for children alignment */

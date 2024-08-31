@@ -17,7 +17,7 @@ export default class Destination extends ModelHelper {
       bestTimeToVisit: { type: 'text', value: null }, // Best time of the year to visit
       activities: { type: 'array', value: [] }, // Popular activities at the destination
       averageCost: { type: 'number', value: null }, // Average cost for visiting
-      travelTips: { type: 'textarea', value: null }, // Travel tips and recommendations
+      travelTips: { type: 'array', value: [] }, // Travel tips and recommendations
       status: { type: 'text', value: null }, // e.g., 'Active', 'Inactive'
       mediumIcon: { type: 'file', value: null }, // Custom image field for medium-sized icons
       backgroundImg: { type: 'file', value: null }, // Background image for the destination
