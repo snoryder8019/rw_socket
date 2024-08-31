@@ -1,21 +1,51 @@
 <style>
-  .readerpopupDiv{
-    width: 100%;
-    height: 100%;
-    overflow-y: scroll;
-background-color:white;
-position:fixed;
-top: 0;
-left:0;
-z-index: 200;
-h1{color:black}
-  }
-  .readerpopupSection{
-
-  }
+ 
 </style>
 <div class="readerpopupDiv">
-<h1>pop up div</h1>
+<%if (typeof record =='object'&& record){%>
+  <div  class="readerpopupSection">
+    <div>
+ 
+      <img class="readerHorizBkgrd" src="<%=record.horizBkgd%>" alt="">
+     
+      <div>
+
+<%if(!record.title){%>
+  <h1><%=record.name%></h1>
+<%}%>
+        <h1><%=record.title%></h1>
+        
+      </div>
+      <img class="readerMediumIcon" src="<%=record.mediumIcon%>" alt="">
+ <h1><%=record.subTitle%></h1>
+
+ <p><%=record.description%></p>
+
+
+ <h1><%=record.location%></h1>
+ <h1><%=record.country%></h1>
+
+ <p><%=record.content%></p>
+ <div class="readerImagesArray">
+  <%if(record.imagesArray){%>
+    <%record.imagesArray.forEach((rec)=>{%>
+      <img src="<%=rec%>" alt="">
+    <%})%>
+    <%}%>
+ </div>
+ <%if(record.links){%>
+ <%record.links.forEach((link)=>{%>
+  <a href="<%=link%>"><%=link%></a>
+  <%})%>
+  <%}%>
+
+</div>
+</div>
+<%}%>
 <button onclick="readerClose()" class="readerCloseButton">close this reader</button>
+
+
+
+
 </div>
 

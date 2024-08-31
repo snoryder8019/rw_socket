@@ -943,7 +943,7 @@ form h1 {
 /* Styling for the slideshow container */
 .slide_view {
   position: relative;
-  height: 400px;
+  height: 450px;
   overflow: hidden;
   border-radius: 50px;
   padding: 2%;
@@ -1007,7 +1007,6 @@ form h1 {
   padding: 12%;
   border-radius: 8px;
   width: 100%;
-  max-width: 90%;
   transition: opacity 1s ease; /* Fade effect for text */
 }
 .slideShowInner p {
@@ -1609,6 +1608,13 @@ button good {
   width: 100%;
 }
 
+.readerBkgImg {
+  min-height: 125px;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
 .readerContainer {
   color: #711881;
   border: 1px solid #ddd;
@@ -1619,6 +1625,7 @@ button good {
   cursor: pointer;
   transition: transform 0.3s;
   min-width: 225px;
+  min-height: 70%;
 }
 .readerContainer:hover {
   transform: translateY(-5px);
@@ -1668,6 +1675,73 @@ button good {
 .ghostButton {
   border-radius: 20px;
   background-color: green;
+}
+
+.readerpopupDiv p {
+  font-size: 1rem;
+}
+
+.readerpopupDiv {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow-y: scroll;
+  background-color: rgba(255, 255, 255, 0.86);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 200;
+}
+.readerpopupDiv h1 {
+  color: black;
+}
+
+.readerpopupSection {
+  display: flex; /* Enables Flexbox layout */
+  flex-direction: column; /* Align children vertically */
+  align-items: center; /* Centers content horizontally */
+  background-color: rgba(255, 255, 255, 0.788);
+  padding: 30px;
+  margin: 2%;
+  height: 80vh; /* Adjust height to limit the container height */
+  overflow-y: auto; /* Enables vertical scrolling if content exceeds the container height */
+  box-sizing: border-box; /* Include padding in the height calculation */
+  max-width: 100%; /* Ensure the section does not exceed the screen width */
+}
+.readerpopupSection h1 {
+  font-family: "mayphylla";
+}
+
+.readerCloseButton {
+  background-color: pink;
+  color: black;
+}
+
+.readerMediumIcon {
+  width: 30%;
+}
+
+.readerHorizBkgrd {
+  width: 100%;
+}
+
+.readerImagesArray img {
+  width: 40%;
+}
+
+.readerImagesArray {
+  display: flex; /* Enables Flexbox for children alignment */
+  flex-wrap: nowrap; /* Prevents images from wrapping to the next line */
+  width: 100%; /* Full width of the container */
+  overflow-x: auto; /* Enables horizontal scrolling */
+  overflow-y: hidden; /* Hides vertical scrolling */
+  scroll-behavior: smooth; /* Smooth scrolling for better UX */
+  gap: 10px; /* Optional: adds spacing between images */
+  padding: 10px; /* Optional: padding around the container */
+  align-items: center; /* Centers images vertically within the container */
 }
 
 /*# sourceMappingURL=style.css.map */

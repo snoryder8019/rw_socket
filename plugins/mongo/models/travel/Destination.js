@@ -22,6 +22,7 @@ export default class Destination extends ModelHelper {
       mediumIcon: { type: 'file', value: null }, // Custom image field for medium-sized icons
       backgroundImg: { type: 'file', value: null }, // Background image for the destination
       horizBkgd: { type: 'file', value: null }, // Horizontal background image
+      links: { type: 'array', value: [] }, // Horizontal background image
       featureImg: { type: 'file', value: null }, // Horizontal background image
     };
 
