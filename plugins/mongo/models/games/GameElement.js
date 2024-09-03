@@ -9,7 +9,7 @@ export default class GameElement extends ModelHelper {
       elementName: { type: 'string', value: '' }, // Name of the game element
       elementImage: { type: 'file', value: null }, // File property for the element image (e.g., PNG, JPG, GIF)
       spriteId: { type: 'string', value: '' }, // ID of the associated sprite
-      coords: { type: 'object', value: { x: 0, y: 0 } }, // Coordinates for the element on the game board
+      //coords: { type: 'object', value: { x: 0, y: 0 } }, // Coordinates for the element on the game board
       elementValues: { type: 'string', value: null }, // Coordinates for the element on the game board
       elementFunction: { type: 'string', value: null }, // Coordinates for the element on the game board
       elementReacts: { type: 'string', value: null }, // Coordinates for the element on the game board
