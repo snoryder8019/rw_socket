@@ -2,10 +2,18 @@ import express from 'express';
 import Launcher from '../../../plugins/mongo/models/games/Launcher.js';
 import generateFormFields from '../../../plugins/helpers/formHelper.js';
 import { buildRoutes } from '../../helpers/routeBuilder.js';
+import Game from '../../../plugins/mongo/models/games/Game.js';
 
 const router = express.Router();
 const modelName = 'launcher';
 
+router.get('/getLauncher',async (req,res)=>{
+  try{
+    const data = await new Game().getAll()
+    res.render('layouts/games/launcher',{data:data})
+  }
+  catch(error){console.error(error)}
+})
 // Route to render the form to add a new launcher
 router.get('/renderAddForm', (req, res) => {
   try {

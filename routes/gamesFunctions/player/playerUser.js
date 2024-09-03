@@ -1,15 +1,15 @@
 import express from 'express';
-import Game from '../../../plugins/mongo/models/Game.js';
+import PlayerUser from '../../../plugins/mongo/models/games/PlayerUser.js';
 import generateFormFields from '../../../plugins/helpers/formHelper.js';
 import { buildRoutes } from '../../helpers/routeBuilder.js';
 
 const router = express.Router();
-const modelName = 'game';
+const modelName = 'playerUser';
 
-// Route to render the form to add a new game
+// Route to render the form to add a new player card
 router.get('/renderAddForm', (req, res) => {
   try {
-    const model = Game.getModelFields();
+    const model = PlayerUser.getModelFields();
     const formFields = generateFormFields(model);
     console.log('renderAddForm');
 
@@ -24,23 +24,23 @@ router.get('/renderAddForm', (req, res) => {
   }
 });
 
-// Route to render the form to edit an existing game
+// Route to render the form to edit an existing player card
 router.get('/renderEditForm/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    const game = await new Game().getById(id);
-    if (!game) {
-      return res.status(404).send({ error: 'Game not found' });
+    const playerUser = await new PlayerUser().getById(id);
+    if (!playerUser) {
+      return res.status(404).send({ error: 'Player card not found' });
     }
-    const model = Game.getModelFields();
-    const formFields = generateFormFields(model, game); // Generate form fields as an array
+    const model = PlayerUser.getModelFields();
+    const formFields = generateFormFields(model, playerUser); // Generate form fields as an array
     res.render('forms/generalEditForm', {
       title: `Edit ${modelName}`,
       action: `${modelName}s/update/${id}`,
       routeSub: `${modelName}s`,
       method: 'post',
       formFields: formFields,
-      data: game,
+      data: playerUser,
     });
   } catch (error) {
     console.error(error);
@@ -48,12 +48,12 @@ router.get('/renderEditForm/:id', async (req, res) => {
   }
 });
 
-// Route to load games
+// Route to load player cards
 router.get('/section', async (req, res) => {
   try {
-    const data = await new Game().getAll();
+    const data = await new PlayerUser().getAll();
     res.render(`./layouts/${modelName}`, {
-      title: 'Game View',
+      title: 'Player Card View',
       data: data,
     });
   } catch (error) {
@@ -62,6 +62,6 @@ router.get('/section', async (req, res) => {
   }
 });
 
-buildRoutes(new Game(), router);
+buildRoutes(new PlayerUser(), router);
 
 export default router;

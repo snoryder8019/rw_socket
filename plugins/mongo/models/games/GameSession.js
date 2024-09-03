@@ -11,6 +11,8 @@ export default class GameSession extends ModelHelper {
       playerIds: { type: 'array', value: [] },
       startTime: { type: 'date', value: null },
       endTime: { type: 'date', value: null },
+      currentState: { type: 'text', value: null },
+      turnHistory: { type: 'array', value: [] },
       status: { type: 'text', value: null },
     };
     if (gameSessionData) {

@@ -1,0 +1,25 @@
+<div class="adminWindow">
+    <div class="adminStatsRow">
+      <% documents.forEach(game => { %>
+        <div class="adminStat">
+          <p><%= game.title %></p>
+          <img alt="Game icon" src="<%= game.mediumIcon %>">
+          
+          <!-- Button to view/edit game details -->
+          <button class="collapsible">View/Edit Game Details <span class="carrot">&#9654;</span></button>
+          <div class="content" data-url="/games/games/renderEditForm/<%= game._id %>"></div>
+          
+          <!-- Button to get images/slideshows related to the game -->
+          <button class="collapsible">Get Game Images/SlideShows <span class="carrot">&#9654;</span></button>
+          <div class="content" data-url="/games/games/renderImagesArray/<%= game._id %>"></div>
+          
+          <!-- Form to upload images related to the game -->
+          <form action="/games/games/<%= game._id %>/upload-images" method="post" enctype="multipart/form-data">
+            <input type="file" name="images" multiple>
+            <button type="submit">Upload</button>
+          </form>
+        </div>
+      <% }) %>
+    </div>
+  </div>
+  

@@ -1,35 +1,31 @@
 import ModelHelper from '../../helpers/models.js';
+import Game from './Game.js';
 import { upload, processImages } from '../../../multer/subscriptionSetup.js';
 import { uploadToLinode } from '../../../aws_sdk/setup.js';
 
-const modelName = 'playerCard';
+export default class GameSetting extends ModelHelper {
+  constructor(settingData) {
+    super('gameSettings');
 
-export default class PlayerCard extends ModelHelper {
-  constructor(playerCardData) {
-    super(`${modelName}s`);
+    // Initialize with only the properties that need to be altered
     this.modelFields = {
-      playerId: { type: 'text', value: null },
-      playerName: { type: 'text', value: null },
-      avatarImage: { type: 'file', value: null },
-      level: { type: 'number', value: null },
-      experiencePoints: { type: 'number', value: null },
-      achievements: { type: 'array', value: [] },
-      games: { type: 'array', value: [] },
-      wins: { type: 'number', value: null },
-      losses: { type: 'number', value: null },
+      settingKey: { type: 'text', value: null }, // e.g., 'difficulty', 'graphicsQuality'
+      settingValue: { type: 'text', value: null }, // The value of the setting
     };
-    if (playerCardData) {
+
+    if (settingData) {
       for (let key in this.modelFields) {
-        if (playerCardData[key] !== undefined) {
-          this.modelFields[key].value = playerCardData[key];
+        if (settingData[key] !== undefined) {
+          this.modelFields[key].value = settingData[key];
         }
       }
     }
   }
 
   static getModelFields() {
-    return Object.keys(new PlayerCard().modelFields).map((key) => {
-      const field = new PlayerCard().modelFields[key];
+    // Return only fields relevant to game settings
+    return Object.keys(new GameSetting().modelFields).map((key) => {
+      const field = new GameSetting().modelFields[key];
       return { name: key, type: field.type };
     });
   }
@@ -51,7 +47,8 @@ export default class PlayerCard extends ModelHelper {
   }
 
   get fileFields() {
-    return [{ name: 'avatarImage', maxCount: 1 }];
+    // File fields might not be necessary for settings, but included if needed
+    return [];
   }
 
   async uploadImagesToLinode(req, res, next) {
@@ -59,7 +56,7 @@ export default class PlayerCard extends ModelHelper {
       if (req.files) {
         for (const key in req.files) {
           const file = req.files[key][0];
-          const fileKey = `${modelName}s/${Date.now()}-${file.originalname}`;
+          const fileKey = `gameSettings/${Date.now()}-${file.originalname}`;
           const url = await uploadToLinode(file.path, fileKey);
           req.body[key] = url; // Save the URL in the request body
         }
@@ -72,6 +69,6 @@ export default class PlayerCard extends ModelHelper {
   }
 
   pathForGetRouteView() {
-    return `admin/${modelName}s/template`;
+    return 'admin/gameSettings/template';
   }
 }

@@ -2,30 +2,32 @@ import ModelHelper from '../../helpers/models.js';
 import { upload, processImages } from '../../../multer/subscriptionSetup.js';
 import { uploadToLinode } from '../../../aws_sdk/setup.js';
 
-const modelName = 'achievement';
-
-export default class Achievement extends ModelHelper {
-  constructor(achievementData) {
-    super(`${modelName}s`);
+export default class PlayerUser extends ModelHelper {
+  constructor(playerData) {
+    super('playerUsers');
     this.modelFields = {
-      name: { type: 'text', value: null },
-      description: { type: 'text', value: null },
-      iconImage: { type: 'file', value: null },
-      points: { type: 'number', value: null },
-      criteria: { type: 'text', value: null },
+      playerId: { type: 'text', value: null },
+      playerName: { type: 'text', value: null },
+      level: { type: 'number', value: null },
+      experiencePoints: { type: 'number', value: null },
+      achievements: { type: 'array', value: [] },
+      games: { type: 'array', value: [] },
+      wins: { type: 'number', value: null },
+      losses: { type: 'number', value: null },
     };
-    if (achievementData) {
+
+    if (playerData) {
       for (let key in this.modelFields) {
-        if (achievementData[key] !== undefined) {
-          this.modelFields[key].value = achievementData[key];
+        if (playerData[key] !== undefined) {
+          this.modelFields[key].value = playerData[key];
         }
       }
     }
   }
 
   static getModelFields() {
-    return Object.keys(new Achievement().modelFields).map((key) => {
-      const field = new Achievement().modelFields[key];
+    return Object.keys(new PlayerUser().modelFields).map((key) => {
+      const field = new PlayerUser().modelFields[key];
       return { name: key, type: field.type };
     });
   }
@@ -47,7 +49,8 @@ export default class Achievement extends ModelHelper {
   }
 
   get fileFields() {
-    return [{ name: 'iconImage', maxCount: 1 }];
+    // Define if you have file upload requirements for PlayerUser
+    return [];
   }
 
   async uploadImagesToLinode(req, res, next) {
@@ -55,7 +58,7 @@ export default class Achievement extends ModelHelper {
       if (req.files) {
         for (const key in req.files) {
           const file = req.files[key][0];
-          const fileKey = `${modelName}s/${Date.now()}-${file.originalname}`;
+          const fileKey = `playerUsers/${Date.now()}-${file.originalname}`;
           const url = await uploadToLinode(file.path, fileKey);
           req.body[key] = url; // Save the URL in the request body
         }
@@ -68,6 +71,6 @@ export default class Achievement extends ModelHelper {
   }
 
   pathForGetRouteView() {
-    return `admin/${modelName}s/template`;
+    return 'admin/playerUsers/template';
   }
 }
