@@ -14,6 +14,12 @@ export default class GameElement extends ModelHelper {
       elementFunction: { type: 'string', value: null }, // Coordinates for the element on the game board
       elementReacts: { type: 'string', value: null }, // Coordinates for the element on the game board
       elementSounds: { type: 'string', value: null }, // Coordinates for the element on the game board
+      elementGame: { type: 'string', value: null }, // Coordinates for the element on the game board
+      elementBackground: { type: 'boolean', value: false }, // Coordinates for the element on the game board
+      elementMovable: { type: 'boolean', value: false }, // Coordinates for the element on the game board
+      elementDropzone: { type: 'boolean', value: false }, // Coordinates for the element on the game board
+      elementClassName: { type: 'boolean', value: false }, // Coordinates for the element on the game board
+      elementInlineStyle: { type: 'boolean', value: false }, // Coordinates for the element on the game board
     };
 
     if (elementData) {

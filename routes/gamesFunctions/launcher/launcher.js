@@ -10,7 +10,8 @@ const modelName = 'launcher';
 router.get('/getLauncher',async (req,res)=>{
   try{
     const data = await new Game().getAll()
-    res.render('layouts/games/launcher',{data:data})
+    const user = req.user;
+    res.render('layouts/games/launcher',{data:data,user:user})
   }
   catch(error){console.error(error)}
 })

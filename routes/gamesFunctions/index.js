@@ -10,10 +10,12 @@ import gameSpritesRouter from './gameSprites/gameSprites.js';
 import gameMusicsRouter from './gameMusics/gameMusics.js';
 import gameSoundsRouter from './gameSounds/gameSounds.js';
 import gameElementsRouter from './gameElements/gameElements.js';
+import ruleSetsRouter from './ruleSets/ruleSets.js';
 
 router.use('/launcher', launcherRouter);
 router.use('/player', playerRouter);
 router.use('/logs', logsRouter);
+router.use('/ruleSets', ruleSetsRouter);
 router.use('/gameMusics', gameMusicsRouter);
 router.use('/gameSounds', gameSoundsRouter);
 router.use('/gameElements', gameElementsRouter);

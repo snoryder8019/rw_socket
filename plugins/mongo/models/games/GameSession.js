@@ -8,7 +8,7 @@ export default class GameSession extends ModelHelper {
     this.modelFields = {
       sessionId: { type: 'text', value: null },
       gameId: { type: 'text', value: null },
-      playerIds: { type: 'array', value: [] },
+      players: { type: 'array', value: [] },
       startTime: { type: 'date', value: null },
       endTime: { type: 'date', value: null },
       currentState: { type: 'text', value: null },

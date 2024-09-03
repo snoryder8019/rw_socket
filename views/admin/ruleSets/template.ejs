@@ -1,0 +1,62 @@
+<div class="adminWindow">
+    <div class="adminStatsRow">
+      <% documents.forEach(ruleSet => { %>
+        <div class="adminStat">
+          <!-- Display Rule Set Name -->
+          <p><%= ruleSet.ruleName %></p>
+  
+          <!-- Display Rule Set Description -->
+          <p>Description: <%= ruleSet.description %></p>
+  
+          <!-- Display Rule Set File (if available) -->
+          <% if (ruleSet.ruleFile) { %>
+            <p>Rule File: <a href="<%= ruleSet.ruleFile %>" target="_blank">Download</a></p>
+          <% } else { %>
+            <p>No Rule File Uploaded</p>
+          <% } %>
+  
+          <!-- Button to View/Edit Rule Set Details -->
+          <button class="collapsible">View/Edit: <span class="carrot">&#9654;</span></button>
+          <div class="content" data-url="/games/ruleSets/renderEditForm/<%= ruleSet._id %>"></div>
+          
+          <!-- Section to Upload New Rule File -->
+          <h3>Upload New Rule File</h3>
+          <form action="/games/ruleSets/<%= ruleSet._id %>/upload-images" method="post" enctype="multipart/form-data">
+            <input type="file" name="ruleFile" accept=".pdf, .docx">
+            <button type="submit">Upload</button>
+          </form>
+        </div>
+      <% }) %>
+    </div>
+  </div>
+  
+  <script>
+    // JavaScript to handle collapsible buttons
+    document.addEventListener('DOMContentLoaded', function () {
+      const collapsibles = document.querySelectorAll('.collapsible');
+      
+      collapsibles.forEach(button => {
+        button.addEventListener('click', function () {
+          this.classList.toggle('active');
+          const content = this.nextElementSibling;
+          
+          if (content.style.maxHeight) {
+            content.style.maxHeight = null;
+          } else {
+            content.style.maxHeight = content.scrollHeight + 'px';
+          }
+  
+          // Fetch content dynamically if it hasn't been loaded yet
+          if (content.dataset.url && !content.innerHTML.trim()) {
+            fetch(content.dataset.url)
+              .then(response => response.text())
+              .then(html => {
+                content.innerHTML = html;
+              })
+              .catch(error => console.error('Error loading content:', error));
+          }
+        });
+      });
+    });
+  </script>
+  

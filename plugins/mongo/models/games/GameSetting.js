@@ -9,8 +9,20 @@ export default class GameSetting extends ModelHelper {
 
     // Initialize with only the properties that need to be altered
     this.modelFields = {
-      settingKey: { type: 'text', value: null }, // e.g., 'difficulty', 'graphicsQuality'
-      settingValue: { type: 'text', value: null }, // The value of the setting
+      name: { type: 'text', value: null }, 
+      game: { type: 'text', value: null }, 
+      socket: { type: 'text', value: null }, 
+      active: { type: 'boolean', value: null },       
+      maxPlayers: { type: 'text', value: null }, 
+      minPlayers: { type: 'text', value: null }, 
+      singlePlayer: { type: 'boolean', value: false }, // if Ai is programmed in
+      customSetting: { type: 'boolean', value: false }, // if we had optional rulesets for the user
+      backgound: { type: 'text', value: null }, 
+      dropElements: { type: 'array', value: [] }, 
+      movableElements: { type: 'array', value: [] }, 
+      ruleSet:{type:'array',value:[]}
+
+      
     };
 
     if (settingData) {

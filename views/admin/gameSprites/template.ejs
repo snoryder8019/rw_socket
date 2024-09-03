@@ -1,0 +1,58 @@
+<div class="adminWindow">
+    <div class="adminStatsRow">
+      <% documents.forEach(gameSprite => { %>
+        <div class="adminStat">
+          <!-- Display Game Sprite Name or ID -->
+          <p>Sprite ID: <%= gameSprite._id %></p>
+  
+          <!-- Display Game Sprite Image -->
+          <img alt="Game Sprite Image" src="<%= gameSprite.imageSrc %>" width="100" height="100">
+  
+          <!-- Display Grid Type -->
+          <p>Grid Type: <%= gameSprite.gridType %></p>
+  
+          <!-- Button to View/Edit Game Sprite Details -->
+          <button class="collapsible">View/Edit: <span class="carrot">&#9654;</span></button>
+          <div class="content" data-url="/gameSprites/renderEditForm/<%= gameSprite._id %>"></div>
+          
+          <!-- Section to Upload New Sprite Image -->
+          <h3>Upload New Sprite Image</h3>
+          <form action="/gameSprites/<%= gameSprite._id %>/upload-images" method="post" enctype="multipart/form-data">
+            <input type="file" name="spriteFile" accept="image/*">
+            <button type="submit">Upload</button>
+          </form>
+        </div>
+      <% }) %>
+    </div>
+  </div>
+  
+  <script>
+    // JavaScript to handle collapsible buttons
+    document.addEventListener('DOMContentLoaded', function () {
+      const collapsibles = document.querySelectorAll('.collapsible');
+      
+      collapsibles.forEach(button => {
+        button.addEventListener('click', function () {
+          this.classList.toggle('active');
+          const content = this.nextElementSibling;
+          
+          if (content.style.maxHeight) {
+            content.style.maxHeight = null;
+          } else {
+            content.style.maxHeight = content.scrollHeight + 'px';
+          }
+  
+          // Fetch content dynamically if it hasn't been loaded yet
+          if (content.dataset.url && !content.innerHTML.trim()) {
+            fetch(content.dataset.url)
+              .then(response => response.text())
+              .then(html => {
+                content.innerHTML = html;
+              })
+              .catch(error => console.error('Error loading content:', error));
+          }
+        });
+      });
+    });
+  </script>
+  

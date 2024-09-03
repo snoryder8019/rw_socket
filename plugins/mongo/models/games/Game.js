@@ -1,7 +1,7 @@
 import ModelHelper from '../../helpers/models.js';
 import { upload, processImages } from '../../../multer/subscriptionSetup.js';
 import { uploadToLinode } from '../../../aws_sdk/setup.js';
-
+import GameSession from './GameSession.js';
 export default class Game extends ModelHelper {
   constructor(gameData) {
     super('games');
@@ -13,6 +13,7 @@ export default class Game extends ModelHelper {
       genre: { type: 'text', value: null },
       gameType: { type: 'text', value: null },
       ruleSet: { type: 'text', value: null },
+      gameSettings: { type: 'text', value: null },
       customRules: { type: 'text', value: null },
       developer: { type: 'text', value: null },
       releaseDate: { type: 'date', value: null },
@@ -81,7 +82,20 @@ export default class Game extends ModelHelper {
       next(error);
     }
   }
-
+async launchGame(){
+  const modelFields = {
+    sessionId: { type: 'text', value: null },
+    gameId: { type: 'text', value: null },
+    playerIds: { type: 'array', value: [] },
+    startTime: { type: 'date', value: null },
+    endTime: { type: 'date', value: null },
+    currentState: { type: 'text', value: null },
+    turnHistory: { type: 'array', value: [] },
+    status: { type: 'text', value: null },
+  };
+  const response = await GameSession().create(modelFields)
+console.log()
+}
   pathForGetRouteView() {
     return 'admin/games/template';
   }

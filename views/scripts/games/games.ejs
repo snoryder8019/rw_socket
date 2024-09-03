@@ -1,0 +1,32 @@
+<script>
+    
+    function joinGame(gameId){
+console.log(`${user.displayName} wants to join ${gameId}`)
+
+
+
+fetch(`/games/games/join/${gameId}`, {
+  method: 'GET', // or 'POST', depending on your API design
+  headers: {
+    'Content-Type': 'application/json' // You can remove this header if not sending any body data
+  }
+})
+  .then(response => {
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    return response.text(); // Use response.text() to handle HTML content
+  })
+  .then(html => {
+document.getElementById('launcher').remove();
+    // Assuming you have a container where you want to render the HTML
+    document.getElementById('gameContainer').innerHTML = html;
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    // Handle errors
+  });
+
+
+    }
+</script>

@@ -1,11 +1,7 @@
-<style>
-    h1{
-        color: black;
-    }
-</style>
-
-<%if(typeof data =='object'&& data){%>
+<div id="gameContainer"></div>
+<div id="launcher"><%if(typeof data =='object'&& data){%>
     <%data.forEach(data =>{%>
-        <h1><%=data.name%></h1><button>join a session</button>
+        <h1><%=data.name%></h1><button onclick="joinGame('<%=data._id%>')">join a session</button>
    <%})%>
     <%}%>
+</div>
