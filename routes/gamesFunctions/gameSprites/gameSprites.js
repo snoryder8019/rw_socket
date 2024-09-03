@@ -10,7 +10,7 @@ router.get('/renderAddForm', (req, res) => {
     const model = GameSprite.getModelFields();
     res.render('forms/generalForm', {
       title: 'Add Game Sprite',
-      action: '/gameSprites/create',
+      action: '/games/gameSprites/create',
       formFields: model,
     });
   } catch (error) {
@@ -31,7 +31,7 @@ router.get('/renderEditForm/:id', async (req, res) => {
     const model = GameSprite.getModelFields();
     res.render('forms/generalEditForm', {
       title: `Edit Game Sprite`,
-      action: `/gameSprites/update/${id}`,
+      action: `/games/gameSprites/update/${id}`,
       routeSub: `gameSprites`,
       method: 'post',
       formFields: model,
