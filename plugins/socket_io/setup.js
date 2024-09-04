@@ -4,6 +4,7 @@ import { configureNamespace } from './namespace.js';
 import { mainChatHandlers } from './mainChat.js';
 import { socketAdminHandlers } from './socketAdmin.js';
 import { socketP2PHandlers } from './videoStream.js';
+import { socketGamesHandlers } from './games.js';
 
 export const router = express.Router();
 router.use((req, res, Server, next) => {
@@ -19,4 +20,5 @@ export const setupSocketIO = (server) => {
   configureNamespace(io, '/main_chat', mainChatHandlers);
   configureNamespace(io, '/socketAdmin', socketAdminHandlers);
   configureNamespace(io, '/videoStream', socketP2PHandlers);
+  configureNamespace(io, '/games', socketGamesHandlers);
 };

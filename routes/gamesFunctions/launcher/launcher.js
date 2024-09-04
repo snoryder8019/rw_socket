@@ -3,15 +3,17 @@ import Launcher from '../../../plugins/mongo/models/games/Launcher.js';
 import generateFormFields from '../../../plugins/helpers/formHelper.js';
 import { buildRoutes } from '../../helpers/routeBuilder.js';
 import Game from '../../../plugins/mongo/models/games/Game.js';
+import GameSession from '../../../plugins/mongo/models/games/GameSession.js';
 
 const router = express.Router();
 const modelName = 'launcher';
 
 router.get('/getLauncher',async (req,res)=>{
   try{
-    const data = await new Game().getAll()
+    const game = await new Game().getAll()
+    const sessions = await new GameSession().getAll()
     const user = req.user;
-    res.render('layouts/games/launcher',{data:data,user:user})
+    res.render('layouts/games/launcher',{sessions:sessions,game:game,user:user})
   }
   catch(error){console.error(error)}
 })

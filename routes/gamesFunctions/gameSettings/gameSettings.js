@@ -15,7 +15,7 @@ router.get('/renderAddForm', (req, res) => {
 
     res.render('forms/generalForm', {
       title: 'Game Setting',
-      action: '/gameSettings/create',
+      action: '/games/gameSettings/create',
       formFields: formFields,
     });
   } catch (error) {
@@ -38,7 +38,7 @@ router.get('/renderEditForm/:id', async (req, res) => {
 
     res.render('forms/generalEditForm', {
       title: `Edit Game Setting`,
-      action: `/gameSettings/update/${id}`,
+      action: `/games/gameSettings/update/${id}`,
       routeSub: `gameSettings`,
       method: 'post',
       formFields: formFields,
@@ -69,30 +69,6 @@ router.get('/section', async (req, res) => {
   }
 });
 
-// Route to create a new game setting
-router.post('/create', async (req, res) => {
-  try {
-    const gameSetting = new GameSetting(req.body);
-    await gameSetting.save();
-    res.redirect('/gameSettings/section');
-  } catch (error) {
-    console.error(error);
-    res.status(500).send({ error: error.message });
-  }
-});
-
-// Route to update an existing game setting
-router.post('/update/:id', async (req, res) => {
-  try {
-    const { id } = req.params;
-    const gameSetting = new GameSetting(req.body);
-    await gameSetting.update(id);
-    res.redirect('/gameSettings/section');
-  } catch (error) {
-    console.error(error);
-    res.status(500).send({ error: error.message });
-  }
-});
 
 // Use route builder to automatically generate CRUD routes
 buildRoutes(new GameSetting(), router);

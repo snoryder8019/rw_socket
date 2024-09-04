@@ -1,8 +1,10 @@
 import express from 'express';
-import GameSession from '../../../plugins/mongo/models/GameSession.js';
-import generateFormFields from '../../../plugins/helpers/formHelper.js';
-import { buildRoutes } from '../../helpers/routeBuilder.js';
-
+import GameSession from '../../plugins/mongo/models/games/GameSession.js';
+import Game from '../../plugins/mongo/models/games/Game.js';
+import generateFormFields from '../../plugins/helpers/formHelper.js';
+import { buildRoutes } from '../helpers/routeBuilder.js';
+import GameSetting from '../../plugins/mongo/models/games/GameSetting.js';
+import User from '../../plugins/mongo/models/User.js'
 const router = express.Router();
 const modelName = 'gameSession';
 
@@ -47,7 +49,35 @@ router.get('/renderEditForm/:id', async (req, res) => {
     res.status(500).send({ error: error.message });
   }
 });
+router.post('/joinSession/:gameId', async(req,res)=>{
+  try{
+    const user = req.user;
+    const sessionId=req.params.gameId;
+    const userCheck = await new GameSession().checkForUser(user._id)
+    console.log(userCheck) 
+    const player={
+      players:{
+      id:user._id,
+      displayName:user.displayName,
+      lastMove:null},
+    }
+    const sessionUpdate = await new GameSession().pushById(sessionId,player)
+    const gameSession = await new GameSession().getById(sessionId)
+    const result =  await new User().updateById(user._id,{lastGame:gameSession._id.toString()});
+    const gameData = await new Game().getById(gameSession.gameId)
+const gameSettingsData = await new GameSetting().getById(gameData.gameSettings)
 
+
+res.render('layouts/games/cardTable',{
+  gameSession:gameSession,
+  user:user,
+  gameData:gameData,
+  gameSettingsData:gameSettingsData,
+})
+
+  }
+  catch(error){console.error(error)}
+})
 // Route to load game sessions
 router.get('/section', async (req, res) => {
   try {

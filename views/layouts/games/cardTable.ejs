@@ -1,5 +1,53 @@
-<%if(typeof gameSession =='object'&& gameSession){%>
-    <h2>WELCOME to Dominoes!!</h2>
-<h1><%=gameSession._id%></h1>
-
-    <%}%>
+<% if (typeof gameSession === 'object' && gameSession) { %>
+    <div class="cardTableGameDiv" style="background-image: url('<%= gameSettingsData.backgroundImg %>');" id="cardTable_<%= gameSession._id %>">
+      
+      <!-- Game Title and Waiting Message -->
+      <h2>WELCOME to Dominoes!!</h2>
+      <h3 style="color:yellow">Waiting for others to join...</h3>
+      
+      <!-- Player Seats arranged around the top -->
+      <div class="playerSeatsTop">
+        <% 
+          // Iterate over the max number of players
+          for (let index = 0; index < gameSettingsData.maxPlayers; index++) {
+            const player = gameSession.players[index];
+        %>
+          <div class="playerSeat">
+            <% if (player && player.id) { %>
+                <div><h3>Seat <%= index + 1 %>: <%= player.displayName %></h3></div>
+                <div><h3>Last Move: <%= player.lastMove %></h3></div>       
+            <% } else { %>
+              Seat <%= index + 1 %>:<div class="loaderWheel"><div class="wheel"></div></div>
+            <% } %>
+          </div>
+        <% } %>
+      </div>  
+      <%if(gameSession.status=="waiting for players"){%>
+        <div class="userControls">      
+          <button style="background-color: red;" class="controlButton">Leave Room</button>
+       
+          <div class="currentUserInfo">
+          </div>
+        </div>
+        <%}%>
+        <%if(gameSession.status==="waiting to start"){%>
+          <div class="userControls">      
+            <button style="background-color: blue;" class="controlButton">Ready to Play</button>
+         
+            <div class="currentUserInfo">
+            </div>
+          </div>
+          
+        <%}%>
+      <%if(gameSession.status==="game in session"){%>
+      <div class="userControls">      
+        <button class="controlButton">Draw Tile</button>
+        <button class="controlButton">Play Tile</button>
+        <button class="controlButton">Pass Turn</button>        
+        <div class="currentUserInfo">
+        </div>
+      </div>
+      <%}%>
+    </div>
+  <% } %>
+  

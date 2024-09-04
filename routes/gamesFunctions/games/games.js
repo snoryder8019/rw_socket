@@ -6,6 +6,7 @@ import { uploadMultiple } from '../../../plugins/multer/setup.js';
 import { ObjectId } from 'mongodb';
 import { buildRoutes } from '../../helpers/routeBuilder.js';
 import GameSession from '../../../plugins/mongo/models/games/GameSession.js';
+import GameSetting from '../../../plugins/mongo/models/games/GameSetting.js';
 import User from '../../../plugins/mongo/models/User.js'
 const router = express.Router();
 const modelName = 'game';
@@ -121,18 +122,19 @@ if(!playingSessions && !waitingSessions){
 await rejoinSession(lastGame);
 return false
 }
-//router.get('/reJoin/:sessionId')
-router.get('/join/:gameId',async(req,res)=>{
+
+router.post('/join/:gameId',async(req,res)=>{
   try{
     const user = req.user;
     const {gameId}=req.params;
-    console.log(gameId)
+    //const partic =await checkParticapation(user.lastGame);
+   const userCheck = await new GameSession().checkForUser(user._id)
+   console.log(userCheck) 
+   const game = await new Game().getById(gameId);
 
-   const partic = checkParticapation(user.lastGame)
-   console.log(partic)
-    const game = await new Game().getById(gameId);
-        const gameSetup = {    
+   const gameSetup = {    
       gameId: game._id,
+      gameName: game.name,
       gameSettings: game.gameSettings,
       gameRuleSet: game.ruleSet,
       players: [{
@@ -144,14 +146,21 @@ router.get('/join/:gameId',async(req,res)=>{
       endTime: { type: 'date', value: null },
       currentState: "waiting to start",
       turnHistory: { type: 'array', value: [] },
-      status:"waiting to start",
+      status:"waiting for players",
     }
+
     const gameSession = await new GameSession().create(gameSetup);
-    const result =  await new User().updateById(user._id,{lastGame:gameSession._id});
-    console.log(`user:${user}, gameSession: ${gameSession._id} \nresult:${result.modifiedCount}`)
+    //wont update user
+    //const result =  await new User().updateById(user._id,{lastGame:gameSession._id.toString()});
+const result = await new GameSession().markUserLast(user._id,gameSession._id)
+    const gameData = await new Game().getById(gameId)
+const gameSettingsData = await new GameSetting().getById(gameData.gameSettings)
+    console.log(`user:${user._id}, gameSession: ${gameSession._id}\nsettings:${gameSettingsData.backgroundImg}\n gameData:${gameData.gameSettings} \nresult:${result}`)
     res.render('./layouts/games/cardTable',{
       gameSession:gameSession,
-      user:user
+      user:user,
+      gameData:gameData,
+      gameSettingsData:gameSettingsData
     })
     // if(!user){
     //   res.status(400).send('no user')

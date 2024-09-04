@@ -45,6 +45,7 @@ export default class ModelHelper {
     const db = getDb();
     const collection = db.collection(this.collectionName);
     const processedDocument = this.processData(updatedDocument);
+    console.log(updatedDocument,processedDocument)
     const result = await collection.updateOne(
       { _id: new ObjectId(id) },
       { $set: processedDocument }
@@ -52,8 +53,9 @@ export default class ModelHelper {
     if (result.matchedCount === 0) {
       throw new Error('No document found with that ID');
     }
-    return await collection.findOne({ _id: new ObjectId(id) });
+    return result;
   }
+
   async pushById(id, updateObject) {
     console.log(id)
     if (!ObjectId.isValid(id)) {

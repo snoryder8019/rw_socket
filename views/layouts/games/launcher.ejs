@@ -1,7 +1,17 @@
 <div id="gameContainer"></div>
-<div id="launcher"><%if(typeof data =='object'&& data){%>
-    <%data.forEach(data =>{%>
-        <h1><%=data.name%></h1><button onclick="joinGame('<%=data._id%>')">join a session</button>
+<div id="launcher"><%if(typeof game =='object'&& game){%>
+<div class="gamesInSession">
+    Join a Game
+    <%sessions.forEach(session=>{%>
+        <div class="message">
+<button class="joinGameButton" game="<%=session.game%>" action-game="joinSession" data-game-id="<%=session._id%>">join <%=session.gameName%> <%=session._id.toString().slice(0,5)%></button>
+<h3>No of Players: <%=session.players.length%></h3>
+</div>    
+<%})%>
+</div>
+    <%game.forEach(game =>{%>
+        <h3>Start a new game</h3>
+    <button class="joinGameButton"game="<%=game.name%>" action-game="games/join" data-game-id="<%=game._id%>"><h2> Create <%=game.name%> Session </h2></button>
    <%})%>
     <%}%>
 </div>

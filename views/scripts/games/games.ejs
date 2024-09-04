@@ -1,32 +1,57 @@
 <script>
-    
-    function joinGame(gameId){
-console.log(`${user.displayName} wants to join ${gameId}`)
+  document.addEventListener('DOMContentLoaded', () => {
+    let socket = io('/games');
 
+    socket.on('connect', () => {
+      console.log('Connected to GAMES CLIENT');
+    });
 
-
-fetch(`/games/games/join/${gameId}`, {
-  method: 'GET', // or 'POST', depending on your API design
-  headers: {
-    'Content-Type': 'application/json' // You can remove this header if not sending any body data
-  }
+socket.on('games in session',(sessionId)=>{
+//  fetchGame("joinSession",sessionId)
+console.log('gmaes in session ran')
 })
-  .then(response => {
-    if (!response.ok) {
-      throw new Error('Network response was not ok');
-    }
-    return response.text(); // Use response.text() to handle HTML content
-  })
-  .then(html => {
-document.getElementById('launcher').remove();
-    // Assuming you have a container where you want to render the HTML
-    document.getElementById('gameContainer').innerHTML = html;
-  })
-  .catch(error => {
-    console.error('Error:', error);
-    // Handle errors
+
+    socket.on('join game session', (data) => {
+      console.log(`Data received from server: ${data}`);
+    });
+
+function fetchGame(action,gameId){
+  fetch(`/games/${action}/${gameId}`, {
+          method: 'POST', // or 'GET', depending on your API design
+          headers: {
+            'Content-Type': 'application/json' // Adjust headers as needed
+          }
+        })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          return response.text(); // Handle HTML content
+        })
+        .then(html => {
+          document.getElementById('launcher').remove(); // Optionally remove launcher if needed
+          document.getElementById('gameContainer').innerHTML = html; // Update the game container with new HTML
+        })
+        .catch(error => {
+          console.error('Error fetching and rendering game table:', error);
+        });
+}
+    // Event listener for dynamically loaded join buttons
+    document.body.addEventListener('click', (event) => {
+      if (event.target && event.target.matches('.joinGameButton')) {
+        const gameId = event.target.getAttribute('data-game-id');
+        const action = event.target.getAttribute('action-game');
+        const gameName = event.target.getAttribute('game');
+        console.log(`${user.displayName} wants to join ${gameName}: ${gameId}`);
+
+        // Emit the join game session event to the server via socket
+        socket.emit('join game session', { user: user, game: gameId });
+  fetchGame(action,gameId)
+        // Fetch the updated game table to re-render
+     
+      }
+    });
   });
-
-
-    }
 </script>
+
+

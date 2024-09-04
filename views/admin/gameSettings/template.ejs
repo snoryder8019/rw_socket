@@ -1,0 +1,25 @@
+<div class="adminWindow">
+    <div class="adminStatsRow">
+      <% documents.forEach(gameSetting => { %>
+        <div class="adminStat">
+          <!-- Display Game Setting Name -->
+          <p><%= gameSetting.name %></p>
+  
+          <!-- Display Game Setting Image -->
+          <img alt="Game Setting image" src="<%= gameSetting.mediumIcon %>">
+  
+          <!-- Collapsible Button to View/Edit Game Setting Details -->
+          <button class="collapsible">view: <span class="carrot">&#9654;</span></button>
+          <div class="content" data-url="/games/gameSettings/renderEditForm/<%= gameSetting._id %>"></div>
+  
+          <!-- Section to Upload Multiple Images -->
+          <h3>Add Multiple Images to Slides</h3>
+          <form action="/games/gameSettings/<%= gameSetting._id %>/upload-images" method="post" enctype="multipart/form-data">
+            <input type="file" name="images" multiple>
+            <button type="submit">Upload</button>
+          </form>
+        </div>
+      <% }) %>
+    </div>
+  </div>
+  

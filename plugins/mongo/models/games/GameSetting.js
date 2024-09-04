@@ -17,11 +17,11 @@ export default class GameSetting extends ModelHelper {
       minPlayers: { type: 'text', value: null }, 
       singlePlayer: { type: 'boolean', value: false }, // if Ai is programmed in
       customSetting: { type: 'boolean', value: false }, // if we had optional rulesets for the user
-      backgound: { type: 'text', value: null }, 
+      backgroundImg: { type: 'file', value: null }, 
       dropElements: { type: 'array', value: [] }, 
       movableElements: { type: 'array', value: [] }, 
       ruleSet:{type:'array',value:[]}
-
+      
       
     };
 
@@ -33,7 +33,7 @@ export default class GameSetting extends ModelHelper {
       }
     }
   }
-
+  
   static getModelFields() {
     // Return only fields relevant to game settings
     return Object.keys(new GameSetting().modelFields).map((key) => {
@@ -41,7 +41,7 @@ export default class GameSetting extends ModelHelper {
       return { name: key, type: field.type };
     });
   }
-
+  
   middlewareForCreateRoute() {
     return [
       upload.fields(this.fileFields),
@@ -49,7 +49,7 @@ export default class GameSetting extends ModelHelper {
       this.uploadImagesToLinode.bind(this),
     ];
   }
-
+  
   middlewareForEditRoute() {
     return [
       upload.fields(this.fileFields),
@@ -57,12 +57,15 @@ export default class GameSetting extends ModelHelper {
       this.uploadImagesToLinode.bind(this),
     ];
   }
-
+  
   get fileFields() {
     // File fields might not be necessary for settings, but included if needed
-    return [];
+   
+    return [
+      {name: 'backgroundImg',  maxCount: 1 }, 
+    ];
   }
-
+  
   async uploadImagesToLinode(req, res, next) {
     try {
       if (req.files) {
