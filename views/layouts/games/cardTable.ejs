@@ -1,8 +1,12 @@
+<!--// Reference: /views/layouts/games/cardTable.js-->
 <% if (typeof gameSession === 'object' && gameSession) { %>
     <div class="cardTableGameDiv" style="background-image: url('<%= gameSettingsData.backgroundImg %>');" id="cardTable_<%= gameSession._id %>">
-      
+      <div style="font-size:.5rem;color: yellow;" class="pauseTimer">your pause time remaining: 2:00</div>
+
       <!-- Game Title and Waiting Message -->
-      <h2>WELCOME to Dominoes!!</h2>
+      <h2>WELCOME to Dominoes!! <%= gameSession._id%></h2>
+      <h6><%=gameSession.currentState%></h6>
+      <h6><%=gameSession.currentStatus%></h6>
       <h3 style="color:yellow">Waiting for others to join...</h3>
       
       <!-- Player Seats arranged around the top -->
@@ -13,41 +17,43 @@
             const player = gameSession.players[index];
         %>
           <div class="playerSeat">
+
             <% if (player && player.id) { %>
                 <div><h3>Seat <%= index + 1 %>: <%= player.displayName %></h3></div>
-                <div><h3>Last Move: <%= player.lastMove %></h3></div>       
+                <div><h3>Last Move: <%= player.lastMove %></h3></div>    
+                <%if(player.id == user.id){%>  
+                <h6 style="color:red" class="ping_socket<%=player.id%>"></h6>
+ <%}%>
             <% } else { %>
               Seat <%= index + 1 %>:<div class="loaderWheel"><div class="wheel"></div></div>
             <% } %>
           </div>
         <% } %>
       </div>  
+      <div class="userControls">      
+        <h6 class="playerPing"></h6>
+
       <%if(gameSession.status=="waiting for players"){%>
-        <div class="userControls">      
-          <button style="background-color: red;" class="controlButton">Leave Room</button>
+          <button onclick="exitSession('<%=gameSession._id%>')" style="background-color: red;" class="controlButton">Exit Game</button>
+          <button  id="readyButton" style="background-color: blue;" class="controlButton"session-data="<%=gameSession._id%>">Ready to Play</button>
        
           <div class="currentUserInfo">
           </div>
-        </div>
         <%}%>
-        <%if(gameSession.status==="waiting to start"){%>
-          <div class="userControls">      
-            <button style="background-color: blue;" class="controlButton">Ready to Play</button>
-         
+        <%if(gameSession.status=="waiting for players" && gameSession.players.length<gameSettingsData.minPlayers){%>
+            
             <div class="currentUserInfo">
-            </div>
-          </div>
-          
-        <%}%>
-      <%if(gameSession.status==="game in session"){%>
-      <div class="userControls">      
-        <button class="controlButton">Draw Tile</button>
-        <button class="controlButton">Play Tile</button>
-        <button class="controlButton">Pass Turn</button>        
-        <div class="currentUserInfo">
-        </div>
-      </div>
-      <%}%>
+              </div>
+              
+              <%}%>
+              <%if(gameSession.status==="game in session"){%>
+                  <button class="controlButton">Draw Tile</button>
+                  <button class="controlButton">Play Tile</button>
+                  <button class="controlButton">Pass Turn</button>        
+                  <div class="currentUserInfo">
+                    </div>
+                    <%}%>
+                    </div>
     </div>
   <% } %>
   

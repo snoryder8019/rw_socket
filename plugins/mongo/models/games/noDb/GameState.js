@@ -1,3 +1,4 @@
+//plugins/mongo/models/games/noDb/GameState.js
 export default class GameState {
     constructor() {
       this.state = 'waiting to start'; // initial state of the game

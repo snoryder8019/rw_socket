@@ -27,7 +27,16 @@ export default class ModelHelper {
     const documents = await collection.find(arg).toArray();
     return documents;
   }
-
+  async getAllByIdAndStatus(id, statuses) {
+    const db = getDb();
+    const collection = db.collection(this.collectionName);
+    const documents = await collection.find({
+      _id: new ObjectId(id), 
+      status: { $in: statuses }
+    }).toArray();
+    return documents;
+  }
+  
   async getById(id) {
     if (!ObjectId.isValid(id)) {
       throw new Error('Invalid ID format');
@@ -37,27 +46,38 @@ export default class ModelHelper {
     const document = await collection.findOne({ _id: new ObjectId(id) });
     return document;
   }
-
   async updateById(id, updatedDocument) {
     if (!ObjectId.isValid(id)) {
       throw new Error('Invalid ID format');
     }
+  
     const db = getDb();
     const collection = db.collection(this.collectionName);
+  
+    // Log the current state of the document in the database
+    const currentDocument = await collection.findOne({ _id: new ObjectId(id) });
+  
     const processedDocument = this.processData(updatedDocument);
-    console.log(updatedDocument,processedDocument)
+  
     const result = await collection.updateOne(
       { _id: new ObjectId(id) },
       { $set: processedDocument }
     );
+  
+  
     if (result.matchedCount === 0) {
       throw new Error('No document found with that ID');
     }
+  
+    if (result.modifiedCount === 0) {
+      console.warn('Document matched but not modified. No changes detected.');
+    }
+  
     return result;
   }
+  
 
   async pushById(id, updateObject) {
-    console.log(id)
     if (!ObjectId.isValid(id)) {
       throw new Error('Invalid ID format');
     }
@@ -76,7 +96,6 @@ export default class ModelHelper {
     return await collection.findOne({ _id: new ObjectId(id) });
   }
   async popById(id, imageUrl) {
-    console.log(id);
     if (!ObjectId.isValid(id)) {
       throw new Error('Invalid ID format');
     }
@@ -110,17 +129,28 @@ export default class ModelHelper {
     }
     return result;
   }
-
   processData(data) {
     const processedData = {};
+  
+    // Debugging: Log model fields and incoming data
+  
     for (const key in this.modelFields) {
       const field = this.modelFields[key];
+  
+      // Debugging: Log the field and check if it's in data
+  
       if (data[key] !== undefined) {
         processedData[key] = this.castValue(data[key], field.type);
+  
+        // Debugging: Log after casting
       }
     }
+  
+    // Debugging: Log the final processed data
+  
     return processedData;
   }
+  
 
   castValue(value, type) {
     switch (type) {

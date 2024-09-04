@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+//Reference: /adminFunctions/blogs/blogs.js
 import express from 'express';
 import Blog from '../../../plugins/mongo/models/blog/Blog.js';
 import generateFormFields from '../../../plugins/helpers/formHelper.js';

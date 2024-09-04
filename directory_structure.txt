@@ -1,0 +1,89 @@
+[01;34m.[0m
+├── app.js
+├── [01;34mbin[0m
+│   └── www.js
+├── boiler updates.txt
+├── [01;34mconfig[0m
+│   └── config.js
+├── copy_log.txt
+├── directory_structure.txt
+├── docker-compose.yml
+├── Dockerfile
+├── [01;34mdocs[0m
+│   ├── docs.md
+│   └── README.md
+├── [01;34mlogs[0m
+│   ├── errors.json
+│   ├── passReset.json
+│   └── regEmails.json
+├── models from gpt
+├── moveToC.bat
+├── nodemon.json
+├── npm_dependencies.bat
+├── package.json
+├── package-lock.json
+├── [01;34mplugins[0m
+│   ├── [01;34maws_sdk[0m
+│   ├── [01;34mhelpers[0m
+│   ├── index.js
+│   ├── [01;34mjwt[0m
+│   ├── [01;34mmongo[0m
+│   ├── [01;34mmulter[0m
+│   ├── [01;34mnodemailer[0m
+│   ├── [01;34mpassport[0m
+│   ├── [01;34mpaypal[0m
+│   ├── [01;34mpuppeteer[0m
+│   ├── [01;34msharp[0m
+│   ├── [01;34mshopify-storefront[0m
+│   ├── [01;34msocket_io[0m
+│   ├── [01;34mstorageBucket[0m
+│   ├── [01;34mstripe[0m
+│   └── [01;34mtickets[0m
+├── [01;34mpublic[0m
+│   ├── [01;34mfonts[0m
+│   ├── [01;34mimages[0m
+│   ├── [01;34mjavascripts[0m
+│   ├── [01;34mjs[0m
+│   └── [01;34mstylesheets[0m
+├── README_lightly.md
+├── [01;34mroutes[0m
+│   ├── [01;34madminFunctions[0m
+│   ├── admin.js
+│   ├── auth.js
+│   ├── [01;34mgamesFunctions[0m
+│   ├── [01;34mhelpers[0m
+│   ├── [01;34mhtml[0m
+│   ├── index.js
+│   ├── [01;34mlogFunctions[0m
+│   ├── [01;34msecurityFunctions[0m
+│   ├── [01;34msystemFunctions[0m
+│   ├── [01;34muserFunctions[0m
+│   └── users.js
+├── rw_socket.code-workspace
+├── [01;34mstylize_examples[0m
+│   └── singleSheet.html
+├── [01;34mtest[0m
+│   ├── [01;34mroutes[0m
+│   └── testConfig.js
+└── [01;34mviews[0m
+    ├── [01;34madmin[0m
+    ├── [01;34manimations[0m
+    ├── [01;34mauth[0m
+    ├── [01;34mauthFalseTemplates[0m
+    ├── [01;34mauthTrueTemplates[0m
+    ├── [01;34mcart[0m
+    ├── [01;34mchat[0m
+    ├── error.ejs
+    ├── [01;34mforms[0m
+    ├── [01;34mhelp[0m
+    ├── index.ejs
+    ├── [01;34mlayouts[0m
+    ├── [01;34mnotifications[0m
+    ├── [01;34mpartials[0m
+    ├── registeredPassword.ejs
+    ├── reset-password.ejs
+    ├── [01;34mscripts[0m
+    ├── [01;34muserDash[0m
+    └── [01;34mvideoChannels[0m
+
+55 directories, 32 files

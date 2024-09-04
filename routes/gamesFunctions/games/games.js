@@ -1,3 +1,4 @@
+//routes/gamesFunctions/games/games.js
 import express from 'express';
 import Game from '../../../plugins/mongo/models/games/Game.js';
 import generateFormFields from '../../../plugins/helpers/formHelper.js';
@@ -104,73 +105,51 @@ router.get('/section', async (req, res) => {
 /////////////
 
 ////////
-async function rejoinSession(sessionId){
-  console.log(`rejoin session${sessionId}`)
-}
-/////////////
-async function checkParticapation(lastGame){
-  if(!lastGame){
-    return false
-  }
-const search = {_id:new ObjectId(lastGame)}
 
-const playingSessions = await new GameSession().getById(lastGame)
-const waitingSessions = await new GameSession().getById(lastGame)
-if(!playingSessions && !waitingSessions){
-  return true;
-}
-await rejoinSession(lastGame);
-return false
-}
 
-router.post('/join/:gameId',async(req,res)=>{
-  try{
+router.post('/join/:gameId', async (req, res) => {
+  try {
     const user = req.user;
-    const {gameId}=req.params;
-    //const partic =await checkParticapation(user.lastGame);
-   const userCheck = await new GameSession().checkForUser(user._id)
-   console.log(userCheck) 
-   const game = await new Game().getById(gameId);
-
-   const gameSetup = {    
+    const { gameId } = req.params;
+    
+    // Check for user's current participation in any session
+    const userCheck = await new GameSession().checkForUser(user._id);
+    const game = await new Game().getById(gameId);
+    const gameSetup = {    
       gameId: game._id,
       gameName: game.name,
       gameSettings: game.gameSettings,
       gameRuleSet: game.ruleSet,
       players: [{
-        id:user._id,
-       displayName:user.displayName,
-       lastMove:null
-          }],
-      startTime:new Date(),
+        id: user._id,
+        displayName: user.displayName,
+        lastMove: null
+      }],
+      startTime: new Date(),
       endTime: { type: 'date', value: null },
       currentState: "waiting to start",
       turnHistory: { type: 'array', value: [] },
-      status:"waiting for players",
+      status: "waiting for players",
+    };
+    if(userCheck){
+      return new GameSession().reJoinSession(userCheck)
     }
-
+    
     const gameSession = await new GameSession().create(gameSetup);
-    //wont update user
-    //const result =  await new User().updateById(user._id,{lastGame:gameSession._id.toString()});
-const result = await new GameSession().markUserLast(user._id,gameSession._id)
-    const gameData = await new Game().getById(gameId)
-const gameSettingsData = await new GameSetting().getById(gameData.gameSettings)
-    console.log(`user:${user._id}, gameSession: ${gameSession._id}\nsettings:${gameSettingsData.backgroundImg}\n gameData:${gameData.gameSettings} \nresult:${result}`)
-    res.render('./layouts/games/cardTable',{
-      gameSession:gameSession,
-      user:user,
-      gameData:gameData,
-      gameSettingsData:gameSettingsData
-    })
-    // if(!user){
-    //   res.status(400).send('no user')
-    // }
-    // if(!game){
-    //   res.status(400).send('no game')
-    // }
+    const result = await new GameSession().markUserLast(user._id, gameSession._id);
+    const gameSettingsData = await new GameSetting().getById(gameData.gameSettings);
+
+    res.render('./layouts/games/cardTable', {
+      gameSession: gameSession,
+      user: user,
+      gameData: game,
+      gameSettingsData: gameSettingsData
+    });
+  } catch (error) {
+    console.error(error);
   }
-  catch(error){console.error(error)}
-})
+});
+
 router.post('/:id/upload-images', uploadMultiple, imagesArray(Game));
 router.get('/renderImagesArray/:id', getImagesArray(Game));
 router.get('/popImagesArray/:id/:url', popImagesArray(Game));

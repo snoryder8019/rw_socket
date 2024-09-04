@@ -23,6 +23,7 @@ export default class User extends ModelHelper {
       firstName: { type: 'text', value: null },
       lastName: { type: 'text', value: null },
       password: { type: 'text', value: null },
+      lastGame:{type:'text', value:null},
       permissions: { type: 'object', value: {} },
       wallet: {
         type: 'object',

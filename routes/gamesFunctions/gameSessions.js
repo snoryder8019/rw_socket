@@ -1,4 +1,6 @@
+//routes/gamesFunctions/gameSessions.js
 import express from 'express';
+import chalk from 'chalk';
 import GameSession from '../../plugins/mongo/models/games/GameSession.js';
 import Game from '../../plugins/mongo/models/games/Game.js';
 import generateFormFields from '../../plugins/helpers/formHelper.js';
@@ -49,12 +51,33 @@ router.get('/renderEditForm/:id', async (req, res) => {
     res.status(500).send({ error: error.message });
   }
 });
+const reJoinSession =  async (sessionId,req,res)=>{
+  console.log(chalk.blue(sessionId))
+  const gameSession = await new GameSession().getById(sessionId)
+const user =req.user
+  const gameData = await new Game().getById(gameSession.gameId)
+  const gameSettingsData = await new GameSetting().getById(gameData.gameSettings)
+  res.render('layouts/games/cardTable',{
+    gameSession:gameSession,
+    user:user,
+    gameData:gameData,
+    gameSettingsData:gameSettingsData,
+  })
+}
 router.post('/joinSession/:gameId', async(req,res)=>{
   try{
     const user = req.user;
     const sessionId=req.params.gameId;
     const userCheck = await new GameSession().checkForUser(user._id)
-    console.log(userCheck) 
+    if (userCheck) {
+      // If the user is already part of a session, call reJoinSession with the correct sessionId
+      console.log('User already in a session, rejoining...');
+      return await reJoinSession(userCheck, req, res); // Ensure userCheck is the sessionId
+    } else {
+      console.log('No existing session, creating a new one...');
+      // Create a new session or handle the logic here
+    }
+    console.log(`userCheck:${userCheck}`) 
     const player={
       players:{
       id:user._id,

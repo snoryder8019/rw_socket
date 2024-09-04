@@ -1,43 +1,78 @@
 <script>
-  document.addEventListener('DOMContentLoaded', () => {
-    let socket = io('/games');
-
+  document.addEventListener('DOMContentLoaded', () => {    
+    let socket = io('/games');    
     socket.on('connect', () => {
       console.log('Connected to GAMES CLIENT');
     });
+    //listen for 'players update'
+    function readyUp(sessionId) {
+  const playerId = user._id; // Assuming socket.id is used as playerId
+  socket.emit('ready up', { playerId, sessionId });
+}
 
-socket.on('games in session',(sessionId)=>{
-//  fetchGame("joinSession",sessionId)
-console.log('gmaes in session ran')
-})
+    socket.on('players update',(players)=>{
+      console.log(`Players Update ${players}`)
+    })
+    // Listen for 'ping' from the server and respond with 'pong'
+      // Listen for 'ping' from the server and respond with 'pong'
+    socket.on('ping', (data) => {
+      console.log('Received ping from server, sending pong back');
+      socket.emit('pong', { startTime: data.startTime });
+    });
+
+    // Listen for 'ping result' to update the latency in the DOM
+    socket.on('ping result', (data) => {
+      const { userId, latency } = data;
+      console.log(`Ping round-trip time for user ${userId}: ${latency} ms`);
+
+      // Find the element with the class 'ping_socket' specific to the userId
+      const pingDisplay = document.querySelector(`.ping_socket${userId}`);
+      if (pingDisplay) {
+        pingDisplay.textContent = `Ping: ${latency} ms`; // Update the text content with the latency
+      }
+    });
+
+
+    socket.on('games in session', (sessionId) => {
+      console.log('games in session ran');
+   socket.emit('players update',(socket.id))
+    });
 
     socket.on('join game session', (data) => {
+      socket.emit('players update', (socket.id))
       console.log(`Data received from server: ${data}`);
     });
 
-function fetchGame(action,gameId){
-  fetch(`/games/${action}/${gameId}`, {
-          method: 'POST', // or 'GET', depending on your API design
-          headers: {
-            'Content-Type': 'application/json' // Adjust headers as needed
-          }
-        })
-        .then(response => {
-          if (!response.ok) {
-            throw new Error('Network response was not ok');
-          }
-          return response.text(); // Handle HTML content
-        })
-        .then(html => {
-          document.getElementById('launcher').remove(); // Optionally remove launcher if needed
-          document.getElementById('gameContainer').innerHTML = html; // Update the game container with new HTML
-        })
-        .catch(error => {
-          console.error('Error fetching and rendering game table:', error);
-        });
-}
+    function fetchGame(action, gameId) {
+     // appendWheel(event.target);
+      fetch(`/games/${action}/${gameId}`, {
+        method: 'POST', // or 'GET', depending on your API design
+        headers: {
+          'Content-Type': 'application/json' // Adjust headers as needed
+        }
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.text(); // Handle HTML content
+      })
+      .then(html => {
+        document.getElementById('launcher').remove(); // Optionally remove launcher if needed
+        document.getElementById('gameContainer').innerHTML = html; // Update the game container with new HTML
+      })
+      .catch(error => {
+        console.error('Error fetching and rendering game table:', error);
+      });
+    }
+
     // Event listener for dynamically loaded join buttons
     document.body.addEventListener('click', (event) => {
+      if (event.target && event.target.matches('.controlButton') && event.target.textContent.trim() === 'Ready to Play') {
+    const sessionId = event.target.getAttribute('session-data');
+    const userId = socket.id
+        readyUp(userId,sessionId); // Call the readyUp function with the sessionId
+    }
       if (event.target && event.target.matches('.joinGameButton')) {
         const gameId = event.target.getAttribute('data-game-id');
         const action = event.target.getAttribute('action-game');
@@ -46,12 +81,9 @@ function fetchGame(action,gameId){
 
         // Emit the join game session event to the server via socket
         socket.emit('join game session', { user: user, game: gameId });
-  fetchGame(action,gameId)
+        fetchGame(action, gameId);
         // Fetch the updated game table to re-render
-     
       }
     });
   });
 </script>
-
-
