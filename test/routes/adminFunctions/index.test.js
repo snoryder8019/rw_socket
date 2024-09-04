@@ -2,11 +2,13 @@ import dotenv from 'dotenv';
 import { expect } from 'chai';
 import request from 'supertest';
 import express from 'express';
+import sinon from 'sinon';
+import chalk from 'chalk';
 import fs from 'fs/promises';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import chalk from 'chalk';
 import cookieParser from 'cookie-parser';
+import flash from 'connect-flash';  // Ensure to add connect-flash middleware
 import { mockCookies } from '../../testConfig.js'; // Import mock data
 
 // Load environment variables from .env file
@@ -20,6 +22,7 @@ const __dirname = path.dirname(__filename);
 const app = express();
 app.use(express.json());
 app.use(cookieParser());
+app.use(flash()); // Add flash middleware
 
 // Function to dynamically scan directories and get route handlers
 const loadRoutes = async () => {
@@ -93,6 +96,25 @@ const loadRoutes = async () => {
     testDirectories.forEach((dir) => {
       routesToTest.forEach((route) => {
         describe(`Testing ${route} route in ${dir} module`, () => {
+          let req;
+          let res;
+          let next;
+
+          beforeEach(() => {
+            // Mock req, res, next for each test
+            req = {
+              flash: sinon.spy(),
+              user: null, // Default to no user
+              cookies: {} // Mock cookies object
+            };
+            res = {
+              redirect: sinon.spy(),
+              status: sinon.stub().returnsThis(),
+              json: sinon.stub().returnsThis()
+            };
+            next = sinon.spy();
+          });
+
           it(`should return 403 Forbidden if no user is found`, (done) => {
             console.log(chalk.blue(`Testing ${route} without user authentication in module: ${dir}`));
             request(app)
@@ -112,7 +134,7 @@ const loadRoutes = async () => {
           it(`should return 200 OK for valid requests with admin user`, (done) => {
             console.log(chalk.blue(`Testing ${route} with admin user in module: ${dir}`));
             // Mock a user with valid permissions
-            const mockUser = {
+            req.user = {
               firstName: 'Test',
               lastName: 'User',
               isAdmin: true,
@@ -121,7 +143,7 @@ const loadRoutes = async () => {
 
             request(app)
               .get(`/${dir}${route}`)
-              .set('Cookie', [`user=${encodeURIComponent(JSON.stringify(mockUser))}`]) // Pass mock user as a cookie
+              .set('Cookie', [`user=${encodeURIComponent(JSON.stringify(req.user))}`]) // Pass mock user as a cookie
               .expect(200) // Expecting OK status
               .end((err, res) => {
                 if (err) {

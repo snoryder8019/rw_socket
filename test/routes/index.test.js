@@ -2,6 +2,7 @@ import { expect } from 'chai';
 import request from 'supertest';
 import express from 'express';
 import chalk from 'chalk';
+import flash from 'connect-flash';  // Add this line to mock `req.flash`
 import cookieParser from 'cookie-parser';
 import indexRouter from '../../routes/index.js'; // Adjust path as needed
 import { mockCookies } from '../testConfig.js'; // Import mock data

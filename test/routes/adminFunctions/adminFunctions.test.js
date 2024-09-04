@@ -1,13 +1,13 @@
 import { expect } from 'chai';
 import sinon from 'sinon';
-
 import { isAdmin } from '../../../routes/adminFunctions/adminFunctions.js';
 import { testUsers } from '../../testConfig.js'; // Import user configurations
 
 describe('isAdmin Middleware', () => {
   it('should call next if user is admin', () => {
     const req = {
-      user: testUsers.admin // Use admin user from config
+      user: testUsers.admin, // Use admin user from config
+      flash: sinon.spy() // Mock req.flash even if it's not expected to be called in this test
     };
     const res = {};
     const next = sinon.spy();
@@ -20,7 +20,7 @@ describe('isAdmin Middleware', () => {
   it('should redirect to home if user is not admin', () => {
     const req = {
       user: testUsers.regularUser, // Use regular user from config
-      flash: sinon.spy()
+      flash: sinon.spy() // Mock req.flash function with sinon.spy
     };
     const res = {
       redirect: sinon.spy()
@@ -38,8 +38,7 @@ describe('isAdmin Middleware', () => {
 
   it('should redirect to home if user is not present', () => {
     const req = {
-      user: testUsers.noAuthUser, // Represents unauthenticated state
-      flash: sinon.spy()
+      flash: sinon.spy() // Mock req.flash function with sinon.spy
     };
     const res = {
       redirect: sinon.spy()
