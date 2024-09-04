@@ -29,12 +29,15 @@ const router = express.Router();
 router.use(cookieParser());
 
 router.use(pluginsRouter);
+//focus test below:
 router.use('/', adminFunctionsRouter);
+//focus test below:
 router.use('/users', users);
+//focus test below:
 router.use('/', cookiesRouter);
 router.use(userBucketRouter);
 router.use('/games', gamesRouter);
-
+//ignore these
 router.get('/getNotifications', getNotifications);
 router.post('/deleteAvatar', deleteAvatar);
 router.post('/assignAvatar', assignAvatar);
@@ -46,6 +49,8 @@ router.get('/reset-password/:token', handleResetPasswordGet);
 router.post('/updateBanned', updateBanned);
 router.post('/userDataUpload', userDataUpload);
 router.post('/saveRotation', saveRotation);
+//focus test below:
+
 router.get('/', noNos, async (req, res) => {
   let user = req.user;
 

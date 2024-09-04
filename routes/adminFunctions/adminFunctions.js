@@ -1,6 +1,6 @@
 export function isAdmin(req, res, next) {
   let user = req.user;
-  console.log('ADMIN ACCESS: accessing admin routes: ' + user.displayName);
+ // console.log('ADMIN ACCESS: accessing admin routes: ' + user._id);
 
   if (user && user.isAdmin) {
     next();

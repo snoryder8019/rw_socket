@@ -1,15 +1,29 @@
 export default class GameState {
     constructor() {
-      this.state = 'initial'; // initial state of the game
-      this.score = 0;         // initial score
+      this.state = 'waiting to start'; // initial state of the game
+      this.scoreboard = {};         // 
     }
+  /////////////
+  //////GAMESTATE FUNCTIONS//////
+
+
+
+
+
+
+
+
+
   
+  //////END GAMESTATE FUNCTIONS//////
+  ///////////
     startGame() {
       this.state = 'running';
     }
   
     pauseGame() {
       this.state = 'paused';
+
     }
   
     endGame() {
@@ -20,17 +34,17 @@ export default class GameState {
       return this.state;
     }
   
-    updateScore(points) {
-      this.score += points;
+    updateScoreboard(points) {
+      this.scoreboard += points;
     }
   
-    getScore() {
+    getScoreboard() {
       return this.score;
     }
   
     resetGame() {
       this.state = 'initial';
-      this.score = 0;
+      this.scoreboard = {};
     }
   }
   

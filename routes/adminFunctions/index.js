@@ -1,6 +1,6 @@
 import express from 'express';
 import videoStream from './chats/videoStream.js';
-import { getUserEditor, postUserEdit } from './users/userControl.js';
+//import { getUserEditor, postUserEdit } from './users/userControl.js';
 import chat from './chats/chat.js';
 import users from './users/users.js';
 import permissions from './permissions/permissions.js';
@@ -98,8 +98,8 @@ router.use('/faqs', permissionsChecker, faqs);
 router.use('/videoStream', videoStream);
 ////
 
-router.post('/postUserEdit', postUserEdit);
-router.get('/userEditor', getUserEditor);
-router.post('/userEdit/:id', postUserEdit);
+// router.post('/postUserEdit', postUserEdit);
+// router.get('/userEditor', getUserEditor);
+// router.post('/userEdit/:id', postUserEdit);
 
 export default router;

@@ -1,14 +1,13 @@
 import { expect } from 'chai';
 import sinon from 'sinon';
+
 import { isAdmin } from '../../../routes/adminFunctions/adminFunctions.js';
+import { testUsers } from '../../testConfig.js'; // Import user configurations
 
 describe('isAdmin Middleware', () => {
   it('should call next if user is admin', () => {
     const req = {
-      user: {
-        displayName: 'Admin User',
-        isAdmin: true
-      }
+      user: testUsers.admin // Use admin user from config
     };
     const res = {};
     const next = sinon.spy();
@@ -20,10 +19,7 @@ describe('isAdmin Middleware', () => {
 
   it('should redirect to home if user is not admin', () => {
     const req = {
-      user: {
-        displayName: 'Regular User',
-        isAdmin: false
-      },
+      user: testUsers.regularUser, // Use regular user from config
       flash: sinon.spy()
     };
     const res = {
@@ -42,6 +38,7 @@ describe('isAdmin Middleware', () => {
 
   it('should redirect to home if user is not present', () => {
     const req = {
+      user: testUsers.noAuthUser, // Represents unauthenticated state
       flash: sinon.spy()
     };
     const res = {
