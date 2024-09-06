@@ -4,10 +4,19 @@
 <div class="gamesInSession">
     Join a Game
     <%sessions.forEach(session=>{%>
+        <%if(session.status =="playing"){%>
+            
+            <%}%>
         <div class="message">
-<button class="joinGameButton" game="<%=session.game%>" action-game="joinSession" data-game-id="<%=session._id%>">join <%=session.gameName%> <%=session._id.toString().slice(0,5)%></button>
-<h3>No of Players: <%=session.players.length%></h3>
-</div>    
+<button class="joinGameButton" game="<%=session.game%>" action-game="joinSession" data-game-id="<%=session._id%>">join <%=session.gameName%> #<%=session._id.toString().slice(0,5)%></button>
+<% if (session.players && session.players.includes(user._id)) { %>
+    <span style="color: green;">● You are registered here</span>
+    <p>status: <%=session.status%></p>
+    <% }else {%>
+        <p>status: <%=session.status%></p>
+        <%}%>
+    <h4>No of Players: <%=session.players.length%> </h4>
+  </div>    
 <%})%>
 </div>
     <%game.forEach(game =>{%>

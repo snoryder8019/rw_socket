@@ -1,5 +1,5 @@
 //routes/helpers/routeBuilder.js **GPT NOTE: DONT REMOVE THIS LINE IN EXAMPLES**
-
+import chalk from 'chalk';
 import { ObjectId } from 'mongodb';
 
 // model needs to be an instance of the model that you want routes built for.
@@ -86,7 +86,6 @@ export const buildRoutes = (model, router) => {
       res.status(500).json({ error: 'Internal server error' });
     }
   });
-  
   router.post(
     '/update/:id',
     [...model.middlewareForEditRoute()],
@@ -96,7 +95,20 @@ export const buildRoutes = (model, router) => {
         if (!ObjectId.isValid(id)) {
           return res.status(400).send({ error: 'Invalid ID format' });
         }
+  
         const updatedDocument = req.body;
+  
+        // Convert boolean-like strings to actual booleans
+        Object.keys(updatedDocument).forEach((key) => {
+          if (updatedDocument[key] === 'true') updatedDocument[key] = true;
+          if (updatedDocument[key] === 'false') updatedDocument[key] = false;
+        });
+  
+        console.log(chalk.green.bold(
+          `********ROUTES/HELPERS/ROUTEBUILDER.js*********   
+          \n\n gameSettingsData:${JSON.stringify(updatedDocument)}
+          \n*********END CONSOLE*********`));
+  
         const result = await model.updateById(id, updatedDocument);
         req.flash('message', `Success!, Updated document: ${result}`);
         res.redirect('/');
@@ -106,7 +118,7 @@ export const buildRoutes = (model, router) => {
       }
     }
   );
-
+  
   router.post(
     '/delete/:id',
     [...model.middlewareForDeleteRoute()],

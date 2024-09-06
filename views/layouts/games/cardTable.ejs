@@ -1,59 +1,72 @@
-<!--// Reference: /views/layouts/games/cardTable.js-->
-<% if (typeof gameSession === 'object' && gameSession) { %>
-    <div class="cardTableGameDiv" style="background-image: url('<%= gameSettingsData.backgroundImg %>');" id="cardTable_<%= gameSession._id %>">
-      <div style="font-size:.5rem;color: yellow;" class="pauseTimer">your pause time remaining: 2:00</div>
+<!-- Reference: /views/layouts/games/cardTable.js -->
+<% if (typeof gameSession === 'object') { %>
+  <div class="cardTableGameDiv" style="background-image: url('<%= gameSettingsData.backgroundImg %>');" id="cardTable_<%= gameSession._id %>">
+    <div style="font-size:.5rem;color: yellow;" class="pauseTimer">Your pause time remaining: 2:00</div>
 
-      <!-- Game Title and Waiting Message -->
-      <h2>WELCOME to Dominoes!! <%= gameSession._id%></h2>
-      <h6><%=gameSession.currentState%></h6>
-      <h6><%=gameSession.currentStatus%></h6>
+    <!-- Game Title and Status Messages -->
+    <h2>WELCOME to Dominoes!! <%= gameSession._id %></h2>
+    <h6>Current State: <%= gameSession.currentState %></h6>
+    <h6>Current Status: <%= gameSession.status %></h6>
+
+    <% if (gameSession.status === "waiting for players") { %>
       <h3 style="color:yellow">Waiting for others to join...</h3>
-      
-      <!-- Player Seats arranged around the top -->
-      <div class="playerSeatsTop">
-        <% 
-          // Iterate over the max number of players
-          for (let index = 0; index < gameSettingsData.maxPlayers; index++) {
-            const player = gameSession.players[index];
-        %>
-          <div class="playerSeat">
+    <% } else if (gameSession.status === "playing") { %>
+      <h3 style="color:green">Game has Begun</h3>
+    <% } %>
 
-            <% if (player && player.id) { %>
-                <div><h3>Seat <%= index + 1 %>: <%= player.displayName %></h3></div>
-                <div><h3>Last Move: <%= player.lastMove %></h3></div>    
-                <%if(player.id == user.id){%>  
-                <h6 style="color:red" class="ping_socket<%=player.id%>"></h6>
- <%}%>
-            <% } else { %>
-              Seat <%= index + 1 %>:<div class="loaderWheel"><div class="wheel"></div></div>
+    <!-- Player Seats arranged around the top -->
+    <div class="playerSeatsTop">
+      <% 
+        // Iterate over the max number of players
+        for (let index = 0; index < gameSettingsData.maxPlayers; index++) {
+          const player = gameSession.players[index];
+      %>
+        <div class="playerSeat">
+          <% if (player && player.id) { %>
+            <div><h3>Seat <%= index + 1 %>: <%= player.displayName %></h3></div>
+            <div><h3>Last Move: <%= player.lastMove %></h3></div>
+            <% if (player.id === user.id) { %>
+              <h6 style="color:red" class="ping_socket<%= player.id %>"></h6>
             <% } %>
-          </div>
-        <% } %>
-      </div>  
-      <div class="userControls">      
-        <h6 class="playerPing"></h6>
-
-      <%if(gameSession.status=="waiting for players"){%>
-          <button onclick="exitSession('<%=gameSession._id%>')" style="background-color: red;" class="controlButton">Exit Game</button>
-          <button  id="readyButton" style="background-color: blue;" class="controlButton"session-data="<%=gameSession._id%>">Ready to Play</button>
-       
-          <div class="currentUserInfo">
-          </div>
-        <%}%>
-        <%if(gameSession.status=="waiting for players" && gameSession.players.length<gameSettingsData.minPlayers){%>
-            
-            <div class="currentUserInfo">
-              </div>
-              
-              <%}%>
-              <%if(gameSession.status==="game in session"){%>
-                  <button class="controlButton">Draw Tile</button>
-                  <button class="controlButton">Play Tile</button>
-                  <button class="controlButton">Pass Turn</button>        
-                  <div class="currentUserInfo">
-                    </div>
-                    <%}%>
-                    </div>
+          <% } else if (gameSession.status === "waiting for players") { %>
+            Seat <%= index + 1 %>:<div class="loaderWheel"><div class="wheel"></div></div>
+          <% } %>
+        </div>
+      <% } %>
     </div>
-  <% } %>
-  
+
+    <!-- User Controls -->
+    <div class="userControls">      
+      <h6 class="playerPing"></h6>
+
+      <% if (gameSession.status === "waiting for players") { %>
+        <button onclick="exitSession('<%= gameSession._id %>')" style="background-color: red;" class="controlButton">Exit Game</button>
+        <button id="readyButton" style="background-color: blue;" class="controlButton" data-session-id="<%= gameSession._id %>">Ready to Play</button>
+        <div class="currentUserInfo"></div>
+      <% } else if (gameSession.status === "playing") { %>
+        <!-- Controls for when the game is in session -->
+        <button class="controlButton">Draw Tile</button>
+        <button class="controlButton">Play Tile</button>
+        <button class="controlButton">Pass Turn</button>        
+        <div class="currentUserInfo"></div>
+      <% } %>
+    </div>
+  </div>
+<% } %>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    // Document-wide click listener for the 'Ready to Play' button
+    document.addEventListener('click', (event) => {
+      if (event.target && event.target.matches('#readyButton')) {
+        const sessionId = event.target.getAttribute('data-session-id');
+        readyUp(sessionId);
+      }
+    });
+
+    function readyUp(sessionId) {
+      const playerId = user._id; // Assuming socket.id is used as playerId
+      socket.emit('ready up', { playerId, sessionId, startGame: true });
+    }
+  });
+</script>

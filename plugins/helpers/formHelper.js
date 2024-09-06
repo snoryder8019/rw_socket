@@ -54,7 +54,8 @@ export default (fields, data = {}) => {
           label: field.label || field.name,
           name: field.name,
           type: field.type,
-          value: data[field.name] || '',
+          options: ['true', 'false'], // Adding the options for the dropdown
+          value: data[field.name] !== undefined ? String(data[field.name]) : '', // Convert boolean to string
         };
       default:
         return {

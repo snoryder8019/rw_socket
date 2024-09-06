@@ -36,12 +36,43 @@ router.get('/renderEditForm/:id', async (req, res) => {
     const model = GameSetting.getModelFields();
     const formFields = generateFormFields(model, gameSetting);
 
+    // Enhance form fields for arrays, objects, and booleans
+    const enhancedFormFields = formFields.map(field => {
+      if (Array.isArray(field.value)) {
+        // Handle array fields
+        return {
+          ...field,
+          type: 'array',
+          value: field.value,
+        };
+      } else if (typeof field.value === 'object' && field.value !== null) {
+        // Handle object fields
+        return {
+          ...field,
+          type: 'object',
+          value: Object.entries(field.value).map(([key, val]) => ({
+            key,
+            val,
+          })),
+        };
+      } else if (typeof field.value === 'boolean') {
+        // Handle boolean fields
+        return {
+          ...field,
+          type: 'boolean',
+          value: field.value,
+        };
+      }
+      // Handle other types (string, number, etc.)
+      return field;
+    });
+
     res.render('forms/generalEditForm', {
       title: `Edit Game Setting`,
       action: `/games/gameSettings/update/${id}`,
       routeSub: `gameSettings`,
       method: 'post',
-      formFields: formFields,
+      formFields: enhancedFormFields,
       data: gameSetting,
       script: `<script>
           document.addEventListener('DOMContentLoaded', function () {
@@ -55,19 +86,6 @@ router.get('/renderEditForm/:id', async (req, res) => {
   }
 });
 
-// Route to view all game settings
-router.get('/section', async (req, res) => {
-  try {
-    const data = await new GameSetting().getAll();
-    res.render('./layouts/section', {
-      title: 'Game Settings Section View',
-      data: data,
-    });
-  } catch (error) {
-    console.error(error);
-    res.status(500).send({ error: error.message });
-  }
-});
 
 
 // Use route builder to automatically generate CRUD routes

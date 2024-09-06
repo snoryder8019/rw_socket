@@ -6,7 +6,7 @@
     });
     //listen for 'players update'
     function readyUp(sessionId) {
-  const playerId = user._id; // Assuming socket.id is used as playerId
+  const playerId = socket.id; // Assuming socket.id is used as playerId
   socket.emit('ready up', { playerId, sessionId });
 }
 

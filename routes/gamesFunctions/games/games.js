@@ -1,5 +1,6 @@
 //routes/gamesFunctions/games/games.js
 import express from 'express';
+import chalk from 'chalk';
 import Game from '../../../plugins/mongo/models/games/Game.js';
 import generateFormFields from '../../../plugins/helpers/formHelper.js';
 import {imagesArray, getImagesArray, popImagesArray, popImagesArrayIndex, updateImagesArray} from '../../helpers/imagesArray.js';
@@ -137,7 +138,14 @@ router.post('/join/:gameId', async (req, res) => {
     
     const gameSession = await new GameSession().create(gameSetup);
     const result = await new GameSession().markUserLast(user._id, gameSession._id);
-    const gameSettingsData = await new GameSetting().getById(gameData.gameSettings);
+    const gameSettingsData = await new GameSetting().getById(game.gameSettings);
+
+    console.log(chalk.green.bold(
+      `********GAME/GAME.js*********
+      \n******Route: games/games/join/:id******
+      \n\n gameSettingsData:${JSON.stringify(gameSettingsData)}
+      \n result:${JSON.stringify(result)}
+      \n*********END CONSOLE*********`));
 
     res.render('./layouts/games/cardTable', {
       gameSession: gameSession,

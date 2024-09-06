@@ -1,4 +1,5 @@
 //plugins/mongo/models/games/noDb/GameState.js
+import GameSession from '../GameSession.js';
 export default class GameState {
     constructor() {
       this.state = 'waiting to start'; // initial state of the game
@@ -18,8 +19,14 @@ export default class GameState {
   
   //////END GAMESTATE FUNCTIONS//////
   ///////////
-    startGame() {
-      this.state = 'running';
+  async startGame() {
+    try{
+      const sessionId= "";
+      const dbStateUpdate = await new GameSession.updateById(sessionId)
+      this.state = 'running';      
+      console.log('START MEUP!!')
+    }
+    catch(error){console.error(error)};
     }
   
     pauseGame() {
