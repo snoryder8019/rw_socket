@@ -1,6 +1,7 @@
 import ModelHelper from '../../helpers/models.js';
 import User from '../User.js';
 import chalk from 'chalk';
+import GameElement from './GameElement.js'
 
 const modelName = 'gameSession';
 //status emits to the launcher for the UX/UI 

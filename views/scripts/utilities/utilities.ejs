@@ -1,60 +1,39 @@
 <script>
-// function appendWheel(e){
-// const divW = document.createElement('div');
+// Function to append a loading wheel (optional, keep it if you use it)
 // function appendWheel(e) {
-//   // Create the outer div
 //   const divW = document.createElement('div');
 //   divW.className = "loaderWheel"; // Set class name for the outer div
 
-//   // Create the inner div
 //   const divWi = document.createElement('div');
 //   divWi.className = "wheel"; // Set class name for the inner div
 
-//   // Append the inner div to the outer div
 //   divW.appendChild(divWi);
-
-//   // Append the outer div to the target element
 //   e.appendChild(divW);
 // }
 
-// }
-
-  function addField(name) {
-    const container = document.getElementById(`${name}-container`);
-    const index = container.querySelectorAll(`input[name="${name}[]"]`).length;
-    const newField = document.createElement("div");
-    newField.className = "array-item";
-    newField.innerHTML = `
-      <input type="text" name="${name}[]" id="${name}-${index}">
-      <button type="button" class="remove-btn">Remove</button>
-    `;
-    container.appendChild(newField);
-  }
-
-  // Function to remove a field
-  function removeField(elementId, routeSub,id,index) {
-  // Find the element by its ID
-  const element = document.getElementById(elementId);
-  
-  if (element) {
-    // Log the child nodes of the element's parent node
-    console.log(element.parentNode.childNodes);
-
-    // Find the input field within the parent node
-    const inputField = element.querySelector('input');
-
-    if (inputField) {
-      // Capture the value of the input field
-      const inputValue = inputField.value;
-      console.log('Input value to be removed:', inputValue);
-//fetch(`${routeSub}/popImagesArrayIndex/${id}/${index}`)
-      // Remove the parent element from the DOM
-     element.remove();
-    }
-  }
+// Function to add a field dynamically to a container
+function addField(name) {
+  const container = document.getElementById(`${name}-container`);
+  const index = container.querySelectorAll(`input[name="${name}[]"]`).length; // Track current index
+  const newField = document.createElement("div");
+  newField.className = "array-item"; // Add a class for the new field
+  newField.innerHTML = `
+    <input type="text" name="${name}[]" id="${name}-${index}">
+    <button type="button" class="remove-btn" onclick="removeField(this)">Remove</button>
+  `;
+  container.appendChild(newField); // Append the new field to the container
 }
 
-  // Function to initialize the observer on all containers
+// Function to remove a field
+function removeField(button) {
+  const field = button.parentElement; // Get the parent div of the button (the field wrapper)
+  field.remove(); // Remove the field wrapper
+}
 
+// Initialize the observer or handler on page load if needed
+document.addEventListener('DOMContentLoaded', function () {
+  console.log('Form loaded and event listeners ready.');
 
-  </script>
+  // Add more initialization code if needed here
+});
+</script>

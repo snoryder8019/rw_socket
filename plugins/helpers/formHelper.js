@@ -57,6 +57,15 @@ export default (fields, data = {}) => {
           options: ['true', 'false'], // Adding the options for the dropdown
           value: data[field.name] !== undefined ? String(data[field.name]) : '', // Convert boolean to string
         };
+        case 'custom': // Custom field handling
+        return {
+          label: field.label || field.name,
+          name: field.name,
+          type: 'select',
+          options: field.options, // Custom options (like Sprite or Game)
+          value: data[field.name] || [],
+          multiple: true, // Assuming it's a multi-select
+        };
       default:
         return {
           label: field.label || field.name,

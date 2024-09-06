@@ -1,25 +1,32 @@
 import ModelHelper from '../../helpers/models.js';
 import { upload, processImages } from '../../../multer/subscriptionSetup.js';
 import { uploadToLinode } from '../../../aws_sdk/setup.js';
-const elOptions = []
+import Game from './Game.js';
+import Sprite from './GameSprite.js';
+
 export default class GameElement extends ModelHelper {
   constructor(elementData) {
     super('gameElements');
+
+    // Define model fields for GameElement
     this.modelFields = {
-      name: { type: 'string', value: '' }, // Name of the game element
-      image: { type: 'file', value: null }, // File property for the element image (e.g., PNG, JPG, GIF)
-      spriteId: { type: 'string', value: '' }, // ID of the associated sprite
-      spriteCoords: { type: 'array', value: [] }, // Array Values as COORD ARGS X:Y:W:H: in px it will be stamped by a cropper from Sprite()
-      //coords: { type: 'object', value: { x: 0, y: 0 } }, // Coordinates for the element on the game board
-      startCoords: { type: 'string', value: null }, // Start Coords    
-      function: { type: 'string', value: null }, // call function
-      reacts: { type: 'string', value: null }, // 
-      sounds: { type: 'string', value: null }, // id for sound pasted 
-      isBkgd: { type: 'boolean', value: false }, //mark as true to use as the background image of the games template
-      movable: { type: 'boolean', value: false }, // Coordinates for the element on the game board
-      dropzone: { type: 'boolean', value: false }, // Coordinates for the element on the game board
-      className: { type:'text', value: null }, // class to ref the SCSS
-      inlineStyle: { type: 'text', value: false }, // inline to the CSS it should overide
+      name: { type: 'string', value: '' },
+      isBkgd: { type: 'boolean', value: false },
+      image: { type: 'file', value: null },
+      isSprite: { type: 'boolean', value: false },
+      spriteId: { type: 'text', value: null },
+      spriteCoords: { type: 'array', value: [] },
+      startCoords: { type: 'string', value: null },
+      function: { type: 'string', value: null },
+      reacts: { type: 'string', value: null },
+      sounds: { type: 'string', value: null },
+      movable: { type: 'boolean', value: false },
+      dropzone: { type: 'boolean', value: false },
+      dropzoneClassName:{type:'text', value: false},
+      className: { type: 'text', value: null },
+      inlineStyle: { type: 'text', value: false },
+      customField1: { type: 'custom', value: [] }, // Custom Game select
+      customField2: { type: 'custom', value: [] }, // Custom Sprite select
     };
 
     if (elementData) {
@@ -31,6 +38,26 @@ export default class GameElement extends ModelHelper {
     }
   }
 
+  // Populate options for customField1 and customField2 from external data
+  async populateCustomFields() {
+    const games = await new Game().getAll(); // Fetch games from Game collection
+    const sprites = await new Sprite().getAll(); // Fetch sprites from Sprite collection
+
+    // Populate customField1 with games
+    this.modelFields.customField1.value = games.map(game => ({
+      value: game._id,
+      label: game.name,
+    }));
+
+    // Populate customField2 with sprites
+    this.modelFields.customField2.value = sprites.map(sprite => ({
+      value: sprite._id,
+      label: sprite.name,
+    }));
+  }
+
+  // Static method to get model fields for form generation
+  // This remains as your original version!
   static getModelFields() {
     return Object.keys(new GameElement().modelFields).map((key) => {
       const field = new GameElement().modelFields[key];
@@ -38,6 +65,7 @@ export default class GameElement extends ModelHelper {
     });
   }
 
+  // Middleware for handling create routes (file upload)
   middlewareForCreateRoute() {
     return [
       upload.fields(this.fileFields),
@@ -46,6 +74,7 @@ export default class GameElement extends ModelHelper {
     ];
   }
 
+  // Middleware for handling edit routes (file upload)
   middlewareForEditRoute() {
     return [
       upload.fields(this.fileFields),
@@ -54,12 +83,12 @@ export default class GameElement extends ModelHelper {
     ];
   }
 
+  // Define file fields to be uploaded
   get fileFields() {
-    return [
-      { name: 'elementImage', maxCount: 1 }, // Allow uploading one element image file
-    ];
+    return [{ name: 'elementImage', maxCount: 1 }];
   }
 
+  // Middleware to handle uploading images to Linode
   async uploadImagesToLinode(req, res, next) {
     try {
       if (req.files && req.files.elementImage) {
@@ -75,6 +104,7 @@ export default class GameElement extends ModelHelper {
     }
   }
 
+  // Path for rendering the view
   pathForGetRouteView() {
     return 'admin/gameElements/template';
   }

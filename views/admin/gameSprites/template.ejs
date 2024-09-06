@@ -13,11 +13,11 @@
   
           <!-- Button to View/Edit Game Sprite Details -->
           <button class="collapsible">View/Edit: <span class="carrot">&#9654;</span></button>
-          <div class="content" data-url="/gameSprites/renderEditForm/<%= gameSprite._id %>"></div>
+          <div class="content" data-url="/games/gameSprites/renderEditForm/<%= gameSprite._id %>"></div>
           
           <!-- Section to Upload New Sprite Image -->
           <h3>Upload New Sprite Image</h3>
-          <form action="/gameSprites/<%= gameSprite._id %>/upload-images" method="post" enctype="multipart/form-data">
+          <form action="/games/gameSprites/<%= gameSprite._id %>/upload-images" method="post" enctype="multipart/form-data">
             <input type="file" name="spriteFile" accept="image/*">
             <button type="submit">Upload</button>
           </form>
