@@ -8,59 +8,33 @@
     <!-- Game Title and Status Messages -->
     <h2>WELCOME to Dominoes!! <%= gameSession._id %></h2>
 
-    <% if (gameSession.status === "waiting for players") { %>
-      <h3 class="state_message" style="color:yellow">Waiting for others to join...</h3>
-    <% } else if (gameSession.status === "playing") { %>
-      <h3 class="state_message" style="color:green">Setting Up Game</h3>
-      <div class="gameBoardCanvas"></div>
-    <% } %>
+    <h3 class="state_message" style="color:yellow">
+      <% if (gameSession.status === "waiting for players") { %>
+        Waiting for others to join...
+      <% } else if (gameSession.status === "playing") { %>
+        Setting Up Game
+      <% } %>
+    </h3>
 
     <!-- Player Seats arranged around the top -->
-    <div class="playerSeatsTop">
-      <% 
-        // Initialize empty seats based on maxPlayers
-        for (let index = 0; index < gameSettingsData.maxPlayers; index++) {
-          const player = gameSession.players[index];
-      %>
-        <div class="playerSeat" id="playerSeat_<%= index %>">
-          <% if (player && player.id && player._id !== user._id) { %>
-            <% if (player.displayName) { %>
-              <div><h3>Seat <%= index + 1 %>: <%= player.displayName %></h3></div>
-            <% } %>
-            <% if (player.lastMove) { %>
-              <div><h3 class="last_move_<%= player.id %>">Last Move: <%= player.lastMove %></h3></div>
-            <% } %>
-            <h6 style="color:red" class="ping_socket<%= player.id %>"></h6>
-          <% } else if (gameSession.status === "waiting for players") { %>
-            Seat <%= index + 1 %>: <div class="loaderWheel"><div class="wheel"></div></div>
-          <% } %>
-        </div>
-      <% } %>
+    <div class="playerSeatsTop" id="playerSeats">
+      <!-- Seats will be dynamically generated here based on socket data -->
     </div>
 
     <!-- User Controls -->
     <div class="userControls">
-      <h6 class="playerPing"></h6>
+      <h6 class="playerPing" id="playerPing_<%= user._id %>">Ping: calculating...</h6>
 
       <% if (gameSession.status === "waiting for players") { %>
-        <!-- Join Game button with user and session IDs -->
         <button id="readyButton" style="background-color: blue;" class="controlButton" data-user-id="<%= user._id %>" data-session-id="<%= gameSession._id %>">Ready to Play</button>
-
-        <!-- Exit Game button with user and session IDs -->
         <button onclick="exitSession('<%= gameSession._id %>')" style="background-color: red;" class="controlButton">Exit Game</button>
-
-        <div class="currentUserInfo"></div>
       <% } else if (gameSession.status === "playing") { %>
-        <!-- Gameplay Buttons -->
         <button class="controlButton">Draw Tile</button>
         <button class="controlButton">Play Tile</button>
         <button class="controlButton">Pass Turn</button>
-
-        <!-- Exit Game button during gameplay -->
         <button onclick="exitSession('<%= gameSession._id %>')" style="width:25%; height:30px; font-size:0.5rem; background-color: red;" class="controlButton">Exit Game</button>
-
-        <div class="currentUserInfo"></div>
       <% } %>
     </div>
   </div>
 <% } %>
+<script></script>

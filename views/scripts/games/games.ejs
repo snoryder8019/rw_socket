@@ -1,10 +1,31 @@
 <script>
   document.addEventListener('DOMContentLoaded', () => {    
     let socket = io('/games');    
+  let socketEventBuffer = []; 
+  function bindSocketEvents() {
+  // Example socket event listener after EJS renders
+  socket.on('playerJoined', (data) => {
+    console.log(`Player joined game session: ${data.gameSessionId}`);
+
+    // Rebind or update the DOM as needed
+    const playerSeats = document.getElementById('playerSeats');
+    if (playerSeats) {
+      updatePlayerSeats(playerSeats, data.players, data.maxPlayers);
+    }
+  });
+  
+  // Other socket events can also be re-bound here
+}
+
+// Listen for an event that signals the EJS content has been re-rendered
+document.addEventListener('ejsRenderComplete', () => {
+  console.log('EJS content rendered, rebinding socket events');
+  bindSocketEvents();  // Reapply socket logic
+}); // Buffer to hold socket events before DOM is ready
+    
     socket.on('connect', () => {
       console.log('Connected to GAMES CLIENT');
     });
-    //listen for 'players update'
     function readyUp(userId,gameSessionId) {   
       console.log(`READY UP FUNCTION sessionId:${gameSessionId}`)   
         socket.emit('ready up', 

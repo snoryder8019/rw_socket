@@ -24,7 +24,7 @@ export const socketGamesHandlers = {
       // Add player to game session and emit player update to all in the room
       const gameSession = await new GameSession().addPlayerToSession(userId, gameSessionId);
       if (gameSession) {
-        nsp.to(gameSessionId).emit('player update', {
+        nsp.to(gameSessionId).emit('state update', {
           userId: user._id,
           userName,
           avatarThumbnailUrl,
@@ -87,18 +87,19 @@ export const socketGamesHandlers = {
       }
     });
 
-    // Emit ping to client every 5 seconds
+    // Emit ping to client every 5 seconds to measure latency
     const pingInterval = setInterval(() => {
       const startTime = Date.now();
       socket.emit('ping', { startTime, userId });
     }, 5000);
 
+    // Handle pong response from client
     socket.on('pong', (data) => {
-      const latency = Date.now() - data.startTime;
-      console.log(`Received pong with latency: ${latency} ms`);
+      const latency = Date.now() - data.startTime; // Calculate round-trip time (RTT)
+      console.log(`Received pong from ${userName} with latency: ${latency} ms`);
 
-      // Emit the ping result back to the specific client
-      socket.emit('ping result', { userId, latency });
+      // Emit the ping result back to the client to update their DOM
+      socket.emit('ping result', { userId: user._id, latency });
     });
 
     // Handle disconnection
