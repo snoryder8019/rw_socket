@@ -9,7 +9,6 @@ const __dirname = path.dirname(__filename);
 
 // Use path.join as usual
 
-console.log(filePath);
 
 
 export default function lib(msg, err, data, filename, logType) {
