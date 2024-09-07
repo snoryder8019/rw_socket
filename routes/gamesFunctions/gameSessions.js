@@ -51,56 +51,101 @@ router.get('/renderEditForm/:id', async (req, res) => {
     res.status(500).send({ error: error.message });
   }
 });
-const reJoinSession =  async (sessionId,req,res)=>{
-  console.log(chalk.blue(sessionId))
-  const gameSession = await new GameSession().getById(sessionId)
-const user =req.user
-  const gameData = await new Game().getById(gameSession.gameId)
-  const gameSettingsData = await new GameSetting().getById(gameData.gameSettings)
-  res.render('layouts/games/cardTable',{
-    gameSession:gameSession,
-    user:user,
-    gameData:gameData,
-    gameSettingsData:gameSettingsData,
-  })
-}
-router.post('/joinSession/:gameId', async(req,res)=>{
-  try{
+const renderGameSession = async (gameSession, user, res) => {
+  const gameData = await new Game().getById(gameSession.gameId);
+  const gameSettingsData = await new GameSetting().getById(gameData.gameSettings);
+  
+  res.render('layouts/games/cardTable', {
+    gameSession: gameSession,
+    user: user,
+    gameData: gameData,
+    gameSettingsData: gameSettingsData,
+  });
+};
+
+// Function to handle rejoining an existing session
+const reJoinSession = async (sessionId, req, res) => {
+  console.log(chalk.blue(`Rejoining session: ${sessionId}`));
+  
+  const gameSession = await new GameSession().getById(sessionId);
+  await renderGameSession(gameSession, req.user, res);
+};
+
+// Route to join a new game session
+router.post('/join/:gameId', async (req, res) => {
+  try {
     const user = req.user;
-    const sessionId=req.params.gameId;
-    const userCheck = await new GameSession().checkForUser(user._id)
+    const userId = JSON.stringify(user._id);
+    const { gameId } = req.params;
+    
+    // Check if the user is already in a session
+    const userCheck = await new GameSession().checkForUser(userId);
     if (userCheck) {
-      // If the user is already part of a session, call reJoinSession with the correct sessionId
-      console.log('User already in a session, rejoining...');
-      return await reJoinSession(userCheck, req, res); // Ensure userCheck is the sessionId
-    } else {
-      console.log('No existing session, creating a new one...');
-      // Create a new session or handle the logic here
+      return reJoinSession(userCheck, req, res);
     }
-    console.log(`userCheck:${userCheck}`) 
-    const player={
-      players:{
-      id:user._id,
-      displayName:user.displayName,
-      lastMove:null},
-    }
-    const sessionUpdate = await new GameSession().pushById(sessionId,player)
-    const gameSession = await new GameSession().getById(sessionId)
-    const result =  await new User().updateById(user._id,{lastGame:gameSession._id.toString()});
-    const gameData = await new Game().getById(gameSession.gameId)
-const gameSettingsData = await new GameSetting().getById(gameData.gameSettings)
 
+    // Create new game session setup
+    const game = await new Game().getById(gameId);
+    const gameSetup = {
+      gameId: game._id,
+      gameName: game.name,
+      gameSettings: game.gameSettings,
+      gameRuleSet: game.ruleSet,
+      players: [{
+        id: userId,
+        displayName: user.displayName,
+        lastMove: null
+      }],
+      startTime: new Date(),
+      endTime: null,
+      currentState: "waiting to start",
+      turnHistory: [],
+      status: "waiting for players",
+    };
 
-res.render('layouts/games/cardTable',{
-  gameSession:gameSession,
-  user:user,
-  gameData:gameData,
-  gameSettingsData:gameSettingsData,
-})
+    // Create the new session
+    const gameSession = await new GameSession().create(gameSetup);
+    await new GameSession().markUserLast(userId, gameSession._id);
 
+    // Render the new session
+    await renderGameSession(gameSession, user, res);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Internal server error');
   }
-  catch(error){console.error(error)}
-})
+});
+
+// Route to join an existing session
+router.post('/joinSession/:gameId', async (req, res) => {
+  try {
+    const user = req.user;
+    const sessionId = req.params.gameId;
+    
+    // Check if user is already in a session
+    const userCheck = await new GameSession().checkForUser(user._id);
+    if (userCheck) {
+      console.log('User already in a session, rejoining...');
+      return reJoinSession(userCheck, req, res);
+    }
+
+    // Add user to the session if not already part of it
+    const player = {
+      id: JSON.stringify(user._id),
+      displayName: user.displayName,
+      lastMove: null
+    };
+    
+    await new GameSession().pushById(sessionId, { players: player });
+    await new User().updateById(user._id, { lastGame: sessionId });
+    
+    // Get updated session details and render
+    const gameSession = await new GameSession().getById(sessionId);
+    await renderGameSession(gameSession, user, res);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Internal server error');
+  }
+});
 // Route to load game sessions
 router.get('/section', async (req, res) => {
   try {

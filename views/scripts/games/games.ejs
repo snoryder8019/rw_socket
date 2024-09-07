@@ -5,43 +5,54 @@
       console.log('Connected to GAMES CLIENT');
     });
     //listen for 'players update'
-    function readyUp(sessionId) {
-  const playerId = socket.id; // Assuming socket.id is used as playerId
-  socket.emit('ready up', { playerId, sessionId });
-}
+    function readyUp(userId,gameSessionId) {   
+      console.log(`READY UP FUNCTION sessionId:${gameSessionId}`)   
+        socket.emit('ready up', 
+          userId,
+          gameSessionId 
+        );
+        }
 
-    socket.on('players update',(players)=>{
-      console.log(`Players Update ${players}`)
-    })
-    // Listen for 'ping' from the server and respond with 'pong'
-      // Listen for 'ping' from the server and respond with 'pong'
-    socket.on('ping', (data) => {
-      console.log('Received ping from server, sending pong back');
-      socket.emit('pong', { startTime: data.startTime });
+
+// Listen for when a player joins
+socket.on('playerJoined', (data) => {
+    const { players, maxPlayers } = data;
+
+    // Clear all player seats first
+    document.querySelectorAll('.playerSeat').forEach((seat) => {
+        seat.innerHTML = '<div class="loaderWheel"><div class="wheel"></div></div>';
     });
 
-    // Listen for 'ping result' to update the latency in the DOM
-    socket.on('ping result', (data) => {
-      const { userId, latency } = data;
-      console.log(`Ping round-trip time for user ${userId}: ${latency} ms`);
-
-      // Find the element with the class 'ping_socket' specific to the userId
-      const pingDisplay = document.querySelector(`.ping_socket${userId}`);
-      if (pingDisplay) {
-        pingDisplay.textContent = `Ping: ${latency} ms`; // Update the text content with the latency
-      }
+    // Loop through each player and update the seat
+    players.forEach((player, index) => {
+        const seat = document.getElementById(`playerSeat_${index}`);
+        if (seat && player) {
+            seat.innerHTML = `
+                <div><h3>Seat ${index + 1}: ${player.displayName}</h3></div>
+                <div><h3 class="last_move_${player._id}">Last Move: ${player.lastMove || 'N/A'}</h3></div>
+                <h6 style="color:red" class="ping_socket${player._id}"></h6>
+            `;
+        }
     });
 
+    // Check if all players are ready
+    if (players.length === maxPlayers) {
+        // Signal that all players are ready
+        socket.emit('allPlayersReady', { sessionId: gameSettingsData._id });
+    }
+});
 
-    socket.on('games in session', (sessionId) => {
-      console.log('games in session ran');
-   socket.emit('players update',(socket.id))
+// Listen for 'allPlayersReady' event
+socket.on('allPlayersReady', () => {
+    document.querySelector('.state_message').textContent = 'All players are ready!';
+});
+
+    socket.on('state update', async(sessionId) => {
+      console.log('state update packet sending');
+   await new GameState().update()
     });
 
-    socket.on('join game session', (data) => {
-      socket.emit('players update', (socket.id))
-      console.log(`Data received from server: ${data}`);
-    });
+ 
 
     function fetchGame(action, gameId) {
      // appendWheel(event.target);
@@ -69,18 +80,20 @@
     // Event listener for dynamically loaded join buttons
     document.body.addEventListener('click', (event) => {
       if (event.target && event.target.matches('.controlButton') && event.target.textContent.trim() === 'Ready to Play') {
-    const sessionId = event.target.getAttribute('session-data');
-    const userId = socket.id
-        readyUp(userId,sessionId); // Call the readyUp function with the sessionId
-    }
-      if (event.target && event.target.matches('.joinGameButton')) {
+    const sessionId = event.target.getAttribute('data-session-id');
+    const userId = event.target.getAttribute('data-user-id');
+    console.log(`GMAES EJS ~~~~~ sesshioinId:${sessionId}`)
+    readyUp(userId,sessionId); // Call the readyUp function with the sessionId
+  }
+  if (event.target && event.target.matches('.joinGameButton')) {
+        const userId = event.target.getAttribute('data-user-id');
         const gameId = event.target.getAttribute('data-game-id');
         const action = event.target.getAttribute('action-game');
         const gameName = event.target.getAttribute('game');
-        console.log(`${user.displayName} wants to join ${gameName}: ${gameId}`);
+        console.log(`${userId} wants to join ${gameName}: ${gameId}`);
 
         // Emit the join game session event to the server via socket
-        socket.emit('join game session', { user: user, game: gameId });
+        socket.emit('playerJoin', { user: user, gameSessionId: gameId });
         fetchGame(action, gameId);
         // Fetch the updated game table to re-render
       }

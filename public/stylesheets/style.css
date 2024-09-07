@@ -1797,6 +1797,12 @@ button good {
   padding: 10px;
   border-radius: 5px;
   text-align: center;
+  font-size: 0.8rem;
+}
+@media (min-width: 768px) {
+  .playerSeat {
+    font-size: 1rem;
+  }
 }
 
 .loaderWheel {

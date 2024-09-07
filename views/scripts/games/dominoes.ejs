@@ -1,19 +1,158 @@
 <script>
-    const socket = io()
-    //DONT REMOVE NOTES
-//views/scripts/games/dominoes.ejs
-//once GameState() methods take over we need to run dominoes game logic here and control the cardTable.ejs DOM
-// plugins/mongo/models/games/noDb
-// ├── Ai.js
-// ├── GameInterface.js
-// ├── GameMech.js
-// ├── GameState.js
-// ├── GameTile.js
-// ├── Sprite.js
-// └── Utility.js
-window.addEventListener('beforeunload', () => {
+document.addEventListener("DOMContentLoaded", function () {
+    console.log("DOM content loaded.");
 
-alert(`do you really want to go?`)
+    const debug = false; // Set this to 'false' to disable debug mode
+    const animationDuration = 5000; // Slow down the scatter animation
+    const staggerDelay = 200; // Delay between each sprite animation
+    const maxLoops = 12; // Number of loops to cycle through
+    const easingFunction = easeOutCubic; // Easing function for smooth animation
+    let loopCount = 11; // Counter for the animation loop
+
+    const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+            mutation.addedNodes.forEach((node) => {
+                if (node.classList && node.classList.contains('cardTableGameDiv')) {
+                    console.log('cardTableGameDiv found!');
+                    setupGame(node);
+                }
+            });
+        });
+    });
+
+    observer.observe(document.body, { childList: true, subtree: true });
+
+    function setupGame(cardTableGameDiv) {
+        if (!cardTableGameDiv) {
+            console.error("cardTableGameDiv not found!");
+            return;
+        }
+
+        console.log("Setting up canvas...");
+        const canvas = document.createElement('canvas');
+        canvas.width = 380;
+        canvas.height = 400;
+        canvas.style.border = "1px solid black";
+        cardTableGameDiv.appendChild(canvas);
+        cardTableGameDiv.style.minHeight = `${canvas.height + 20}px`;
+        cardTableGameDiv.style.overflow = "hidden";
+        const ctx = canvas.getContext('2d');
+        if (!ctx) {
+            console.error("Failed to get 2D context. Canvas may not be initialized properly.");
+            return;
+        }
+
+        console.log("Fetching game elements...");
+        fetchGameElements().then(gameElements => {
+            if (!gameElements || gameElements.length === 0) {
+                console.error("No game elements found.");
+                return;
+            }
+
+            const relevantElements = gameElements.filter(el => el.game === 'dominoes');
+            if (relevantElements.length === 0) {
+                console.warn("No game elements for 'dominoes' found.");
+                return;
+            }
+
+            console.log("Rendering relevant game elements.");
+            setTimeout(() => {
+                loopScatter(ctx, relevantElements); // Start the loop
+            }, 2000); // Initial delay before starting the scatter animation
+        }).catch(error => {
+            console.error("Error fetching game elements:", error);
+        });
+    }
+
+    async function fetchGameElements() {
+        try {
+            const response = await fetch('/games/gameElements/allData');
+            if (!response.ok) {
+                console.error(`Error fetching game elements: ${response.statusText}`);
+                return [];
+            }
+            const gameElements = await response.json();
+            console.log("Fetched game elements:", gameElements);
+            return gameElements;
+        } catch (error) {
+            console.error("Error fetching game elements:", error);
+            throw error;
+        }
+    }
+
+    function loopScatter(ctx, gameElements) {
+        if (loopCount < maxLoops) {
+            scatterSprites(ctx, gameElements);
+            loopCount++;
+            setTimeout(() => {
+                loopScatter(ctx, gameElements); // Call again for the next loop
+            }, animationDuration + (staggerDelay * gameElements.length)); // Wait until the current loop finishes
+        } else {
+            console.log("Animation loop completed.");
+        }
+    }
+
+    function scatterSprites(ctx, gameElements) {
+        const centerX = 200; // Center of the 400x400 canvas
+        const centerY = 200;
+
+        gameElements.forEach((el, index) => {
+            const destinationX = Math.random() * 300; // Random destination within the canvas
+            const destinationY = Math.random() * 300;
+
+            setTimeout(() => {
+                animateSpriteScatter(ctx, el, centerX, centerY, destinationX, destinationY, 0, animationDuration);
+            }, index * staggerDelay); // Staggering the animations
+        });
+    }
+
+    function animateSpriteScatter(ctx, el, startX, startY, endX, endY, startTime, duration) {
+        const currentTime = new Date().getTime() - startTime;
+
+        const progress = Math.min(currentTime / duration, 1); // Clamp progress between 0 and 1
+        const easeProgress = easingFunction(progress); // Apply easing function
+
+        const currentX = startX + (endX - startX) * easeProgress;
+        const currentY = startY + (endY - startY) * easeProgress;
+
+        // Clear the canvas before each redraw
+        ctx.clearRect(0, 0, 400, 400);
+
+        // Render the sprite at its new position
+        renderSprite(ctx, el.sourceCoords, [currentX, currentY, el.spriteCoords[2], el.spriteCoords[3]], el.image, el.startCoords);
+
+        if (progress < 1) {
+            requestAnimationFrame(() => animateSpriteScatter(ctx, el, startX, startY, endX, endY, startTime, duration));
+        }
+    }
+
+    function renderSprite(ctx, sourceCoords, spriteCoords, imgSrc, startCoords) {
+        const [sx, sy, sWidth, sHeight] = sourceCoords;
+        const [dx, dy, dWidth, dHeight] = spriteCoords;
+        const [startX, startY] = startCoords;
+
+        const img = new Image();
+        img.src = imgSrc;
+
+        img.onload = function () {
+            ctx.drawImage(img, sx, sy, sWidth, sHeight, dx + startX, dy + startY, dWidth, dHeight);
+
+            if (debug) {
+                ctx.strokeStyle = 'red';
+                ctx.lineWidth = 2;
+                ctx.strokeRect(dx + startX, dy + startY, dWidth, dHeight);
+            }
+        };
+
+        img.onerror = function () {
+            console.error(`Failed to load image: ${imgSrc}`);
+        };
+    }
+
+    // Easing function for smooth animation (ease-out)
+    function easeOutCubic(t) {
+        return 1 - Math.pow(1 - t, 3);
+    }
 });
 
 </script>

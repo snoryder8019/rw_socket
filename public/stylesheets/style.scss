@@ -1795,6 +1795,10 @@ background-size: cover;
   padding: 10px;
   border-radius: 5px;
   text-align: center;
+  font-size: .8rem;
+  @media (min-width:768px) {
+    font-size: 1rem;
+  }
 }
 
 .loaderWheel {

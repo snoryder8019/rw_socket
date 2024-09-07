@@ -11,12 +11,13 @@ export default class GameElement extends ModelHelper {
     // Define model fields for GameElement
     this.modelFields = {
       name: { type: 'string', value: '' },
+      game:{type: 'string',value:null},
       isBkgd: { type: 'boolean', value: false },
       image: { type: 'file', value: null },
       isSprite: { type: 'boolean', value: false },
-      spriteId: { type: 'text', value: null },
       spriteCoords: { type: 'array', value: [] },
-      startCoords: { type: 'string', value: null },
+      sourceCoords: { type: 'array', value: [] },
+      startCoords: { type: 'array', value: [] },
       function: { type: 'string', value: null },
       reacts: { type: 'string', value: null },
       sounds: { type: 'string', value: null },
@@ -25,6 +26,7 @@ export default class GameElement extends ModelHelper {
       dropzoneClassName:{type:'text', value: false},
       className: { type: 'text', value: null },
       inlineStyle: { type: 'text', value: false },
+      itemScore:{type:'number',value:null},
       customField1: { type: 'custom', value: [] }, // Custom Game select
       customField2: { type: 'custom', value: [] }, // Custom Sprite select
     };
@@ -85,17 +87,17 @@ export default class GameElement extends ModelHelper {
 
   // Define file fields to be uploaded
   get fileFields() {
-    return [{ name: 'elementImage', maxCount: 1 }];
+    return [{ name: 'image', maxCount: 1 }];
   }
 
   // Middleware to handle uploading images to Linode
   async uploadImagesToLinode(req, res, next) {
     try {
-      if (req.files && req.files.elementImage) {
-        const file = req.files.elementImage[0];
+      if (req.files && req.files.image) {
+        const file = req.files.image[0];
         const fileKey = `gameElements/${Date.now()}-${file.originalname}`;
         const url = await uploadToLinode(file.path, fileKey);
-        req.body.elementImage = url; // Save the URL in the request body
+        req.body.image = url; // Save the URL in the request body
       }
       next();
     } catch (error) {

@@ -2,6 +2,7 @@ import ModelHelper from '../../helpers/models.js';
 import User from '../User.js';
 import chalk from 'chalk';
 import GameElement from './GameElement.js'
+import GameState from './noDb/GameState.js'
 
 const modelName = 'gameSession';
 //status emits to the launcher for the UX/UI 
@@ -58,8 +59,8 @@ export default class GameSession extends ModelHelper {
       const update = {
         lastGame: sessionId, // Update user's lastGame field with the session ID
       };
-      console.log(chalk.yellow(`update:${update}`));
       const result = await new User().updateById(userId, update); // Await the update operation
+      console.log(chalk.yellow(`Marking User update:${result}`));
 
       // Optional: Log the result to confirm the update
       return result; // Return the result of the update operation
@@ -70,6 +71,7 @@ export default class GameSession extends ModelHelper {
 
   async checkForUser(userId) {
     try {
+      console.log(`USER IDDDDDD :${userId}`)
       const user = await new User().getById(userId);
       if (!user) {
         console.error(`User not found with ID: ${userId}`);
@@ -84,8 +86,8 @@ export default class GameSession extends ModelHelper {
         return false;
       }
 
-      const sessions = await this.getAllByIdAndStatus(lastGameId, ["waiting for players", "waiting to start"]);
-
+      const sessions = await new GameSession().getAllByIdAndStatus(lastGameId, ["waiting for players", "waiting to start","playing"]);
+console.log(chalk.yellow(sessions))
       if (sessions.length > 0) {
         return lastGameId; // Return lastGame if it matches a waiting session
       }
@@ -102,16 +104,17 @@ export default class GameSession extends ModelHelper {
   }
 
   // Add a player to a game session
-  async addPlayerToSession(sessionId, userId) {
+  async addPlayerToSession(userId,sessionId) {
     try {
       console.log(sessionId)
-      const session = await this.getById(sessionId);
+      const session = await new GameSession().getById(sessionId);
       if (!session) {
         console.error(`Session not found with ID: ${sessionId}`);
         return false;
       }
       if (!session.players.includes(userId)) {
         session.players.push(userId);
+        await GameSession().markUserLast(userId,session._id)
         await this.updateById(sessionId, { players: session.players });
         console.log(`User ${userId} added to session ${sessionId}`);
         return true;
@@ -126,24 +129,34 @@ export default class GameSession extends ModelHelper {
   }
 
   // Mark a player as ready in a session
-  async markPlayerReady(sessionId, playerId) {
+  async markPlayerReady(userId,sessionId) {
     try {
-      const session = await this.getById(sessionId);
+      const session = await new GameSession().getById(sessionId);
       if (!session) {
         console.error(`Session not found with ID: ${sessionId}`);
         return false;
       }
 
-      const playerIndex = session.players.findIndex(p => p.id === playerId);
-      if (playerIndex !== -1) {
-        session.players[playerIndex].ready = true;
-        await this.updateById(sessionId, { players: session.players });
-        console.log(`Player ${playerId} marked as ready in session ${sessionId}`);
-        return true;
+      if (session && session.players && session.players.length > 0) {
+        // Use the correct property to find the player by userId
+        const playerIndex = session.players.findIndex(player => 
+          player.id && player.id.includes(userId)
+        );
+        
+        if (playerIndex !== -1) {
+          session.players[playerIndex].ready = true;
+          await new GameSession().updateById(sessionId, { players: session.players });
+          console.log(`Player ${userId} marked as ready in session ${sessionId}`);
+          return true;
+        } else {
+          console.log(`Player ${userId} not found in session ${sessionId}`);
+          return false;
+        }
+      } else {
+        console.log(`Session ${sessionId} not found or contains no players`);
+        return false;
       }
 
-      console.log(`Player ${playerId} not found in session ${sessionId}`);
-      return false;
     } catch (error) {
       console.error(`Error marking player ready in session ${sessionId}:`, error);
       return false;
@@ -153,7 +166,7 @@ export default class GameSession extends ModelHelper {
   // Check if all players are ready in a session
   async areAllPlayersReady(sessionId) {
     try {
-      const session = await this.getById(sessionId);
+      const session = await new GameSession().getById(sessionId);
       if (!session) {
         console.error(`Session not found with ID: ${sessionId}`);
         return false;
@@ -193,15 +206,4 @@ export default class GameSession extends ModelHelper {
     }
   }
 
-  // Update a game session by ID
-  async updateById(sessionId, updateData) {
-    try {
-      const result = await super.updateById(sessionId, updateData);
-      console.log(`Session ${sessionId} updated with data:`, updateData);
-      return result;
-    } catch (error) {
-      console.error(`Error updating session ${sessionId}:`, error);
-      return false;
-    }
-  }
 }

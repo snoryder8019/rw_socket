@@ -6,8 +6,8 @@ export default class GameSprite extends ModelHelper {
   constructor(spriteData) {
     super('gameSprites');
     this.modelFields = {
-      name: { type: 'string', value: null }, // Grid type (e.g., '3x3')
-      decsription: { type: 'string', value: null }, // Grid type (e.g., '3x3')
+      name: { type: 'string', value: null },
+      decsription: { type: 'string', value: null }, 
       
       imageSrc: { type: 'string', value: '' }, // Source URL of the sprite image (PNG, JPG, GIF)
       frames: { type: 'array', value: [] }, // Array to hold different frames of the sprite

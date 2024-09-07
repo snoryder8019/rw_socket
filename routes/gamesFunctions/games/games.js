@@ -7,6 +7,8 @@ import {imagesArray, getImagesArray, popImagesArray, popImagesArrayIndex, update
 import { uploadMultiple } from '../../../plugins/multer/setup.js';
 import { ObjectId } from 'mongodb';
 import { buildRoutes } from '../../helpers/routeBuilder.js';
+import GameSprite from '../../../plugins/mongo/models/games/GameSprite.js';
+import GameElement from '../../../plugins/mongo/models/games/GameElement.js';
 import GameSession from '../../../plugins/mongo/models/games/GameSession.js';
 import GameSetting from '../../../plugins/mongo/models/games/GameSetting.js';
 import User from '../../../plugins/mongo/models/User.js'
@@ -111,10 +113,11 @@ router.get('/section', async (req, res) => {
 router.post('/join/:gameId', async (req, res) => {
   try {
     const user = req.user;
+   const userId=JSON.stringify(user._id);
     const { gameId } = req.params;
     
     // Check for user's current participation in any session
-    const userCheck = await new GameSession().checkForUser(user._id);
+    const userCheck = await new GameSession().checkForUser(userId);
     const game = await new Game().getById(gameId);
     const gameSetup = {    
       gameId: game._id,
@@ -122,7 +125,7 @@ router.post('/join/:gameId', async (req, res) => {
       gameSettings: game.gameSettings,
       gameRuleSet: game.ruleSet,
       players: [{
-        id: user._id,
+        id:userId,
         displayName: user.displayName,
         lastMove: null
       }],
@@ -137,7 +140,7 @@ router.post('/join/:gameId', async (req, res) => {
     }
     
     const gameSession = await new GameSession().create(gameSetup);
-    const result = await new GameSession().markUserLast(user._id, gameSession._id);
+    const result = await new GameSession().markUserLast(userId, gameSession._id);
     const gameSettingsData = await new GameSetting().getById(game.gameSettings);
 
     console.log(chalk.green.bold(

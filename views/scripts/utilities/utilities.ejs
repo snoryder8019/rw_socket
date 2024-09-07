@@ -10,6 +10,11 @@
 //   divW.appendChild(divWi);
 //   e.appendChild(divW);
 // }
+function randoWL(xLimit, yLimit) {
+    const xResult = Math.random() * xLimit;
+    const yResult = Math.random() * yLimit;
+    return { xResult, yResult };
+}
 
 // Function to add a field dynamically to a container
 function addField(name) {

@@ -1,5 +1,6 @@
 import express from 'express';
 const router = express.Router();
+import gameStateRouter from './noDb/gameState.js'
 import launcherRouter from './launcher/launcher.js';
 import playerRouter from './player/playerUser.js';
 import logsRouter from './logs/gameLogs.js';
@@ -16,6 +17,7 @@ import ruleSetsRouter from './ruleSets/ruleSets.js';
 router.use('/launcher', launcherRouter);
 router.use('/player', playerRouter);
 router.use('/logs', logsRouter);
+router.use('/gameState', gameStateRouter);
 router.use('/ruleSets', ruleSetsRouter);
 router.use('/gameMusics', gameMusicsRouter);
 router.use('/gameSounds', gameSoundsRouter);
