@@ -1,6 +1,16 @@
 import express from 'express';
 import fs from 'fs';
 import path from 'path';
+import { fileURLToPath } from 'url';
+
+// Get the current file path (ES6 replacement for __dirname)
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Use path.join as usual
+
+console.log(filePath);
+
 
 export default function lib(msg, err, data, filename, logType) {
   // Define the log file path
