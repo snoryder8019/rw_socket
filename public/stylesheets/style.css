@@ -77,6 +77,10 @@
   max-width: 50vw;
 }
 
+.debug {
+  color: red;
+}
+
 #notifications, #cart, #rewards, #help, #settings, #admin, #wallet {
   display: none;
 }

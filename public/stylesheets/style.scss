@@ -128,12 +128,15 @@ padding: 1%;
   max-width: 50vw;
 }
 
-
+.debug{
+  color:red;
+}
 
 
   #notifications, #cart, #rewards, #help, #settings, #admin, #wallet{
     display: none;
   }
+  
   .footerImg{
     margin-left: 10%;;
     width: 80%;
