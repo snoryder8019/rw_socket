@@ -5,18 +5,13 @@ import path from 'path';
 import os from 'os';
 import { isAdmin } from './adminFunctions/adminFunctions.js';
 import { readLogFile, gatherIp } from './systemFunctions/systemFunctions.js';
-
 const router = express.Router();
-
 router.use(pluginsRouter);
 router.get('/', gatherIp, isAdmin, async (req, res) => {
   let user = req.user;
-
   const db = getDb();
-
   const collection = db.collection('users');
   const users = await collection.find({}).toArray();
-
   const collection2 = db.collection('tickets');
   const tickets = await collection2.find({}).toArray();
   //console.log(users)
