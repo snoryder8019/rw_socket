@@ -18,6 +18,7 @@ export default class GameSetting extends ModelHelper {
       singlePlayer: { type: 'boolean', value: false }, // if Ai is programmed in
       customSetting: { type: 'boolean', value: false }, // if we had optional rulesets for the user
       backgroundImg: { type: 'file', value: null }, 
+      spriteIds:{type:'array',value:[]},
       dropElements: { type: 'array', value: [] }, 
       movableElements: { type: 'array', value: [] }, 
       ruleSet:{type:'array',value:[]}

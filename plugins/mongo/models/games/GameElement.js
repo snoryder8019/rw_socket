@@ -15,10 +15,10 @@ export default class GameElement extends ModelHelper {
       isBkgd: { type: 'boolean', value: false },
       image: { type: 'file', value: null },
       isSprite: { type: 'boolean', value: false },
+      spriteId:{type: 'string',value:null},
       /*dataType:'number' ensures input type to the array*/
       spriteCoords: { type: 'array', value: [], dataType:'number' },
       sourceCoords: { type: 'array', value: [], dataType:'number' },
-      startCoords: { type: 'array', value: [], dataType:'number'},
       function: { type: 'string', value: null },
       reacts: { type: 'string', value: null },
       sounds: { type: 'string', value: null },

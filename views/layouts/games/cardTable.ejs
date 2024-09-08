@@ -6,13 +6,18 @@
     <div style="font-size:.5rem;color: yellow;" class="pauseTimer">Your pause time remaining: 2:00</div>
 
     <!-- Game Title and Status Messages -->
-    <h2>WELCOME to Dominoes!! <%= gameSession._id %></h2>
+
+    <% if (gameSession.status === "waiting for players") { %>
+    <h2>WELCOME to Dominoes!! </h2>
+    <% } else if (gameSession.status === "playing") { %>
+      <h2>player turn: ____</h2>
+      <% } %>
 
     <h3 class="state_message" style="color:yellow">
       <% if (gameSession.status === "waiting for players") { %>
         Waiting for others to join...
       <% } else if (gameSession.status === "playing") { %>
-        Setting Up Game
+        Dealing Deck
       <% } %>
     </h3>
 
