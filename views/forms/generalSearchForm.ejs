@@ -3,31 +3,20 @@
 <head>
   <title>Search Users</title>
   <style>
-    .user-item {
-      margin: 10px 0;
-      padding: 5px;
-      border: 1px solid #ccc;
-    }
+
   </style>
 </head>
 <body>
   <h1>Search Users</h1>
   <input type="text" id="searchInput" placeholder="Search by name or email..." onkeyup="filterUsers()">
-<label>club</label><input type="radio">
-<select>
-    <option value=""></option><!--%clubs%-->
-</select>
-<label>club</label><input type="radio">
-<select>
-    <option value=""></option><!--%clubs%-->
-</select>
+
   <div id="usersList">
     <% users.forEach(user => { %>
       <div class="user-item" 
            data-name="<%= (user.firstName || '').toLowerCase() %>" 
            data-email="<%= (user.email || '').toLowerCase() %>">
-        <p><strong>Name:</strong> <%= user.firstName || 'No name provided' %></p>
-        <p><strong>Email:</strong> <%= user.email || 'No email provided' %></p>
+        <p> <%= user.firstName || 'No name provided' %>-<%= user.email || 'No email provided' %>
+        <button>:</button></p>
       </div>
     <% }) %>
   </div>

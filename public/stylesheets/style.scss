@@ -330,8 +330,18 @@ box-shadow:inset 2px 2px 2px $black;
   #settings{
     margin-bottom: 12%;
   }
-  
-
+  #usersList{
+    height: 400px;
+    overflow-y: scroll;
+  }
+  #searchInput input{
+    
+    font-weight: 900;
+  }
+  .user-item {
+ 
+    border: 1px solid #ccc;
+  }
 .userSetting {
     transition: width 0.5s ease;
     /* Set a default width or use another property as needed */
@@ -454,22 +464,22 @@ display: flex;
 #chat-window-basic {
     @include sliderWindows();
     left:59%;
-    top:1%;
-    height:98vh;
+    top:0;
+    height:87%;
     margin:0%;
     z-index: 1001;
     @media (max-width:768px) {
         width: 92%;
-        left:100%;
-        top:16vh;
-        height: 79vh;
+        left:102%;
+        top:1%;
+        height: 87%;
         padding: 1%;
     }
   @media (max-width:768px)and (min-aspect-ratio:1/1) {
     width:95vw;
     top:0%;
-    left:105%;
-    height: 100vh;
+    left:102%;
+    height: 87%;
     z-index: 10002;
   }
 }
@@ -482,14 +492,14 @@ display: flex;
   font-size: smaller;
   width: 91%;
   top:15%;
-  height:78vh;
+  height:87vh;
   z-index: 1001;
   box-shadow: 0px 0px 120px rgba(53, 0, 52, 0.865);
 }
     @media (max-width:768px) {
         width: 92%;
-        height:75%;
-        margin-top: 41%;
+        height:87%;
+      //  margin-top: 41%;
     }
     
     
@@ -502,9 +512,10 @@ display: flex;
 }
 @mixin toggleOpt(){
   //  position: absolute;
+ // margin-left: 12%;
     width:40px;
     height: 40px;
-    margin:2%;
+    margin:2% 32%;
      border-radius: 40px;
  //border: 5px solid $purple;
  background-size: 90%;
@@ -517,13 +528,13 @@ display: flex;
   #chatToggle{
     @include toggleOpt();
       //  transform: rotate(90deg);      
-        left: -25%;
-        top:56%;
+      //  left: -25%;
+      //  top:56%;
         display:none;
 
 @media (max-width:768px) {
   display: block;
- left: -33%;
+// left: -33%;
 }
   }
   #dashToggle{
@@ -741,10 +752,18 @@ grid-template-columns: 1fr 10fr;
     font-size: 0.8rem; /* Smaller text size */
   }
   #bannerControls{
-    margin: 2%;
+    grid-template-columns: 1fr 1fr ;
+    text-align: center;
+   width: 100%;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    display: grid;
+    margin: 0;
     padding: 2%;
     z-index: 1005;
     align-self: center;
+    background-color: black;
   }
 #userGreeting{
   font-size: .8rem;
@@ -1717,6 +1736,7 @@ position:fixed;
 top: 0;
 left:0;
 z-index: 200;
+p{color:black}
 h1{color:black}
 @media (min-width:768px) {
   width: 51%;
