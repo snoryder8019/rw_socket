@@ -91,13 +91,28 @@ $gradientEdge: #410b4b;
   /* Define accent font family variable in CSS */
   
   
+  .labelColor{
+    &_brand{color:$purple}
+    &_alert{color:red}
+    &_success{color:green}
+
+  }
+  .fontColor{
+    &_brand{color:$purple}
+    &_alert{color:red}
+    &_success{color:green}
+  }
   
+  .margin_padding_0{
+    padding: 0px auto;
+    margin: 0px auto;
+  }
   
-  
-  
-  
-  
-  
+  .bg_color{
+    &_black{background-color: black;}
+    &_white{background-color: white;}
+    &_brand{background-color: $purple;}
+  }
   
   
   
@@ -110,19 +125,20 @@ $gradientEdge: #410b4b;
       background:linear-gradient(to right,$gradientEdge,$purple,$purple, $gradientEdge);
       color:$gold;
       padding: 1%;
-  }
-//   :root p{
-// font-family: $back;
-// color: #410b4b;
-// font-weight: 500;
-// font-size: 1.3rem;
-// padding: 1%;
-//   }
-.faded_background{
-  // background-position: center;
-  // background-size: cover;
-  // background-repeat: no-repeat;
-  // background-blend-mode: lighten;
+    }
+    //   :root p{
+      // font-family: $back;
+      // color: #410b4b;
+      // font-weight: 500;
+      // font-size: 1.3rem;
+      // padding: 1%;
+
+      //   }
+      .faded_background{
+        // background-position: center;
+        // background-size: cover;
+        // background-repeat: no-repeat;
+        // background-blend-mode: lighten;
 }
 
 .big_letter_a {
@@ -1955,4 +1971,24 @@ background-size: cover;
 }
 #gameContainer{
   padding: 2%;
+}
+#actionsContainer{
+  animation:fadeIn .8s ease-out 0s 1;
+  background-color: white;
+  position: fixed;
+  min-height: 100%;
+  min-width: 100%;
+  left: 0;
+  top: 0;
+  z-index: 2000;
+}
+.action-button{
+  border-radius: 5px;
+  height: 80px;
+}
+.buttonGrid{
+  width: 96%;
+  margin:2%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
 }

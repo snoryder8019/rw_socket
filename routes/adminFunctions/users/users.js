@@ -239,5 +239,30 @@ router.get('/paginateUsers', async (req, res) => {
       .send({ error: 'An error occurred while fetching user data' });
   }
 });
+router.post('/actions', async(req, res) => {
+  try {
+      const { userId } = req.body;
+const user = await new User().getById(userId)
+      if (!userId) {
+          return res.status(400).json({ error: 'User ID is missing' });
+      }
+
+      // Simulating fetching an array of actions
+      const actionsArray = [
+        'notification', 
+        'email', 
+        'permissions',
+        'subscribeApp', 
+        'subscribeClub', 
+        'giftGems', 
+        'register', 
+        'ban', 
+      ]; // Could be dynamic
+      res.render('partials/actionsButtons', { actionsArray, user });  } catch (error) {
+      console.error('Server error:', error);
+      return res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
 
 export default router;

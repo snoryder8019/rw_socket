@@ -1,1 +1,29 @@
-<h3>Custom Settings</h3>
+<div style="background-color: white;color: black;" class="main login_form_basic">
+<h3>Custom Settings <img src="<%=webappSettings.thumbnailLogo%>"> </h3>
+<div id="shareIdResult"></div>
+<%if (typeof user =='object'&& user){%>
+<%if(user.shareId){%>
+    <div class="border_thin margin_thin">
+   <h2> This is your unique ShareId: <input placeholder="<%=user.shareId%>"></h2>
+  <p class="fontColor_alert">**This ID is bound to your account. You must contact support to change this ID.</p>
+</div> 
+  <%}else{%>
+
+
+<div class="border_thin margin_thin form_med">
+    <div class="responseMessage"></div>
+    <h3 class="fontColor_brand">Your ShareId Creation </h3>
+    <p>This is an ID number. Its unique only to your account. 
+        <br><strong>What is this for?</strong> This code allows you easliy and securely share outside the <%=webappSettings.comapnyName%> platform.
+        <br> <strong>NOTE:</strong> This ID is permenant and cannot be changed.</strong></p>
+    <input id="userId" type="text"hidden value="<%=user._id%>">
+    <h6>example: "r0yal", "kar#n", or "c@r0l". if its available we'll assign it to you!</h6>
+    <input id="shareCodeRequestId" type="text">
+    
+    <button onclick ="sendRandomReq()" id="randomShareGenerate"> GENERATE RANDOM</button>
+   <h6><span class="margin_padding_0 fontColor_alert">Caution:</span> This Action is Permenant.</h6>
+    <button onclick ="requestShareCode()" type="submit">GET THIS ID</button>
+</div>
+<%}%>
+<%}%>
+</div>

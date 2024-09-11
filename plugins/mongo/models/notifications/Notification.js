@@ -9,6 +9,8 @@ export default class Notification extends ModelHelper {
     super(`${modelName}s`);
     this.modelFields = {
       type: { type: 'text', value: null },
+      scheduledOutgoing: { type: 'date', value: null },
+      autoSchedule: { type: 'boolean', value: false },
       actionTrigger: { type: 'array', value: [] },
       sender: { type: 'text', value: null },
       draft: { type: 'boolean', value: null },

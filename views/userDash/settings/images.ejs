@@ -9,7 +9,9 @@
         <%}else{%>
           <input type="radio" name="avatar" data-avatar-url="<%=user.images[i].thumbnailUrl%>" onclick="assignAvatar(this)" id="makeAvatar_user_<%= i %>" /> make avatar
         <%}%>
+        <%if(i>0){%>
         <a href="#" class="deleteAvatar" data-avatar-url="<%=user.images[i].thumbnailUrl%>">&#x274C; delete avatar</a>
+     <%}%>
       </div> 
     </div>
   <%}%>

@@ -1,4 +1,29 @@
 <script>
+function userActions(userId) {
+    fetch('/users/actions', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ userId })  // Sending the userId
+    })
+    .then(response => response.text())  // Expect the response as HTML (rendered EJS)
+    .then(html => {
+        // Create a new div element to hold the actions
+        const actionDiv = document.createElement('div');
+        actionDiv.id = 'actionsContainer';  // Set its id
+
+        // Insert the rendered HTML from EJS into the new div
+        actionDiv.innerHTML = html;
+
+        // Append the new div to an existing element in your document
+        document.body.appendChild(actionDiv);  // Append to body or another container
+    })
+    .catch(error => {
+        console.error('Error fetching actions:', error);
+    });
+}
+
 function filterUsers() {
   const searchInput = document.getElementById('searchInput').value.toLowerCase();
   const usersList = document.getElementById('usersList');

@@ -10,6 +10,7 @@ export default class User extends ModelHelper {
     super('users');
     this.modelFields = {
       isAdmin: { type: 'boolean', value: false },
+      shareId:{type:'text',value:null},
       name: { type: 'text', value: null },
       title: { type: 'text', value: null },
       surname: { type: 'text', value: null },
@@ -24,6 +25,7 @@ export default class User extends ModelHelper {
       lastName: { type: 'text', value: null },
       password: { type: 'text', value: null },
       lastGame:{type:'text', value:null},
+      notifications:{type:'array',value:[]},
       permissions: { type: 'object', value: {} },
       wallet: {
         type: 'object',
@@ -100,4 +102,18 @@ export default class User extends ModelHelper {
   pathForGetRouteView() {
     return 'admin/users/template';
   }
+
+async getActions(){
+try{
+  const data = "actions"
+  const actions = "actions"
+return data
+
+}
+catch(error){console.error(error)}
+}
+
+
+
+
 }

@@ -3,7 +3,6 @@ import { getDb } from '../mongo/mongo.js';
 import bcrypt from 'bcrypt';
 import { sendDynamicEmail } from '../nodemailer/setup.js';
 import crypto from 'crypto';
-import lib from '../../routes/logFunctions/logFunctions.js';
 
 // Function to generate a random reset token
 export const generateResetToken = () => {
@@ -39,12 +38,7 @@ export const resetPasswordRequest = async (req, res) => {
 
       const dynamicLink = `${config.baseUrl}reset-password/${resetToken}`;
       console.log(dynamicLink);
-      const libLog = {
-        userEmail: user.email,
-        sentEmail: email,
-        dynamicLink: dynamicLink,
-      };
-      lib('password reset req:', null, libLog, 'passReset.json', 'data');
+
       await sendDynamicEmail(email, 'passwordReset', user, null, dynamicLink);
       return res.render('registeredPassword', { pageType: 'password' });
     } else {

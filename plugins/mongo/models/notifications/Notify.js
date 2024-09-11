@@ -8,7 +8,9 @@ class Notify extends ModelHelper {
     super(`${modelName}s`);
     this.modelFields = {
       notificationId: { type: 'text', value: null },    // Reference to the notification
+      notifyType: { type: 'text', value: null },    // Reference to the notification
       recipientId: { type: 'text', value: null },       // ID of the recipient
+      recipientIds: { type: 'array', value: [] },       // ID of the recipient
       recipientType: { type: 'text', value: null },     // Type of recipient (e.g., user, group)
       status: { type: 'text', value: 'pending' },       // Status of the notification (e.g., sent, seen, failed)
       sentAt: { type: 'date', value: null },            // Date and time when the notification was sent

@@ -8,6 +8,7 @@ export default class WebappSetting extends ModelHelper {
   constructor(webappSettingData) {
     super(`${modelName}s`);
     this.modelFields = {
+      compnayName:{type:'text',value:null},
       mainBannerDesktop: { type: 'file', value: null },
       mainBannerCell: { type: 'file', value: null },
       mainLogo: { type: 'file', value: null },

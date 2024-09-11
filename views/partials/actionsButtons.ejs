@@ -1,0 +1,20 @@
+
+      <div class="bg_color_brand login_form_basic">
+        <h2>User Window</h2>
+        <h2>Display Name: <%=user.displayName%></h2>
+        <h2><%=user.firstName%> <%=user.lastName%></h2>
+        
+        <h6>User Id: <%=user._id%></h6>
+        
+     
+    
+    
+        
+
+<div class="buttonGrid">
+      <% actionsArray.forEach(action => { %>
+            <button class="action-button"><%= action %></button>
+        <% }) %>
+    </div>
+        <button class="bg_color_red fontColor_white" onclick="removeEl('actionsContainer')">Close Actions Window</button>
+    </div>

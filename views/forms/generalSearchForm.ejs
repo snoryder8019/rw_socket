@@ -7,16 +7,16 @@
   </style>
 </head>
 <body>
-  <h1>Search Users</h1>
-  <input type="text" id="searchInput" placeholder="Search by name or email..." onkeyup="filterUsers()">
-
-  <div id="usersList">
+  
+  <div class="login_form_basic bg_color_brand" id="usersList">
+    <h1>Search Users</h1>
+    <input type="text" id="searchInput" placeholder="Search by name or email..." onkeyup="filterUsers()">
     <% users.forEach(user => { %>
       <div class="user-item" 
            data-name="<%= (user.firstName || '').toLowerCase() %>" 
            data-email="<%= (user.email || '').toLowerCase() %>">
         <p> <%= user.firstName || 'No name provided' %>-<%= user.email || 'No email provided' %>
-        <button>:</button></p>
+        <button onclick="userActions('<%=user._id%>')" id="userActionButton">actions</button></p>
       </div>
     <% }) %>
   </div>

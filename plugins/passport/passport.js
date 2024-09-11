@@ -5,7 +5,6 @@ import FacebookStrategy from 'passport-facebook';
 import bcrypt from 'bcrypt';
 import { getDb } from '../mongo/mongo.js';
 import { ObjectId } from 'mongodb';
-import lib from '../../routes/logFunctions/logFunctions.js';
 import Permission from '../mongo/models/Permission.js';
 
 // Adjusted newUser function for creating or retrieving user
@@ -81,13 +80,7 @@ passport.use(
         const user = await users.findOne({ email });
 
         if (!user) {
-          lib(
-            'login error: ',
-            'error: Email Not Found',
-            `Login Error:'email not found' , attempted email :${email} `,
-            'errors.json',
-            'data'
-          );
+      
           return done(null, false, {
             message: 'Email not found, have you tried registering this email?',
           });
@@ -95,13 +88,7 @@ passport.use(
 
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
-          lib(
-            'login error: ',
-            'error: Password Does Not Match',
-            `Login Error:'bad password' , attempted email :${email} `,
-            'errors.json',
-            'data'
-          );
+      
           return done(null, false, {
             message: 'Incorrect Password, Please Try Again',
           });

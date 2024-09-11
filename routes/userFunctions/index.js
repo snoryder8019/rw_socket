@@ -1,9 +1,10 @@
 import express from 'express';
+import userShareCodes from './userShareCodes/userShareCodes.js';
 import chat from './chat/chat.js';
 import help from './help/help.js';
 import reader from './reader/reader.js';
-
 const router = express.Router();
+router.use('/userShareCodes', userShareCodes);
 router.use('/chat', chat);
 router.use('/help', help);
 router.use('/reader', reader);
