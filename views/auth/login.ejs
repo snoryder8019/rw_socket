@@ -1,6 +1,6 @@
 
         
-        <div style="background-image:url(<%=webappSettings[0].mainLogo%>)" class="login_form_basic faded_background" id="emailLoginForm">
+        <div class="login_form_basic faded_background" id="emailLoginForm">
             <div class="loginForm">
                 <h1>LOGIN to <span class="brand_title_font">Royal Splendor</span></h1>
 
@@ -11,21 +11,20 @@
                     <input type="password" id="password" name="password" placeholder="enter your password" required>
                     <button class="button_wide" id="loginButton" type="submit">LOGIN</button>
                 </form>
-                <h5>Forgot your password? <span style="color:blue; cursor: pointer;" onclick="showResetInput()" id="resetLink">reset password</span></h5>
-                <div id="resetEmailInput" style="display: none;">
-                    <form id="resetPasswordForm">
-                        <h2>Reset Password ℹ️</h2>
-                        <h3>You will receive an email to securely reset your password.</h3>
-                        <h4>Enter your email to send a reset link</h4>
-                        <input id="resetPassInput" name="email" type="email" required>
-                        <button id="resetPassButton" type="submit">Request Password Reset</button>
-                    </form>
-                    <button onclick="showResetInput()">close this window</button>
-                </div>
+             
             </div>
         </div>
-        <h6>Login Issues? email <a href="mailto:w2marketing.scott@gmail.com">support</a></h6>
-        <div class="loginFlows" id="regWindow"><%-include('../auth/register')%></div>
+        <h3>Forgot your password? <span style="color:blue; cursor: pointer;" onclick="showResetInput()" id="resetLink">reset password</span></h3>
+        <div id="resetEmailInput">
+            <form id="resetPasswordForm">
+                <h2>Reset Password ℹ️</h2>
+                <h3>You will receive an email to securely reset your password.</h3>
+                <h4>Enter your email to send a reset link</h4>
+                <input id="resetPassInput" name="email" type="email" required>
+                <button id="resetPassButton" type="submit">Request Password Reset</button>
+            </form>
+            <button onclick="showResetInput()">close this window</button>
+        </div>        <div class="loginFlows" id="regWindow"><%-include('../auth/register')%></div>
         <p>or login with:</p>
         <button class="button_wide" id="googleAuthButton"><a style="text-decoration: none;" href="/auth/google">Google Auth</a></button>
 

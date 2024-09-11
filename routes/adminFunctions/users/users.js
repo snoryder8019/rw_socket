@@ -73,8 +73,35 @@ router.get('/renderEditForm/:id', async (req, res) => {
     res.status(500).send({ error: error.message });
   }
 });
+router.get('/usersAvatars', async (req, res) => {
+  try {
+    // Use a simple filter query with getAll to find users with at least one image that has avatarTag: true
+    const documents = await new User().getAll({
+      "images.avatarTag": true // Query where any image in the array has avatarTag: true
+    });
 
-/////////////////
+    // Extract the thumbnailUrl from the images where avatarTag is true
+    const avatarUrls = documents.flatMap(doc =>
+      doc.images
+        .filter(image => image.avatarTag === true) // Filter only images with avatarTag: true
+        .map(image => image.thumbnailUrl) // Map to thumbnailUrl
+    );
+
+    // Shuffle the array to get random avatars
+    const shuffledAvatarUrls = avatarUrls.sort(() => Math.random() - 0.5);
+
+    // Return a maximum of 25 avatar URLs
+    const limitedAvatarUrls = shuffledAvatarUrls.slice(0, 25);
+
+    res.send(limitedAvatarUrls); // Send the array of thumbnail URLs
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ error: error.message });
+  }
+});
+
+
+//////
 router.get('/section', async (req, res) => {
   try {
     const data = await new User().getAll();

@@ -1,0 +1,203 @@
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const targetElement = document.querySelector('.login_form_basic');
+        let animationFrameId = null; // Track the animation frame for cancellation
+    
+        // Function to clear the canvas and stop the animation
+        function clearCanvas(ctx, canvasWidth, canvasHeight) {
+            ctx.clearRect(0, 0, canvasWidth, canvasHeight); // Clear the canvas
+            if (animationFrameId) {
+                cancelAnimationFrame(animationFrameId); // Stop the animation loop
+                animationFrameId = null;
+            }
+        }
+    
+        // Function to fetch and render login animation
+        async function renderLoginAnimation() {
+            try {
+                const response = await fetch('/users/usersAvatars');
+                const avatarUrls = await response.json(); // Assuming the response is an array of avatar URLs
+    
+                if (avatarUrls.length > 0) {
+                    console.log('Creating canvas...');
+    
+                    // Create and set up the canvas
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+    
+                    // Set canvas dimensions to match the login form
+                    canvas.width = targetElement.clientWidth;
+                    canvas.height = targetElement.clientHeight;
+                    canvas.classList.add('avatar_canvas');
+                    targetElement.appendChild(canvas);
+    
+                    // Check if the canvas is appended
+                    console.log('Canvas appended. Width:', canvas.width, 'Height:', canvas.height);
+    
+                    // Store avatar objects for animation
+                    const avatarObjects = await Promise.all(
+                        avatarUrls.map(url => loadAvatarImage(url, canvas.width, canvas.height))
+                    );
+    
+                    // Start animation loop with connecting lines
+                    animateAvatarsAndLines(ctx, avatarObjects, canvas.width, canvas.height);
+                }
+            } catch (error) {
+                console.error('Error in renderLoginAnimation:', error);
+            }
+        }
+    
+        // Function to load avatar image and create an avatar object
+        function loadAvatarImage(url, canvasWidth, canvasHeight) {
+            return new Promise((resolve) => {
+                const img = new Image();
+                img.src = url;
+    
+                img.onload = () => {
+                    resolve({
+                        img: img,
+                        x: Math.random() * canvasWidth, // Random starting x position
+                        y: Math.random() * canvasHeight, // Random starting y position
+                        xDirection: Math.random() < 0.5 ? 1 : -1, // Random initial x direction
+                        yDirection: Math.random() < 0.5 ? 1 : -1, // Random initial y direction
+                        speed: Math.random() * 0.04 + 0.04, // Slow random speed for creeping
+                        size: 50 // Avatar size (50x50 pixels)
+                    });
+                };
+    
+                img.onerror = () => {
+                    console.error(`Failed to load image: ${url}`);
+                    resolve(null);
+                };
+            });
+        }
+    
+        // Function to animate avatars and draw lines connecting them
+        function animateAvatarsAndLines(ctx, avatarObjects, canvasWidth, canvasHeight) {
+            function draw() {
+                // Clear the canvas for the next frame
+                ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+    
+                // Draw lines connecting avatars first (so they appear behind the avatars)
+                drawConnectingLines(ctx, avatarObjects);
+    
+                // Draw and update each avatar's position
+                avatarObjects.forEach((avatar, index) => {
+                    if (avatar) {
+                        // Draw avatar as a circle
+                        drawCircleImage(ctx, avatar.img, avatar.x, avatar.y, avatar.size);
+    
+                        // Update avatar position
+                        avatar.x += avatar.xDirection * avatar.speed;
+                        avatar.y += avatar.yDirection * avatar.speed;
+    
+                        // Reverse direction if avatar hits canvas edges
+                        if (avatar.x <= 0 || avatar.x + avatar.size >= canvasWidth) {
+                            avatar.xDirection *= -1;
+                        }
+                        if (avatar.y <= 0 || avatar.y + avatar.size >= canvasHeight) {
+                            avatar.yDirection *= -1;
+                        }
+                    }
+                });
+    
+                // Request the next frame and store the animation frame ID
+                animationFrameId = requestAnimationFrame(draw);
+            }
+    
+            animationFrameId = requestAnimationFrame(draw);
+        }
+    
+        // Function to draw connecting lines between avatars
+        function drawConnectingLines(ctx, avatarObjects) {
+            ctx.strokeStyle = 'purple'; // Set line color to purple
+            ctx.lineWidth = 2;
+    
+            const validAvatars = avatarObjects.filter(avatar => avatar);
+    
+            // Draw lines between avatars
+            for (let i = 0; i < validAvatars.length; i++) {
+                const avatar1 = validAvatars[i];
+                const avatar2 = validAvatars[(i + 1) % validAvatars.length]; // Connect the last avatar to the first one
+    
+                drawLine(ctx, avatar1.x + avatar1.size / 2, avatar1.y + avatar1.size / 2, avatar2.x + avatar2.size / 2, avatar2.y + avatar2.size / 2);
+            }
+        }
+    
+        // Function to draw a line between two points
+        function drawLine(ctx, x1, y1, x2, y2) {
+            ctx.beginPath();
+            ctx.moveTo(x1, y1);
+            ctx.lineTo(x2, y2);
+            ctx.stroke();
+        }
+    
+        // Function to draw an image in a circular clipping area
+     // Function to draw an image in a circular clipping area while maintaining aspect ratio
+// Function to draw an image in a circular clipping area, fully fitting the circle
+function drawCircleImage(ctx, img, x, y, size) {
+    ctx.save(); // Save the current state
+
+    // Create a circular clipping path
+    ctx.beginPath();
+    ctx.arc(x + size / 2, y + size / 2, size / 2, 0, Math.PI * 2);
+    ctx.closePath();
+    ctx.clip();
+
+    // Calculate aspect ratio of the image
+    const imgAspectRatio = img.width / img.height;
+    
+    let drawWidth, drawHeight;
+    const circleAspectRatio = 1; // Circle has a 1:1 aspect ratio
+
+    // Check whether the image is wider or taller than the circle
+    if (imgAspectRatio > circleAspectRatio) {
+        // Image is wider than it is tall, adjust width
+        drawWidth = size;
+        drawHeight = size / imgAspectRatio;
+    } else {
+        // Image is taller than it is wide, adjust height
+        drawHeight = size;
+        drawWidth = size * imgAspectRatio;
+    }
+
+    // Center the image inside the circular area
+    const offsetX = x + (size - drawWidth) / 2;
+    const offsetY = y + (size - drawHeight) / 2;
+
+    // Draw the image maintaining its aspect ratio
+    ctx.drawImage(img, offsetX, offsetY, drawWidth, drawHeight);
+
+    ctx.restore(); // Restore the original state
+}
+
+    
+        if (targetElement) {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    const canvas = targetElement.querySelector('canvas');
+                    if (entry.isIntersecting) {
+                        console.log('login form is in view');
+                        if (!canvas) {
+                            // If no canvas exists, render the animation
+                            renderLoginAnimation();
+                        }
+                    } else {
+                        console.log('login form is out of view');
+                        if (canvas) {
+                            // Clear canvas and remove it from the DOM when out of view
+                            const ctx = canvas.getContext('2d');
+                            clearCanvas(ctx, canvas.width, canvas.height);
+                            canvas.remove();
+                        }
+                    }
+                });
+            });
+    
+            observer.observe(targetElement);
+        } else {
+            console.log('login_form_basic element not found');
+        }
+    });
+    </script>
+    

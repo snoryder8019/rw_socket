@@ -71,6 +71,7 @@ export const buildRoutes = (model, router) => {
     }
   });
 
+  
   router.get('/:id', [...model.middlewareForGetRoute()], async (req, res) => {
     try {
       const { id } = req.params;
