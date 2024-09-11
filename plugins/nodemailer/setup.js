@@ -5,7 +5,9 @@ import path from 'path';
 import { getDb } from '../mongo/mongo.js';
 import { config } from '../../config/config.js';
 import querystring from 'querystring';
-
+import { fileURLToPath } from 'url';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 const emailHeaderUrl = `${config.baseUrl}images/logoTransp.png`;
 ////////////////////////////////
 let transporter = null;
@@ -53,8 +55,7 @@ export const sendDynamicEmail = async (to, emailType, user, dynamicLink) => {
 
   if (!settings) throw new Error(`Unknown email type: ${emailType}`);
 
-  const templatePath = path.join(__dirname, 'templates', settings.templateName);
-  let htmlTemplate = fs
+  const templatePath = path.join(__dirname, 'templates', settings.templateName);  let htmlTemplate = fs
     .readFileSync(templatePath, 'utf8')
     .replace('{firstName}', user.firstName)
     .replace('{dynamicLink}', dynamicLink)

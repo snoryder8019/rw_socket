@@ -4,10 +4,9 @@ import crypto from 'crypto';
 import { getDb } from '../mongo/mongo.js';
 import { config } from '../../config/config.js';
 import { sendDynamicEmail } from '../nodemailer/setup.js';
-import lib from '../../routes/logFunctions/logFunctions.js';
-
+import chalk from 'chalk';
 export const router = express.Router();
-
+import WebappSetting from '../mongo/models/WebappSetting.js'
 // Function to generate a random reset token
 const generateResetToken = () => {
   // Generate a random 32-character hexadecimal token
@@ -22,11 +21,7 @@ export async function createUser(newUser) {
   if (emailCheck) {
     console.log(emailCheck);
     console.log('This email is Taken');
-    const libLog = {
-      errorMessage: 'DB returned email is taken',
-      'attempted email': newUser,
-    };
-    lib('login error: ', 'error: Email Taken', libLog, 'errors.json', 'data');
+
     return { success: false, message: 'Email is already taken' }; // Return a custom message
   } else {
     const result = await db.collection('users').insertOne(newUser);
@@ -73,16 +68,12 @@ router.post('/requestEmailConf', async (req, res) => {
       dynamicLink,
       null
     );
-    const libLog = {
-      userEmail: user,
-      sentEmail: registrarsEmail,
-      dynamicLink: dynamicLink,
-    };
-    lib('confirmation email sent: ', null, libLog, 'confEmails.json', 'data');
+const webappSettings = await new WebappSetting().getAll();
     req.flash('success', 'Registration successful! Logged in successfully.');
     return res.render('registeredPassword', {
       pageType: 'registration',
       user: user,
+      webappSettings:webappSettings
     });
   } catch (err) {
     console.error(err);
@@ -138,21 +129,16 @@ router.post('/regUser', async (req, res) => {
       const dynamicLink = `${config.baseUrl}confirm/${confirmationToken}`; // Construct the confirmation link
       const emailType = 'confirmation'; // Use the confirmation email type
       const registrarsEmail = req.body.email;
+      console.log(chalk.green(`dynamicLink ${dynamicLink}\nregistrars emsil: ${registrarsEmail}`))
       const user = {
         firstName: req.body.firstName, // Add other user-specific data as needed
       };
-      const libLog = {
-        userEmail: user.email,
-        sentEmail: registrarsEmail,
-        dynamicLink: dynamicLink,
-      };
-      lib('reg email sent: ', null, libLog, 'regEmails.json', 'data');
+  
       await sendDynamicEmail(
         registrarsEmail,
         emailType,
         user,
-        null,
-        dynamicLink,
+       dynamicLink,
         null
       );
 

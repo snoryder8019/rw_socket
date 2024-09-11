@@ -48,12 +48,112 @@
   color: #ffde68;
   padding: 1%; }
 
-:root p {
+.faded_background {
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-blend-mode: lighten; }
+
+.big_letter_a {
+  font-size: 8rem;
+  font-family: 'Times New Roman', Times, serif;
+  color: #711881;
+  opacity: 0.3;
+  /* Semi-transparent letter */
+  position: absolute;
+  /* Position it absolutely within the parent */
+  top: 22%;
+  /* Align with the top of the container */
+  left: 47%;
+  /* Adjust this to move it horizontally */
+  z-index: 0;
+  /* Ensure it stays behind the text */ }
+
+.big_letter_q {
+  font-family: 'Times New Roman', Times, serif;
+  color: #711881;
+  font-size: 7rem;
+  opacity: 0.3;
+  /* Semi-transparent letter */
+  position: absolute;
+  /* Position it absolutely within the parent */
+  top: -6px;
+  /* Align with the top of the container */
+  left: 18px;
+  /* Adjust this to move it horizontally */
+  z-index: 0;
+  /* Ensure it stays behind the text */ }
+
+.faq_container {
+  height: auto;
+  position: relative;
+  /* Needed to position the big letter absolutely within this container */
+  margin-bottom: 20px;
+  /* Add some space between Q and A blocks */ }
+
+.faqTerm {
+  font-size: 1.1rem;
+  color: black;
   font-family: "backlash";
-  color: #410b4b;
-  font-weight: 500;
-  font-size: 1.3rem;
-  padding: 1%; }
+  position: relative;
+  z-index: 1;
+  /* Ensure text appears above the big letter */
+  padding: 2%; }
+
+.br_5 {
+  border-radius: 5px; }
+
+.border_thin {
+  background-color: rgba(255, 255, 255, 0.478);
+  border: 1px solid #711881; }
+
+.margin_small {
+  margin: 16px; }
+
+.brand_title_font {
+  font-family: "mayphylla"; }
+  @media (min-width: 768px) {
+    .brand_title_font {
+      font-size: 5rem;
+      transform: translateY(-10px);
+      color: #ffde68;
+      text-shadow: 2px 2px 2px #711881; } }
+
+.button_wide {
+  width: 94%;
+  padding: 1%;
+  margin: 2%;
+  font-size: 1.2rem;
+  background-color: #dbdbdb;
+  color: #711881; }
+
+.loginFlows {
+  background-color: white; }
+
+.login_form_basic button:hover {
+  transform: scale(1.1); }
+
+.login_form_basic::placeholder {
+  text-align: center; }
+
+.login_form_basic input:active {
+  border: 1px solid #711881;
+  box-shadow: 2px 2px 2px #711881; }
+
+.login_form_basic {
+  background-color: white;
+  color: #711881; }
+  .login_form_basic input, .login_form_basic button {
+    width: 94%;
+    padding: 1%;
+    margin: 2%;
+    font-size: 1.2rem; }
+  .login_form_basic label {
+    font-size: 1.2rem; }
+  .login_form_basic button {
+    background-color: #dbdbdb;
+    color: #711881;
+    font-size: 1.2rem; }
 
 #main {
   max-width: 50vw; }
@@ -202,11 +302,6 @@
   overflow: hidden;
   background-color: #f1f1f1; }
 
-form {
-  color: #711881; }
-  form h1 {
-    color: #711881; }
-
 .carrot {
   float: right;
   transition: transform 0.3s; }
@@ -306,12 +401,6 @@ form {
   width: 16%;
   height: 34px; }
 
-.oneTouchLogin {
-  width: 75px;
-  align-items: center;
-  align-content: center;
-  display: flex; }
-
 .loaderDiv {
   padding: 2%;
   flex-shrink: 0;
@@ -348,7 +437,6 @@ form {
 
 #chat-window-basic {
   border: 3px solid #ffde68;
-  box-shadow: 3px 3px 3px #711881, inset 5px 5px 5px #1a0a1b;
   margin: 2%;
   position: fixed;
   height: 90vh;
@@ -358,7 +446,7 @@ form {
   transition-timing-function: ease-in;
   transition-duration: .4s;
   transform: translateX(0%);
-  background-color: #711881;
+  background-color: white;
   left: 59%;
   top: 0;
   height: 87%;
@@ -381,7 +469,6 @@ form {
 
 #userDash {
   border: 3px solid #ffde68;
-  box-shadow: 3px 3px 3px #711881, inset 5px 5px 5px #1a0a1b;
   margin: 2%;
   position: fixed;
   height: 90vh;
@@ -391,7 +478,7 @@ form {
   transition-timing-function: ease-in;
   transition-duration: .4s;
   transform: translateX(0%);
-  background-color: #711881;
+  background-color: white;
   right: 100%;
   top: 0%;
   z-index: 1001; }
@@ -962,9 +1049,6 @@ form {
 #notifications {
   border: 1px solid #ffde68; }
 
-#regWindow, #loginWindow, #resetEmailInput, #emailLoginForm {
-  display: none; }
-
 @keyframes fadeIn {
   0% {
     opacity: 0;
@@ -976,13 +1060,6 @@ form {
   padding: 2%;
   margin: 2%;
   font-size: 1.2rem; }
-
-.loginFlows {
-  padding: 5%;
-  animation: fadeIn .5s ease-out 1 0s;
-  transform-style: preserve-3d;
-  transition-duration: .8s;
-  transition-timing-function: ease-in-out; }
 
 @keyframes flashMsg {
   0% {
@@ -1008,6 +1085,12 @@ form {
 
 #remoteVideo {
   width: 100%; }
+
+.index-containerr {
+  background-repeat: no-repeat;
+  background-size: 69%;
+  background-position: left;
+  background-blend-mode: hue; }
 
 #game-container, .index-container {
   color: black;

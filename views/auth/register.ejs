@@ -1,25 +1,25 @@
-<div class="loginBox">
+<div class="login_form_basic">
   <h2>Register your email to Login:</h2>
   <form action="/regUser" method="post">
     <div>
       <label>First Name</label>
-      <input id="firstname" name="firstName" type="text" autocomplete="firstname" required />
+      <input id="firstname" name="firstName" type="text" placeholder="enter your first name" autocomplete="firstname" required />
     </div>
     <div>
       <label>Last Name</label>
-      <input id="lastname" name="lastName" type="text" autocomplete="lastname" required />
+      <input id="lastname" name="lastName" type="text" placeholder="enter your last name" autocomplete="lastname" required />
     </div>
     <div>
       <label>Email</label>
-      <input name="email" type="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" title="Valid email characters not recognized" required />
+      <input name="email" type="email" placeholder="enter your email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" title="Valid email characters not recognized" required />
     </div>
     <div>
       <label>Password</label>
-      <input id="password1" name="password" type="password" pattern=".{8,}" title="Minimum 8 characters" required />
+      <input id="password1" name="password" placeholder="enter your password" type="password" pattern=".{8,}" title="Minimum 8 characters" required />
     </div>
     <div>
       <label>Confirm Password</label>
-      <input id="password2" type="password" required />
+      <input id="password2" type="password" placeholder="confirm your password" required />
     </div>
     <div>
       <button type="submit">Register</button>

@@ -1,26 +1,15 @@
-<!-- Inside ./partials/login.ejs -->
-<div class="loginBox">
-    <h2>Login Methods:</h2>
-    <% if (typeof user === 'object' && user) { %>
-        <p>You are logged in as <%= user.firstName %> <%= user.lastName %></p>
-        <p>email <%= user.email %></p>
-        <a href="/logout"><button>logout</button></a>
-        <button id="loginClose">close</button>
-    <% } else { %>
-        <div id="authOptions">
-            <button id="localAuthButton">Login with Email</button>
-            <button id="googleAuthButton"><a style="text-decoration: none;" href="/auth/google">Login with Google</a></button>
-            <button id="facebookAuthButton"><a style="text-decoration: none;" href="/auth/facebook">Login with Facebook</a></button>
-        </div>
 
-        <div class="loginFlows" id="emailLoginForm" style="display: none;">
+        
+        <div style="background-image:url(<%=webappSettings[0].mainLogo%>)" class="login_form_basic faded_background" id="emailLoginForm">
             <div class="loginForm">
+                <h1>LOGIN to <span class="brand_title_font">Royal Splendor</span></h1>
+
                 <form action="/auth/local" method="post">
-                    <label for="email">Email:</label><br>
-                    <input type="text" id="email" name="email" required><br>
-                    <label for="password">Password:</label><br>
-                    <input type="password" id="password" name="password" required>
-                    <button id="loginButton" type="submit">Login</button>
+                    <label for="email">EMAIL</label><br>
+                    <input type="text" id="email" name="email" placeholder="enter your email" required><br>
+                    <label for="password">PASSWORD</label><br>
+                    <input type="password" id="password" name="password" placeholder="enter your password" required>
+                    <button class="button_wide" id="loginButton" type="submit">LOGIN</button>
                 </form>
                 <h5>Forgot your password? <span style="color:blue; cursor: pointer;" onclick="showResetInput()" id="resetLink">reset password</span></h5>
                 <div id="resetEmailInput" style="display: none;">
@@ -36,54 +25,9 @@
             </div>
         </div>
         <h6>Login Issues? email <a href="mailto:w2marketing.scott@gmail.com">support</a></h6>
-    <% } %>
+        <div class="loginFlows" id="regWindow"><%-include('../auth/register')%></div>
+        <p>or login with:</p>
+        <button class="button_wide" id="googleAuthButton"><a style="text-decoration: none;" href="/auth/google">Google Auth</a></button>
+
+
 </div>
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const localAuthButton = document.getElementById('localAuthButton');
-    const emailLoginForm = document.getElementById('emailLoginForm');
-    const resetLink = document.getElementById('resetLink');
-    const resetEmailInput = document.getElementById('resetEmailInput');
-    const resetPasswordForm = document.getElementById('resetPasswordForm');
-    const resetPassInput = document.getElementById('resetPassInput');
-    const resetPassButton = document.getElementById('resetPassButton');
-
-    localAuthButton.addEventListener('click', function() {
-        emailLoginForm.style.display = (emailLoginForm.style.display === 'none' ? 'block' : 'none');
-    });
-
-    resetLink.addEventListener('click', function() {
-        resetEmailInput.style.display = (resetEmailInput.style.display === 'none' ? 'block' : 'none');
-    });
-
-    resetPasswordForm.addEventListener('submit', async function(event) {
-        event.preventDefault();
-        try {
-            const response = await fetch('/reset-password-request', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email: resetPassInput.value })
-            });
-
-            if (response.ok) {
-                resetEmailInput.style.display = 'none';
-                alert('Please check your email for your secure password reset link.');
-            } else {
-                alert("Hmmmm..something's not right \n\n User email not found, double check your email is correct. \n\n *Have you registered this email before?\n You must register before logging in the first time*");
-            }
-        } catch (error) {
-            console.error('Error:', error);
-        }
-    });
-
-    resetPassInput.addEventListener('input', function() {
-        if (!resetPassInput.value.includes('@')) {
-            resetPassButton.style.display = 'none';
-        } else {
-            resetPassButton.style.display = 'block';
-            resetPassButton.style.marginLeft = '8%';
-        }
-    });
-});
-</script>

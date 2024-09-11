@@ -3,10 +3,10 @@ dotenv.config();
 
 export const config = {
   // Breaking changes below
-  app_name: 'rw_socket',
+  app_name: 'Royal Splendor',
   DB_NAME: process.env.DB_NAME,
   DB_URL: process.env.DB_URL,
-  baseUrl: process.env.BASE_URL,
+  baseUrl: process.env.BASE_URL_TEST,
   ticketsEmail: 'scott@w2marketing.biz',
   emailService: 'smtp.office365.com',
   // End breaking changes

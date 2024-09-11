@@ -33,66 +33,38 @@ import items from './items/items.js';
 import calendars from './calendars/calendars.js';
 
 const router = express.Router();
-const permissionsChecker = async (req, res, next) => {
-  // Check if user exists
-  if (!req.user) {
-    console.log('Permission denied: No user found');
-    return res.status(403).json({ message: 'Forbidden: No user found' });
-  }
 
-  const pathSplit = req.originalUrl.split('/');
-  const permission = pathSplit[1]; // Grab the first part of the path after '/'
-  const userPermissions = req.user.permissions;
-  const user = req.user.firstName + ' ' + req.user.lastName;
+router.use('/marquees', marquees);
+router.use('/chat', chat);
+router.use('/calendars', calendars);
+router.use('/transactions', transactions);
+router.use('/items', items);
+router.use('/events', events);
+router.use('/tickets', tickets);
+router.use('/footers', footers);
 
-  // Check if the permission exists and is granted
-  if (
-    userPermissions.full ||
-    (userPermissions && userPermissions[permission] === true)
-  ) {
-    console.log(
-      `${user}: Permission granted for ${permission}, full access:${userPermissions.full}`
-    );
-    next(); // Permission granted, proceed to the next middleware
-  } else {
-    console.log(`Permission denied: ${permission}`);
-    return res
-      .status(403)
-      .json({ message: 'Forbidden: Insufficient permissions' });
-  }
-};
-
-router.use('/marquees', permissionsChecker, marquees);
-router.use('/chat', permissionsChecker, chat);
-router.use('/calendars', permissionsChecker, calendars);
-router.use('/transactions', permissionsChecker, transactions);
-router.use('/items', permissionsChecker, items);
-router.use('/events', permissionsChecker, events);
-router.use('/tickets', permissionsChecker, tickets);
-router.use('/footers', permissionsChecker, footers);
-
-router.use('/votes', permissionsChecker, votes);
-router.use('/users', permissionsChecker, users);
-router.use('/permissions', permissionsChecker, permissions);
-router.use('/videoLead', permissionsChecker, videoLead);
-router.use('/videoProduction', permissionsChecker, videoProduction);
-router.use('/clubs', permissionsChecker, clubs);
-router.use('/webappSettings', permissionsChecker, webappSettings);
-router.use('/notifications', permissionsChecker, notifications);
-router.use('/sectionSettings', permissionsChecker, sectionSettings);
-router.use('/subscriptions', permissionsChecker, subscriptions);
-router.use('/generalEditor', permissionsChecker, generalEditor);
-router.use('/destinations', permissionsChecker, destinations);
-router.use('/excursions', permissionsChecker, excursions);
-router.use('/media', permissionsChecker, media);
-router.use('/chats', permissionsChecker, chats);
-router.use('/travels', permissionsChecker, travels);
-router.use('/gems', permissionsChecker, gems);
-router.use('/vendors', permissionsChecker, vendors);
-router.use('/videos', permissionsChecker, videos);
-router.use('/blogs', permissionsChecker, blogs);
-router.use('/helps', permissionsChecker, helps);
-router.use('/faqs', permissionsChecker, faqs);
+router.use('/votes', votes);
+router.use('/users', users);
+router.use('/permissions', permissions);
+router.use('/videoLead', videoLead);
+router.use('/videoProduction', videoProduction);
+router.use('/clubs', clubs);
+router.use('/webappSettings', webappSettings);
+router.use('/notifications', notifications);
+router.use('/sectionSettings', sectionSettings);
+router.use('/subscriptions', subscriptions);
+router.use('/generalEditor', generalEditor);
+router.use('/destinations', destinations);
+router.use('/excursions', excursions);
+router.use('/media', media);
+router.use('/chats', chats);
+router.use('/travels', travels);
+router.use('/gems', gems);
+router.use('/vendors', vendors);
+router.use('/videos', videos);
+router.use('/blogs', blogs);
+router.use('/helps', helps);
+router.use('/faqs', faqs);
 
 /////P2P routes
 router.use('/videoStream', videoStream);

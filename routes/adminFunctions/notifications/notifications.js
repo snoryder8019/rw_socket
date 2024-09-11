@@ -2,7 +2,7 @@ import express from 'express';
 import Notification from '../../../plugins/mongo/models/notifications/Notification.js';
 import generateFormFields from '../../../plugins/helpers/formHelper.js';
 import { buildRoutes } from '../../helpers/routeBuilder.js';
-
+import GameLog from '../../../plugins/mongo/models/games/GameLog.js'
 const router = express.Router();
 const modelName = 'notification';
 
@@ -61,6 +61,7 @@ router.get('/section', async (req, res) => {
     res.status(500).send({ error: error.message });
   }
 });
+router.get('/userNotifications')
 
 buildRoutes(new Notification(), router);
 

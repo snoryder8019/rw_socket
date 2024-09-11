@@ -1,9 +1,9 @@
 <div id="userDash">
   <div class="dashContent">
-    <div>
+    
      
       <%if(typeof user =='object'&& user){%>
-      </div>      
+      
       <div class="wallet">
         <div class="jewel"><img class="usersOnline"src="<%=user.images[0].thumbnailUrl%>"></div>
         <div class="jewel"><div><%=user.displayName%></div><div> <%=user.email%></div></div> 
@@ -19,23 +19,12 @@
       <%}%>
         <%}else{%>
 
-      <div style="overflow: scroll;height:auto;">
-        <h2>Login Portal</h2>
-        <div id="authOptionButtons">
-        <button class="authOpts" id="firstTimeYes">"This is my first time to login on this website."</button>
-        <button class="authOpts" id="firstTimeNo">"I have registered and created a login on this website."</button>
-       </div>
-        <div class="loginFlows" id="regWindow"><%-include('../auth/register')%></div>
         <div class="loginFlows" id="loginWindow"><%-include('../auth/login')%></div>
-
- 
-      </div>
 
       <%}%>
             <%- include('./settings/userNav',{user:user})%>
     </div>
   </div>
-</div>
 
 
 

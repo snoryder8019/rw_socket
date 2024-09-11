@@ -1,9 +1,18 @@
-<%if(typeof faqs =='object'&& faqs){%>
-<%faqs.forEach(faq =>{%>
-<div class="index-container">
-    <%=faq.question%>
-    <br>
-    <%=faq.answer%>
-</div>
-    <%})%>
-    <%}%>
+<% if (typeof faqs == 'object' && faqs) { %>
+    <% faqs.forEach(faq => { %>
+      <div class="index-containerr" style="overflow: none;">
+        <div class="border_thin margin_thin br_5 faq_container">
+            <span class="big_letter_q">Q   <span class="big_letter_a">A</span></span>
+            <span class="faqTerm">Q: <%= faq.question %></span>
+            <div class="border_thin margin_small br_5 faq_container">
+           
+              <span class="faqTerm">A: <%= faq.answer %></span>
+            </div>
+          </div>
+          
+          
+        
+      </div>
+    <% }) %>
+  <% } %>
+  
