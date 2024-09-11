@@ -1,0 +1,83 @@
+
+<script>
+ window.addEventListener('load', () => {
+    const list = document.querySelector('#productList');
+    let listItems = document.querySelectorAll('#productList li'); // NodeList of product items
+    const sortSelect = document.getElementById('sortProducts');
+    const productCategories = document.getElementById('productCategories');
+    let currentCategory = 'all'; // Track the current category
+
+    // Observer options for IntersectionObserver
+    const observerOptions = {
+        root: null, // Use the viewport as the root
+        threshold: 0.5 // Trigger when 50% of the item is visible
+    };
+
+    // Function to highlight the center item when it comes into view
+    function observeHighlight(entries, observer) {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('centerHighlight'); // Add class when the item is visible
+            } else {
+                entry.target.classList.remove('centerHighlight'); // Remove class when the item is not visible
+            }
+        });
+    }
+
+    // Create an IntersectionObserver instance
+    const observer = new IntersectionObserver(observeHighlight, observerOptions);
+
+    // Function to sort products
+    function sortProducts(criteria) {
+        const itemsArray = Array.from(listItems);
+
+        itemsArray.sort((a, b) => {
+            if (criteria === 'title') {
+                return a.querySelector('.productTitle').innerText.localeCompare(b.querySelector('.productTitle').innerText);
+            } else if (criteria === 'price') {
+                return parseFloat(a.querySelector('.productPrice').innerText.slice(1)) - parseFloat(b.querySelector('.productPrice').innerText.slice(1));
+            }
+        });
+
+        // Append sorted items back to the list
+        itemsArray.forEach(item => list.appendChild(item));
+
+        // Update observer with new list items
+        listItems.forEach(item => observer.observe(item)); // Re-observe items after sorting
+    }
+
+    // Function to filter products by category
+    function filterByCategory(category) {
+        currentCategory = category; // Update the current category
+
+        listItems.forEach(item => {
+            if (category === 'all' || item.dataset.category === category) {
+                item.style.display = ''; // Show item
+                observer.observe(item); // Observe the item
+            } else {
+                item.style.display = 'none'; // Hide item
+                observer.unobserve(item); // Unobserve hidden items
+            }
+        });
+
+        // Update list items for sorting and observing
+        listItems = document.querySelectorAll('#productList li'); // Update NodeList
+    }
+
+    // Event listener for sorting products
+    sortSelect.addEventListener('change', (e) => {
+        sortProducts(e.target.value);
+    });
+
+    // Event listener for category filtering
+    productCategories.addEventListener('click', (e) => {
+        if (e.target.tagName === 'BUTTON') {
+            filterByCategory(e.target.dataset.category);
+        }
+    });
+
+    // Observe all initial list items
+    listItems.forEach(item => observer.observe(item));
+});
+
+</script>

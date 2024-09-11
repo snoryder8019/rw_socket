@@ -9,6 +9,84 @@ const __dirname = path.dirname(__filename);
 // Storefront API credentials
 const API_KEY = process.env.SHOP_API;
 const STORE_DOMAIN = 'royal-splendor.myshopify.com'; // Replace with your actual store domain
+export const getCollections = async () => {
+  try {
+    const fetch = (await import('node-fetch')).default;
+
+    const response = await fetch(
+      `https://${STORE_DOMAIN}/api/2023-10/graphql.json`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Shopify-Storefront-Access-Token': API_KEY,
+        },
+        body: JSON.stringify({
+          query: `
+                    {
+                        collections(first: 10) {
+                            edges {
+                                node {
+                                    id
+                                    title
+                                    description
+                                    products(first: 10) {
+                                        edges {
+                                            node {
+                                                id
+                                                title
+                                                description
+                                                productType
+                                                images(first: 1) {
+                                                    edges {
+                                                        node {
+                                                            originalSrc
+                                                            altText
+                                                        }
+                                                    }
+                                                }
+                                                variants(first: 1) {
+                                                    edges {
+                                                        node {
+                                                            price {
+                                                                amount
+                                                                currencyCode
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                `,
+        }),
+      }
+    );
+
+    const contentType = response.headers.get('content-type');
+    const text = await response.text();
+
+    if (response.status !== 200) {
+      throw new Error(
+        `Server responded with status ${response.status}: ${text}`
+      );
+    }
+
+    if (!contentType || !contentType.includes('application/json')) {
+      throw new Error(`Expected JSON, but received ${contentType}: ${text}`);
+    }
+
+    const data = JSON.parse(text);
+    return data.data.collections.edges;
+  } catch (error) {
+    console.error('Error fetching collections:', error.message);
+    throw new Error(error.message);
+  }
+};
 
 export const getProducts = async () => {
   try {

@@ -4,78 +4,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shopify Storefront</title>
-    <link rel="stylesheet" type="text/css" href="/styles/shopifyStorefront.css">
+    <link rel="stylesheet" type="text/css" href="/stylesheets/shopifyStorefront.css">
 </head>
 <body>
     <div class="shopifyStorefront">
         <header>
             <h1>Shopify Storefront</h1>
+
+            <!-- Dropdown for sorting products -->
             <select id="sortProducts">
                 <option value="title">Sort by Title</option>
                 <option value="price">Sort by Price</option>
             </select>
+        
             <div id="productCategories">
                 <!--CATEGORIES-->
             </div>
         </header>
+
         <ul id="productList">
             <!--PRODUCTS-->
         </ul>
     </div>
-    <script>
-        window.addEventListener('load', () => {
-            const list = document.querySelector('.shopifyStorefront ul');
-            const listItems = document.querySelectorAll('.shopifyStorefront li');
-            const sortSelect = document.getElementById('sortProducts');
-            const productCategories = document.getElementById('productCategories');
-
-            function highlightCenterItem() {
-                const center = list.scrollLeft + list.offsetWidth / 2;
-                listItems.forEach(item => {
-                    const itemCenter = item.offsetLeft + item.offsetWidth / 2;
-                    if (Math.abs(center - itemCenter) < item.offsetWidth / 2) {
-                        item.classList.add('centerHighlight');
-                    } else {
-                        item.classList.remove('centerHighlight');
-                    }
-                });
-            }
-
-            function sortProducts(criteria) {
-                const itemsArray = Array.from(listItems);
-                itemsArray.sort((a, b) => {
-                    if (criteria === 'title') {
-                        return a.querySelector('.productTitle').innerText.localeCompare(b.querySelector('.productTitle').innerText);
-                    } else if (criteria === 'price') {
-                        return parseFloat(a.querySelector('.productPrice').innerText.slice(1)) - parseFloat(b.querySelector('.productPrice').innerText.slice(1));
-                    }
-                });
-                itemsArray.forEach(item => list.appendChild(item));
-                highlightCenterItem();
-            }
-
-            function filterByCategory(category) {
-                listItems.forEach(item => {
-                    if (category === 'all' || item.dataset.category === category) {
-                        item.style.display = '';
-                    } else {
-                        item.style.display = 'none';
-                    }
-                });
-                highlightCenterItem();
-            }
-
-            sortSelect.addEventListener('change', (e) => sortProducts(e.target.value));
-
-            productCategories.addEventListener('click', (e) => {
-                if (e.target.tagName === 'BUTTON') {
-                    filterByCategory(e.target.dataset.category);
-                }
-            });
-
-            list.addEventListener('scroll', highlightCenterItem);
-            highlightCenterItem();
-        });
-    </script>
+    
 </body>
 </html>
