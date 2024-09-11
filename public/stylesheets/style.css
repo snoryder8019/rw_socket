@@ -107,7 +107,7 @@
 .brand_title_font {
   font-family: "mayphylla";
   color: #ffde68;
-  font-size: 5rem;
+  font-size: 2.6rem;
   text-shadow: 2px 2px 2px #711881; }
   @media (min-width: 768px) {
     .brand_title_font {
@@ -459,7 +459,7 @@
   transition-timing-function: ease-in;
   transition-duration: .4s;
   transform: translateX(0%);
-  background: linear-gradient(to bottom, #ffc3ff, #711881, #711881, #711881, #711881, #711881, #711881, #711881, #711881, #ffc3ff);
+  background: linear-gradient(to bottom, #5c005c, #711881, #711881, #711881, #a71fa7, #711881, #711881, #711881, #711881, #3c003c);
   left: 59%;
   top: 0;
   height: 87%;
@@ -491,7 +491,7 @@
   transition-timing-function: ease-in;
   transition-duration: .4s;
   transform: translateX(0%);
-  background: linear-gradient(to bottom, #ffc3ff, #711881, #711881, #711881, #711881, #711881, #711881, #711881, #711881, #ffc3ff);
+  background: linear-gradient(to bottom, #5c005c, #711881, #711881, #711881, #a71fa7, #711881, #711881, #711881, #711881, #3c003c);
   right: 100%;
   top: 0%;
   z-index: 1001; }

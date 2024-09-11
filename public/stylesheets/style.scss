@@ -180,7 +180,7 @@ $gradientEdge: #410b4b;
 .brand_title_font{
   font-family: $maph;
   color: $gold;
-  font-size: 5rem;
+  font-size: 2.6rem;
   text-shadow: 2px 2px 2px $purple;
   @media (min-width:768px) {
     font-size: 5rem;
@@ -579,7 +579,7 @@ height:34px;
     transition-timing-function: ease-in;
     transition-duration: .4s;
     transform: translateX(0%);
-   background: linear-gradient(to bottom,rgb(255, 195, 255),$purple,$purple,$purple,$purple,$purple,$purple,$purple,$purple,rgb(255, 195, 255));
+   background: linear-gradient(to bottom,rgb(92,0,92),$purple,$purple,$purple,rgb(167, 31, 167),$purple,$purple,$purple,$purple,rgb(60, 0, 60));
 }
 #chat-window-basic {
     @include sliderWindows();
