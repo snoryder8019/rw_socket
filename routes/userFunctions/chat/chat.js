@@ -51,21 +51,18 @@ const likePost = async (req, res) => {
     res.status(500).json({ error: 'An error occurred while updating the like tally' });
   }
 };
+
+// Fetch user's avatar
 const getUserAvatar = async (userId) => {
-  // Fetch user details (assuming User model is defined and connected to MongoDB)
   const user = await new User().getById(userId);
-  
   if (!user || !user.images || !Array.isArray(user.images)) {
-    // Return a default avatar URL if no user or images are found
-    return '/path/to/default/avatar.jpg';
+    return '/path/to/default/avatar.jpg';  // Default avatar
   }
-
-  // Find the image with avatarTag === true
   const avatarImage = user.images.find(img => img.avatarTag === true);
-
-  // Return the avatar URL or a default URL if no avatar image is found
   return avatarImage ? avatarImage.url : '/path/to/default/avatar.jpg';
 };
+
+// Reply post logic, callable from both routes and socket
 
 const replyPost = async (req, res) => {
   const { postId, userId, replyMessage } = req.body;

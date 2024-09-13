@@ -17,15 +17,32 @@ export const mainChatHandlers = {
 
     nsp.to('General').emit('user list', Object.values(users));
 
+    // Handle incoming replies from socket
+    socket.on('replyMessage', async (data) => {
+      const { postId, replyMessage } = data;
+      const userId = user._id;  // Get the user's ID from socket
+
+      try {
+        const replyData = { postId, userId, replyMessage };
+        
+        // Call the replyPost logic from routes
+        const result = await replyPost(replyData);
+
+        if (result.error) {
+          socket.emit('replyError', result.error);  // Send error to client if any
+        } else {
+          nsp.to('General').emit('newReply', { postId, reply: result.reply });
+        }
+      } catch (error) {
+        console.error('Error handling reply:', error);
+        socket.emit('replyError', 'Error handling reply');
+      }
+    });
+
+    // Existing chat message logic
     socket.on('chat message', async (message, roomId) => {
       try {
-        await savechatMessage(
-          user.key,
-          user.displayName,
-          roomId,
-          message,
-          avatarThumbnailUrl
-        );
+        await savechatMessage(user.key, user.displayName, roomId, message, avatarThumbnailUrl);
         nsp.to('General').emit('chat message', {
           roomId: roomId,
           message,
@@ -36,6 +53,37 @@ export const mainChatHandlers = {
         console.error('Error sending message:', error);
       }
     });
+    socket.on('likeUpdated', async ({ postId, likes }) => {
+      try {
+        // Emit the like update to all clients in the room
+        nsp.to('General').emit('likeUpdated', { postId, likes });
+      } catch (error) {
+        console.error('Error updating likes:', error);
+      }
+    });
+    
+    // Emit a new reply event when a reply is added
+    socket.on('newReply', ({ postId, reply }) => {
+      const actionsDiv = document.getElementById(`${postId}_actions`);
+      if (!actionsDiv) return;
+    
+      const repliesContainer = actionsDiv.parentElement.querySelector('.repliesContainer');
+      if (!repliesContainer) return;
+    
+      // Append the new reply to the replies container
+      renderSingleReply(reply, repliesContainer);
+    
+      // Ensure the replies are visible
+      repliesContainer.style.display = 'block';
+    
+      // Optionally update reply counter if you're showing one
+      const repliesCounter = actionsDiv.querySelector('.repliesCounter');
+      if (repliesCounter) {
+        const currentRepliesCount = parseInt(repliesCounter.textContent) || 0;
+        repliesCounter.textContent = `${currentRepliesCount + 1} ${currentRepliesCount + 1 === 1 ? 'reply' : 'replies'}`;
+      }
+    });
+    
 
     socket.on('fetch messages', async ({ roomId, page, messagesPerPage }) => {
       try {

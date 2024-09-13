@@ -175,6 +175,36 @@ document.addEventListener('click', (event) => {
     console.log('Marquee event emitted');
   }
 });
+socket.on('likeUpdated', ({ postId, likes }) => {
+  const actionsDiv = document.getElementById(`${postId}_actions`);
+  if (!actionsDiv) return;
+
+  const likesCounter = actionsDiv.querySelector('.likesCounter');
+  if (likesCounter) {
+    likesCounter.textContent = `${likes} ${likes === 1 ? 'like' : 'likes'}`;
+  }
+});
+
+socket.on('newReply', ({ postId, reply }) => {
+  const actionsDiv = document.getElementById(`${postId}_actions`);
+  if (!actionsDiv) return;
+
+  const repliesContainer = actionsDiv.parentElement.querySelector('.repliesContainer');
+  if (!repliesContainer) return;
+
+  // Append the new reply to the replies container
+  renderSingleReply(reply, repliesContainer);
+
+  // Ensure the replies are visible
+  repliesContainer.style.display = 'block';
+
+  // Optionally update reply counter if you're showing one
+  const repliesCounter = actionsDiv.querySelector('.repliesCounter');
+  if (repliesCounter) {
+    const currentRepliesCount = parseInt(repliesCounter.textContent) || 0;
+    repliesCounter.textContent = `${currentRepliesCount + 1} ${currentRepliesCount + 1 === 1 ? 'reply' : 'replies'}`;
+  }
+});
 
 
       ////////     
