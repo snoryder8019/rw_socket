@@ -1,34 +1,35 @@
 <div id="chat-window-basic">
+  <div id="userList">
+       <div class="loaderWheel">
+           <div class="loaderDiv"><h3>loading chatroom...</h3></div>
+           <div class="loaderDiv"><div class="wheel"></div></div>
+       </div>
+   </div>
+   <div id="chatTabs">
+      <%if (typeof chatRooms == 'object' && chatRooms){%>
+    <%for(let i=0; i<chatRooms.length;i++){%>
+       <div onclick="changeRooms()" id="tab_section_<%=chatRooms[i]._id%>" class="tab_section"><%=chatRooms[i].roomName%></div>
+       <%}%>
+       <%}%>
+    <!--this will ultimately pull up a list of rooms you have permission to join-->
+    
+   </div>
   
   <% if(typeof user === 'object' && user) { %>
+    <div id="chatContainer">
       <script>var firstName = "<%= user.firstName %>"</script>
       <script>var chatStyle = "<%=user.chatStyle%>"</script>
      <script>var avatarStyle = "<%=user.avatarStyle%>"</script>
      <script id="updatedRoomId">var roomId = "<%=chatRooms[0]._id%>"</script>
-     <div id="userList">
-          <div class="loaderWheel">
-              <div class="loaderDiv"><h3>loading chatroom...</h3></div>
-              <div class="loaderDiv"><div class="wheel"></div></div>
-          </div>
-      </div>
-      <div id="chatTabs">
-         <%if (typeof chatRooms == 'object' && chatRooms){%>
-       <%for(let i=0; i<chatRooms.length;i++){%>
-          <div onclick="changeRooms()" id="tab_section_<%=chatRooms[i]._id%>" class="tab_section"><%=chatRooms[i].roomName%></div>
-          <%}%>
-          <%}%>
-       <!--this will ultimately pull up a list of rooms you have permission to join-->
-       
-      </div>
       <div id="chat">
           <div id="messages"></div>
-      </div>
- 
-      <div class="inputBar">
-          <div class="emojiSlider"></div>
-         
-          <input class="chatInput"id="chatInput" autocomplete="off" /> <span hidden class="addImage">🖼️</span><button id="submitChat">Send</button>
           </div>
+          </div>
+          <div class="inputBar">
+              <div class="emojiSlider"></div>
+             
+              <input class="chatInput"id="chatInput" autocomplete="off" /> <span hidden class="addImage">🖼️</span><button id="submitChat">Send</button>
+              </div>
   <% } else { %>
       <p>Please log in to join the chat.</p>
   <% } %>

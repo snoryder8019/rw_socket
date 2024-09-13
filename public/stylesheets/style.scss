@@ -790,7 +790,10 @@ align-content: center;
   border-radius: 5px;
 }
 
-
+#chatContainer{
+max-height: 68%;
+overflow-y: scroll;
+}
 
 #chat{
     width: 96%;
@@ -798,7 +801,7 @@ align-content: center;
 overflow-y: auto;
 transition-timing-function: ease-out;
 transition-duration: .6s;
-    height: 63%;
+  //  height: 63%;
     box-shadow: inset 1px 1px 4px rgba(0, 0, 0, 0.749);
     border-top-left-radius:25px ;
     border-bottom-right-radius:25px ;
@@ -808,7 +811,7 @@ transition-duration: .6s;
     
 }
 @media (max-width:768px)and (min-aspect-ratio:1/1) {
-  height: 43%;
+ // height: 43%;
 }
 }
 #mainBanner{
