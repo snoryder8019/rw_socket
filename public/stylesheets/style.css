@@ -819,6 +819,20 @@
 .usersOnline {
   cursor: pointer; }
 
+.repliesContainer {
+  border-left: 2px solid purple;
+  border-top: 2px solid purple; }
+
+.replyMessage {
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px; }
+
+.repliesCounter {
+  color: blue;
+  cursor: pointer;
+  font-weight: bold; }
+
 .usersOnline {
   background-color: #410b4b;
   max-width: 35px;
@@ -847,25 +861,29 @@
 
 .message, .message_green {
   display: grid;
-  grid-template-columns: 2fr 8fr 1fr;
+  grid-template-columns: 2fr 8fr;
   margin-bottom: 10px;
   width: 98%;
   border-radius: 5px;
   box-shadow: 2px 2px 5px rgba(255, 217, 0, 0.406);
   background: linear-gradient(to right, rgba(128, 0, 128, 0.56), rgba(255, 217, 0, 0.229), #711881, #711881, #711881, #711881, #711881, #711881, #711881, #711881, #711881);
-  /* Light grey background */
   animation: fadeIn .3s ease-IN 0s 1; }
 
-.message_green {
-  background: linear-gradient(to left, rgba(128, 0, 128, 0.56), rgba(255, 217, 0, 0.229), #711881, #711881, #711881, #711881, #711881, #711881, #711881, #711881, #711881);
-  /* Light grey background */ }
+.message .messageText {
+  display: flex;
+  align-items: center;
+  /* Vertically centers the text */
+  justify-content: center;
+  /* Horizontally centers the text */
+  text-align: left;
+  /* Centers text if it's multiple lines */ }
 
 .messageUser {
   margin: 1%;
   font-weight: bold;
   margin-right: 5px; }
 
-.message img, .message_green img {
+.message img {
   background-color: #410b4b;
   max-width: 35px;
   min-width: 35px;
@@ -877,9 +895,12 @@
 
 .messageText {
   text-align: left;
-  font-size: 1.2rem;
+  font-size: .9rem;
   font-weight: 800;
   /* Additional styling as needed */ }
+  @media (min-width: 768px) {
+    .messageText {
+      font-size: 1.2rem; } }
 
 #confettiCanvas {
   background-color: transparent;

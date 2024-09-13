@@ -949,6 +949,27 @@ $headshotPx:35px;
 .usersOnline {
   cursor: pointer;
 }
+.repliesContainer {
+
+ // margin-top: 10px;
+ // padding-left: 20px;
+  border-left: 2px solid purple;
+  border-top: 2px solid purple;
+}
+
+.replyMessage {
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.repliesCounter {
+  color: blue;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+
 .usersOnline {
     background-color: #410b4b;
     max-width: $headshotPx;
@@ -978,22 +999,22 @@ $headshotPx:35px;
 }
 
 
-.message {
-display: grid;
-    grid-template-columns: 2fr 8fr 1fr;
-margin-bottom: 10px;
-width: 98%;
-//padding: 5px;
-border-radius: 5px;
-box-shadow:  2px 2px 5px rgba(255, 217, 0, 0.406);
-//border: 1px solid $black;
-background:linear-gradient(to right,rgba(128, 0, 128, 0.56),rgba(255, 217, 0, 0.229),$purple,$purple,$purple,$purple,$purple,$purple,$purple,$purple,$purple); /* Light grey background */
-animation:fadeIn .3s ease-IN 0s 1;
+.message, .message_green {
+	display: grid;
+	grid-template-columns: 2fr 8fr;
+	margin-bottom: 10px;
+	width: 98%;
+	border-radius: 5px;
+	box-shadow: 2px 2px 5px rgba(255, 217, 0, 0.406);
+	background: linear-gradient(to right, rgba(128, 0, 128, 0.56), rgba(255, 217, 0, 0.229), #711881, #711881, #711881, #711881, #711881, #711881, #711881, #711881, #711881);
+	animation: fadeIn .3s ease-IN 0s 1;
 }
-.message_green{
-  @extend .message;
-  background:linear-gradient(to left,rgba(128, 0, 128, 0.56),rgba(255, 217, 0, 0.229),$purple,$purple,$purple,$purple,$purple,$purple,$purple,$purple,$purple); /* Light grey background */
 
+.message .messageText {
+	display: flex;
+	align-items: center; /* Vertically centers the text */
+	justify-content: center; /* Horizontally centers the text */
+	text-align: left; /* Centers text if it's multiple lines */
 }
 
 #messages:first-child{
@@ -1017,9 +1038,12 @@ animation:fadeIn .3s ease-IN 0s 1;
 }
 .messageText {
     text-align: left;
-font-size: 1.2rem;
+font-size: .9rem;
 font-weight: 800;
     /* Additional styling as needed */
+    @media (min-width:768px) {
+      font-size:1.2rem
+    }
 }
 #confettiCanvas{
     background-color: transparent;

@@ -17,6 +17,8 @@ export default class ChatMessage extends ModelHelper {
       message: { type: 'text', value: null },
       messageDate: { type: 'text', value: null },
       responses: { type: 'array', value: [] },
+      likedBy: { type: 'array', value: [] },
+      replies: { type: 'array', value: [] },
       sharedBy: { type: 'array', value: [] },
       user: { type: 'text', value: null },
       visible: { type: 'boolean', value: true },

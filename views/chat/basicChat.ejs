@@ -1,198 +1,199 @@
 <div id="chat-window-basic">
   
-    <% if(typeof user === 'object' && user) { %>
-        <script>var firstName = "<%= user.firstName %>"</script>
-        <script>var chatStyle = "<%=user.chatStyle%>"</script>
-       <script>var avatarStyle = "<%=user.avatarStyle%>"</script>
-       <script id="updatedRoomId">var roomId = "<%=chatRooms[0]._id%>"</script>
-       <div id="userList">
-            <div class="loaderWheel">
-                <div class="loaderDiv"><h3>loading chatroom...</h3></div>
-                <div class="loaderDiv"><div class="wheel"></div></div>
-            </div>
-        </div>
-        <div id="chatTabs">
-           <%if (typeof chatRooms == 'object' && chatRooms){%>
-         <%for(let i=0; i<chatRooms.length;i++){%>
-            <div onclick="changeRooms()" id="tab_section_<%=chatRooms[i]._id%>" class="tab_section"><%=chatRooms[i].roomName%></div>
-            <%}%>
-            <%}%>
-         <!--this will ultimately pull up a list of rooms you have permission to join-->
+  <% if(typeof user === 'object' && user) { %>
+      <script>var firstName = "<%= user.firstName %>"</script>
+      <script>var chatStyle = "<%=user.chatStyle%>"</script>
+     <script>var avatarStyle = "<%=user.avatarStyle%>"</script>
+     <script id="updatedRoomId">var roomId = "<%=chatRooms[0]._id%>"</script>
+     <div id="userList">
+          <div class="loaderWheel">
+              <div class="loaderDiv"><h3>loading chatroom...</h3></div>
+              <div class="loaderDiv"><div class="wheel"></div></div>
+          </div>
+      </div>
+      <div id="chatTabs">
+         <%if (typeof chatRooms == 'object' && chatRooms){%>
+       <%for(let i=0; i<chatRooms.length;i++){%>
+          <div onclick="changeRooms()" id="tab_section_<%=chatRooms[i]._id%>" class="tab_section"><%=chatRooms[i].roomName%></div>
+          <%}%>
+          <%}%>
+       <!--this will ultimately pull up a list of rooms you have permission to join-->
+       
+      </div>
+      <div id="chat">
+          <div id="messages"></div>
+      </div>
+ 
+      <div class="inputBar">
+          <div class="emojiSlider"></div>
          
-        </div>
-        <div id="chat">
-            <div id="messages"></div>
-        </div>
-   
-        <div class="inputBar">
-            <div class="emojiSlider"></div>
-           
-            <input class="chatInput"id="chatInput" autocomplete="off" /> <span hidden class="addImage">🖼️</span><button id="submitChat">Send</button>
-            </div>
-    <% } else { %>
-        <p>Please log in to join the chat.</p>
-    <% } %>
+          <input class="chatInput"id="chatInput" autocomplete="off" /> <span hidden class="addImage">🖼️</span><button id="submitChat">Send</button>
+          </div>
+  <% } else { %>
+      <p>Please log in to join the chat.</p>
+  <% } %>
 </div>
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-  const emojiSlider = document.querySelector('.emojiSlider');
+  document.addEventListener('DOMContentLoaded', function() {
+const emojiSlider = document.querySelector('.emojiSlider');
 
-  // Create an Intersection Observer
-  const observer = new IntersectionObserver((entries, observer) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        // Element is in view, load the .ejs content
-        loadEmojiContent();
-        // Stop observing once the content is loaded
-        observer.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.1 }); // Adjust the threshold as needed
-
-  // Observe the emojiSlider element
-  observer.observe(emojiSlider);
-
-  // Function to load the .ejs file content
-  function loadEmojiContent() {
-    fetch('/getEmojis')
-      .then(response => response.text())
-      .then(data => {
-        emojiSlider.innerHTML = data; // Insert the loaded content into the div
-        attachEmojiClickHandlers(); // Attach click handlers to the loaded emojis
-      })
-      .catch(error => console.error('Error loading the .ejs file:', error));
-  }
-
-  // Function to attach click handlers to each emoji
-  function attachEmojiClickHandlers() {
-    const emojis = emojiSlider.querySelectorAll('.emoji-option');
-    emojis.forEach(emoji => {
-      emoji.addEventListener('click', () => {
-        const emojiValue = emoji.getAttribute('data-emoji');
-        selectEmoji(emojiValue);
-      });
-    });
-  }
-
-  // Function to handle emoji selection
-  function selectEmoji(emoji) {
-    const inputField = document.querySelector('input'); // Select the input field (modify the selector as needed)
-    if (inputField) {
-      const currentValue = inputField.value; // Get the current value of the input field
-      inputField.value = currentValue + emoji; // Append the emoji to the current value
+// Create an Intersection Observer
+const observer = new IntersectionObserver((entries, observer) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      // Element is in view, load the .ejs content
+      loadEmojiContent();
+      // Stop observing once the content is loaded
+      observer.unobserve(entry.target);
     }
+  });
+}, { threshold: 0.1 }); // Adjust the threshold as needed
+
+// Observe the emojiSlider element
+observer.observe(emojiSlider);
+
+// Function to load the .ejs file content
+function loadEmojiContent() {
+  fetch('/getEmojis')
+    .then(response => response.text())
+    .then(data => {
+      emojiSlider.innerHTML = data; // Insert the loaded content into the div
+      attachEmojiClickHandlers(); // Attach click handlers to the loaded emojis
+    })
+    .catch(error => console.error('Error loading the .ejs file:', error));
+}
+
+// Function to attach click handlers to each emoji
+function attachEmojiClickHandlers() {
+  const emojis = emojiSlider.querySelectorAll('.emoji-option');
+  emojis.forEach(emoji => {
+    emoji.addEventListener('click', () => {
+      const emojiValue = emoji.getAttribute('data-emoji');
+      selectEmoji(emojiValue);
+    });
+  });
+}
+
+// Function to handle emoji selection
+function selectEmoji(emoji) {
+  const inputField = document.querySelector('input'); // Select the input field (modify the selector as needed)
+  if (inputField) {
+    const currentValue = inputField.value; // Get the current value of the input field
+    inputField.value = currentValue + emoji; // Append the emoji to the current value
   }
+}
 });
 
 </script>
 
 <script>
-    document.addEventListener('DOMContentLoaded',()=>{
+  document.addEventListener('DOMContentLoaded',()=>{
 
 
-    })
-        document.addEventListener('DOMContentLoaded', () => {
-            const elements = document.querySelectorAll('.message');
-            elements.forEach((element, index) => {
-                const delay = index * 0.2; // Adjust the multiplier for different delays
-                element.style.animationDelay = `${delay}s`;
-            });
-        });
-    </script>
+  })
+      document.addEventListener('DOMContentLoaded', () => {
+          const elements = document.querySelectorAll('.message');
+          elements.forEach((element, index) => {
+              const delay = index * 0.2; // Adjust the multiplier for different delays
+              element.style.animationDelay = `${delay}s`;
+          });
+      });
+  </script>
 <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        var socket = io('/main_chat');
-        let currentPage = 1;
-        const messagesPerPage = 12; 
-        function requestInitialMessages() {
-            socket.emit('fetch messages', { roomId: roomId, page: currentPage, messagesPerPage: messagesPerPage });
-        }   
-        //////
+  document.addEventListener('DOMContentLoaded', () => {
+      var socket = io('/main_chat');
+      let currentPage = 1;
+      const messagesPerPage = 12; 
+      function requestInitialMessages() {
+          socket.emit('fetch messages', { roomId: roomId, page: currentPage, messagesPerPage: messagesPerPage });
+      }   
+      //////
 
-  socket.on('connect_error', (err) => {
-    console.error('Connection error:', err);
-  });
+socket.on('connect_error', (err) => {
+  console.error('Connection error:', err);
+});
 
-  socket.on('broadcast', (videoUrl) => {
-    const finUrl = videoUrl.videoUrl.videoUrl;
-    console.log(`CHANNEL ONE BROADCAST NOTICED url: ${finUrl}`);
-    const containerVid = document.querySelector('.myVideo');
-    const statusText = document.getElementById('statusText');
-    
-    // Hide the "New videos here daily!" text
-    statusText.style.display = 'none';
-    
-    // Stop and remove the existing video if it exists
-    let existingVideo = document.getElementById('videoPlayer');
-    if (existingVideo) {
-      existingVideo.pause(); // Stop the video
-      existingVideo.src = ''; // Clear the source
-      existingVideo.load(); // Stop downloading the video
-      existingVideo.remove(); // Remove the video element from the DOM
-    }
-    
-    // Create a new video element and add it to the container
-    const videoPlayer = document.createElement('video');
-    videoPlayer.id = 'videoPlayer';
-    videoPlayer.autoplay = true;
-    videoPlayer.muted = true;
-    videoPlayer.controls = true;
-    videoPlayer.style.maxHeight = '200px';
-    videoPlayer.style.width = '100%';
-
-    const sourceElement = document.createElement('source');
-    sourceElement.src = `https://${finUrl}`;
-    sourceElement.type = 'video/mp4';
-
-    videoPlayer.appendChild(sourceElement);
-    containerVid.appendChild(videoPlayer);
-    
-    // Load and play the new video
-    videoPlayer.load();
-    videoPlayer.play();
-  });
-
-  socket.on('marquee', (data) => {
-    console.log('Received marquee message:', data.message);
-    const marqueeText = document.getElementById('marqueeText');
-    marqueeText.innerText = data.message;
-    marqueeText.style.display = 'block'; // Show the marquee
-  });
+socket.on('broadcast', (videoUrl) => {
+  const finUrl = videoUrl.videoUrl.videoUrl;
+  console.log(`CHANNEL ONE BROADCAST NOTICED url: ${finUrl}`);
+  const containerVid = document.querySelector('.myVideo');
+  const statusText = document.getElementById('statusText');
   
-  document.addEventListener('click', (event) => {
-    if(event.target.classList.contains('play-video')){
-      const videoUrl = event.target.getAttribute('data-video');
-      console.log(`playVIDDDSS!!k ${videoUrl}`);
-      socket.emit('broadcast', { videoUrl: videoUrl });
-    }
-  });
+  // Hide the "New videos here daily!" text
+  statusText.style.display = 'none';
+  
+  // Stop and remove the existing video if it exists
+  let existingVideo = document.getElementById('videoPlayer');
+  if (existingVideo) {
+    existingVideo.pause(); // Stop the video
+    existingVideo.src = ''; // Clear the source
+    existingVideo.load(); // Stop downloading the video
+    existingVideo.remove(); // Remove the video element from the DOM
+  }
+  
+  // Create a new video element and add it to the container
+  const videoPlayer = document.createElement('video');
+  videoPlayer.id = 'videoPlayer';
+  videoPlayer.autoplay = true;
+  videoPlayer.muted = true;
+  videoPlayer.controls = true;
+  videoPlayer.style.maxHeight = '200px';
+  videoPlayer.style.width = '100%';
 
-  document.addEventListener('click', (event) => {
-    if (event.target.classList.contains('marqueeButton')) {
-      const marqueeMessage = document.getElementById('marqueeMessage').value;
-      console.log('Button clicked', marqueeMessage);
-      socket.emit('marquee', { message: marqueeMessage });
-      console.log('Marquee event emitted');
-    }
-  });
+  const sourceElement = document.createElement('source');
+  sourceElement.src = `https://${finUrl}`;
+  sourceElement.type = 'video/mp4';
+
+  videoPlayer.appendChild(sourceElement);
+  containerVid.appendChild(videoPlayer);
+  
+  // Load and play the new video
+  videoPlayer.load();
+  videoPlayer.play();
+});
+
+socket.on('marquee', (data) => {
+  console.log('Received marquee message:', data.message);
+  const marqueeText = document.getElementById('marqueeText');
+  marqueeText.innerText = data.message;
+  marqueeText.style.display = 'block'; // Show the marquee
+});
+
+document.addEventListener('click', (event) => {
+  if(event.target.classList.contains('play-video')){
+    const videoUrl = event.target.getAttribute('data-video');
+    console.log(`playVIDDDSS!!k ${videoUrl}`);
+    socket.emit('broadcast', { videoUrl: videoUrl });
+  }
+});
+
+document.addEventListener('click', (event) => {
+  if (event.target.classList.contains('marqueeButton')) {
+    const marqueeMessage = document.getElementById('marqueeMessage').value;
+    console.log('Button clicked', marqueeMessage);
+    socket.emit('marquee', { message: marqueeMessage });
+    console.log('Marquee event emitted');
+  }
+});
 
 
-        ////////     
-        socket.on('messages fetched', (messages) => {
-            if (messages.length) {
-                const reversedMessages = messages.reverse();
-                reversedMessages.forEach(messageObject => {
-                    let isOwnMessage = messageObject.user === "currentUserDisplayName";
-                    addMessage(messageObject, isOwnMessage);
-                });
-                currentPage++;
-            }
-        });
-        let userId = "<%=user._id%>";
-        function addMessage(messageObject, isOwnMessage = false) {
+      ////////     
+      socket.on('messages fetched', (messages) => {
+          if (messages.length) {
+              const reversedMessages = messages.reverse();
+              reversedMessages.forEach(messageObject => {
+                  let isOwnMessage = messageObject.user === "currentUserDisplayName";
+                  addMessage(messageObject, isOwnMessage);
+              });
+              currentPage++;
+          }
+      });
+      let userId = "<%=user._id%>";
+      function addMessage(messageObject, isOwnMessage = false) {
+    const userId = "<%= user._id %>";  // Ensure userId is declared at the top
     const messagesContainer = document.getElementById('chat');
     const shouldScroll = messagesContainer.scrollTop + messagesContainer.clientHeight + 50 >= messagesContainer.scrollHeight;
-    
+
     const messageDiv = document.createElement('div');
     messageDiv.className = isOwnMessage ? 'message ownMessage' : 'message';
 
@@ -208,179 +209,291 @@
     actionsDiv.className = 'messageActions';
     actionsDiv.id = `${messageObject._id}_actions`;
 
+    // Safely handle `likedBy` and `replies`
+    const likedBy = Array.isArray(messageObject.likedBy) ? messageObject.likedBy : [];
+    const replies = Array.isArray(messageObject.replies) ? messageObject.replies : [];
+
+    // Add a likes counter
+    const likesCounter = document.createElement('span');
+    likesCounter.className = 'likesCounter';
+    likesCounter.textContent = `${likedBy.length} ${likedBy.length === 1 ? 'like' : 'likes'}`; // Show the number of likes
+
+    // Add a replies counter
+    const repliesCounter = document.createElement('span');
+    repliesCounter.className = 'repliesCounter';
+    repliesCounter.textContent = `${replies.length} ${replies.length === 1 ? 'reply' : 'replies'}`; // Show the number of replies
+
+    // Heart (like) icon
     const heartIcon = document.createElement('span');
     heartIcon.textContent = '❤️';
-    heartIcon.className = 'heartIcon unliked-icon';
-    heartIcon.style.filter = "grayscale(50%)";
-    heartIcon.dataset.isLiked = "false";  // Set initial state to "unliked"
+    heartIcon.className = 'heartIcon';
+    heartIcon.style.filter = likedBy.includes(userId) ? 'grayscale(0%)' : 'grayscale(50%)';
+    heartIcon.dataset.isLiked = likedBy.includes(userId).toString();  // Determine initial like state
 
+    // Reply icon
     const replyIcon = document.createElement('span');
     replyIcon.textContent = '↩️';
     replyIcon.className = 'replyIcon';
-    replyIcon.style.filter = "grayscale(5%)";
+    replyIcon.style.filter = replies.length > 0 ? 'grayscale(0%)' : 'grayscale(50%)';
 
+    actionsDiv.appendChild(likesCounter);
     actionsDiv.appendChild(heartIcon);
+    actionsDiv.appendChild(repliesCounter);
     actionsDiv.appendChild(replyIcon);
 
     messageDiv.appendChild(messageAvatar);
     messageDiv.appendChild(messageTextSpan);
     messageDiv.appendChild(actionsDiv);
+
+    // Replies Container
+    const repliesContainer = document.createElement('div');
+    repliesContainer.className = 'repliesContainer';
+    repliesContainer.style.display = 'none'; // Initially hidden
+    renderReplies(replies, repliesContainer);  // Render replies but keep hidden
+    messageDiv.appendChild(repliesContainer);
+
+    // Show/Hide reply toggle if there are more than 1 reply
+    if (replies.length > 0) {
+        repliesCounter.style.cursor = 'pointer'; // Make it clickable
+        repliesCounter.addEventListener('click', () => {
+            const isVisible = repliesContainer.style.display === 'block';
+            repliesContainer.style.display = isVisible ? 'none' : 'block'; // Toggle visibility
+            repliesCounter.textContent = isVisible
+                ? `${replies.length} ${replies.length === 1 ? 'reply' : 'replies'}`
+                : `Hide replies (${replies.length})`;  // Update text when expanded
+        });
+    }
+
     messagesContainer.appendChild(messageDiv);
 
     if (shouldScroll) {
         messagesContainer.scrollTop = messagesContainer.scrollHeight;
     }
 
-    const postId = messageObject._id;  // Assuming messageObject._id is the postId
-    const userId = messageObject.userId; // Assuming messageObject contains userId
+    const postId = messageObject._id;
 
+    // Heart click handler
     heartIcon.addEventListener('click', (e) => {
         const isLiked = e.target.dataset.isLiked === "true";
         handleIconClick('heart', postId, userId, e, isLiked);
     });
 
-    replyIcon.addEventListener('click', () => {
-        handleIconClick('reply', postId, userId);
+    // Reply click handler
+    replyIcon.addEventListener('click', (e) => {
+        handleReplyClick(postId, userId);
+    });
+}
+
+function renderReplies(replies, parentElement) {
+    // Clear existing replies
+    parentElement.innerHTML = '';
+
+    replies.forEach(reply => {
+        const replyDiv = document.createElement('div');
+        replyDiv.className = 'message replyMessage';
+
+        const replyAvatar = document.createElement('img');
+        replyAvatar.className = 'usersOnline';
+        replyAvatar.src = reply.thumbnailUrl || `/images/icons/emerald.png`;
+
+        const replyTextSpan = document.createElement('span');
+        replyTextSpan.className = 'messageText';
+        replyTextSpan.textContent = reply.message || 'No reply text.';
+
+        replyDiv.appendChild(replyAvatar);
+        replyDiv.appendChild(replyTextSpan);
+
+        parentElement.appendChild(replyDiv);
     });
 }
 
 function handleIconClick(action, postId, userId, e, isLiked) {
-    console.log(`Action: ${action}, Post ID: ${postId}, User ID: ${userId}`);
-
-    const newAction = isLiked ? 'unlike' : 'like';
-    const tally = isLiked ? '--' : '++'; // Correct the tally increment/decrement
-
-    console.log(`New Action: ${newAction}`);
-    console.log(`Tally: ${tally}`);
+    const tally = isLiked ? '--' : '++';  // Pass the tally based on the current like status
 
     fetch(`/users/chat/like`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ userId, postId, tally })
+        body: JSON.stringify({ userId, tally, postId })
     })
     .then(response => response.json())
     .then(data => {
-        const newTally = data.tally;
+        const newTally = data.likes; // Fetch the updated number of likes from the response
+        const likesCounter = e.target.parentElement.querySelector('.likesCounter'); // Find the counter element
 
-        // Toggle the icon state
+        // Update the likes counter in the UI
+        if (likesCounter) {
+            likesCounter.textContent = `${newTally} likes`; // Update the text of the likes counter
+        }
+
+        // Update UI after like/unlike
         if (!isLiked) {
-            e.target.textContent = '❤️'; // Like icon (filled heart)
-            e.target.className = 'heartIcon liked-icon'; // Apply liked class
+            e.target.textContent = '❤️'; // Filled heart for liked
             e.target.style.filter = 'grayscale(0%)'; // Remove grayscale
-            e.target.dataset.isLiked = "true"; // Set isLiked to true
+            e.target.dataset.isLiked = "true"; 
         } else {
-            e.target.textContent = '❤️'; // Unlike icon (empty heart)
-            e.target.className = 'heartIcon unliked-icon'; // Apply unliked class
+            e.target.textContent = '❤️'; // Empty heart for unliked
             e.target.style.filter = 'grayscale(50%)'; // Apply grayscale
-            e.target.dataset.isLiked = "false"; // Set isLiked to false
+            e.target.dataset.isLiked = "false";
         }
     })
     .catch(error => {
-        console.error('Error updating tally:', error);
+        console.error('Error updating like:', error);
+    });
+}
+function handleReplyClick(postId, userId) {
+    const replyMessage = prompt("Enter your reply:");
+    if (replyMessage) {
+        fetch(`/users/chat/reply`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ userId, postId, replyMessage })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Check if the actions div and replies container exist before accessing them
+                const actionsDiv = document.getElementById(`${postId}_actions`);
+                if (!actionsDiv) {
+                    console.error(`Error: actionsDiv with ID ${postId}_actions not found`);
+                    return;
+                }
+
+                const repliesContainer = actionsDiv.parentElement.querySelector('.repliesContainer');
+                if (!repliesContainer) {
+                    console.error(`Error: repliesContainer not found for postId ${postId}`);
+                    return;
+                }
+
+                // Append the new reply to the replies container
+                renderSingleReply(data.reply, repliesContainer);
+
+                // Ensure the replies are visible
+                repliesContainer.style.display = 'block';
+
+                // Optionally update reply counter if you're showing one
+                const repliesCounter = actionsDiv.querySelector('.repliesCounter');
+                if (repliesCounter) {
+                    const currentRepliesCount = parseInt(repliesCounter.textContent) || 0;
+                    repliesCounter.textContent = `${currentRepliesCount + 1} ${currentRepliesCount + 1 === 1 ? 'reply' : 'replies'}`;
+                }
+            }
+        })
+        .catch(error => {
+            console.error('Error posting reply:', error);
+        });
+    }
+}
+
+// Function to render a single reply and append it to the replies container
+function renderSingleReply(reply, parentElement) {
+    const replyDiv = document.createElement('div');
+    replyDiv.className = 'replyMessage'; // Add a class for styling the reply
+
+    const replyAvatar = document.createElement('img');
+    replyAvatar.className = 'usersOnline';
+    replyAvatar.src = reply.thumbnailUrl || `/images/icons/emerald.png`;
+replyAvatar.style.transform="scale(.5)"
+    const replyTextSpan = document.createElement('span');
+    replyTextSpan.className = 'replyText'; // Use a different class for reply text styling
+    replyTextSpan.textContent = reply.message || 'No reply text.';
+
+    replyDiv.appendChild(replyAvatar);
+    replyDiv.appendChild(replyTextSpan);
+
+    // Append the reply to the parentElement (messageText class element)
+    parentElement.appendChild(replyDiv);
+}
+
+// Update renderReplies to just render multiple replies in the container without replacing the message
+function renderReplies(replies, parentElement) {
+    replies.forEach(reply => {
+        renderSingleReply(reply, parentElement);
     });
 }
 
-        socket.on('chat message', (msg,roomyId) => {
-            console.log(`chatting..${msg.user} room:${roomId}`)
-        console.log(roomId == msg.roomId)
-           if (roomId == msg.roomId){addMessage(msg, msg.user === 'You')};
-            
-            const messagesContainer = document.getElementById('messages');
-            messagesContainer.scrollTop = messagesContainer.scrollHeight;
-        });
-        
-        document.getElementById('submitChat').addEventListener('click', sendMessage);
-        document.getElementById('chatInput').addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                sendMessage();
-            }        
-        });    
-        
-        
-                function sendMessage() {
-                    const input = document.getElementById('chatInput');
-                    const message = input.value.trim();  
-                       
-                    console.log(`send messagefunction~ room: ${roomId}`)
-                    if (message !== '') {
-                        socket.emit('chat message', message, roomId);
-                        input.value = '';
-                    }
-                }
 
-        function changeRooms(newRoomId) {
-    currentPage = 1; // Reset the page to 1 when changing rooms        
-    roomId = newRoomId; // Update the roomId to the new room's ID
+
+
+
+      socket.on('chat message', (msg, roomyId) => {
+          console.log(`chatting..${msg.user} room:${roomId}`)
+      console.log(roomId == msg.roomId)
+         if (roomId == msg.roomId){addMessage(msg, msg.user === 'You')};
+          
+          const messagesContainer = document.getElementById('messages');
+          messagesContainer.scrollTop = messagesContainer.scrollHeight;
+      });
+      
+      document.getElementById('submitChat').addEventListener('click', sendMessage);
+      document.getElementById('chatInput').addEventListener('keypress', (e) => {
+          if (e.key === 'Enter') {
+              sendMessage();
+          }        
+      });    
+      
+      
+              function sendMessage() {
+                  const input = document.getElementById('chatInput');
+                  const message = input.value.trim();  
+                     
+                  console.log(`send messagefunction~ room: ${roomId}`)
+                  if (message !== '') {
+                      socket.emit('chat message', message, roomId);
+                      input.value = '';
+                  }
+              }
+
+      function changeRooms(newRoomId) {
+  currentPage = 1; // Reset the page to 1 when changing rooms        
+  roomId = newRoomId; // Update the roomId to the new room's ID
 console.log(`changing rooms ${newRoomId}`)    
 const messagesContainer = document.getElementById('chat');
 console.log(`changing rooms ${messagesContainer}`)
-    messagesContainer.innerHTML = ''; // Clear the current chat messages
-    socket.emit('fetch messages', { roomId: roomId, page: currentPage, messagesPerPage: messagesPerPage });
+  messagesContainer.innerHTML = ''; // Clear the current chat messages
+  socket.emit('fetch messages', { roomId: roomId, page: currentPage, messagesPerPage: messagesPerPage });
 }    
 
-        document.addEventListener('click', (event) => {
-    if (event.target.classList.contains('tab_section')) {
-        const roomIdNum = event.target.id.split("_", 3);
-        changeRooms(roomIdNum[2]); // Call changeRooms with the new room ID
-     }
+      document.addEventListener('click', (event) => {
+  if (event.target.classList.contains('tab_section')) {
+      const roomIdNum = event.target.id.split("_", 3);
+      changeRooms(roomIdNum[2]); // Call changeRooms with the new room ID
+   }
 });
 
-        socket.on('user list', (users) => {
-            const userList = document.getElementById('userList');
-            userList.innerHTML = '';
-            users.forEach((user) => {
-                const div = document.createElement('div');
-                div.className = 'usersOnline';
-                div.dataset.userId = user.id;
-                div.dataset.userName = user.name;
-                div.dataset.userAvatar = user.avatarThumbnailUrl || '/path/to/default/avatar/image.jpg';
-    
-                const img = document.createElement('img');
-                img.className = 'userImage';
-                img.src = div.dataset.userAvatar;
-                div.appendChild(img);
-    
-                userList.appendChild(div);
-            });
-        });
-    
-        socket.on('connect_error', (error) => {
-            console.log('Connection Error:', error);
-        });
-    
-        const chatToggle = document.getElementById('chatToggle');
-        const chatWindow = document.getElementById('chat-window-basic');
-        chatToggle.addEventListener('click', () => {
-            const isOpen = chatWindow.style.transform === "translateX(-106%)";
-            chatWindow.style.transform = isOpen ? "translateX(0%)" : "translateX(-106%)";
-          //  chatToggle.innerHTML = isOpen ? "C" : "X";
-        });
-    
-        // document.addEventListener('click', (event) => {
-        //     if (event.target.classList.contains('usersOnline')) {
-        //         const userId = event.target.parentElement.dataset.userId;
-        //         const userName = event.target.parentElement.dataset.userName;
-        //         const userAvatar = event.target.parentElement.dataset.userAvatar;
-    
-        //         const userInfoBox = document.getElementById('userInfoBox');
-        //         userInfoBox.querySelector('.userName').textContent = userName;
-        //         userInfoBox.querySelector('.userAvatar').src = userAvatar;
-    
-        //         userInfoBox.style.left = `${event.pageX}px`;
-        //         userInfoBox.style.top = `${event.pageY}px`;
-        //         userInfoBox.style.display = 'block';
-        //     } else {
-        //         const userInfoBox = document.getElementById('userInfoBox');
-        //         userInfoBox.style.display = 'none';
-        //     };
-       
-        // });
-    
-
-
-
-        requestInitialMessages();
-    });
+      socket.on('user list', (users) => {
+          const userList = document.getElementById('userList');
+          userList.innerHTML = '';
+          users.forEach((user) => {
+              const div = document.createElement('div');
+              div.className = 'usersOnline';
+              div.dataset.userId = user.id;
+              div.dataset.userName = user.name;
+              div.dataset.userAvatar = user.avatarThumbnailUrl || '/path/to/default/avatar/image.jpg';
+  
+              const img = document.createElement('img');
+              img.className = 'userImage';
+              img.src = div.dataset.userAvatar;
+              div.appendChild(img);
+  
+              userList.appendChild(div);
+          });
+      });
+  
+      socket.on('connect_error', (error) => {
+          console.log('Connection Error:', error);
+      });
+  
+      const chatToggle = document.getElementById('chatToggle');
+      const chatWindow = document.getElementById('chat-window-basic');
+      chatToggle.addEventListener('click', () => {
+          const isOpen = chatWindow.style.transform === "translateX(-106%)";
+          chatWindow.style.transform = isOpen ? "translateX(0%)" : "translateX(-106%)";
+      });
+  
+      requestInitialMessages();
+  });
 </script>
