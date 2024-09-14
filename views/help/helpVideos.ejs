@@ -1,3 +1,10 @@
-<%videos.forEach(video =>{%>
-    <video src="<%=video.url%> controls muted"></video>
-    <%})%>
+<% videos.forEach(video => { %>
+    <p><%=video.url%></p>
+    <video class="myVideo" controls muted>
+        <source src="https://<%=video.url%>" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+<% }) %>
+<!-----------------------us-ord-1.linodeobjects.com/  royal-bucket  /videos/1724456503612-video Text Alpha_2.mp4-->
+<!--https://royal-bucket.us-ord-1.linodeobjects.com/videos/1724453976440-WIN_20211011_13_12_30_Pro.mp4-->
+<!--https://royal-bucket.us-ord-1.linodeobjects.com/videos/1724453976440-WIN_20211011_13_12_30_Pro.mp4-->
