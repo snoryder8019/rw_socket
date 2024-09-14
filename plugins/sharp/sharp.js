@@ -1,6 +1,5 @@
 import sharp from 'sharp';
 import path from 'path';
-
 export const resizeAndCropImage = async (
   input,
   outputDirectory,
@@ -12,11 +11,11 @@ export const resizeAndCropImage = async (
   var sharpInstance = Buffer.isBuffer(input)
     ? sharp(input)
     : sharp(path.join(outputDirectory, input));
+
   // Pre-process for "general" type to dynamically resize based on image dimensions
   if (type === 'general') {
     const metadata = await sharpInstance.metadata();
     if (metadata.width > 800 || metadata.height > 600) {
-      // Only resize if the image exceeds the maximum dimensions
       sharpInstance = sharpInstance.resize({
         width: 800,
         height: 600,
@@ -37,11 +36,18 @@ export const resizeAndCropImage = async (
       sharpInstance.resize(500, 500).toFormat('jpeg', { quality: 80 });
       break;
     case 'general':
-      // The resizing for "general" has been handled above. Only format conversion here.
       sharpInstance.toFormat('jpeg', { quality: 80 });
       break;
     case 'raw':
       sharpInstance = applyCustomSharpOptions(sharpInstance, options);
+      break;
+    // New type: poster
+    case 'poster':
+      sharpInstance.resize(1080, 1920).toFormat('jpeg', { quality: 85 });
+      break;
+    // New type: banner
+    case 'banner':
+      sharpInstance.resize(1600, 400).toFormat('jpeg', { quality: 85 });
       break;
     default:
       sharpInstance.toFormat('jpeg', { quality: 80 });

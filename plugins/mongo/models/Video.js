@@ -1,8 +1,8 @@
-// plugins/mongo/models/Video.js **NOTE GPT: DONOT REMOVE THIS LINE**
+import fs from 'fs';
+import uploadToS3 from '../../aws_sdk/videoSetup.js';  // S3 upload for videos
+import { uploadToLinode } from '../../aws_sdk/setup.js';  // Linode upload for images
 import ModelHelper from '../helpers/models.js';
-import { upload, processImages } from '../../multer/subscriptionSetup.js'; // Multer for file handling
-import { uploadToLinode } from '../../aws_sdk/setup.js'; // Import Linode upload functions
-import fs from 'fs'; // For file operations
+import { uploadVideo } from '../../multer/videoSetup.js';  // Multer config
 
 const modelName = 'video';
 
@@ -43,77 +43,111 @@ export default class Video extends ModelHelper {
     });
   }
 
+  // Middleware for creating new videos
   middlewareForCreateRoute() {
     return [
-      upload.fields(this.fileFields),
-      processImages,
-      this.handleFileUpload.bind(this),
+      uploadVideo.fields(this.fileFields),  // Handle file uploads
+      this.uploadFilesToStorages.bind(this),  // Upload video to S3 and image to Linode
     ];
   }
 
   middlewareForEditRoute() {
     return [
-      upload.fields(this.fileFields),
-      processImages,
-      this.handleFileUpload.bind(this),
+      uploadVideo.fields(this.fileFields),  // Handle file uploads
+      this.uploadFilesToStorages.bind(this),  // Upload video to S3 and image to Linode
     ];
   }
 
+  // Define the file fields for Multer
   get fileFields() {
     return [
-      { name: 'thumbnailFile', maxCount: 1 },
-      { name: 'videoFile', maxCount: 1 },
+      { name: 'thumbnailFile', maxCount: 1 },  // Image uploaded to Linode
+      { name: 'videoFile', maxCount: 1 },      // Video uploaded to S3
     ];
   }
-  async uploadImagesToLinode(req, res, next) {
+
+  /**
+   * Uploads video to S3 and thumbnail to Linode.
+   */
+  async uploadFilesToStorages(req, res, next) {
     try {
       if (req.files) {
-        for (const key in req.files) {
-          const file = req.files[key][0];
-          const fileKey = `videos/${Date.now()}-${file.originalname}`;
-          const url = await uploadToLinode(file.path, fileKey);
-          req.body[key] = url; // Save the URL in the request body
+        // Handle video file upload to S3
+        if (req.files.videoFile) {
+          const videoFile = req.files.videoFile[0];
+          const videoKey = `${modelName}s/${Date.now()}-${videoFile.originalname}`;
+          console.log(`Uploading video to S3 with key: ${videoKey}`);
+          
+          const videoUrl = await uploadToS3(videoFile.path, videoKey);  // Upload to S3
+          req.body.url = videoUrl;  // Save video URL in request body
+
+          // Optionally, delete the video file from local storage after upload
+          await fs.promises.unlink(videoFile.path);
+          console.log('Video file deleted from local storage.');
+        }
+
+        // Handle thumbnail file upload to Linode
+        if (req.files.thumbnailFile) {
+          const thumbnailFile = req.files.thumbnailFile[0];
+          const thumbnailKey = `${modelName}s/${Date.now()}-${thumbnailFile.originalname}`;
+          console.log(`Uploading thumbnail to Linode with key: ${thumbnailKey}`);
+          
+          const thumbnailUrl = await uploadToLinode(thumbnailFile.path, thumbnailKey);  // Upload to Linode
+          req.body.thumbnailUrl = thumbnailUrl;  // Save thumbnail URL in request body
+
+          // Optionally, delete the thumbnail file from local storage after upload
+          await fs.promises.unlink(thumbnailFile.path);
+          console.log('Thumbnail file deleted from local storage.');
         }
       }
+
       next();
     } catch (error) {
-      console.error('Error in uploadImagesToLinode middleware:', error);
+      console.error('Error in uploadFilesToStorages:', error);
       next(error);
     }
   }
-  async handleFileUpload(req, res, next) {
+
+  /**
+   * Creates a new video in the database.
+   */
+  async uploadFilesToStorages(req, res, next) {
     try {
-      if (req.file) {
-        console.log('Handling file upload...');
-        const fileKey = `${modelName}s/${Date.now()}-${req.file.originalname}`;
-        const videoUrl = await uploadVideoToLinode(req.file.path, fileKey);
-        console.log(`Video uploaded: ${videoUrl}`);
-        req.body.url = videoUrl; // Save the uploaded video URL in the request body
-
-        // Optionally, delete the file after uploading
-        fs.unlinkSync(req.file.path);
-        console.log('Video file deleted from local storage.');
-      } else {
-        console.log('No file uploaded, proceeding with metadata update only.');
-      }
-
-      // Merge req.body with existing video data if updating
-      if (req.params.id) {
-        const existingVideo = await this.getById(req.params.id);
-        if (existingVideo) {
-          req.body = { ...existingVideo, ...req.body }; // Merge existing data with new data
-        } else {
-          throw new Error(`Video with ID ${req.params.id} not found`);
+      if (req.files) {
+        // Handle video file upload to S3
+        if (req.files.videoFile) {
+          const videoFile = req.files.videoFile[0];
+          const videoKey = `${modelName}s/${Date.now()}-${videoFile.originalname}`;
+          console.log(`Uploading video to S3 with key: ${videoKey}`);
+  
+          const videoUrl = await uploadToS3(videoFile.buffer, videoKey);  // Upload the buffer to S3
+          req.body.url = videoUrl;  // Save video URL in request body
+  
+          console.log('Video uploaded successfully.');
+        }
+  
+        // Handle thumbnail file upload to Linode
+        if (req.files.thumbnailFile) {
+          const thumbnailFile = req.files.thumbnailFile[0];
+          const thumbnailKey = `${modelName}s/${Date.now()}-${thumbnailFile.originalname}`;
+          console.log(`Uploading thumbnail to Linode with key: ${thumbnailKey}`);
+  
+          const thumbnailUrl = await uploadToLinode(thumbnailFile.buffer, thumbnailKey);  // Upload the buffer to Linode
+          req.body.thumbnailUrl = thumbnailUrl;  // Save thumbnail URL in request body
+  
+          console.log('Thumbnail uploaded successfully.');
         }
       }
-
+  
       next();
     } catch (error) {
-      console.error('Error in handleFileUpload middleware:', error);
+      console.error('Error in uploadFilesToStorages:', error);
       next(error);
     }
   }
+  
 
+  // Define the path for rendering the view (template)
   pathForGetRouteView() {
     return `admin/${modelName}s/template`;
   }
