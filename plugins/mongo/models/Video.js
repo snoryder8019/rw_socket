@@ -11,6 +11,7 @@ export default class Video extends ModelHelper {
     super(`${modelName}s`);
     this.modelFields = {
       name: { type: 'text', value: null },
+      title: { type: 'text', value: null },
       url: { type: 'text', value: null },
       alt: { type: 'text', value: null },
       directory: { type: 'text', value: null },

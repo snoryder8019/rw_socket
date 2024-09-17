@@ -1,5 +1,5 @@
 <% videos.forEach(video => { %>
-    <p><%=video.url%></p>
+    <h2><%=video.title%></h2>
     <video class="myVideo" controls muted>
         <source src="https://<%=video.url%>" type="video/mp4">
         Your browser does not support the video tag.

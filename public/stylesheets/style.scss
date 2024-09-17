@@ -124,7 +124,7 @@ $gradientEdge: #410b4b;
       font-size: 1rem;
       text-align: center;
       background:linear-gradient(to right,$gradientEdge,$purple,$purple, $gradientEdge);
-      color:$gold;
+     //color:$gold;
       padding: 1%;
     }
     //   :root p{
@@ -443,6 +443,7 @@ text-align: center;
 //   transition: background-color 0.3s;
 // }
 .collapsible {
+  font-family: $time;
   font-weight: 900;
   width:93%;
   margin:4%;
@@ -456,7 +457,6 @@ text-align: center;
   border-top-color: rgb(255, 231, 95);
   border-radius:25px;
   background:linear-gradient(to right, #be9f48, #a58838 12%,rgb(255, 252, 237) 42%,rgb(167, 150, 56));
-  color: #333;
   cursor: pointer;
   padding: 10px;
   text-align: left;
@@ -471,7 +471,7 @@ text-align: center;
 
 .active, .collapsible:hover {
   //background-color: $purple;
-  color: $gold;
+  color: #f7e2a8;
   text-shadow: 1px 1px 0 black;
 }
 
@@ -1116,7 +1116,8 @@ $headshotPx:35px;
 	width: 98%;
 	border-radius: 5px;
 	box-shadow: 2px 2px 5px rgba(255, 217, 0, 0.406);
-	background: linear-gradient(to right, rgba(128, 0, 128, 0.56), rgba(255, 217, 0, 0.229), #711881, #711881, #711881, #711881, #711881, #711881, #711881, #711881, #711881);
+  background-color: white;
+	//background: linear-gradient(to right, rgba(128, 0, 128, 0.56), rgba(255, 217, 0, 0.229), #711881, #711881, #711881, #711881, #711881, #711881, #711881, #711881, #711881);
 	animation: fadeIn .3s ease-IN 0s 1;
 }
 
@@ -1137,7 +1138,7 @@ $headshotPx:35px;
     margin-right: 5px;
 }
 .message img{
-    background-color: #410b4b;
+  //  background-color: #410b4b;
     max-width: $headshotPx;
     min-width: $headshotPx;
     min-height: $headshotPx;
@@ -1366,6 +1367,7 @@ text-shadow: #1a0a1b;
 
 #notifications{
     border: 1px solid $gold;
+    background-color: white;
 }
 
 

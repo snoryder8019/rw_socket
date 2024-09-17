@@ -70,7 +70,6 @@
   font-size: 1rem;
   text-align: center;
   background: linear-gradient(to right, #410b4b, #711881, #711881, #410b4b);
-  color: #ffde68;
   padding: 1%; }
 
 .big_letter_a {
@@ -335,6 +334,7 @@
   margin-top: 5px; }
 
 .collapsible {
+  font-family: "times";
   font-weight: 900;
   width: 93%;
   margin: 4%;
@@ -348,7 +348,6 @@
   border-top-color: #ffe75f;
   border-radius: 25px;
   background: linear-gradient(to right, #be9f48, #a58838 12%, #fffced 42%, #a79638);
-  color: #333;
   cursor: pointer;
   padding: 10px;
   text-align: left;
@@ -361,7 +360,7 @@
   overflow: hidden; }
 
 .active, .collapsible:hover {
-  color: #ffde68;
+  color: #f7e2a8;
   text-shadow: 1px 1px 0 black; }
 
 .content {
@@ -970,7 +969,7 @@
   width: 98%;
   border-radius: 5px;
   box-shadow: 2px 2px 5px rgba(255, 217, 0, 0.406);
-  background: linear-gradient(to right, rgba(128, 0, 128, 0.56), rgba(255, 217, 0, 0.229), #711881, #711881, #711881, #711881, #711881, #711881, #711881, #711881, #711881);
+  background-color: white;
   animation: fadeIn .3s ease-IN 0s 1; }
 
 .message .messageText {
@@ -988,7 +987,6 @@
   margin-right: 5px; }
 
 .message img {
-  background-color: #410b4b;
   max-width: 35px;
   min-width: 35px;
   min-height: 35px;
@@ -1214,7 +1212,8 @@
   display: none; }
 
 #notifications {
-  border: 1px solid #ffde68; }
+  border: 1px solid #ffde68;
+  background-color: white; }
 
 @keyframes fadeIn {
   0% {
