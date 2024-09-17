@@ -5,6 +5,7 @@ import Help from "../../../plugins/mongo/models/help/Help.js";
 import Vote from "../../../plugins/mongo/models/blog/Vote.js";
 import Club from "../../../plugins/mongo/models/Club.js";
 import Video from '../../../plugins/mongo/models/Video.js'
+import {marked} from 'marked';
 const router = express.Router();
 const readerOptions = {
   blog: Blog,
@@ -58,10 +59,11 @@ router.get('/overlay/:model/:id', async (req, res) => {
 
     // Dynamically fetch the data by ID from the specified model
     const record = await new Model().getById(id); // Adjust method based on your ORM/ODM
-
+    const htmlLayout = marked(record.content)
+    console.log(htmlLayout)
     if (record) {
       // Render the EJS template to a string
-      res.render('partials/readerPopup', { record })
+      res.render('partials/readerPopup', { record, htmlLayout })
        
     } else {
       // Send a 404 response if data is not found
