@@ -335,20 +335,34 @@
   margin-top: 5px; }
 
 .collapsible {
-  background-color: #f9f9f9;
+  font-weight: 900;
+  width: 93%;
+  margin: 4%;
+  color: black;
+  font-size: 1.3rem;
+  min-height: 45px;
+  min-width: 92%;
+  box-shadow: inset 1px 1px 0 grey;
+  border: 3px solid #be9f48;
+  border-bottom-color: 12px solid #ffe75c;
+  border-top-color: #ffe75f;
+  border-radius: 25px;
+  background: linear-gradient(to right, #be9f48, #a58838 12%, #fffced 42%, #a79638);
   color: #333;
   cursor: pointer;
   padding: 10px;
-  width: 100%;
-  border: none;
   text-align: left;
   outline: none;
   font-size: 18px;
-  transition: background-color 0.3s; }
+  transition: background-color 0.3s;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  overflow: hidden; }
 
 .active, .collapsible:hover {
-  background-color: #711881;
-  color: #ffde68; }
+  color: #ffde68;
+  text-shadow: 1px 1px 0 black; }
 
 .content {
   border: 1px solid white;
@@ -386,30 +400,6 @@
 
 .rotate {
   transform: rotate(90deg); }
-
-.collapsible {
-  width: 93%;
-  margin: 4%;
-  color: black;
-  font-size: 1.3rem;
-  min-height: 45px;
-  min-width: 92%;
-  box-shadow: inset 1px 1px 0 grey;
-  border: 3px solid #be9f48;
-  border-bottom-color: 12px solid #ffe75c;
-  border-top-color: #ffe75f;
-  border-radius: 25px;
-  background: linear-gradient(to right, #be9f48, #a58838 12%, #fffced 42%, #a79638);
-  color: #333;
-  cursor: pointer;
-  padding: 10px;
-  text-align: left;
-  outline: none;
-  font-size: 18px;
-  transition: background-color 0.3s;
-  display: flex;
-  justify-content: space-between;
-  align-items: center; }
 
 .rotated {
   transform: rotate(180deg); }
@@ -462,12 +452,6 @@
 
 .collapse-section {
   display: block; }
-
-.collapsible {
-  overflow: hidden;
-  transition: max-height 0.5s ease-out;
-  max-height: 700px;
-  /* Adjust this value based on the maximum content height */ }
 
 .collapsed {
   max-height: 0;
@@ -719,7 +703,7 @@
   align-items: center;
   /* Vertically align items in the middle */ }
 
-.wallet, .collapse-section {
+.wallet {
   background: linear-gradient(to right, purple, #9a019a);
   box-shadow: inset 2px 2px 2px #1a0a1b;
   padding: 1%;
@@ -1768,10 +1752,6 @@ button good {
 
 .reader-inner-content {
   padding: 20px; }
-
-.ghostButton {
-  border-radius: 20px;
-  background-color: green; }
 
 .readerpopupDiv p {
   font-size: 1rem; }

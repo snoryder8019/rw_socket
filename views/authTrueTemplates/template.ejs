@@ -32,7 +32,7 @@
           <% } %>
           <br>
           <% if (setting.entryText !== "" && setting.entryText !== "") { %>
-            <button style="background-image: url('<%= setting.entryBackground %>');" class="<%=setting.buttonStyle%>"><%= setting.entryText %><span class="carrot">||</span></button>
+            <button class="<%=setting.buttonStyle%>"><%= setting.entryText %><span class="carrot">&#9654</span></button>
             <div class="<%=setting.buttonDivStyle%>" data-url="<%= setting.entryUrl %>"></div>
           <% } %>
         </div>
