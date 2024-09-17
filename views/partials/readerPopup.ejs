@@ -4,14 +4,23 @@
       <div  class="readerpopupSection">
          
         
-          <div style="background-image: url('<%=record.horizBkgd%>');" class="readerHeader">     
-        
-         <h1><%=record.title%></h1>
-         <%if(!record.title){%>
-           <h1><%=record.name%></h1>
-          <%}%>              
-         </div>
-
+        <%if(record.horizBkgd){%>
+          <div style="background-image: url('<%=record.horizBkgd%>');" class="readerHeader">        
+          </div>
+            <%}else{%>     
+              <div class="readerIcon">
+<img class="readerIcon" src="/images/LogoTransp.png">
+              </div> 
+                <%}%>
+      <div class="title bb1px">
+      <h1><%=record.title%></h1>
+      <%if(!record.title){%>
+        <h1><%=record.name%></h1>
+       <%}%>      
+      </div>       
+      <%if(record.author){%>
+      <div class="readerAuthor">by: <%=record.author%></div> 
+      <%}%>
          <div>
            <img class="readerMediumIcon" src="<%=record.mediumIcon%>" alt="">
         <h2><%=record.subTitle%></h2>

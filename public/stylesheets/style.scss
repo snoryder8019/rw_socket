@@ -196,7 +196,7 @@ $gradientEdge: #410b4b;
 .brand_title_font{
   font-family: $maph;
   color: $gold;
-  font-size: 2.6rem;
+  font-size: 3.5rem;
   text-shadow: 2px 2px 2px $purple;
   @media (min-width:768px) {
     font-size: 5rem;
@@ -212,11 +212,28 @@ $gradientEdge: #410b4b;
   background-color: rgb(219, 219, 219);
 color: $purple;
 }
+.signup_below{
+  display:block;
+  @media (min-width:768px) {
+    display:none;
+  }
+}
+#resetEmailInput{
+  display:none;
+}
+#emailLoginForm{
+  min-height:500px;
+}
 .loginFlows{
  // background-color:white;
+ @media (min-width:768px) {
+ display: grid;
+ grid-template-columns: 3fr 1fr;
+  
+ }
 }
 .login_form_basic button:hover{  
-filter:invert(2) brightness(1.4);
+filter:invert(1.6) brightness(1.4);
 }
 .login_form_basic::placeholder{
 text-align: center;
@@ -253,8 +270,8 @@ text-align: center;
     margin: 2%;
     font-size: 1.2rem;
     @media (min-width:768px) {
-      width: 50%;
-      margin:2% 24%;
+     // width: 50%;
+      margin:2% ;
     }
   }
   label{
@@ -587,6 +604,18 @@ height:34px;
     0%{transform: rotate(0deg);}
     100%{transform: rotate(359deg);}
 }
+@keyframes flashingNotice {
+  0%{opacity: 1;}
+  79%{opacity: 1;scale: 1.2;}
+  80%{opacity: 0;}
+  85%{opacity: 1;scale: 1.2;}
+  90%{opacity: 0;}
+  100%{opacity: 1;}
+  
+}
+.flashingNotice{
+  animation: flashingNotice 10s ease-in 3s infinite ;
+}
 .wheel{
     flex-shrink: 0;
     min-height: 40px;
@@ -638,8 +667,14 @@ height:34px;
     z-index: 10002;
   }
 }
+.contrast_basic{
+  color:black;
+  background-color: white;
+  input{
+    background-color: white;
+  }
+}
 #userDash{
-
     @include sliderWindows();
     right:100%;
     top:0%;
@@ -656,13 +691,30 @@ height:34px;
         width: 92%;
         height:87%;
       //  margin-top: 41%;
-    }
-    
-    
+    }       
+}
+.media_cell_only{
+  @media (min-width:768px) {    
+    display:none;
+  }
+  display:block;
+}
+.media_desktop_only{
+  @media (min-width:768px) {    
+    display:block;
+  }
+  display:none;
+}
+.spacer_50{
+  min-height: 50px;
+  margin-bottom: 10%;
+}
+.spacer_10{
+  min-height: 10px;
+  margin-bottom: 10%;
 }
 .dashContent{
-    height: 87%;
-   
+    height: 100%;   
     overflow-y: scroll;
 //     overflow-y: scroll;
 }
@@ -1878,7 +1930,7 @@ background-color: green;
   width: 100%;
   height: 100%;
   overflow-y: scroll;
-background-color:rgba(255, 255, 255, 0.86);
+background:rgba(255, 255, 255, 0.86);
 background-repeat: no-repeat;
 background-position: center;
 background-size: cover;
@@ -1895,11 +1947,14 @@ h1{color:black}
 }
 }
 .readerpopupSection {
+  text-shadow: 1px 1px 0 white;
   h2{color: black;}
 display: flex; /* Enables Flexbox layout */
 flex-direction: column; /* Align children vertically */
 align-items: center; /* Centers content horizontally */
-background-color: rgba(255, 255, 255, 0.788);
+//background-color: rgba(255, 255, 255, 0.788);
+background:linear-gradient(to bottom, $purple 2%, rgba(255, 255, 255, 0.86) 30%);
+
 padding: 30px;
 margin: 2%;
 height: 80vh; /* Adjust height to limit the container height */
@@ -1907,7 +1962,10 @@ overflow-y: auto; /* Enables vertical scrolling if content exceeds the container
 box-sizing: border-box; /* Include padding in the height calculation */
 max-width: 100%; /* Ensure the section does not exceed the screen width */
 h1{
-  font-family: $maph;
+  font-family: $back;
+  color:black;
+  font-size: 4rem;
+  text-shadow: 2px 2px 0 white;
 }
 li{color:black;text-align: left;font-size: 1.2rem;}
 }
@@ -1927,7 +1985,35 @@ background-size: cover;
   }
   
 }
-.readerCloseButton{background-color: pink; color: black;}
+.bb1px{min-width: 98%;
+  border-bottom:1px solid $purple;
+  margin: 1%;
+}
+.readerIcon{
+ transform:translate(-1%, 10%);
+ margin: -10%;
+  width: 80%;
+}
+.readerAuthor{
+  min-width: 100%;
+  color: black;
+  text-align:end;
+  font-size: 1rem;
+  font-style: italic;
+}
+// .readerHeaderScreen{
+//   position: absolute;
+//   width: 100%;
+//   min-height: 100%;
+//   background-color: rgba(128, 128, 128, 0.661);
+// }
+.readerHeader::before{background-color: #297fb9bc;}
+.readerCloseButton{background-color: pink;
+   color: black;
+   width: 96%;
+   margin:2%;
+   height:40px
+  }
 .readerMediumIcon{width:30%}
 .readerHorizBkgrd{
   width:100%;

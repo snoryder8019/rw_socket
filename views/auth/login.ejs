@@ -1,36 +1,42 @@
 
         
-        <div class="login_form_basic faded_background" id="emailLoginForm">
-            <div class="loginForm">
-                <h3>LOGIN to <span class="brand_title_font">Royal Splendor</span></h3>
-                
+        <div class="login_form_basic contrast_basic" id="emailLoginForm">
+            
+            <div class="media_cell_only spacer_10"></div>
+            <span class="brand_title_font">Royal Splendor</span>
+                <div class="media_cell_only spacer_10"></div>
                 <form action="/auth/local" method="post">
-                    <label for="email">EMAIL</label><br>
+                    <label for="email">Login with your EMAIL</label><br>
                     <input type="text" id="email" name="email" placeholder="enter your email" required><br>
                     <label for="password">PASSWORD</label><br>
                     <input type="password" id="password" name="password" placeholder="enter your password" required>
+                    <h3><span style="text-align:right;color:blue; cursor: pointer;" onclick="showResetInput()" id="resetLink">Forget your password?</span></h3>
                     <button class="button_wide" id="loginButton" type="submit">LOGIN</button>
+               
                 </form>
-                
-            </div>
-        </div>
-        <div class="login_form_basic">
-        <h3>Forgot your password? <span style="color:blue; cursor: pointer;" onclick="showResetInput()" id="resetLink">reset password</span></h3>
-        <div id="resetEmailInput">
-            <form id="resetPasswordForm">
-                <h2>Reset Password ℹ️</h2>
-                <h3>You will receive an email to securely reset your password.</h3>
-                <h4>Enter your email to send a reset link</h4>
-                <input style="text-align:center" id="resetPassInput" name="email" type="email" required>
-                <button id="resetPassButton" type="submit">Request Password Reset</button>
-            </form>
-            <button onclick="showResetInput()">close this window</button>
-        </div>   
-        </div>   
+               <div>
+                <h2>Not a Member?</h2>
+                <div class="media_cell_only flashingNotice">⬇️ scroll down to register ⬇️</div>
+
+            </div> 
         
-        <div class="loginFlows" id="regWindow"><%-include('../auth/register')%></div>
-        <p>or login with:</p>
-        <button class="button_wide" id="googleAuthButton"><a style="text-decoration: none;" href="/auth/google">Google Auth</a></button>
-
-
-</div>
+        
+        <div id="resetEmailInput">
+            <div class="login_form_basic contrast_basic">
+                <form id="resetPasswordForm">
+                    <h2>Reset Password ℹ️</h2>
+                    <h3>You will receive an email to securely reset your password.</h3>
+                    <h4>Enter your email to send a reset link</h4>
+                    <input style="text-align:center" id="resetPassInput" name="email" type="email" required>
+                    <button id="resetPassButton" type="submit">Request Password Reset</button>
+                </form>
+                <button onclick="showResetInput()">close this window</button>
+            </div>   
+        </div>   
+    </div>
+        
+        
+        
+        
+        <div class="login_form_basic" id="regWindow"><%-include('../auth/register')%></div>
+    </div>

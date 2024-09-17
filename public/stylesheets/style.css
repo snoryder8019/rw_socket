@@ -132,7 +132,7 @@
 .brand_title_font {
   font-family: "mayphylla";
   color: #ffde68;
-  font-size: 2.6rem;
+  font-size: 3.5rem;
   text-shadow: 2px 2px 2px #711881; }
   @media (min-width: 768px) {
     .brand_title_font {
@@ -147,8 +147,25 @@
   background-color: #dbdbdb;
   color: #711881; }
 
+.signup_below {
+  display: block; }
+  @media (min-width: 768px) {
+    .signup_below {
+      display: none; } }
+
+#resetEmailInput {
+  display: none; }
+
+#emailLoginForm {
+  min-height: 500px; }
+
+@media (min-width: 768px) {
+  .loginFlows {
+    display: grid;
+    grid-template-columns: 3fr 1fr; } }
+
 .login_form_basic button:hover {
-  filter: invert(2) brightness(1.4); }
+  filter: invert(1.6) brightness(1.4); }
 
 .login_form_basic::placeholder {
   text-align: center; }
@@ -184,8 +201,7 @@
     font-size: 1.2rem; }
     @media (min-width: 768px) {
       .login_form_basic input, .login_form_basic button {
-        width: 50%;
-        margin: 2% 24%; } }
+        margin: 2%; } }
   .login_form_basic label {
     font-size: 1.2rem; }
   .login_form_basic button {
@@ -484,6 +500,24 @@
     transform: rotate(0deg); }
   100% {
     transform: rotate(359deg); } }
+@keyframes flashingNotice {
+  0% {
+    opacity: 1; }
+  79% {
+    opacity: 1;
+    scale: 1.2; }
+  80% {
+    opacity: 0; }
+  85% {
+    opacity: 1;
+    scale: 1.2; }
+  90% {
+    opacity: 0; }
+  100% {
+    opacity: 1; } }
+.flashingNotice {
+  animation: flashingNotice 10s ease-in 3s infinite; }
+
 .wheel {
   flex-shrink: 0;
   min-height: 40px;
@@ -526,6 +560,12 @@
       height: 87%;
       z-index: 10002; } }
 
+.contrast_basic {
+  color: black;
+  background-color: white; }
+  .contrast_basic input {
+    background-color: white; }
+
 #userDash {
   border: 3px solid #ffde68;
   margin: 2%;
@@ -554,8 +594,28 @@
       width: 92%;
       height: 87%; } }
 
+.media_cell_only {
+  display: block; }
+  @media (min-width: 768px) {
+    .media_cell_only {
+      display: none; } }
+
+.media_desktop_only {
+  display: none; }
+  @media (min-width: 768px) {
+    .media_desktop_only {
+      display: block; } }
+
+.spacer_50 {
+  min-height: 50px;
+  margin-bottom: 10%; }
+
+.spacer_10 {
+  min-height: 10px;
+  margin-bottom: 10%; }
+
 .dashContent {
-  height: 87%;
+  height: 100%;
   overflow-y: scroll; }
 
 #chatToggle {
@@ -1683,7 +1743,7 @@ button good {
   width: 100%;
   height: 100%;
   overflow-y: scroll;
-  background-color: rgba(255, 255, 255, 0.86);
+  background: rgba(255, 255, 255, 0.86);
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
@@ -1702,13 +1762,14 @@ button good {
       padding: 1%; } }
 
 .readerpopupSection {
+  text-shadow: 1px 1px 0 white;
   display: flex;
   /* Enables Flexbox layout */
   flex-direction: column;
   /* Align children vertically */
   align-items: center;
   /* Centers content horizontally */
-  background-color: rgba(255, 255, 255, 0.788);
+  background: linear-gradient(to bottom, #711881 2%, rgba(255, 255, 255, 0.86) 30%);
   padding: 30px;
   margin: 2%;
   height: 80vh;
@@ -1722,7 +1783,10 @@ button good {
   .readerpopupSection h2 {
     color: black; }
   .readerpopupSection h1 {
-    font-family: "mayphylla"; }
+    font-family: "backlash";
+    color: black;
+    font-size: 4rem;
+    text-shadow: 2px 2px 0 white; }
   .readerpopupSection li {
     color: black;
     text-align: left;
@@ -1739,9 +1803,32 @@ button good {
       font-size: 3rem;
       text-align: center; } }
 
+.bb1px {
+  min-width: 98%;
+  border-bottom: 1px solid #711881;
+  margin: 1%; }
+
+.readerIcon {
+  transform: translate(-1%, 10%);
+  margin: -10%;
+  width: 80%; }
+
+.readerAuthor {
+  min-width: 100%;
+  color: black;
+  text-align: end;
+  font-size: 1rem;
+  font-style: italic; }
+
+.readerHeader::before {
+  background-color: #297fb9bc; }
+
 .readerCloseButton {
   background-color: pink;
-  color: black; }
+  color: black;
+  width: 96%;
+  margin: 2%;
+  height: 40px; }
 
 .readerMediumIcon {
   width: 30%; }
