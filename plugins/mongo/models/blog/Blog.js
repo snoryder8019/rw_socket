@@ -8,6 +8,7 @@ export default class Blog extends ModelHelper {
     super('blogs');
     this.modelFields = {
       name: { type: 'text', value: null },
+      order:{type:'number',value:null},
       title: { type: 'text', value: null },
       subtitle: { type: 'text', value: null },
       content: { type: 'textarea', value: null },
