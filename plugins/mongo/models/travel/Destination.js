@@ -9,6 +9,8 @@ export default class Destination extends ModelHelper {
     this.modelFields = {
       name: { type: 'text', value: null },
       title: { type: 'text', value: null },
+      content: { type: 'text', value: null },
+
       subTitle: { type: 'text', value: null },
       description: { type: 'textarea', value: null },
       location: { type: 'text', value: null },

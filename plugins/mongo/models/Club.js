@@ -12,6 +12,8 @@ export default class Club extends ModelHelper {
       description: { type: 'textarea', value: null },
       callToAction: { type: 'text', value: null },
       price: { type: 'number', value: null },
+      content: { type: 'text', value: null },
+
       subLength: { type: 'number', value: null },
       creationDate: { type: 'date', value: null },
       mediumIcon: { type: 'file', value: null },

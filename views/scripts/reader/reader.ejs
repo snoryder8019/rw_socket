@@ -1,7 +1,7 @@
 <script>
   function readerClose(){
     console.log(event.target.parentElement)
-    event.target.parentElement.remove()
+    event.target.parentElement.parentElement.remove()
   }
   async function renderReader(model, id) {
     try {

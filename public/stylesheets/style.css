@@ -355,7 +355,8 @@
   padding: 0 1px;
   display: none;
   overflow: hidden;
-  background-color: #7b2d76; }
+  background-color: #7b2d76;
+  transition: transform 1.8s ease-in-out, opacity 1.8s ease-in-out; }
 
 .carrot {
   float: right;
@@ -364,8 +365,51 @@
 .rotate {
   transform: rotate(90deg); }
 
-.collapsable {
-  box-shadow: inset 2px 2px 2px #1a0a1b; }
+.medalion_button {
+  margin: 4%;
+  color: black;
+  font-size: 1.3rem;
+  min-height: 68px;
+  min-width: 92%;
+  box-shadow: inset 1px 1px 0 grey;
+  border: 3px solid #be9f48;
+  border-bottom-color: 12px solid #ffe75c;
+  border-top-color: #ffe75f;
+  border-radius: 25px;
+  background: linear-gradient(to right, #be9f48, #a58838 12%, #fffced 42%, #a79638); }
+
+.active, .collapsible:hover {
+  background-color: #ccc; }
+
+.carrot {
+  transition: transform 0.3s; }
+
+.rotate {
+  transform: rotate(90deg); }
+
+.collapsible {
+  width: 93%;
+  margin: 4%;
+  color: black;
+  font-size: 1.3rem;
+  min-height: 45px;
+  min-width: 92%;
+  box-shadow: inset 1px 1px 0 grey;
+  border: 3px solid #be9f48;
+  border-bottom-color: 12px solid #ffe75c;
+  border-top-color: #ffe75f;
+  border-radius: 25px;
+  background: linear-gradient(to right, #be9f48, #a58838 12%, #fffced 42%, #a79638);
+  color: #333;
+  cursor: pointer;
+  padding: 10px;
+  text-align: left;
+  outline: none;
+  font-size: 18px;
+  transition: background-color 0.3s;
+  display: flex;
+  justify-content: space-between;
+  align-items: center; }
 
 .rotated {
   transform: rotate(180deg); }
@@ -773,12 +817,9 @@
 
 #mainBanner {
   height: 16vh;
-  background-size: cover;
+  background-size: 90%;
   background-position: center;
   background-repeat: no-repeat;
-  background-color: #410b4b;
-  box-shadow: 0px 0px 20px #d9ef1846;
-  border: 5px solid #1a0a1b;
   z-index: 8001; }
   @media (min-width: 768px) {
     #mainBanner {
@@ -791,8 +832,7 @@
   display: grid;
   grid-template-columns: 1fr 10fr;
   transition: all 0.3s ease;
-  /* Smooth transition for shrinking */
-  background-color: #71188100; }
+  /* Smooth transition for shrinking */ }
   @media (min-width: 768px) {
     .banner {
       min-height: 14vh; } }
@@ -1564,7 +1604,8 @@ button good {
   color: white; }
 
 .noStyle {
-  border-radius: 5px; }
+  margin-top: 3%;
+  border-radius: 6px; }
   .noStyle h1 {
     text-shadow: 8px 5px 8px #000000;
     font-family: "minonPro";
@@ -1762,6 +1803,8 @@ button good {
       padding: 1%; } }
 
 .readerpopupSection {
+  border: 9px solid #711881;
+  border-radius: 22px;
   text-shadow: 1px 1px 0 white;
   display: flex;
   /* Enables Flexbox layout */
@@ -1769,7 +1812,7 @@ button good {
   /* Align children vertically */
   align-items: center;
   /* Centers content horizontally */
-  background: linear-gradient(to bottom, #711881 2%, rgba(255, 255, 255, 0.86) 30%);
+  background-color: rgba(255, 255, 255, 0.788);
   padding: 30px;
   margin: 2%;
   height: 80vh;
@@ -1785,8 +1828,11 @@ button good {
   .readerpopupSection h1 {
     font-family: "backlash";
     color: black;
-    font-size: 4rem;
+    font-size: 2.2rem;
     text-shadow: 2px 2px 0 white; }
+    @media (min-width: 768px) {
+      .readerpopupSection h1 {
+        font-size: 3.5rem; } }
   .readerpopupSection li {
     color: black;
     text-align: left;
@@ -1831,7 +1877,8 @@ button good {
   height: 40px; }
 
 .readerMediumIcon {
-  width: 30%; }
+  width: 96%;
+  margin: 2%; }
 
 .readerHorizBkgrd {
   width: 100%;

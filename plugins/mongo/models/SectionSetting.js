@@ -13,6 +13,8 @@ export default class SectionSetting extends ModelHelper {
       order: { type: 'number', value: null },
       title: { type: 'text', value: null },
       subTitle: { type: 'text', value: null },
+      content: { type: 'text', value: null },
+
       animation: { type: 'text', value: 'none' },
       buttonDivStyle: { type: 'text', value: 'content' },
       buttonStyle: { type: 'text', value: 'collapsable' },

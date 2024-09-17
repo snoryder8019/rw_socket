@@ -14,6 +14,8 @@ export default class Vote extends ModelHelper {
       records: { type: 'array', value: [] }, // Array of user IDs who voted
       createdAt: { type: 'date', value: new Date() },
       updatedAt: { type: 'date', value: new Date() },
+      content: { type: 'text', value: null },
+
     };
 
     if (voteData) {

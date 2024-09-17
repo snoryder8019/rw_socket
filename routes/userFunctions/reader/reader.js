@@ -59,6 +59,7 @@ router.get('/overlay/:model/:id', async (req, res) => {
 
     // Dynamically fetch the data by ID from the specified model
     const record = await new Model().getById(id); // Adjust method based on your ORM/ODM
+   
     const htmlLayout = marked(record.content)
     console.log(htmlLayout)
     if (record) {

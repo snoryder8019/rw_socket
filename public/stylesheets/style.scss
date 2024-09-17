@@ -59,7 +59,8 @@ $gradientEdge: #410b4b;
     font-family: $dark;
     src: url('/fonts/darkerGrotesque-Light.ttf');
   }
-  
+  $borderRadius_primary:22px;
+
   
   $primaryFontFamily:$mini;
   $smallFontSize:1.2rem;
@@ -462,7 +463,7 @@ text-align: center;
   display: none;
   overflow: hidden;
   background-color: #7b2d76;
-}
+  transition: transform 1.8s ease-in-out, opacity 1.8s ease-in-out;}
 
 .carrot {
   float: right;
@@ -472,8 +473,57 @@ text-align: center;
 .rotate {
   transform: rotate(90deg);
 }
-.collapsable{
-box-shadow:inset 2px 2px 2px $black;
+.medalion_button{
+  margin:4%;
+  color: black;
+  font-size: 1.3rem;
+  min-height: 68px;
+  min-width: 92%;
+  box-shadow: inset 1px 1px 0 grey;
+  border: 3px solid #be9f48;
+  border-bottom-color: 12px solid rgb(255, 231, 92);
+  border-top-color: rgb(255, 231, 95);
+  border-radius:25px;
+  background:linear-gradient(to right, #be9f48, #a58838 12%,rgb(255, 252, 237) 42%,rgb(167, 150, 56))
+}
+
+
+.active, .collapsible:hover {
+  background-color: #ccc;
+}
+
+
+
+.carrot {
+  transition: transform 0.3s;
+}
+
+.rotate {
+  transform: rotate(90deg);
+}
+.collapsible {
+  width:93%;
+  margin:4%;
+  color: black;
+  font-size: 1.3rem;
+  min-height: 45px;
+  min-width: 92%;
+  box-shadow: inset 1px 1px 0 grey;
+  border: 3px solid #be9f48;
+  border-bottom-color: 12px solid rgb(255, 231, 92);
+  border-top-color: rgb(255, 231, 95);
+  border-radius:25px;
+  background:linear-gradient(to right, #be9f48, #a58838 12%,rgb(255, 252, 237) 42%,rgb(167, 150, 56));
+  color: #333;
+  cursor: pointer;
+  padding: 10px;
+  text-align: left;
+  outline: none;
+  font-size: 18px;
+  transition: background-color 0.3s;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 .rotated {
     transform: rotate(180deg);
@@ -887,12 +937,12 @@ transition-duration: .6s;
 #mainBanner{
   height: 16vh;
  // background-image: url('/images/MainBanner.png');
-  background-size: cover;
+  background-size: 90%;
   background-position: center;
   background-repeat: no-repeat;
-  background-color: #410b4b;
-  box-shadow: 0px 0px 20px #d9ef1846;
-  border:5px solid #1a0a1b;
+  //background-color: #410b4b;
+ // box-shadow: 0px 0px 20px #d9ef1846;
+ // border:5px solid #1a0a1b;
   z-index: 8001;
   @media (min-width:768px) {
     width: 56%;
@@ -903,13 +953,9 @@ transition-duration: .6s;
 }
 .banner {
 display:grid;
-
-
 grid-template-columns: 1fr 10fr;
-
-    transition: all 0.3s ease; /* Smooth transition for shrinking */
-  
-    background-color:$purpleFade0;
+    transition: all 0.3s ease; /* Smooth transition for shrinking */  
+  //  background-color:$purpleFade0;
     @media (min-width:768px) {
       min-height: 14vh;
     }
@@ -1721,6 +1767,8 @@ max-width: 75px;
         color: white;
       }
       .noStyle{
+        margin-top: 3%;
+        border-radius: 6px;
         h1{
           text-shadow:8px 5px 8px #000000;
           font-family: $mini;
@@ -1729,7 +1777,6 @@ max-width: 75px;
       
       }
 
-        border-radius: 5px;
       }
       .client_window, .noStyle{
         border: 4px solid $gold;
@@ -1947,13 +1994,15 @@ h1{color:black}
 }
 }
 .readerpopupSection {
+  border: 9px solid $purple;
+border-radius: $borderRadius_primary;
   text-shadow: 1px 1px 0 white;
   h2{color: black;}
 display: flex; /* Enables Flexbox layout */
 flex-direction: column; /* Align children vertically */
 align-items: center; /* Centers content horizontally */
-//background-color: rgba(255, 255, 255, 0.788);
-background:linear-gradient(to bottom, $purple 2%, rgba(255, 255, 255, 0.86) 30%);
+background-color: rgba(255, 255, 255, 0.788);
+//background:linear-gradient(to bottom, $purple 2%, rgba(255, 255, 255, 0.86) 30%);
 
 padding: 30px;
 margin: 2%;
@@ -1962,9 +2011,13 @@ overflow-y: auto; /* Enables vertical scrolling if content exceeds the container
 box-sizing: border-box; /* Include padding in the height calculation */
 max-width: 100%; /* Ensure the section does not exceed the screen width */
 h1{
+  @media (min-width:768px) {
+    
+    font-size: 3.5rem;
+  }
   font-family: $back;
   color:black;
-  font-size: 4rem;
+  font-size: 2.2rem;
   text-shadow: 2px 2px 0 white;
 }
 li{color:black;text-align: left;font-size: 1.2rem;}
@@ -2014,7 +2067,10 @@ background-size: cover;
    margin:2%;
    height:40px
   }
-.readerMediumIcon{width:30%}
+.readerMediumIcon{
+  width:96%;
+  margin:2%;
+}
 .readerHorizBkgrd{
   width:100%;
   filter:brightness(.6);

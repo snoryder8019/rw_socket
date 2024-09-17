@@ -9,6 +9,8 @@ export default class Excursion extends ModelHelper {
       title: { type: 'text', value: null },
       description: { type: 'textarea', value: null },
       location: { type: 'text', value: null },
+      content: { type: 'text', value: null },
+
       duration: { type: 'number', value: null }, // Duration in hours/days
       cost: { type: 'number', value: null },
       itinerary: { type: 'array', value: [] }, // Array of itinerary items

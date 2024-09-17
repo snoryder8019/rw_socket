@@ -14,6 +14,8 @@ export default class Vendor extends ModelHelper {
       links: { type: 'array', value: [] },
       promos: { type: 'array', value: [] },
       clubs: { type: 'array', value: [] },
+      content: { type: 'text', value: null },
+
       description: { type: 'text', value: null },
       mediumIcon: { type: 'file', value: null },
       backgroundImg: { type: 'file', value: null },

@@ -9,7 +9,7 @@
           </div>
             <%}else{%>     
               <div class="readerIcon">
-<img class="readerIcon" src="/images/LogoTransp.png">
+<img class="readerIcon" src="/images/logo_oval.png">
               </div> 
                 <%}%>
       <div class="title bb1px">
@@ -23,8 +23,8 @@
       <%}%>
          <div>
            <img class="readerMediumIcon" src="<%=record.mediumIcon%>" alt="">
-        <h2><%=record.subTitle%></h2>
-        <p><%=record.description%></p>
+        <h2 style="color:black"><%=record.subTitle%></h2>
+        <p style="color:black"><%=record.description%></p>
         <h2><%=record.location%></h2>
         <h2><%=record.country%></h2>
         <p><%-htmlLayout%></p>
@@ -61,9 +61,9 @@
               <% } %>
             </div>
             
+            <button onclick="readerClose()" class="readerCloseButton">Close This Reader</button>
           </div>
   <%}%>
-  <button onclick="readerClose()" class="readerCloseButton">close this reader</button>
 
 
 
