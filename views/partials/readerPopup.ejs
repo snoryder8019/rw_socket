@@ -34,24 +34,29 @@
         <%}%>
       <%if(record.travelTips){%>
         <h2>Travel Tips for:    
-           <%=record.title%>
+          <%=record.title%>
           <%if(!record.title){%>
             <h1><%=record.name%>
-           <%}%>  
-           </h2>
-        <ul>
-      <%record.travelTips.forEach((travelTip)=>{%>
-        <li><%=travelTip%></li>
-        <%})%>
-      </ul>
-        <%}%>
-      </div>
-    </div>
+              <%}%>  
+            </h2>
+            <ul>
+              <%record.travelTips.forEach((travelTip)=>{%>
+                <li><%=travelTip%></li>
+                <%})%>
+              </ul>
+              <%}%>
+              <% if (record.votes) { %>
+                <% record.votes.forEach(vote => { %>
+                  <p><%= vote.question %></p>
+                <% }) %>
+              <% } %>
+            </div>
+            
+          </div>
   <%}%>
   <button onclick="readerClose()" class="readerCloseButton">close this reader</button>
 
 
 
 
-</div>
 

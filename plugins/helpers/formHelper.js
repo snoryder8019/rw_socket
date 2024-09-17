@@ -1,4 +1,4 @@
-export default (fields, data = {}) => {
+export default (fields, data = {}, additionalData = {}) => {
   return fields.map((field) => {
     switch (field.type) {
       case 'text':
@@ -6,69 +6,60 @@ export default (fields, data = {}) => {
       case 'date':
       case 'color':
         return {
-          label: field.label || field.name,
+          label: field.name.charAt(0).toUpperCase() + field.name.slice(1),
           name: field.name,
           type: field.type,
           value: data[field.name] || '',
         };
       case 'textarea':
         return {
-          label: field.label || field.name,
+          label: field.name.charAt(0).toUpperCase() + field.name.slice(1),
           name: field.name,
           type: field.type,
           value: data[field.name] || '',
         };
       case 'dropdown':
         return {
-          label: field.label || field.name,
           name: field.name,
-          type: field.type,
-          options: field.options,
-          value: data[field.name] || '',
+          label: field.name.charAt(0).toUpperCase() + field.name.slice(1),
+          type: 'dropdown',
+          options: additionalData[field.name] || [], // Use additionalData for dropdowns
+          value: data[field.name] || '',  // Use data for current value
         };
       case 'file':
         return {
-          label: field.label || field.name,
+          label: field.name.charAt(0).toUpperCase() + field.name.slice(1),
           name: field.name,
           type: field.type,
         };
       case 'radio':
         return {
-          label: field.label || field.name,
+          label: field.name.charAt(0).toUpperCase() + field.name.slice(1),
           name: field.name,
           type: field.type,
-          options: field.options,
-          value: data[field.name] || '',
-        };
-      case 'range':
-        return {
-          label: field.label || field.name,
-          name: field.name,
-          type: field.type,
-          min: field.min,
-          max: field.max,
+          options: field.options || [],
           value: data[field.name] || '',
         };
       case 'boolean':
         return {
-          label: field.label || field.name,
+          label: field.name.charAt(0).toUpperCase() + field.name.slice(1),
           name: field.name,
-          type: field.type,
-          options: ['true', 'false'], // Adding the options for the dropdown
-          value: data[field.name] !== undefined ? String(data[field.name]) : '', // Convert boolean to string
+          type: 'radio',
+          options: ['true', 'false'],  // Boolean as radio options
+          value: data[field.name] !== undefined ? String(data[field.name]) : '',  // Convert boolean to string
         };
-        case 'custom': // Custom field handling
+      case 'custom':
         return {
-          label: field.label || field.name,
+          label: field.name.charAt(0).toUpperCase() + field.name.slice(1),
           name: field.name,
           type: 'select',
-          options: field.options, // Custom options (like Sprite or Game)
+          options: field.options || [], // Custom options for select
           value: data[field.name] || [],
           multiple: true, // Assuming it's a multi-select
         };
       default:
         return {
-          label: field.label || field.name,
+          label: field.name.charAt(0).toUpperCase() + field.name.slice(1),
           name: field.name,
           type: 'text',
           value: data[field.name] || '',

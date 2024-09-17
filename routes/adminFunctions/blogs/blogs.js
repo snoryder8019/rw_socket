@@ -5,29 +5,37 @@ import Blog from '../../../plugins/mongo/models/blog/Blog.js';
 import generateFormFields from '../../../plugins/helpers/formHelper.js';
 import {imagesArray,getImagesArray,popImagesArray,popImagesArrayIndex,updateImagesArray} from '../../helpers/imagesArray.js'
 import { uploadMultiple } from '../../../plugins/multer/setup.js';
+import Vote from '../../../plugins/mongo/models/blog/Vote.js'
 
 import { buildRoutes } from '../../helpers/routeBuilder.js';
 
 const router = express.Router();
 const modelName = 'blog';
-
 // Route to render the form to add a new blog
-router.get('/renderAddForm', (req, res) => {
+router.get('/renderAddForm', async (req, res) => {
   try {
+    // Fetch votes or other dynamic data
+    const votes = await new Vote().getAll();
+    const voteOptions = votes.map(vote => vote.question);  // Extract questions
+console.log(votes)
+    // Instantiate Blog
+    const blog = new Blog();
     const model = Blog.getModelFields();
-    const formFields = generateFormFields(model);
+
+    // Pass votes to generateFormFields
+    const formFields = generateFormFields(model, {}, { vote: voteOptions });
 
     res.render('forms/generalBlogForm', {
       title: 'Add New Blog',
       action: '/blogs/create',
-      formFields: formFields,
-      wysiwyg: true, // Indicate to initialize WYSIWYG editor
+      formFields: formFields
     });
   } catch (error) {
-    console.error(error);
+    console.error('Error loading form:', error);
     res.status(500).send({ error: error.message });
   }
 });
+
 
 // Route to render the form to edit an existing blog
 router.get('/renderEditForm/:id', async (req, res) => {

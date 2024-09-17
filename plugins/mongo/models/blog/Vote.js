@@ -1,16 +1,19 @@
 import ModelHelper from '../../helpers/models.js';
+import { upload, processImages } from '../../../multer/subscriptionSetup.js';
+import { uploadToLinode } from '../../../aws_sdk/setup.js';
 
 export default class Vote extends ModelHelper {
   constructor(voteData) {
     super('votes');
     this.modelFields = {
-
+      
+      name: { type: 'text', value: null },
       question: { type: 'text', value: null },
-      options: { type: 'array', value: [] },
+      options: { type: 'array', value: [] }, // Array of vote options
       voteType: { type: 'text', value: null },
-      records: { type: 'array', value: [] },//users id#
+      records: { type: 'array', value: [] }, // Array of user IDs who voted
       createdAt: { type: 'date', value: new Date() },
-      updatedAt: { type: 'date', value: new Date() }
+      updatedAt: { type: 'date', value: new Date() },
     };
 
     if (voteData) {
@@ -31,49 +34,42 @@ export default class Vote extends ModelHelper {
 
   middlewareForCreateRoute() {
     return [
-      this.validateVote.bind(this),
-      this.checkIfAlreadyVoted.bind(this),
+      upload.fields(this.fileFields),
+      processImages,
+      this.uploadImagesToLinode.bind(this),
     ];
   }
 
   middlewareForEditRoute() {
     return [
-      this.validateVote.bind(this),
+      upload.fields(this.fileFields),
+      processImages,
+      this.uploadImagesToLinode.bind(this),
     ];
   }
 
-  async validateVote(req, res, next) {
-    try {
-      const { voterId, blogId, voteType } = req.body;
-      if (!voterId || !blogId || !['upvote', 'downvote'].includes(voteType)) {
-        throw new Error('Invalid vote data');
-      }
-      next();
-    } catch (error) {
-      console.error('Error in validateVote middleware:', error);
-      res.status(400).json({ error: error.message });
-    }
+  get fileFields() {
+    return [];
   }
 
-  async checkIfAlreadyVoted(req, res, next) {
+  async uploadImagesToLinode(req, res, next) {
     try {
-      const { voterId, blogId } = req.body;
-      const existingVote = await this.findOne({ voterId, blogId });
-      if (existingVote) {
-        throw new Error('User has already voted on this blog');
+      if (req.files) {
+        for (const key in req.files) {
+          const file = req.files[key][0];
+          const fileKey = `votes/${Date.now()}-${file.originalname}`;
+          const url = await uploadToLinode(file.path, fileKey);
+          req.body[key] = url; // Save the URL in the request body
+        }
       }
       next();
     } catch (error) {
-      console.error('Error in checkIfAlreadyVoted middleware:', error);
-      res.status(400).json({ error: error.message });
+      console.error('Error in uploadImagesToLinode middleware:', error);
+      next(error);
     }
   }
 
   pathForGetRouteView() {
     return 'admin/votes/template';
-  }
-  
-  async updateVoteCount(blogId, voteType) {
-    // Logic to update the vote count for a blog
   }
 }

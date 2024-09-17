@@ -354,6 +354,22 @@
 .rotated {
   transform: rotate(180deg); }
 
+.usersOnline {
+  position: relative;
+  display: inline-block; }
+
+.debugMessage {
+  color: red;
+  font-size: 12px;
+  position: absolute;
+  right: -80px;
+  /* Adjust this value to your needs */
+  top: 50%;
+  transform: translateY(-50%);
+  white-space: nowrap;
+  pointer-events: none;
+  /* Prevent the span from blocking other interactions */ }
+
 .imagesThumbs {
   display: flex;
   flex-direction: row;
@@ -401,6 +417,10 @@
   width: 96%;
   margin: 1%;
   padding: 1%; }
+
+.readerVideo {
+  width: 100%;
+  max-height: 135px; }
 
 .thumb {
   display: block;
@@ -1438,7 +1458,17 @@
     transform: translate(0, 0); }
   100% {
     transform: translate(-100%, 0); } }
+.videoTitle {
+  font-size: .8rem;
+  max-width: 100px;
+  white-space: nowrap;
+  /* Prevent text from wrapping to the next line */
+  overflow: hidden;
+  /* Hide the overflowed text */
+  text-overflow: ellipsis; }
+
 .video_container {
+  text-align: center;
   margin: 20px;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr; }
@@ -1449,7 +1479,8 @@
   border: 1px solid #ccc; }
 
 .btn {
-  padding: 10px 20px;
+  padding: 3%;
+  margin: 2%;
   background-color: #007bff;
   color: #fff;
   border: none;

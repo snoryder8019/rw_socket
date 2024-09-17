@@ -1,6 +1,7 @@
 import ModelHelper from '../../helpers/models.js';
 import { upload, processImages } from '../../../multer/subscriptionSetup.js';
 import { uploadToLinode } from '../../../aws_sdk/setup.js';
+import Vote from './Vote.js'
 
 export default class Blog extends ModelHelper {
   constructor(blogData) {
@@ -23,13 +24,14 @@ export default class Blog extends ModelHelper {
       metaDescription: { type: 'text', value: null },
       metaKeywords: { type: 'array', value: [] },
       slug: { type: 'text', value: null },
+      custom1: { type: 'custom1', value: null },
       visibility: { type: 'text', value: 'public' },
       allowComments: { type: 'boolean', value: true },
-      allowVotes: { type: 'boolean', value: true },
       views: { type: 'number', value: 0 },
       shares: { type: 'number', value: 0 },
       likes: { type: 'number', value: 0 },
       comments: { type: 'array', value: [] },
+      vote:{type:'dropdown',value:['none']}
       // Add more fields as necessary...
     };
 
@@ -41,7 +43,17 @@ export default class Blog extends ModelHelper {
       }
     }
   }
-
+  async getVotes() {
+    
+      try {
+        const votes = await new Vote().getVotes();
+        this.modelFields.vote.value = votes; // Set the votes dynamically
+      } catch (error) {
+        console.error('Error loading votes:', error);
+    }
+  }
+  
+  
   static getModelFields() {
     return Object.keys(new Blog().modelFields).map((key) => {
       const field = new Blog().modelFields[key];

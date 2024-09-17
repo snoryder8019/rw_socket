@@ -1,28 +1,18 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title><%= title %></title>
-  <style>
-    .array-field, .object-field {
-      margin-bottom: 10px;
-    }
-  </style>
-</head>
-<body>
   <h1><%= title %></h1>
   <form action="<%= action %>" method="post" enctype="multipart/form-data" id="blogForm">
     <% formFields.forEach(field => { %>
       <div>
         <label for="<%= field.name %>"><%= field.label %>:</label>
         <% if (field.type === 'textarea' && field.name === 'content') { %>
-          <!-- Content field for the blog body with a special class to indicate WYSIWYG support -->
+          <!-- WYSIWYG for content -->
           <textarea name="<%= field.name %>" id="<%= field.name %>" class="wysiwyg"><%- field.value %></textarea>
         <% } else if (field.type === 'textarea') { %>
           <textarea name="<%= field.name %>" id="<%= field.name %>"><%= field.value %></textarea>
         <% } else if (field.type === 'file') { %>
           <input type="file" name="<%= field.name %>" id="<%= field.name %>">
+        <% } else if (field.type === 'custom1') { %>
+          <!-- WYSIWYG for custom1 field -->
+          <textarea name="<%= field.name %>" id="customWYSIWYG"><%= field.value %></textarea>
         <% } else if (field.type === 'dropdown') { %>
           <select name="<%= field.name %>" id="<%= field.name %>">
             <% field.options.forEach(option => { %>
@@ -44,7 +34,8 @@
         <% } %>
       </div>
     <% }) %>
+    
     <button type="submit">Submit</button>
   </form>
-</body>
-</html>
+
+ 

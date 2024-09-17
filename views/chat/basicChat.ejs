@@ -495,24 +495,31 @@ console.log(`changing rooms ${messagesContainer}`)
    }
 });
 
-      socket.on('user list', (users) => {
-          const userList = document.getElementById('userList');
-          userList.innerHTML = '';
-          users.forEach((user) => {
-              const div = document.createElement('div');
-              div.className = 'usersOnline';
-              div.dataset.userId = user.id;
-              div.dataset.userName = user.name;
-              div.dataset.userAvatar = user.avatarThumbnailUrl || '/path/to/default/avatar/image.jpg';
-  
-              const img = document.createElement('img');
-              img.className = 'userImage';
-              img.src = div.dataset.userAvatar;
-              div.appendChild(img);
-  
-              userList.appendChild(div);
-          });
-      });
+socket.on('user list', (users) => {
+    const userList = document.getElementById('userList');
+    userList.innerHTML = '';
+    users.forEach((user) => {
+        const div = document.createElement('div');
+        div.className = 'usersOnline';
+        div.dataset.userId = user.id;
+        div.dataset.userName = user.name;
+        div.dataset.userAvatar = user.avatarThumbnailUrl || '/path/to/default/avatar/image.jpg';
+
+        const img = document.createElement('img');
+        img.className = 'userImage';
+        img.src = div.dataset.userAvatar;
+        div.appendChild(img);
+
+        // Add debug message
+        const debugSpan = document.createElement('span');
+        debugSpan.className = 'debugMessage';
+        debugSpan.textContent = user.name; // Display user.firstName (or name in this case)
+        div.appendChild(debugSpan);
+
+        userList.appendChild(div);
+    });
+});
+
   
       socket.on('connect_error', (error) => {
           console.log('Connection Error:', error);

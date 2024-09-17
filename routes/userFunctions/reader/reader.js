@@ -4,7 +4,7 @@ import Destination from "../../../plugins/mongo/models/travel/Destination.js";
 import Help from "../../../plugins/mongo/models/help/Help.js";
 import Vote from "../../../plugins/mongo/models/blog/Vote.js";
 import Club from "../../../plugins/mongo/models/Club.js";
-
+import Video from '../../../plugins/mongo/models/Video.js'
 const router = express.Router();
 const readerOptions = {
   blog: Blog,
@@ -37,6 +37,14 @@ router.get('/grid/:model', async (req, res) => {
     res.status(500).send({ error: 'Internal Server Error' });
   }
 });
+router.get('/videos',async(req,res)=>{
+try{
+  const videos = await new Video().getAll();
+  console.log(videos)
+  res.render('partials/videoReels',{videos:videos})
+}
+catch(error){console.error(error)}
+})
 router.get('/overlay/:model/:id', async (req, res) => {
   try {
     const { model, id } = req.params;
