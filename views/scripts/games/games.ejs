@@ -1,192 +1,180 @@
-<!--/views/scripts/games/games.ejs **NOTE: GPT DONT REMOVE THIS LINE, ALWAYS INCLUDE**-->
 <script>
+  //GPT DONT DELETE THIS REFERENCE LINE
+  //<!--views/scripts/games/games.ejs-->
+  //GPT DONT DELETE THIS REFERENCE LINE
+  
   document.addEventListener('DOMContentLoaded', () => {
-    let socket = io('/games');
+      let socket = io('/games');
+  
+      function bindSocketEvents() {
+          // Example socket event listener after EJS renders
+        socket.on('playerJoined', (data) => {
+    const { players, maxPlayers } = data;
+    const currentUserId = document.querySelector('.cardTableGameDiv').getAttribute('data-user-id'); // Get current user's ID
+    const playerSeatsContainer = document.getElementById('playerSeats');
 
-    function bindSocketEvents() {
-      // Example socket event listener after EJS renders
+    // Clear current seats
+    playerSeatsContainer.innerHTML = '';
+
+    // Populate player seats excluding the current user
+    players.filter(player => player._id !== currentUserId).forEach((player, index) => {
+        const playerSeat = document.createElement('div');
+        playerSeat.classList.add('playerSeat');
+        playerSeat.id = `playerSeat_${index}`;
+        playerSeat.innerHTML = `
+            <h3>Seat ${index + 1}: ${player.displayName}</h3>
+            <h6 class="last_move" id="last_move_${player._id}">Last Move: ${player.lastMove || 'N/A'}</h6>
+            <h6 class="ping_socket" id="ping_socket_${player._id}">Ping: N/A</h6>
+        `;
+        playerSeatsContainer.appendChild(playerSeat);
+    });
+
+    // Fill empty seats with placeholders
+    for (let i = players.length - 1; i < maxPlayers - 1; i++) {
+        const emptySeat = document.createElement('div');
+        emptySeat.classList.add('playerSeat');
+        emptySeat.id = `playerSeat_${i}`;
+        emptySeat.innerHTML = `<div><h3>Seat ${i + 1}: Empty</h3></div>`;
+        playerSeatsContainer.appendChild(emptySeat);
+    }
+});
+
+      }
+  
+      // Listen for an event that signals the EJS content has been re-rendered
+      document.addEventListener('ejsRenderComplete', () => {
+          console.log('EJS content rendered, rebinding socket events');
+          bindSocketEvents();  // Reapply socket logic
+      });
+  
+      socket.on('connect', () => {
+          console.log('Connected to GAMES CLIENT');
+      });
+  
+      function readyUp(userId, gameSessionId) {
+          console.log(`READY UP FUNCTION sessionId: ${gameSessionId}`);
+          socket.emit('ready up', userId, gameSessionId);
+      }
+  
+      // Listen for when a player joins
       socket.on('playerJoined', (data) => {
-        const { players, maxPlayers } = data;
-        const playerSeatsContainer = document.getElementById('playerSeats');
-        
-        // Clear current seats
-        playerSeatsContainer.innerHTML = '';
+    const { players, maxPlayers } = data;
+    const currentUserId = document.querySelector('.cardTableGameDiv').getAttribute('data-user-id'); // Get current user's ID
+    const playerSeatsContainer = document.getElementById('playerSeats');
 
-        // Populate player seats
-        players.forEach((player, index) => {
-          const playerSeat = document.createElement('div');
-          playerSeat.classList.add('playerSeat');
-          playerSeat.id = `playerSeat_${index}`;
-          playerSeat.innerHTML = `
-            <div><h3>Seat ${index + 1}: ${player.displayName}</h3></div>
-            <div><h3 class="last_move_${player._id}">Last Move: ${player.lastMove || 'N/A'}</h3></div>
-            <h6 style="color:red" class="ping_socket${player._id}"></h6>
-          `;
-          playerSeatsContainer.appendChild(playerSeat);
-        });
+    // Clear current opponent seats
+    playerSeatsContainer.innerHTML = '';
 
-        // Fill empty seats with placeholders
-        for (let i = players.length; i < maxPlayers; i++) {
-          const emptySeat = document.createElement('div');
-          emptySeat.classList.add('playerSeat');
-          emptySeat.id = `playerSeat_${i}`;
-          emptySeat.innerHTML = `<div><h3>Seat ${i + 1}: Empty</h3></div>`;
-          playerSeatsContainer.appendChild(emptySeat);
-        }
-      });
-    }
-
-    // Listen for an event that signals the EJS content has been re-rendered
-    document.addEventListener('ejsRenderComplete', () => {
-      console.log('EJS content rendered, rebinding socket events');
-      bindSocketEvents();  // Reapply socket logic
+    // Populate opponent seats, exclude the current user
+    players.filter(player => player._id !== currentUserId).forEach((player, index) => {
+        const playerSeat = document.createElement('div');
+        playerSeat.classList.add('playerSeat');
+        playerSeat.id = `playerSeat_${index}`;
+        playerSeat.innerHTML = `
+            <h3>Seat ${index + 1}: ${player.displayName}</h3>
+            <h6 class="last_move" id="last_move_${player._id}">Last Move: ${player.lastMove || 'N/A'}</h6>
+            <h6 class="ping_socket" id="ping_socket_${player._id}">Ping: N/A</h6>
+        `;
+        playerSeatsContainer.appendChild(playerSeat);
     });
 
-    socket.on('connect', () => {
-      console.log('Connected to GAMES CLIENT');
-    });
-
-    function readyUp(userId, gameSessionId) {
-      console.log(`READY UP FUNCTION sessionId: ${gameSessionId}`);
-      socket.emit('ready up', userId, gameSessionId);
+    // Fill empty seats with placeholders for opponents
+    for (let i = players.length - 1; i < maxPlayers - 1; i++) {
+        const emptySeat = document.createElement('div');
+        emptySeat.classList.add('playerSeat');
+        emptySeat.id = `playerSeat_${i}`;
+        emptySeat.innerHTML = `<div><h3>Seat ${i + 1}: Empty</h3></div>`;
+        playerSeatsContainer.appendChild(emptySeat);
     }
-
-    // Listen for when a player joins
-    socket.on('playerJoined', (data) => {
-      const { players, maxPlayers } = data;
-
-      // Clear all player seats first
-      document.querySelectorAll('.playerSeat').forEach((seat) => {
-        seat.innerHTML = '<div class="loaderWheel"><div class="wheel"></div></div>';
-      });
-
-      // Loop through each player and update the seat
-      players.forEach((player, index) => {
-        const seat = document.getElementById(`playerSeat_${index}`);
-        if (seat && player) {
-          seat.innerHTML = `
-            <div><h3>Seat ${index + 1}: ${player.displayName}</h3></div>
-            <div><h3 class="last_move_${player._id}">Last Move: ${player.lastMove || 'N/A'}</h3></div>
-            <h6 style="color:red" class="ping_socket${player._id}"></h6>
-          `;
-        }
-      });
-
-      // Check if all players are ready
-      if (players.length === maxPlayers) {
-        socket.emit('allPlayersReady', { sessionId: gameSettingsData._id });
-      }
-    });
-
-    // Listen for 'allPlayersReady' event
-    socket.on('allPlayersReady', () => {
-  console.log('All players are ready, requesting game state update');
-  // Emit event to the server to request state update
-  const gameSessionId = document.querySelector('.cardTableGameDiv').getAttribute('data-game-session-id');
-  socket.emit('requestStateUpdate', { gameSessionId });
-});
-function updatePlayerTurn(currentTurnId, players) {
-    const turnElement = document.querySelector('.cardTableGameDiv h2');
-    if (turnElement) {
-      // Find the player with the currentTurnId in the players array
-      const currentPlayer = players.find(player => player._id === currentTurnId);
-      
-      // If we find the player, update the turn display
-      if (currentPlayer) {
-        turnElement.textContent = `Player turn: ${currentPlayer.displayName}`;
-      } else {
-        turnElement.textContent = 'Player turn: Unknown';
-      }
-    }
-  }
-
-  socket.on('state update', (updatedState) => {
-    console.log('Received updated state:', updatedState);
-
-    // Parse the current state and player turn
-    const stateElement = document.querySelector('.cardTableGameDiv h4');
-    if (stateElement && updatedState.currentState) {
-      stateElement.textContent = `Current State: ${updatedState.currentState.state}`;
-    }
-
-    // Update player turn based on currentTurn and player array
-    if (updatedState.currentState && updatedState.players) {
-      updatePlayerTurn(updatedState.currentState.currentTurn, updatedState.players);
-    }
-    if (updatedState.dealtDominoes) {
-        console.log('Dominoes have been dealt to players:', updatedState.dealtDominoes);
-        // Update the UI with the new dominoes for each player
-        updatePlayerDominoesUI(updatedState.dealtDominoes);
-    }
-  });
-
-  // Initial setup - parse data from the DOM (gameSettings and gameSession)
-  const gameSessionElement = document.querySelector('.cardTableGameDiv');
-  if (gameSessionElement) {
-    const gameSettings = JSON.parse(gameSessionElement.getAttribute('data-game-settings'));
-    const gameSessionId = gameSessionElement.getAttribute('data-game-session-id');
-
-    // Assuming gameSession contains currentState and players
-    const currentState = gameSettings.currentState;
-    const players = gameSettings.players;
-
-    // Display the initial state and player turn
-    if (currentState && players) {
-      updatePlayerTurn(currentState.currentTurn, players);
-    }
-  }
-
-    socket.on('ping result', (data) => {
-      const { userId, latency } = data;
-      const pingElement = document.getElementById(`playerPing`);
-      if (pingElement) {
-        pingElement.innerHTML = `Ping: ${latency} ms`;
-      }
-    });
-
-    // Listen for the ping event and respond with pong
-    socket.on('ping', (data) => {
-  // Ensure this is the session ID, not the game settings ID
-  const gameSessionId = document.querySelector('.cardTableGameDiv').getAttribute('data-game-session-id'); 
-  console.log(`Sending pong with gameSessionId: ${gameSessionId}`); // Log for debugging
-  socket.emit('pong', { ...data, gameSessionId });  // Respond with the correct session ID
 });
 
-
-
-    // Fetch and display game content dynamically
-    function fetchGame(action, gameId) {
-      fetch(`/games/${action}/${gameId}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' }
-      })
-      .then(response => response.text())
-      .then(html => {
-        document.getElementById('launcher').remove();
-        document.getElementById('gameContainer').innerHTML = html;
-      })
-      .catch(error => {
-        console.error('Error fetching and rendering game table:', error);
+      // Listen for 'allPlayersReady' event
+      socket.on('allPlayersReady', () => {
+          console.log('All players are ready, requesting game state update');
+          // Emit event to the server to request state update
+          const gameSessionId = document.querySelector('.cardTableGameDiv').getAttribute('data-game-session-id');
+          socket.emit('requestStateUpdate', { gameSessionId });
       });
-    }
-
-    // Event listener for dynamically loaded join buttons
-    document.body.addEventListener('click', (event) => {
-      if (event.target && event.target.matches('.controlButton') && event.target.textContent.trim() === 'Ready to Play') {
-        const sessionId = event.target.getAttribute('data-session-id');
-        const userId = event.target.getAttribute('data-user-id');
-        console.log(`GAMES EJS ~~~~~ sessionId: ${sessionId}`);
-        readyUp(userId, sessionId);
+  
+      // Update player turn in the UI
+      function updatePlayerTurn(currentTurnId, players) {
+          const turnElement = document.querySelector('.cardTableGameDiv h2');
+          if (turnElement) {
+              const currentPlayer = players.find(player => player._id === currentTurnId);
+              turnElement.textContent = currentPlayer
+                  ? `Player turn: ${currentPlayer.displayName}`
+                  : 'Player turn: Unknown';
+          }
       }
-      if (event.target && event.target.matches('.joinGameButton')) {
-        const userId = event.target.getAttribute('data-user-id');
-        const gameId = event.target.getAttribute('data-game-id');
-        const action = event.target.getAttribute('action-game');
-        const gameName = event.target.getAttribute('game');
-
-        socket.emit('playerJoin', { user: userId, gameSessionId: gameId });
-        fetchGame(action, gameId);
+  
+      // Handle ping and pong
+      socket.on('ping', (data) => {
+          const gameSessionElement = document.querySelector('.cardTableGameDiv');
+          const gameSessionId = gameSessionElement ? gameSessionElement.getAttribute('data-game-session-id') : null;
+  
+          if (gameSessionId) {
+              console.log(`Sending pong with gameSessionId: ${gameSessionId}`);
+              socket.emit('pong', { ...data, gameSessionId });
+          } else {
+              console.warn('No gameSessionId found in the DOM.');
+          }
+      });
+  
+      // Handle state update
+      socket.on('state update', (updatedState) => {
+          console.log(`updatedState : ${updatedState.state}`);
+  
+          // If we receive an updatedState, use it directly
+          const stateElement = document.querySelector('.cardTableGameDiv h4');
+          if (stateElement) {
+              stateElement.textContent = `Current State: ${updatedState.state}`;
+          } else {
+              console.warn('State element not found.');
+          }
+      });
+  
+      socket.on('ping result', (data) => {
+          const { userId, latency } = data;
+          const pingElement = document.getElementById(`playerPing`);
+          if (pingElement) {
+              pingElement.innerHTML = `Ping: ${latency} ms`;
+          }
+      });
+  
+      // Fetch and display game content dynamically
+      function fetchGame(action, gameId) {
+          fetch(`/games/${action}/${gameId}`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' }
+          })
+          .then(response => response.text())
+          .then(html => {
+              document.getElementById('launcher').remove();
+              document.getElementById('gameContainer').innerHTML = html;
+          })
+          .catch(error => {
+              console.error('Error fetching and rendering game table:', error);
+          });
       }
-    });
+  
+      // Event listener for dynamically loaded join buttons
+      document.body.addEventListener('click', (event) => {
+          if (event.target && event.target.matches('.controlButton') && event.target.textContent.trim() === 'Ready to Play') {
+              const sessionId = event.target.getAttribute('data-session-id');
+              const userId = event.target.getAttribute('data-user-id');
+              console.log(`GAMES EJS ~~~~~ sessionId: ${sessionId}`);
+              readyUp(userId, sessionId);
+          }
+          if (event.target && event.target.matches('.joinGameButton')) {
+              const userId = event.target.getAttribute('data-user-id');
+              const gameId = event.target.getAttribute('data-game-id');
+              const action = event.target.getAttribute('action-game');
+  
+              socket.emit('playerJoin', { user: userId, gameSessionId: gameId });
+              fetchGame(action, gameId);
+          }
+      });
   });
-</script>
+  //GPT DONT DELETE THIS REFERENCE LINE
+  </script>
+  

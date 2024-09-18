@@ -2093,7 +2093,8 @@ background-size: cover;
 }
 
 .playerSeat {
-  background-color: rgba(255, 255, 255, 0.8);
+  border:2px solid $goldDim;
+  background-color: $purple;
   padding: 10px;
   border-radius: 5px;
   text-align: center;

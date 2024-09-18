@@ -15,6 +15,8 @@ export default class GameSetting extends ModelHelper {
       active: { type: 'boolean', value: null },       
       maxPlayers: { type: 'text', value: null }, 
       minPlayers: { type: 'text', value: null }, 
+      maxDeal:{type:'number',value:0},
+      decks:{type:'number',value:1},
       singlePlayer: { type: 'boolean', value: false }, // if Ai is programmed in
       customSetting: { type: 'boolean', value: false }, // if we had optional rulesets for the user
       backgroundImg: { type: 'file', value: null }, 

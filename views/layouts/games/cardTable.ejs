@@ -1,47 +1,65 @@
+<!--GPT DONT DELETE THIS REFERENCE LINE-->
+<!--views/layouts/games/cardTable.ejs-->
+<!--GPT DONT DELETE THIS REFERENCE LINE-->
+<input type="text" value="<%= gameSession._id %>">
+
 <div data-game-settings='<%= JSON.stringify(gameSettingsData) %>' 
   data-game-id="<%- gameSettingsData._id %>" 
   data-game-session-id="<%= gameSession._id %>" 
+  data-user-id="<%= user._id %>" 
   class="cardTableGameDiv" 
   style="background-image: url('<%= gameSettingsData.backgroundImg %>');" 
   id="cardTable_<%= gameSession._id %>">
- 
- <div style="font-size:.5rem;color: yellow;" class="pauseTimer">Your pause time remaining: 2:00</div>
 
- <!-- Game Title and Status Messages -->
- <% if (gameSession.status === "waiting for players") { %>
- <h2>WELCOME to Dominoes!! </h2>
- <% } else if (gameSession.status === "playing") { %>
-   <h2>Player turn: ____</h2>
- <% } %>
+  <div style="font-size:.5rem;color: yellow;" class="pauseTimer">Your pause time remaining: 2:00</div>
 
- <h3 class="state_message" style="color:yellow">
-   <% if (gameSession.status === "waiting for players") { %>
-     Waiting for others to join...
-   <% } %>
- </h3>
+  <!-- Game Title and Status Messages -->
+  <% if (gameSession.status === "waiting for players") { %>
+    <h2>WELCOME to Dominoes!! </h2>
+  <% } else if (gameSession.status === "playing") { %>
+    <h2>Player turn: ____</h2>
+  <% } %>
 
- <!-- Add gameSession.currentState -->
- <h4 style="color:red;">
-   Current State: <%= gameSession.currentState.state || 'Loading...' %>
- </h4>
+  <h3 class="state_message" style="color:yellow">
+    <% if (gameSession.status === "waiting for players") { %>
+      Waiting for others to join...
+    <% } %>
+  </h3>
 
- <!-- Player Seats arranged around the top -->
- <div class="playerSeatsTop" id="playerSeats">
-   <!-- Seats will be dynamically generated here based on socket data -->
- </div>
+  <!-- Add gameSession.currentState -->
+  <h4 style="color:red;">
+    Current State: <%= gameSession.currentState.state || 'Loading...' %>
+  </h4>
 
- <!-- User Controls -->
- <div class="userControls">
-   <h6 class="playerPing" id="playerPing">Ping: calculating...</h6>
+  <!-- Player Seats (opponents only) -->
+  <div class="playerSeatsTop" id="playerSeats">
+    <% if (gameSession.players && gameSession.players.length > 0) { %>
+      <% gameSession.players.forEach((player, index) => { %>
+        <% if (player._id !== user._id) { %> <!-- Only opponents -->
+          <div class="playerSeat" id="playerSeat_<%= index %>">
+            <h3>Seat <%= index + 1 %>: <%= player.displayName %></h3>
+            <h6 class="last_move" id="last_move_<%= player._id %>">Last Move: <%= player.lastMove || 'N/A' %></h6>
+            <h6 class="ping_socket" id="ping_socket_<%= player._id %>">Ping: N/A</h6>
+          </div>
+        <% } %>
+      <% }); %>
+    <% } else { %>
+      <p>No players joined yet.</p>
+    <% } %>
+  </div>
 
-   <% if (gameSession.status === "waiting for players") { %>
-     <button id="readyButton" style="background-color: blue;" class="controlButton" data-user-id="<%= user._id %>" data-session-id="<%= gameSession._id %>">Ready to Play</button>
-     <button onclick="exitSession('<%= gameSession._id %>')" style="background-color: red;" class="controlButton">Exit Game</button>
-   <% } else if (gameSession.status === "playing") { %>
-     <button class="controlButton">Draw Tile</button>
-     <button class="controlButton">Play Tile</button>
-     <button class="controlButton">Pass Turn</button>
-     <button onclick="exitSession('<%= gameSession._id %>')" style="width:25%; height:30px; font-size:0.5rem; background-color: red;" class="controlButton">Exit Game</button>
-   <% } %>
- </div>
+  <!-- User Controls (only for you, no appearance on the board) -->
+  <div class="userControls">
+    <h6 class="playerPing" id="playerPing">Ping: calculating...</h6>
+
+    <% if (gameSession.status === "waiting for players") { %>
+      <button id="readyButton" style="background-color: blue;" class="controlButton" data-user-id="<%= user._id %>" data-session-id="<%= gameSession._id %>">Ready to Play</button>
+      <button onclick="exitSession('<%= gameSession._id %>')" style="background-color: red;" class="controlButton">Exit Game</button>
+    <% } else if (gameSession.status === "playing") { %>
+      <button class="controlButton">Draw Tile</button>
+      <button class="controlButton">Play Tile</button>
+      <button class="controlButton">Pass Turn</button>
+      <button onclick="exitSession('<%= gameSession._id %>')" style="width:25%; height:30px; font-size:0.5rem; background-color: red;" class="controlButton">Exit Game</button>
+    <% } %>
+  </div>
 </div>

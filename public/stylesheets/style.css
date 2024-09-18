@@ -1903,7 +1903,8 @@ button good {
   margin-bottom: 20px; }
 
 .playerSeat {
-  background-color: rgba(255, 255, 255, 0.8);
+  border: 2px solid #695f38;
+  background-color: #711881;
   padding: 10px;
   border-radius: 5px;
   text-align: center;

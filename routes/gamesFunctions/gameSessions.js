@@ -1,4 +1,6 @@
+//GPT DONT DELETE THIS REFERENCE LINE
 //routes/gamesFunctions/gameSessions.js
+//GPT DONT DELETE THIS REFERENCE LINE
 import express from 'express';
 import chalk from 'chalk';
 import GameSession from '../../plugins/mongo/models/games/GameSession.js';

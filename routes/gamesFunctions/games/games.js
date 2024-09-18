@@ -135,6 +135,7 @@ router.post('/join/:gameId', async (req, res) => {
       
       turnHistory: { type: 'array', value: [] },
       status: "waiting for players",
+      currentState:{},
     };
     if(userCheck){
       return new GameSession().reJoinSession(userCheck)
@@ -143,10 +144,11 @@ router.post('/join/:gameId', async (req, res) => {
     const gameSession = await new GameSession().create(gameSetup);
     const result = await new GameSession().markUserLast(userId, gameSession._id);
     const gameSettingsData = await new GameSetting().getById(game.gameSettings);
-
+//const userImg =awawi
     console.log(chalk.green.bold(
       `********GAME/GAME.js*********
       \n******Route: games/games/join/:id******
+      \ngmaeSession Data: ${gameSession._id}
       \n\n gameSettingsData:${JSON.stringify(gameSettingsData)}
       \n result:${JSON.stringify(result)}
       \n*********END CONSOLE*********`));

@@ -1,5 +1,6 @@
+//GPT DONT DELETE THIS REFERENCE LINE
 //<!--/plugins/mongo/models/games/noDb/GamesState.js **NOTE: GPT DONT REMOVE THIS LINE, ALWAYS INCLUDE**-->
-
+//GPT DONT DELETE THIS REFERENCE LINE
 import GameSession from '../GameSession.js';
 import mongoose from 'mongoose'; // Add mongoose for ObjectId validation
 import { ObjectId } from 'mongodb';
