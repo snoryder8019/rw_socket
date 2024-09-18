@@ -73,27 +73,31 @@ router.post('/join/:sessionId', async (req, res) => {
     const isPlayerInSession = gameSession.players.some(player => player.id.toString() === userId.toString());
 
     const gameSettingsData = await new GameSetting().getById(gameSession.gameSettings);
+    
     if (isPlayerInSession) {
-      console.log(chalk.blue.bgGray(`player in session, adding to active session...`))
+      console.log(chalk.blue.bgGray(`Player is already in session, rendering active session...`));
+
       // If the user is already in the session, just render the game session
-      console.log(chalk.blue(gameSettingsData))
       return res.render('layouts/games/cardTable', {
         gameSession: gameSession,
-        gameSettingsData:gameSettingsData,
+        gameSettingsData: gameSettingsData,
         user: req.user
       });
     }
-const idString = JSON.stringify(userId)
-    // Add the user to the session's players array
-    const updatedPlayers = [...gameSession.players, {
-      id: idString,
-      displayName: user.displayName,
-      lastMove: null
-    }];
+
+    // User is not part of the session, add them to the session's players array
+    const updatedPlayers = [
+      ...gameSession.players,
+      {
+        id: userId.toString(), // Ensure the id is a string
+        displayName: user.displayName,
+        lastMove: null
+      }
+    ];
 
     // Update the session with the new players array
     const update = { players: updatedPlayers };
-    await new GameSession().updateById(sessionId, update); // Use your model's update method
+    await new GameSession().updateById(sessionId, update);
 
     // Get the updated game session and settings data
     const updatedSession = await new GameSession().getById(sessionId);
@@ -101,7 +105,7 @@ const idString = JSON.stringify(userId)
     // Render the game session for the user
     res.render('layouts/games/cardTable', {
       gameSession: updatedSession,
-      gameSettingsData:gameSettingsData,
+      gameSettingsData: gameSettingsData,
       user: user
     });
 
