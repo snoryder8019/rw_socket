@@ -1,4 +1,5 @@
-//routes/gamesFunctions/games/games.js
+//routes/gamesFunctions/games/games.js**NOTE: GPT DONT REMOVE THIS LINE, ALWAYS INCLUDE**
+
 import express from 'express';
 import chalk from 'chalk';
 import Game from '../../../plugins/mongo/models/games/Game.js';
@@ -131,7 +132,7 @@ router.post('/join/:gameId', async (req, res) => {
       }],
       startTime: new Date(),
       endTime: { type: 'date', value: null },
-      currentState: "waiting to start",
+      
       turnHistory: { type: 'array', value: [] },
       status: "waiting for players",
     };

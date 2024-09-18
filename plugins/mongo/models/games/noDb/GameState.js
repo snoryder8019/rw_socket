@@ -1,6 +1,9 @@
+//<!--/plugins/mongo/models/games/noDb/GamesState.js **NOTE: GPT DONT REMOVE THIS LINE, ALWAYS INCLUDE**-->
+
 import GameSession from '../GameSession.js';
 import mongoose from 'mongoose'; // Add mongoose for ObjectId validation
-
+import { ObjectId } from 'mongodb';
+import chalk from 'chalk';
 export default class GameState {
     constructor(stateData) {
       const gameStatePacket = {
@@ -22,18 +25,14 @@ export default class GameState {
 
     async startGame(sessionId) {
         try {
-            // Ensure sessionId is a valid ObjectId
-            if (!mongoose.Types.ObjectId.isValid(sessionId)) {
-                throw new Error('Invalid ID format');
-            }
-
-            // Assuming GameState is stored as a data object, not an instance
+       console.log(sessionId)
+       this.stateData.state = 'dealing';  
+       this.stateData.nextTurn=0;    
             const dbStateUpdate = await new GameSession().updateById(sessionId, {
                 status: "playing",
                 currentState: this.stateData  // Pass the state data, not the class instance
             });
-            this.state = 'running';      
-            console.log('START MEUP!!', dbStateUpdate);
+           // console.log('START MEUP!!', dbStateUpdate);
         } catch (error) {
             console.error(error);
         }
@@ -53,7 +52,7 @@ export default class GameState {
             if (!mongoose.Types.ObjectId.isValid(sessionId)) {
                 throw new Error('Invalid ID format');
             }
-
+console.log(chalk.green(sessionId))
             const persistentStateData = await new GameSession().getById(sessionId);
             return persistentStateData.currentState;
         } catch (error) {
@@ -74,4 +73,10 @@ export default class GameState {
         this.state = 'initial';
         this.scoreboard = {};
     }
+    async update(gameSessionId) {
+        console.log(`Updating game state for session: ${gameSessionId}`);
+        // Logic to update the game state for the specific session
+        // Fetch data, update state, etc.
+        return updatedGameState;
+      }
 }

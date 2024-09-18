@@ -1,158 +1,100 @@
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        let spriteImagesCache = {}; // Cache for sprite images
-        let spritesMap = {}; // To store sprites by _id
-        let gameElements = []; // Store game elements
-        let animationStates = []; // Store animation state for each domino independently
-    let gameState = {}
-        // Extract gameSettingsData from the cardTableGameDiv's data attribute
-        function extractGameSettingsData(cardTableGameDiv) {
-            const gameSettings = cardTableGameDiv.getAttribute('data-game-settings');
-            console.log('Extracting gameSettingsData:', gameSettings);
-            if (gameSettings) {
-                return JSON.parse(gameSettings);
-            } else {
-                console.error('No gameSettingsData found on the cardTableGameDiv');
-                return null;
-            }
-        }
-    
-        // 1. Fetch sprite images using spriteIds
-        async function fetchSprites(spriteIds) {
-            console.log('Fetching sprites for spriteIds:', spriteIds);
-            try {
-                const response = await fetch('/games/gameSprites/allData'); // Fetch sprites from API
-                const sprites = await response.json();
-                console.log('Fetched sprites:', sprites);
-    
-                // Map sprites by their _id
-                sprites.forEach(sprite => {
-                    if (spriteIds.includes(sprite._id) && sprite.imageSrc) { // Check for _id
-                        spritesMap[sprite._id] = sprite; // Store sprites by their _id
-                        console.log(`Sprite ${sprite._id} added to spritesMap`);
-                    }
-                });
-                
-            } catch (error) {
-                console.error('Error fetching sprites:', error);
-            }
-        }
-        
-        // 2. Preload and cache sprite images
-        async function preloadImages() {
-            console.log('Preloading images from spritesMap:', spritesMap);
-            const promises = Object.values(spritesMap).map(sprite => {
-                return new Promise((resolve, reject) => {
-                    const img = new Image();
-                    img.src = sprite.imageSrc; // Use imageSrc from sprite object
-                    
-                    img.onload = () => {
-                        spriteImagesCache[sprite._id] = img; // Cache image by _id
-                        console.log(`Image loaded and cached for spriteId: ${sprite._id}`);
-                        resolve();
-                    };
-                    
-                    img.onerror = () => {
-                        console.error(`Failed to load image for spriteId: ${sprite._id}`);
-                        reject();
-                    };
-                });
-            });
-    
-            await Promise.all(promises); // Wait for all images to load
-            console.log("All sprite images cached:", spriteImagesCache);
-        }
-    
-        // 3. Fetch game elements to get the coordinates for rendering
-        async function fetchGameElements() {
-            console.log('Fetching game elements...');
-            try {
-                const response = await fetch('/games/gameElements/allData');
-                const elements = await response.json();
-                console.log('Fetched game elements:', elements);
-                return elements;
-            } catch (error) {
-                console.error('Error fetching game elements:', error);
-                return [];
-            }
-        }
-    
-        // Initialize independent animation state for each domino
-        function initializeAnimationState() {
-            console.log('Initializing animation state for game elements:', gameElements);
-            gameElements.forEach((el, index) => {
-                if (!spritesMap[el.spriteId]) {
-                    console.error(`Sprite not found for element with spriteId: ${el.spriteId}`);
-                    return;
-                }
-    
-                console.log(`Initializing animation state for element with spriteId: ${el.spriteId}`);
-                // Assign each element its own unique properties
-                animationStates.push({
-                    spriteId: el.spriteId, // Ensure the correct spriteId from gameElements is used
-                    x: Math.random() * 300 + 50, // Random initial x position
-                    y: Math.random() * 300 + 50, // Random initial y position
-                    dx: (Math.random() * 0.5 - 0.25), // Unique x velocity
-                    dy: (Math.random() * 0.5 - 0.25), // Unique y velocity
-                    rotation: 0, // Start rotation at 0
-                    rotationSpeed: (Math.random() * 0.02 - 0.01), // Unique rotation speed
-                });
-            });
-            console.log('Animation states initialized:', animationStates);
-        }
-    
-        // 4. Render game elements with continuous movement and independent rotation
-        function renderGameElements(ctx) {
-            ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height); // Clear canvas
-            console.log('Rendering game elements...');
-    
-            // Iterate over each game element and render it independently
-            animationStates.forEach((animState, index) => {
-                const el = gameElements[index]; // Get the corresponding game element by index
-                const sprite = spritesMap[el.spriteId]; // Get the correct sprite for the element
-                const img = spriteImagesCache[el.spriteId]; // Get the correct image for the element
-    
-                if (sprite && img) {
-                    console.log(`Rendering element with spriteId: ${el.spriteId}`);
-                    // Update positions and rotation for continuous animation
-                    animState.x += animState.dx;
-                    animState.y += animState.dy;
-                    animState.rotation += animState.rotationSpeed;
-    
-                    // Bounce off the edges of the canvas independently
-                    if (animState.x < 20 || animState.x > 280) animState.dx *= -1;
-                    if (animState.y < 20 || animState.y > 280) animState.dy *= -1;
-    
-                    // Render the sprite with scaling, movement, and rotation
-                    const scaledWidth = el.spriteCoords[2] * 0.8;
-                    const scaledHeight = el.spriteCoords[3] * 0.8;
-    
-                    // Save the current context state
-                    ctx.save();
-                    ctx.translate(animState.x + scaledWidth / 2, animState.y + scaledHeight / 2); // Move to the center of the sprite
-                    ctx.rotate(animState.rotation); // Rotate the sprite
-                    ctx.translate(-scaledWidth / 2, -scaledHeight / 2); // Move back to the top-left of the sprite
-                    ctx.drawImage(
-                        img,
-                        el.sourceCoords[0], el.sourceCoords[1],
-                        el.sourceCoords[2], el.sourceCoords[3],
-                        0, 0, scaledWidth, scaledHeight
-                    );
-                    ctx.restore(); // Restore the context to avoid affecting other elements
-                } else {
-                    console.error(`Missing sprite or image for element with spriteId: ${el.spriteId}`);
-                }
-            });
-    
-            // Request the next animation frame for continuous animation
-            requestAnimationFrame(() => renderGameElements(ctx));
-        }
-    
-        // Main setup function to load everything and render
-        async function setupGameBoard(ctx, gameSettingsData) {
-        const spriteIds = gameSettingsData.spriteIds;
-        console.log('Setting up game board with spriteIds:', spriteIds);
+document.addEventListener("DOMContentLoaded", function () {
+    let spriteImagesCache = {}; // Cache for sprite images
+    let spritesMap = {}; // To store sprites by _id
+    let gameElements = []; // Store game elements
+    let animationStates = []; // Store animation state for each domino independently
+    let gameState = {};
+    let dealingAnimationActive = false;
 
+    // Extract gameSettingsData from the cardTableGameDiv's data attribute
+    function extractGameSettingsData(cardTableGameDiv) {
+        const gameSettings = cardTableGameDiv.getAttribute('data-game-settings');
+        if (gameSettings) {
+            return JSON.parse(gameSettings);
+        } else {
+            console.error('No gameSettingsData found on the cardTableGameDiv');
+            return null;
+        }
+    }
+
+    // 1. Fetch sprite images using spriteIds
+    async function fetchSprites(spriteIds) {
+        try {
+            const response = await fetch('/games/gameSprites/allData'); // Fetch sprites from API
+            const sprites = await response.json();
+
+            // Map sprites by their _id
+            sprites.forEach(sprite => {
+                if (spriteIds.includes(sprite._id) && sprite.imageSrc) { // Check for _id
+                    spritesMap[sprite._id] = sprite; // Store sprites by their _id
+                }
+            });
+        } catch (error) {
+            console.error('Error fetching sprites:', error);
+        }
+    }
+
+    // 2. Preload and cache sprite images
+    async function preloadImages() {
+        const promises = Object.values(spritesMap).map(sprite => {
+            return new Promise((resolve, reject) => {
+                const img = new Image();
+                img.src = sprite.imageSrc; // Use imageSrc from sprite object
+                
+                img.onload = () => {
+                    spriteImagesCache[sprite._id] = img; // Cache image by _id
+                    resolve();
+                };
+                
+                img.onerror = () => {
+                    console.error(`Failed to load image for spriteId: ${sprite._id}`);
+                    reject();
+                };
+            });
+        });
+
+        await Promise.all(promises); // Wait for all images to load
+    }
+
+    // Add a 3-second dealing animation
+    function startDealingAnimation(ctx, playerPositions) {
+        dealingAnimationActive = true;
+        let dealCount = 0;
+        const maxDeals = 10; // Assuming each player gets 10 dominoes
+        const dealInterval = setInterval(() => {
+            if (dealCount >= maxDeals) {
+                clearInterval(dealInterval);
+                dealingAnimationActive = false;
+                return;
+            }
+            
+            // For each deal, animate a domino flying to each player position
+            playerPositions.forEach((position, index) => {
+                renderDealingAnimation(ctx, position.x, position.y, index);
+            });
+
+            dealCount++;
+        }, 300); // Deal one domino every 300ms for 3 seconds
+    }
+
+    // Render dealing animation for a single domino
+    function renderDealingAnimation(ctx, x, y, playerIndex) {
+        ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height); // Clear canvas
+
+        // Simple dealing animation (can be improved with actual domino images)
+        ctx.fillStyle = playerIndex % 2 === 0 ? 'blue' : 'green';
+        ctx.fillRect(x, y, 40, 20); // Draw a "domino" as a rectangle
+
+        // Optionally, add player labels
+        ctx.font = "12px Arial";
+        ctx.fillStyle = "white";
+        ctx.fillText(`Player ${playerIndex + 1}`, x + 10, y + 15);
+    }
+
+    // Main setup function to load everything and render
+    async function setupGameBoard(ctx, gameSettingsData) {
+        const spriteIds = gameSettingsData.spriteIds;
         if (!spriteIds || spriteIds.length === 0) {
             console.error("No spriteIds found in gameSettingsData.");
             return;
@@ -163,46 +105,49 @@
         gameElements = await fetchGameElements(); // Fetch game elements
 
         if (gameElements.length) {
-            console.log('Game elements fetched successfully:', gameElements);
             initializeAnimationState(); // Initialize animation state for each element
-            requestAnimationFrame(() => renderGameElements(ctx)); // Start continuous animation
+            const playerPositions = [
+                { x: 50, y: 350 }, // Player 1
+                { x: 250, y: 350 }, // Player 2
+                { x: 450, y: 350 }, // Player 3
+                { x: 650, y: 350 }  // Player 4
+            ];
+            startDealingAnimation(ctx, playerPositions); // Start dealing animation
+
+            // Wait until the dealing animation completes, then start the game
+            setTimeout(() => {
+                requestAnimationFrame(() => renderGameElements(ctx));
+            }, 3000); // Wait for 3 seconds before starting game elements animation
         } else {
             console.error("No game elements found.");
         }
     }
 
-        // MutationObserver to trigger setup when the cardTableGameDiv is added to the DOM
-        const observer = new MutationObserver((mutations) => {
+    // MutationObserver to trigger setup when the cardTableGameDiv is added to the DOM
+    const observer = new MutationObserver((mutations) => {
         mutations.forEach((mutation) => {
             mutation.addedNodes.forEach((node) => {
                 if (node.classList && node.classList.contains('cardTableGameDiv')) {
-                    console.log('cardTableGameDiv found!');
-
-                    // Extract gameSettingsData from the data attribute
                     const gameSettingsData = extractGameSettingsData(node);
-                    if (!gameSettingsData) return; // Exit if no gameSettingsData is found
+                    if (!gameSettingsData) return;
 
-                    // Create canvas and attach it to the cardTableGameDiv
                     const canvas = document.createElement('canvas');
-                    const divWidth = node.clientWidth; // Get the dynamic width of the gameDiv
-                    canvas.width = divWidth; // Set the canvas width dynamically
-                    canvas.height = 400; // Set canvas height to 400px
-                    node.appendChild(canvas); // Append the canvas to cardTableGameDiv
+                    const divWidth = node.clientWidth;
+                    canvas.width = divWidth;
+                    canvas.height = 400;
+                    node.appendChild(canvas);
                     const ctx = canvas.getContext('2d');
 
-                    console.log(`Canvas size set: width = ${divWidth}px, height = 400px`);
-
-                    // Set up the game board with gameSettingsData
-                    setupGameBoard(ctx, gameSettingsData); // Call the setup function with the canvas context and gameSettingsData
+                    // Set up the game board and run dealing animation
+                    setupGameBoard(ctx, gameSettingsData);
                 }
             });
         });
     });
 
-    
-        // Observe for changes in the DOM to detect when the cardTableGameDiv is added
-        observer.observe(document.body, { childList: true, subtree: true });
-    });
-    
-    </script>
-    
+    // Observe for changes in the DOM
+    observer.observe(document.body, { childList: true, subtree: true });
+});
+
+
+</script>

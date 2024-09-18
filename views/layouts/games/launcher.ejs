@@ -7,14 +7,11 @@
         <% const playerIndex = session.players.findIndex(player => player.id && player.id === user._id.toString()) %>
         
         <% if (session.status !== 'ended') { %>
-          <!-- If session is not ended, show the session details -->
           <div style="color:black;border:1px solid black;" class="messages">
             <% if (playerIndex !== -1) { %>
-              <!-- Player is registered and session is active -->
               <span style="color: green;">● You are registered for <%= session.gameName %></span>
               <button data-user-id="<%=user._id%>" class="joinGameButton" game="<%= session.game %>" action-game="joinSession" data-game-id="<%= session._id %>">Take Your Seat</button>
             <% } else { %>
-              <!-- Player is not registered, allow them to join -->
               <button data-user-id="<%=user._id%>" class="joinGameButton" game="<%= session.game %>" action-game="joinSession" data-game-id="<%= session._id %>">
                 Join <%= session.gameName %> #<%= session._id.toString().slice(0, 5) %>
               </button>
@@ -26,10 +23,9 @@
     </div>
 
     <!-- Display game creation options -->
-    <h3 style="color:black">Start a new game</h3>
     <% game.forEach(game => { %>
       <button class="joinGameButton" game="<%= game.name %>" action-game="games/join" data-game-id="<%= game._id %>">
-        <h2>Create <%= game.name %> Session</h2>
+        <h2>Play <%= game.name %></h2>
       </button>
     <% }) %>
   <% } %>

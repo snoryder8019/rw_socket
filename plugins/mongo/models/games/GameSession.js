@@ -18,7 +18,7 @@ export default class GameSession extends ModelHelper {
       players: { type: 'array', value: [] },
       startTime: { type: 'date', value: null },
       endTime: { type: 'date', value: null },
-      currentState: { type: 'text', value: null },
+      currentState: { type: 'object', value: {} },
       turnHistory: { type: 'array', value: [] },
       status: { type: 'text', value: null },
     };
@@ -114,7 +114,7 @@ console.log(chalk.yellow(sessions))
       }
       if (!session.players.includes(userId)) {
         session.players.push(userId);
-        await GameSession().markUserLast(userId,session._id)
+        await new GameSession().markUserLast(userId,session._id)
         await this.updateById(sessionId, { players: session.players });
         console.log(`User ${userId} added to session ${sessionId}`);
         return true;
