@@ -13,6 +13,7 @@ export default class GameSession extends ModelHelper {
     super(`${modelName}s`);
     this.modelFields = {
       sessionId: { type: 'text', value: null },
+      gameSettings: { type: 'text', value: null },
       gameId: { type: 'text', value: null },
       gameName: { type: 'text', value: null },
       players: { type: 'array', value: [] },

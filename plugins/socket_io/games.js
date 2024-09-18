@@ -9,31 +9,24 @@ export const socketGamesHandlers = {
   onConnection: (nsp, socket, users) => {
     const user = socket.request.user;
     const userName = user.displayName;
+    
+    const avatarImage = user.images?.find((img) => img.avatarTag) || {};
+    const avatarThumbnailUrl = avatarImage.thumbnailUrl || 'defaultThumbnail.png';
     const userId = user._id;
-
     console.log(chalk.green(`GAMES.JS ~ User: ${userName} connected to GAMES`));
-
-    users[socket.id] = { userName };
-
+    users[socket.id] = { userName, avatarThumbnailUrl };
     // Handle joining the game session
     socket.on('join game session', async (data) => {
       const { gameSessionId } = data;
       console.log(chalk.blue(`Received gameSessionId: ${gameSessionId}`)); // Log the received session ID
-    
-      if (!gameSessionId) {
+          if (!gameSessionId) {
         socket.emit('error', { message: 'No game session ID provided.' });
         return;
       }
-    
-      // Store session ID on the socket object for later use
-      socket.gameSessionId = gameSessionId;
-    
-      // Join the player to the game session room
+          socket.gameSessionId = gameSessionId;
       socket.join(gameSessionId);
-      
-      console.log(chalk.blue(`User ${userName} joined session ${gameSessionId}`));
-    
-      const gameSession = await new GameSession().addPlayerToSession(userId, gameSessionId);
+            console.log(chalk.blue(`User ${userName} joined session ${gameSessionId}`));
+          const gameSession = await new GameSession().addPlayerToSession(userId, gameSessionId);
       if (gameSession) {
         nsp.to(gameSessionId).emit('playerJoined', {
           players: gameSession.players,

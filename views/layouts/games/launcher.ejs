@@ -1,32 +1,41 @@
 <div id="gameContainer"></div>
 <div id="launcher">
-  <% if (typeof game === 'object' && game) { %>
-    <h6 style="color:red" class="myPing"></h6>
-    <div style="color:black" class="gamesInSession">
-      <% sessions.forEach(session => { %>
-        <% const playerIndex = session.players.findIndex(player => player.id && player.id === user._id.toString()) %>
-        
-        <% if (session.status !== 'ended') { %>
-          <div style="color:black;border:1px solid black;" class="messages">
-            <% if (playerIndex !== -1) { %>
-              <span style="color: green;">● You are registered for <%= session.gameName %></span>
-              <button data-user-id="<%=user._id%>" class="joinGameButton" game="<%= session.game %>" action-game="joinSession" data-game-id="<%= session._id %>">Take Your Seat</button>
-            <% } else { %>
-              <button data-user-id="<%=user._id%>" class="joinGameButton" game="<%= session.game %>" action-game="joinSession" data-game-id="<%= session._id %>">
-                Join <%= session.gameName %> #<%= session._id.toString().slice(0, 5) %>
-              </button>
-              <p>Status: <%= session.status %></p>
-            <% } %>
-          </div>
-        <% } %>
-      <% }) %>
-    </div>
+  <h6 style="color:red" class="myPing"></h6>
+  <div style="color:black" class="gamesInSession">
+    <h2>Games in Session Here</h2>
+  </div>
 
-    <!-- Display game creation options -->
-    <% game.forEach(game => { %>
-      <button class="joinGameButton" game="<%= game.name %>" action-game="games/join" data-game-id="<%= game._id %>">
-        <h2>Play <%= game.name %></h2>
+  <!-- If the user is part of a game session, display only that game -->
+  <% if (typeof userGame === 'object' && userGame) { %>
+    <button class="joinGameButton" game="<%= userGame.gameName %>" action-game="/games/launcher/join/<%= userGame._id %>" data-game-id="<%= userGame._id %>">
+      <h2>Join <%= userGame.gameName %></h2>
+    </button>
+    <button class="exitGameButton" game="<%= userGame.gameName %>" action-game="/games/exit/<%= userGame._id %>" data-game-id="<%= userGame._id %>">
+      <h2>Exit <%= userGame.gameName %></h2>
+    </button>
+  <% } else { %>
+    <!-- If the user is not part of a game session, show all available games -->
+    <% gameSessions.forEach(game => { %>
+      <button class="joinGameButton" game="<%= game.gameName %>" action-game="/games/launcher/join/<%= game._id %>" data-game-id="<%= game._id %>">
+        <h2>Play <%= game.gameName %></h2>
       </button>
+
+      <% if (game.status === 'waiting') { %>
+        <button class="joinGameButton" game="<%= game.gameName %>" action-game="/games/launcher/join/<%= game._id %>" data-game-id="<%= game._id %>">
+          <h2>Join <%= game.gameName %> (Waiting for players)</h2>
+        </button>
+      <% } %>
+
+      <% if (game.status === 'inProgress') { %>
+        <button class="spectateGameButton" game="<%= game.gameName %>" action-game="/games/launcher/spectate/<%= game._id %>" data-game-id="<%= game._id %>">
+          <h2>Spectate <%= game.gameName %></h2>
+        </button>
+      <% } %>
     <% }) %>
+
+    <!-- If no game session is available to the user, show 'Create New Game Session' button -->
+    <button class="createSessionButton" action-game="/games/launcher/create-session" data-game-id="<%= selectedGameId %>">
+      <h2>Create New Game Session</h2>
+    </button>
   <% } %>
 </div>

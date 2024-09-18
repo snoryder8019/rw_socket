@@ -1,180 +1,161 @@
 <script>
-  //GPT DONT DELETE THIS REFERENCE LINE
-  //<!--views/scripts/games/games.ejs-->
-  //GPT DONT DELETE THIS REFERENCE LINE
-  
-  document.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener('DOMContentLoaded', () => {
       let socket = io('/games');
   
       function bindSocketEvents() {
-          // Example socket event listener after EJS renders
         socket.on('playerJoined', (data) => {
-    const { players, maxPlayers } = data;
-    const currentUserId = document.querySelector('.cardTableGameDiv').getAttribute('data-user-id'); // Get current user's ID
-    const playerSeatsContainer = document.getElementById('playerSeats');
-
-    // Clear current seats
-    playerSeatsContainer.innerHTML = '';
-
-    // Populate player seats excluding the current user
-    players.filter(player => player._id !== currentUserId).forEach((player, index) => {
-        const playerSeat = document.createElement('div');
-        playerSeat.classList.add('playerSeat');
-        playerSeat.id = `playerSeat_${index}`;
-        playerSeat.innerHTML = `
-            <h3>Seat ${index + 1}: ${player.displayName}</h3>
-            <h6 class="last_move" id="last_move_${player._id}">Last Move: ${player.lastMove || 'N/A'}</h6>
-            <h6 class="ping_socket" id="ping_socket_${player._id}">Ping: N/A</h6>
-        `;
-        playerSeatsContainer.appendChild(playerSeat);
-    });
-
-    // Fill empty seats with placeholders
-    for (let i = players.length - 1; i < maxPlayers - 1; i++) {
-        const emptySeat = document.createElement('div');
-        emptySeat.classList.add('playerSeat');
-        emptySeat.id = `playerSeat_${i}`;
-        emptySeat.innerHTML = `<div><h3>Seat ${i + 1}: Empty</h3></div>`;
-        playerSeatsContainer.appendChild(emptySeat);
-    }
-});
-
+          const { players, maxPlayers } = data;
+          const currentUserId = document.querySelector('.cardTableGameDiv').getAttribute('data-user-id');
+          const playerSeatsContainer = document.getElementById('playerSeats');
+  
+          playerSeatsContainer.innerHTML = '';
+  
+          players.filter(player => player._id !== currentUserId).forEach((player, index) => {
+            const playerSeat = document.createElement('div');
+            playerSeat.classList.add('playerSeat');
+            playerSeat.id = `playerSeat_${index}`;
+            playerSeat.innerHTML = `
+              <h3>Seat ${index + 1}: ${player.displayName}</h3>
+              <h6 class="last_move" id="last_move_${player._id}">Last Move: ${player.lastMove || 'N/A'}</h6>
+              <h6 class="ping_socket" id="ping_socket_${player._id}">Ping: N/A</h6>
+            `;
+            playerSeatsContainer.appendChild(playerSeat);
+          });
+  
+          for (let i = players.length; i < maxPlayers; i++) {
+            const emptySeat = document.createElement('div');
+            emptySeat.classList.add('playerSeat');
+            emptySeat.id = `playerSeat_${i}`;
+            emptySeat.innerHTML = `<div><h3>Seat ${i + 1}: Empty</h3></div>`;
+            playerSeatsContainer.appendChild(emptySeat);
+          }
+        });
       }
   
-      // Listen for an event that signals the EJS content has been re-rendered
       document.addEventListener('ejsRenderComplete', () => {
-          console.log('EJS content rendered, rebinding socket events');
-          bindSocketEvents();  // Reapply socket logic
+        console.log('EJS content rendered, rebinding socket events');
+        bindSocketEvents();
       });
   
       socket.on('connect', () => {
-          console.log('Connected to GAMES CLIENT');
+        console.log('Connected to GAMES CLIENT');
       });
   
       function readyUp(userId, gameSessionId) {
-          console.log(`READY UP FUNCTION sessionId: ${gameSessionId}`);
-          socket.emit('ready up', userId, gameSessionId);
+        socket.emit('ready up', userId, gameSessionId);
       }
   
-      // Listen for when a player joins
-      socket.on('playerJoined', (data) => {
-    const { players, maxPlayers } = data;
-    const currentUserId = document.querySelector('.cardTableGameDiv').getAttribute('data-user-id'); // Get current user's ID
-    const playerSeatsContainer = document.getElementById('playerSeats');
-
-    // Clear current opponent seats
-    playerSeatsContainer.innerHTML = '';
-
-    // Populate opponent seats, exclude the current user
-    players.filter(player => player._id !== currentUserId).forEach((player, index) => {
-        const playerSeat = document.createElement('div');
-        playerSeat.classList.add('playerSeat');
-        playerSeat.id = `playerSeat_${index}`;
-        playerSeat.innerHTML = `
-            <h3>Seat ${index + 1}: ${player.displayName}</h3>
-            <h6 class="last_move" id="last_move_${player._id}">Last Move: ${player.lastMove || 'N/A'}</h6>
-            <h6 class="ping_socket" id="ping_socket_${player._id}">Ping: N/A</h6>
-        `;
-        playerSeatsContainer.appendChild(playerSeat);
-    });
-
-    // Fill empty seats with placeholders for opponents
-    for (let i = players.length - 1; i < maxPlayers - 1; i++) {
-        const emptySeat = document.createElement('div');
-        emptySeat.classList.add('playerSeat');
-        emptySeat.id = `playerSeat_${i}`;
-        emptySeat.innerHTML = `<div><h3>Seat ${i + 1}: Empty</h3></div>`;
-        playerSeatsContainer.appendChild(emptySeat);
-    }
-});
-
-      // Listen for 'allPlayersReady' event
       socket.on('allPlayersReady', () => {
-          console.log('All players are ready, requesting game state update');
-          // Emit event to the server to request state update
-          const gameSessionId = document.querySelector('.cardTableGameDiv').getAttribute('data-game-session-id');
-          socket.emit('requestStateUpdate', { gameSessionId });
+        const gameSessionId = document.querySelector('.cardTableGameDiv').getAttribute('data-game-session-id');
+        socket.emit('requestStateUpdate', { gameSessionId });
       });
   
-      // Update player turn in the UI
       function updatePlayerTurn(currentTurnId, players) {
-          const turnElement = document.querySelector('.cardTableGameDiv h2');
-          if (turnElement) {
-              const currentPlayer = players.find(player => player._id === currentTurnId);
-              turnElement.textContent = currentPlayer
-                  ? `Player turn: ${currentPlayer.displayName}`
-                  : 'Player turn: Unknown';
-          }
+        const turnElement = document.querySelector('.cardTableGameDiv h2');
+        if (turnElement) {
+          const currentPlayer = players.find(player => player._id === currentTurnId);
+          turnElement.textContent = currentPlayer ? `Player turn: ${currentPlayer.displayName}` : 'Player turn: Unknown';
+        }
       }
   
-      // Handle ping and pong
       socket.on('ping', (data) => {
-          const gameSessionElement = document.querySelector('.cardTableGameDiv');
-          const gameSessionId = gameSessionElement ? gameSessionElement.getAttribute('data-game-session-id') : null;
-  
-          if (gameSessionId) {
-              console.log(`Sending pong with gameSessionId: ${gameSessionId}`);
-              socket.emit('pong', { ...data, gameSessionId });
-          } else {
-              console.warn('No gameSessionId found in the DOM.');
-          }
+        const gameSessionId = document.querySelector('.cardTableGameDiv')?.getAttribute('data-game-session-id');
+        if (gameSessionId) {
+          socket.emit('pong', { ...data, gameSessionId });
+        }
       });
   
-      // Handle state update
       socket.on('state update', (updatedState) => {
-          console.log(`updatedState : ${updatedState.state}`);
-  
-          // If we receive an updatedState, use it directly
-          const stateElement = document.querySelector('.cardTableGameDiv h4');
-          if (stateElement) {
-              stateElement.textContent = `Current State: ${updatedState.state}`;
-          } else {
-              console.warn('State element not found.');
-          }
+        const stateElement = document.querySelector('.cardTableGameDiv h4');
+        if (stateElement) {
+          stateElement.textContent = `Current State: ${updatedState.state}`;
+        }
       });
+  
+      socket.on('updateGamesList', (games) => {
+        const gamesInSessionDiv = document.querySelector('.gamesInSession');
+        gamesInSessionDiv.innerHTML = '<h2>Games in Session Here</h2>';
+        games.forEach(game => {
+          const gameButton = document.createElement('button');
+          gameButton.classList.add('joinGameButton');
+          gameButton.setAttribute('data-game-id', game._id);
+          gameButton.innerHTML = `<h2>Play ${game.name}</h2>`;
+  
+          if (game.status === 'waiting') {
+            gameButton.innerHTML = `<h2>Join ${game.name} (Waiting for players)</h2>`;
+          } else if (game.status === 'inProgress') {
+            gameButton.classList.add('spectateGameButton');
+            gameButton.innerHTML = `<h2>Spectate ${game.name}</h2>`;
+          }
+  
+          gamesInSessionDiv.appendChild(gameButton);
+        });
+      });
+  
+      socket.emit('requestGamesList');
   
       socket.on('ping result', (data) => {
-          const { userId, latency } = data;
-          const pingElement = document.getElementById(`playerPing`);
-          if (pingElement) {
-              pingElement.innerHTML = `Ping: ${latency} ms`;
-          }
+        const pingElement = document.getElementById('playerPing');
+        if (pingElement) {
+          pingElement.innerHTML = `Ping: ${data.latency} ms`;
+        }
       });
   
-      // Fetch and display game content dynamically
       function fetchGame(action, gameId) {
-          fetch(`/games/${action}/${gameId}`, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' }
-          })
-          .then(response => response.text())
-          .then(html => {
-              document.getElementById('launcher').remove();
-              document.getElementById('gameContainer').innerHTML = html;
-          })
-          .catch(error => {
-              console.error('Error fetching and rendering game table:', error);
-          });
+        fetch(`/${action}/${gameId}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' }
+        })
+        .then(response => response.text())
+        .then(html => {
+          document.getElementById('launcher').remove();
+          document.getElementById('gameContainer').innerHTML = html;
+        })
+        .catch(error => {
+          console.error('Error fetching and rendering game table:', error);
+        });
       }
   
       // Event listener for dynamically loaded join buttons
       document.body.addEventListener('click', (event) => {
-          if (event.target && event.target.matches('.controlButton') && event.target.textContent.trim() === 'Ready to Play') {
-              const sessionId = event.target.getAttribute('data-session-id');
-              const userId = event.target.getAttribute('data-user-id');
-              console.log(`GAMES EJS ~~~~~ sessionId: ${sessionId}`);
-              readyUp(userId, sessionId);
-          }
-          if (event.target && event.target.matches('.joinGameButton')) {
-              const userId = event.target.getAttribute('data-user-id');
-              const gameId = event.target.getAttribute('data-game-id');
-              const action = event.target.getAttribute('action-game');
+        if (event.target && event.target.matches('.joinGameButton')) {
+          const gameId = event.target.getAttribute('data-game-id');
+          const action = 'games/launcher/join';  // Updated path for joining
   
-              socket.emit('playerJoin', { user: userId, gameSessionId: gameId });
-              fetchGame(action, gameId);
-          }
+          // Emit the player join event and fetch the game
+          socket.emit('playerJoin', { gameSessionId: gameId });
+          fetchGame(action, gameId);  // Now using 'games/launcher/join'
+        }
+  
+        // Handle create session button
+        if (event.target && event.target.matches('.createSessionButton')) {
+          const gameId = event.target.getAttribute('data-game-id');
+          const action = '/games/launcher/create-session';
+  
+          // Fetch to create a new session
+          fetch(action, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ gameId })
+          })
+          .then(response => response.text())
+          .then(html => {
+            document.getElementById('launcher').remove();
+            document.getElementById('gameContainer').innerHTML = html;
+          })
+          .catch(error => {
+            console.error('Error creating game session:', error);
+          });
+        }
+  
+        if (event.target && event.target.matches('.controlButton') && event.target.textContent.trim() === 'Ready to Play') {
+          const sessionId = event.target.getAttribute('data-session-id');
+          const userId = event.target.getAttribute('data-user-id');
+          readyUp(userId, sessionId);
+        }
       });
-  });
-  //GPT DONT DELETE THIS REFERENCE LINE
+    });
   </script>
   

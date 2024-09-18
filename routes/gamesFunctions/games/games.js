@@ -110,60 +110,6 @@ router.get('/section', async (req, res) => {
 
 ////////
 
-
-router.post('/join/:gameId', async (req, res) => {
-  try {
-    const user = req.user;
-   const userId=JSON.stringify(user._id);
-    const { gameId } = req.params;
-    
-    // Check for user's current participation in any session
-    const userCheck = await new GameSession().checkForUser(userId);
-    const game = await new Game().getById(gameId);
-    const gameSetup = {    
-      gameId: game._id,
-      gameName: game.name,
-      gameSettings: game.gameSettings,
-      gameRuleSet: game.ruleSet,
-      players: [{
-        id:userId,
-        displayName: user.displayName,
-        lastMove: null
-      }],
-      startTime: new Date(),
-      endTime: { type: 'date', value: null },
-      
-      turnHistory: { type: 'array', value: [] },
-      status: "waiting for players",
-      currentState:{},
-    };
-    if(userCheck){
-      return new GameSession().reJoinSession(userCheck)
-    }
-    
-    const gameSession = await new GameSession().create(gameSetup);
-    const result = await new GameSession().markUserLast(userId, gameSession._id);
-    const gameSettingsData = await new GameSetting().getById(game.gameSettings);
-//const userImg =awawi
-    console.log(chalk.green.bold(
-      `********GAME/GAME.js*********
-      \n******Route: games/games/join/:id******
-      \ngmaeSession Data: ${gameSession._id}
-      \n\n gameSettingsData:${JSON.stringify(gameSettingsData)}
-      \n result:${JSON.stringify(result)}
-      \n*********END CONSOLE*********`));
-
-    res.render('./layouts/games/cardTable', {
-      gameSession: gameSession,
-      user: user,
-      gameData: game,
-      gameSettingsData: gameSettingsData
-    });
-  } catch (error) {
-    console.error(error);
-  }
-});
-
 router.post('/:id/upload-images', uploadMultiple, imagesArray(Game));
 router.get('/renderImagesArray/:id', getImagesArray(Game));
 router.get('/popImagesArray/:id/:url', popImagesArray(Game));
