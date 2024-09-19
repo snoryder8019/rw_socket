@@ -57,7 +57,6 @@
         turnElement.textContent = currentPlayer ? `Player turn: ${currentPlayer.displayName}` : 'Player turn: Unknown';
       }
     }
-
     // Update state and controls based on the new game state
     function updateStateAndControls(gameState) {
       const stateElement = document.querySelector('.cardTableGameDiv h4');
@@ -131,10 +130,11 @@ function updateStateAndControls(gameState) {
 async function handleDealingPhase(updatedState) {
   const gameSessionId = updatedState.gameSessionId;
   const cardTableGameDiv = document.querySelector('.cardTableGameDiv');
+  initializeCanvasContext();
   const gameSettingsData = extractGameSettingsData(cardTableGameDiv);
 
+  console.log("Starting dealing animation for players..."+ctx);
   if (gameSettingsData && ctx) {
-    console.log("Starting dealing animation for players...");
     const playerPositions = [
       { x: 50, y: 350 },  // Player 1 position
       { x: 250, y: 350 }, // Player 2 position

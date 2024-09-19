@@ -28,6 +28,7 @@ export default class GameElement extends ModelHelper {
       className: { type: 'text', value: null },
       inlineStyle: { type: 'text', value: false },
       itemScore:{type:'number',value:null},
+      itemScores:{type:'array',value:[],dataType:'number'},
       customField1: { type: 'custom', value: [] }, // Custom Game select
       customField2: { type: 'custom', value: [] }, // Custom Sprite select
     };
