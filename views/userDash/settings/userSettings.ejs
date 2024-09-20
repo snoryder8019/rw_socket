@@ -1,6 +1,8 @@
 <div id="settings">
   <button class="collapsible">Avatar Settings<span class="carrot">&#9654;</span></button>
-  <div class="content"><%- include('images') %></div>
+  <div class="content" data-url="/users/avatars/all"></div>
+  <button class="collapsible">My Images<span class="carrot">&#9654;</span></button>
+  <div class="content" data-url="/users/userImages/all"></div>
 
   <button class="collapsible">Website Settings<span class="carrot">&#9654;</span></button>
   <div class="content"><%- include('websiteSettings') %></div>
