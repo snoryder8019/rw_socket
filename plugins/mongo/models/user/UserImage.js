@@ -7,6 +7,7 @@ export default class UserImage extends ModelHelper {
     super('userImages');
     this.modelFields = {
       usid: { type: 'text', value: null }, // Reference to user.shortId
+      userId: { type: 'text', value: null }, // Reference to user.shortId
       imageUrl: { type: 'text', value: null }, 
       image: { type: 'file', value: null }, 
       altText: { type: 'text', value: null },

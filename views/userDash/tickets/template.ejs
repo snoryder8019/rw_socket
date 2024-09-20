@@ -1,0 +1,19 @@
+<div class="adminWindow">
+    <div class="adminStatsRow">
+      <% documents.forEach(ticket => { %>
+        <div class="adminStat">
+          <p><%= ticket.subject %></p>
+          <p>Status: <%= ticket.status %></p>
+          <p>Priority: <%= ticket.priority %></p>
+          <button class="collapsible">view: <span class="carrot">&#9654;</span></button>
+          <div class="content" data-url="/tickets/renderEditForm/<%= ticket._id %>"></div>
+          <h3>add multiple attachments</h3>
+          <form action="/tickets/<%=ticket._id%>/upload-attachments" method="post" enctype="multipart/form-data">
+            <input type="file" name="attachments" multiple>
+            <button type="submit">Upload</button>
+          </form>
+        </div>
+      <% }) %>
+    </div>
+  </div>
+  

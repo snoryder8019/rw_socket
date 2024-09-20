@@ -28,6 +28,7 @@ export default class Blog extends ModelHelper {
       custom1: { type: 'custom1', value: null },
       visibility: { type: 'text', value: 'public' },
       allowComments: { type: 'boolean', value: true },
+      help: { type: 'boolean', value: false },
       views: { type: 'number', value: 0 },
       shares: { type: 'number', value: 0 },
       likes: { type: 'number', value: 0 },

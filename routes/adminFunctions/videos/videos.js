@@ -41,19 +41,49 @@ router.get('/renderEditForm/:id', async (req, res) => {
     // Handle special fields such as arrays, objects, booleans
     const enhancedFormFields = formFields.map(field => {
       if (Array.isArray(field.value)) {
-        return { ...field, type: 'array', value: field.value };
+        // Handle array fields
+        return {
+          ...field,
+          type: 'array',
+          value: field.value,
+        };
       } else if (typeof field.value === 'object' && field.value !== null) {
+        // Handle object fields
         return {
           ...field,
           type: 'object',
-          value: Object.entries(field.value).map(([key, val]) => ({ key, val })),
+          value: Object.entries(field.value).map(([key, val]) => ({
+            key,
+            val,
+          })),
         };
       } else if (typeof field.value === 'boolean') {
-        return { ...field, type: 'boolean', value: field.value };
+        // Handle boolean fields
+        return {
+          ...field,
+          type: 'boolean',
+          value: field.value,
+        };
+      } else if (field.type === 'dropdown') {
+        // Handle dropdown fields
+        return {
+          ...field,
+          type: 'dropdown',
+          options: field.options || [],
+          value: field.value,
+        };
+      } else if (field.type === 'file') {
+        // Handle file fields (e.g., for video thumbnails)
+        return {
+          ...field,
+          type: 'file',
+          value: '',
+        };
       }
+      // Handle other types (string, number, etc.)
       return field;
     });
-
+    
     res.render('forms/generalEditForm', {
       title: `Edit ${modelName}`,
       action: `${modelName}s/update/${id}`,

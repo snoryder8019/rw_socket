@@ -22,7 +22,7 @@ const helpVideos = async (req, res) => {
   }
 };
 router.get('/faqs', faqs);
-router.get('/how-to-videos', helpVideos)
+router.get('/helpVideos', helpVideos)
 // router.get('/how-to-videos',how-to-videos)
 // router.get('/directions',directions)
 // router.get('/tickets',tickets)
