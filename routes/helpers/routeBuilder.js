@@ -33,7 +33,7 @@ const permissionsChecker = async (req, res, next) => {
 
 // model needs to be an instance of the model that you want routes built for.
 // router needs to be an instance of an express router provided from the route file that you are utilizing
-export const buildRoutes = (model, router) => {
+export const buildRoutes = (model, router,customFields ={}) => {
   router.post(
     '/create',
    
@@ -172,4 +172,37 @@ export const buildRoutes = (model, router) => {
       }
     }
   );
+
+  router.get('/renderAddForm', async (req, res) => {
+    const modelInstance = new model.constructor();
+
+    try {
+      // Fetch custom dropdown data for the form, based on custom fields passed
+      const dynamicData = {};
+      for (const [fieldName, Model] of Object.entries(customFields)) {
+        const modelData = await new Model().getAll();  // Assume getAll() method exists in models
+        dynamicData[fieldName] = modelData.map(item => ({ label: item.name || item.title, value: item._id }));
+      }
+
+      // Get model fields
+      const modelFields = modelInstance.getModelFields();
+
+      // Generate form fields using dynamicData (custom dropdowns)
+      const formFields = generateFormFields(modelFields, {}, dynamicData);
+
+      // Render the form
+      res.render('forms/generalBlogForm', {
+        title: `Add New ${model.name}`,
+        action: `/${model.name.toLowerCase()}s/create`,
+        formFields: formFields,
+        ...dynamicData
+      });
+
+    } catch (error) {
+      console.error('Error loading form:', error);
+      res.status(500).send({ error: error.message });
+    }
+  });
+
+
 };

@@ -6,36 +6,47 @@ import generateFormFields from '../../../plugins/helpers/formHelper.js';
 import {imagesArray,getImagesArray,popImagesArray,popImagesArrayIndex,updateImagesArray} from '../../helpers/imagesArray.js'
 import { uploadMultiple } from '../../../plugins/multer/setup.js';
 import Vote from '../../../plugins/mongo/models/blog/Vote.js'
-
+import Destination from '../../../plugins/mongo/models/travel/Destination.js'
 import { buildRoutes } from '../../helpers/routeBuilder.js';
 
 const router = express.Router();
 const modelName = 'blog';
 // Route to render the form to add a new blog
-router.get('/renderAddForm', async (req, res) => {
-  try {
-    // Fetch votes or other dynamic data
-    const votes = await new Vote().getAll();
-    const voteOptions = votes.map(vote => vote.question);  // Extract questions
-console.log(votes)
-    // Instantiate Blog
-    const blog = new Blog();
-    const model = Blog.getModelFields();
+// router.get('/renderAddForm', async (req, res) => {
+//   try {
+//     // Fetch votes or other dynamic data
+//     const votes = await new Vote().getAll();
+//     const voteOptions = votes.map(vote => vote.question);  // Extract questions
+// console.log(votes)
+//     // Instantiate Blog
+//     const blog = new Blog();
+//     const model = Blog.getModelFields();
 
-    // Pass votes to generateFormFields
-    const formFields = generateFormFields(model, {}, { vote: voteOptions });
+//     // Pass votes to generateFormFields
+//     const formFields = generateFormFields(model, {}, { vote: voteOptions });
 
-    res.render('forms/generalBlogForm', {
-      title: 'Add New Blog',
-      action: '/blogs/create',
-      formFields: formFields
-    });
-  } catch (error) {
-    console.error('Error loading form:', error);
-    res.status(500).send({ error: error.message });
-  }
-});
+//     res.render('forms/generalBlogForm', {
+//       title: 'Add New Blog',
+//       action: '/blogs/create',
+//       formFields: formFields
+//     });
+//   } catch (error) {
+//     console.error('Error loading form:', error);
+//     res.status(500).send({ error: error.message });
+//   }
+// });
+// router.get('/renderAddForm', async (req, res) => {
+//   const blog = new Blog();
+  
+//   // Fetch dynamic model options
+//   const modelOptions = await blog.getModelOptions({
+//     vote: Vote,       // Dropdown for votes
+//     destination:Destination,  // Dropdown for categories
+//   });
 
+//   // Render the form with dynamic dropdowns
+//   await renderAddForm(req, res, blog, 'Add New Blog', '/blogs/create', router, () => modelOptions);
+// });
 
 // Route to render the form to edit an existing blog
 router.get('/renderEditForm/:id', async (req, res) => {
@@ -106,6 +117,6 @@ router.post('/:id/upload-images',uploadMultiple, imagesArray(Blog));
 router.get('/renderImagesArray/:id', getImagesArray(Blog))
 router.get('/popImagesArray/:id/:url', popImagesArray(Blog))
 router.get('/popImagesArrayIndex/:id/:index', popImagesArrayIndex(Blog))
-buildRoutes(new Blog(), router);
+buildRoutes(new Blog(), router,{vote:Vote,destination:Destination});
 
 export default router;

@@ -45,17 +45,24 @@ export default class Blog extends ModelHelper {
       }
     }
   }
-  async getVotes() {
-    
+
+  
+  async getModelOptions(modelList = {}) {
+    const options = {};
+
+    for (const [fieldName, Model] of Object.entries(modelList)) {
       try {
-        const votes = await new Vote().getVotes();
-        this.modelFields.vote.value = votes; // Set the votes dynamically
+        const modelInstance = new Model();
+        const data = await modelInstance.getAll(); // Assuming every model has a getAll method
+        options[fieldName] = data.map(item => ({ label: item.name || item.title || item.question, value: item._id }));
       } catch (error) {
-        console.error('Error loading votes:', error);
+        console.error(`Error fetching options for ${fieldName}:`, error);
+        options[fieldName] = []; // Fallback to empty array in case of error
+      }
     }
+
+    return options;
   }
-  
-  
   static getModelFields() {
     return Object.keys(new Blog().modelFields).map((key) => {
       const field = new Blog().modelFields[key];
