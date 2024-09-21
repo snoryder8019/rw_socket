@@ -859,7 +859,7 @@ height:34px;
     padding: 1%;
     border-top: 1px solid $gold;
     border-bottom: 1px solid $gold;
-
+    color:$gold
 }
 .wallet{
     display: flex;
@@ -1726,6 +1726,8 @@ max-width: 75px;
       // }
     
       .marquee {
+        color:$gold;
+        text-shadow: 1px 1px 0px black;
         width: 100%;   
         overflow: hidden;
         white-space: nowrap;
@@ -2005,7 +2007,7 @@ background-size: cover;
 position:fixed;
 top: 0;
 left:0;
-z-index: 200;
+z-index: 1001;
 p{color:black}
 h1{color:black}
 @media (min-width:768px) {
@@ -2027,7 +2029,7 @@ background-color: rgba(255, 255, 255, 0.788);
 
 padding: 30px;
 margin: 2%;
-height: 80vh; /* Adjust height to limit the container height */
+height: 90vh; /* Adjust height to limit the container height */
 overflow-y: auto; /* Enables vertical scrolling if content exceeds the container height */
 box-sizing: border-box; /* Include padding in the height calculation */
 max-width: 100%; /* Ensure the section does not exceed the screen width */

@@ -743,7 +743,8 @@
   box-shadow: inset 2px 2px 2px #1a0a1b;
   padding: 1%;
   border-top: 1px solid #ffde68;
-  border-bottom: 1px solid #ffde68; }
+  border-bottom: 1px solid #ffde68;
+  color: #ffde68; }
 
 .wallet {
   display: flex;
@@ -1548,6 +1549,8 @@
   display: flex; }
 
 .marquee {
+  color: #ffde68;
+  text-shadow: 1px 1px 0px black;
   width: 100%;
   overflow: hidden;
   white-space: nowrap;
@@ -1806,7 +1809,7 @@ button good {
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 200; }
+  z-index: 1001; }
   .readerpopupDiv p {
     color: black; }
   .readerpopupDiv h1 {
@@ -1830,7 +1833,7 @@ button good {
   background-color: rgba(255, 255, 255, 0.788);
   padding: 30px;
   margin: 2%;
-  height: 80vh;
+  height: 90vh;
   /* Adjust height to limit the container height */
   overflow-y: auto;
   /* Enables vertical scrolling if content exceeds the container height */
