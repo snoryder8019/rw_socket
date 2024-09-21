@@ -230,7 +230,7 @@ socket.on('newReply', ({ postId, reply }) => {
 
     const messageAvatar = document.createElement('img');
     messageAvatar.className = 'usersOnline';
-    messageAvatar.src = messageObject.thumbnailUrl || `/images/icons/emerald.png`;
+    messageAvatar.src = messageObject.thumbnailUrl || `/images/logo_rst.png`;
 
     const messageTextSpan = document.createElement('span');
     messageTextSpan.className = 'messageText';
@@ -325,7 +325,7 @@ function renderReplies(replies, parentElement) {
 
         const replyAvatar = document.createElement('img');
         replyAvatar.className = 'usersOnline';
-        replyAvatar.src = reply.thumbnailUrl || `/images/icons/emerald.png`;
+        replyAvatar.src = reply.thumbnailUrl || `images/logo_rst.png`;
 
         const replyTextSpan = document.createElement('span');
         replyTextSpan.className = 'messageText';
@@ -426,7 +426,7 @@ function renderSingleReply(reply, parentElement) {
 
     const replyAvatar = document.createElement('img');
     replyAvatar.className = 'usersOnline';
-    replyAvatar.src = reply.thumbnailUrl || `/images/icons/emerald.png`;
+    replyAvatar.src = reply.thumbnailUrl || `/images/logo_rst.png`;
 replyAvatar.style.transform="scale(.5)"
     const replyTextSpan = document.createElement('span');
     replyTextSpan.className = 'replyText'; // Use a different class for reply text styling
@@ -503,7 +503,7 @@ socket.on('user list', (users) => {
         div.className = 'usersOnline';
         div.dataset.userId = user.id;
         div.dataset.userName = user.name;
-        div.dataset.userAvatar = user.avatarThumbnailUrl || '/path/to/default/avatar/image.jpg';
+        div.dataset.userAvatar = user.avatarThumbnailUrl || '/images/logo_rst.png';
 
         const img = document.createElement('img');
         img.className = 'userImage';
