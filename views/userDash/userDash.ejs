@@ -5,7 +5,7 @@
       <%if(typeof user =='object'&& user){%>
       
       <div class="wallet">
-        <div class="jewel"><img class="usersOnline"src="<%=user.images[0].thumbnailUrl%>"></div>
+        <div class="jewel"><img class="usersOnline"src="<%=user.myAvatar[0].avatarUrl%>"></div>
         <div class="jewel"><div><%=user.displayName%></div><div> <%=user.email%></div></div> 
         <div class="jewel"><img src="/images/icons/emerald.png"> <div><%=user.wallet.emerald%></div></div>
     
