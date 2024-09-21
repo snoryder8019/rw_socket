@@ -749,6 +749,16 @@ height:34px;
     background-color: white;
   }
 }
+.userDisplayName{
+  font-size: .7rem;
+  text-wrap: nowrap;
+  text-overflow: hidden;
+  max-width: 100%;
+  text-align: left;
+  
+
+  
+}
 #userDash{
     @include sliderWindows();
     right:100%;
@@ -1067,7 +1077,7 @@ grid-template-columns: 1fr 10fr;
 
 }
 }
-$headshotPx:35px;
+$headshotPx:60px;
 .userInfoBox {
   position: absolute;
   background-color: white;
@@ -1094,19 +1104,26 @@ $headshotPx:35px;
   cursor: pointer;
 }
 .repliesContainer {
-
- // margin-top: 10px;
- // padding-left: 20px;
-  border-left: 2px solid purple;
-  border-top: 2px solid purple;
+animation: fadeIn .8s ease-out 0s;
+// margin-top: 10px;
+// padding-left: 20px;
+border-left: 2px solid purple;
+border-top: 2px solid purple;
 }
 
 .replyMessage {
+  animation: fadeIn .8s ease-out 0s;
+  height: auto;
   display: flex;
   align-items: center;
-  margin-bottom: 5px;
+  margin: -5%;
+  .usersOnline{margin: 0;padding: 0;}
+  .replyText{font-size: .9rem; margin: 0;padding:0;}
 }
-
+.replyMessage img{
+  animation: fadeIn .8s ease-out 0s;
+  transform: scale(.5);
+}
 .repliesCounter {
   color: blue;
   cursor: pointer;
@@ -1141,11 +1158,13 @@ $headshotPx:35px;
     width: 100%;
       overflow: hidden;
 }
-
+.likesCounter .repliesCounter{
+  min-width: 100%;
+}
 
 .message, .message_green {
 	display: grid;
-	grid-template-columns: 2fr 8fr;
+	grid-template-columns: 2fr 8fr 4fr;
 	margin-bottom: 10px;
 	width: 98%;
 	border-radius: 5px;
@@ -1158,8 +1177,9 @@ $headshotPx:35px;
 .message .messageText {
 	display: flex;
 	align-items: center; /* Vertically centers the text */
-	justify-content: center; /* Horizontally centers the text */
-	text-align: left; /* Centers text if it's multiple lines */
+//	justify-content: center; /* Horizontally centers the text */
+margin-left: 10%;
+text-align: left; /* Centers text if it's multiple lines */
 }
 
 #messages:first-child{
@@ -1178,12 +1198,12 @@ $headshotPx:35px;
     min-height: $headshotPx;
     border-radius: 50%;
     border: 3px solid gold;
-    max-width: 40px;
+   
     margin-left:10%;
 }
 .messageText {
     text-align: left;
-font-size: .9rem;
+
 font-weight: 800;
     /* Additional styling as needed */
     @media (min-width:768px) {

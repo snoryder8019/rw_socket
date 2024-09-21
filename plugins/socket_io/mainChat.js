@@ -33,14 +33,16 @@ export const mainChatHandlers = {
     socket.on('replyMessage', async (data) => {
       const { postId, replyMessage } = data;
       const userId = user._id;
-      const avatarThumbnail = users[socket.id].avatarThumbnailUrl || 'images/logo_rst.png'; // Use the stored avatar or fallback
-
+    
+      // Ensure the avatar is always available before sending a reply
+      const avatarThumbnail = users[socket.id]?.avatarThumbnailUrl || 'images/logo_rst.png'; // Use fallback if not available
+    
       try {
-        const replyData = { postId, userId, replyMessage };
+        const replyData = { postId, userId, replyMessage,avatarThumbnail };
         
         // Call the replyPost logic from routes
         const result = await replyPost(replyData);
-
+    
         if (result.error) {
           socket.emit('replyError', result.error);  // Send error to client if any
         } else {
@@ -51,10 +53,10 @@ export const mainChatHandlers = {
         socket.emit('replyError', 'Error handling reply');
       }
     });
-
+    
     // Existing chat message logic
     socket.on('chat message', async (message, roomId) => {
-      const avatarThumbnail = users[socket.id].avatarThumbnailUrl || 'images/logo_rst.png';  // Use the stored avatar or fallback
+      const avatarThumbnail = users[socket.id]?.avatarThumbnailUrl || 'images/logo_rst.png';  // Use fallback if not available
       try {
         await savechatMessage(user.key, user.displayName, roomId, message, avatarThumbnail);
         nsp.to('General').emit('chat message', {
@@ -67,6 +69,7 @@ export const mainChatHandlers = {
         console.error('Error sending message:', error);
       }
     });
+    
 
     socket.on('likeUpdated', async ({ postId, likes }) => {
       try {
@@ -95,7 +98,7 @@ export const mainChatHandlers = {
       const repliesCounter = actionsDiv.querySelector('.repliesCounter');
       if (repliesCounter) {
         const currentRepliesCount = parseInt(repliesCounter.textContent) || 0;
-        repliesCounter.textContent = `${currentRepliesCount + 1} ${currentRepliesCount + 1 === 1 ? 'reply' : 'replies'}`;
+        repliesCounter.textContent = `${currentRepliesCount + 1} ${currentRepliesCount + 1 === 1 ? 'reply' : '🗨️'}`;
       }
     });
 

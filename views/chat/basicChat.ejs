@@ -182,7 +182,7 @@ socket.on('likeUpdated', ({ postId, likes }) => {
 
   const likesCounter = actionsDiv.querySelector('.likesCounter');
   if (likesCounter) {
-    likesCounter.textContent = `${likes} ${likes === 1 ? 'like' : 'likes'}`;
+    likesCounter.textContent = `${likes} ${likes === 1 ? 'like' : ''}`;
   }
 });
 
@@ -203,7 +203,7 @@ socket.on('newReply', ({ postId, reply }) => {
   const repliesCounter = actionsDiv.querySelector('.repliesCounter');
   if (repliesCounter) {
     const currentRepliesCount = parseInt(repliesCounter.textContent) || 0;
-    repliesCounter.textContent = `${currentRepliesCount + 1} ${currentRepliesCount + 1 === 1 ? 'reply' : 'replies'}`;
+    repliesCounter.textContent = `${currentRepliesCount + 1} ${currentRepliesCount + 1 === 1 ? 'reply' : '🗨️'}`;
   }
 });
 
@@ -227,119 +227,155 @@ socket.on('newReply', ({ postId, reply }) => {
 
     const messageDiv = document.createElement('div');
     messageDiv.className = isOwnMessage ? 'message ownMessage' : 'message';
+    
+    // Apply CSS Grid to messageDiv
+    messageDiv.style.display = 'grid';
+    messageDiv.style.gridTemplateColumns = '2fr 8fr 1fr';  // Define the grid layout: avatar, message, actions
+    messageDiv.style.alignItems = 'center';  // Vertically align the content in the center
+
+    // Avatar and Display Name (2fr)
+    const avatarContainer = document.createElement('div');
+    avatarContainer.className = 'avatarContainer';
+    avatarContainer.style.gridColumn = '1';  // Place avatar in the first column
 
     const messageAvatar = document.createElement('img');
     messageAvatar.className = 'usersOnline';
     messageAvatar.src = messageObject.thumbnailUrl || `/images/logo_rst.png`;
 
+    const displayName = document.createElement('span');
+    displayName.className = 'userDisplayName';
+    displayName.textContent = messageObject.user || 'Unknown User';  // Show user display name
+
+    avatarContainer.appendChild(messageAvatar);
+    avatarContainer.appendChild(displayName);  // Place username under avatar
+
+    // Message text and replies (8fr)
+    const messageTextContainer = document.createElement('div');
+    messageTextContainer.style.gridColumn = '2';  // Place message text in the second column
+
     const messageTextSpan = document.createElement('span');
     messageTextSpan.className = 'messageText';
     messageTextSpan.textContent = messageObject.message || 'No message text.';
 
+    messageTextContainer.appendChild(messageTextSpan);  // Display the message text
+
+    // Action div (1fr) - Likes and Replies
     const actionsDiv = document.createElement('div');
     actionsDiv.className = 'messageActions';
-    actionsDiv.id = `${messageObject._id}_actions`;
+    actionsDiv.style.gridColumn = '3';  // Place actions in the third column
 
-    // Safely handle `likedBy` and `replies`
-    const likedBy = Array.isArray(messageObject.likedBy) ? messageObject.likedBy : [];
-    const replies = Array.isArray(messageObject.replies) ? messageObject.replies : [];
-
-    // Add a likes counter
+    // Single Heart with counter
     const likesCounter = document.createElement('span');
     likesCounter.className = 'likesCounter';
-    likesCounter.textContent = `${likedBy.length} ${likedBy.length === 1 ? 'like' : 'likes'}`; // Show the number of likes
+    likesCounter.textContent = `${messageObject.likedBy?.length || 0} ❤️`;  // One heart icon with counter
 
-    // Add a replies counter
+    // Single Comment bubble with counter
     const repliesCounter = document.createElement('span');
     repliesCounter.className = 'repliesCounter';
-    repliesCounter.textContent = `${replies.length} ${replies.length === 1 ? 'reply' : 'replies'}`; // Show the number of replies
-
-    // Heart (like) icon
-    const heartIcon = document.createElement('span');
-    heartIcon.textContent = '❤️';
-    heartIcon.className = 'heartIcon';
-    heartIcon.style.filter = likedBy.includes(userId) ? 'grayscale(0%)' : 'grayscale(50%)';
-    heartIcon.dataset.isLiked = likedBy.includes(userId).toString();  // Determine initial like state
-
-    // Reply icon
-    const replyIcon = document.createElement('span');
-    replyIcon.textContent = '↩️';
-    replyIcon.className = 'replyIcon';
-    replyIcon.style.filter = replies.length > 0 ? 'grayscale(0%)' : 'grayscale(50%)';
+    repliesCounter.textContent = `${messageObject.replies?.length || 0} 🗨️`;  // One comment bubble with counter
 
     actionsDiv.appendChild(likesCounter);
-    actionsDiv.appendChild(heartIcon);
     actionsDiv.appendChild(repliesCounter);
-    actionsDiv.appendChild(replyIcon);
 
-    messageDiv.appendChild(messageAvatar);
-    messageDiv.appendChild(messageTextSpan);
-    messageDiv.appendChild(actionsDiv);
+    messageDiv.appendChild(avatarContainer);  // Avatar and user name (2fr)
+    messageDiv.appendChild(messageTextContainer);  // Message text (8fr)
+    messageDiv.appendChild(actionsDiv);  // Likes and replies (1fr)
 
-    // Replies Container
+    // Replies container (initially hidden)
     const repliesContainer = document.createElement('div');
     repliesContainer.className = 'repliesContainer';
-    repliesContainer.style.display = 'none'; // Initially hidden
-    renderReplies(replies, repliesContainer);  // Render replies but keep hidden
-    messageDiv.appendChild(repliesContainer);
+    repliesContainer.style.display = 'none';  // Initially hidden
 
-    // Show/Hide reply toggle if there are more than 1 reply
-    if (replies.length > 0) {
-        repliesCounter.style.cursor = 'pointer'; // Make it clickable
-        repliesCounter.addEventListener('click', () => {
-            const isVisible = repliesContainer.style.display === 'block';
-            repliesContainer.style.display = isVisible ? 'none' : 'block'; // Toggle visibility
-            repliesCounter.textContent = isVisible
-                ? `${replies.length} ${replies.length === 1 ? 'reply' : 'replies'}`
-                : `Hide replies (${replies.length})`;  // Update text when expanded
-        });
-    }
+    // If there are replies, render them
+    renderReplies(messageObject.replies || [], repliesContainer);
+
+    // Input field for new reply
+    const replyInputDiv = document.createElement('div');
+    replyInputDiv.className = 'replyInputDiv';
+
+    const replyInputField = document.createElement('input');
+    replyInputField.type = 'text';
+    replyInputField.className = 'replyInputField';
+    replyInputField.placeholder = 'Write a reply...';
+
+    const replySubmitButton = document.createElement('button');
+    replySubmitButton.textContent = 'Reply';
+    replySubmitButton.className = 'replySubmitButton';
+
+    replyInputDiv.appendChild(replyInputField);
+    replyInputDiv.appendChild(replySubmitButton);
+
+    repliesContainer.appendChild(replyInputDiv);  // Add reply input to replies container
+    messageTextContainer.appendChild(repliesContainer);  // Place the replies under the message text
 
     messagesContainer.appendChild(messageDiv);
 
+    // Scroll the container if needed
     if (shouldScroll) {
         messagesContainer.scrollTop = messagesContainer.scrollHeight;
     }
 
     const postId = messageObject._id;
 
-    // Heart click handler
-    heartIcon.addEventListener('click', (e) => {
+    // Like click handler
+    likesCounter.addEventListener('click', (e) => {
         const isLiked = e.target.dataset.isLiked === "true";
-        handleIconClick('heart', postId, userId, e, isLiked);
+        handleLikeClick(postId, userId, e, isLiked);
     });
 
-    // Reply click handler
-    replyIcon.addEventListener('click', (e) => {
-        handleReplyClick(postId, userId);
+    // Reply click handler to toggle reply input field and replies
+    repliesCounter.addEventListener('click', () => {
+        const isVisible = repliesContainer.style.display === 'block';
+        repliesContainer.style.display = isVisible ? 'none' : 'block';
+    });
+
+    // Submit reply handler
+    replySubmitButton.addEventListener('click', () => {
+        const replyMessage = replyInputField.value.trim();
+        if (replyMessage) {
+            handleReplyClick(postId, userId, replyMessage, replyInputField, repliesContainer);
+        }
     });
 }
 
+// Function to render replies under the main message
+function renderSingleReply(reply, parentElement) {
+    const replyDiv = document.createElement('div');
+    replyDiv.className = 'replyMessage';  // Add a class for styling the reply
+
+    replyDiv.style.display = 'grid';
+    replyDiv.style.gridTemplateColumns = '2fr 8fr';  // 2fr for avatar, 8fr for reply text
+    replyDiv.style.alignItems = 'center';
+
+    // Avatar for reply (2fr)
+    const replyAvatar = document.createElement('img');
+    replyAvatar.className = 'usersOnline';
+    replyAvatar.src = reply.thumbnailUrl || `/images/logo_rst.png`;
+    replyAvatar.style.gridColumn = '1';  // Place avatar in the first column
+
+    // Reply text (8fr)
+    const replyTextSpan = document.createElement('span');
+    replyTextSpan.className = 'replyText';
+    replyTextSpan.textContent = reply.message || 'No reply text.';
+    replyTextSpan.style.gridColumn = '2';  // Place reply text in the second column
+
+    replyDiv.appendChild(replyAvatar);  // 2fr
+    replyDiv.appendChild(replyTextSpan);  // 8fr
+
+    // Append the reply to the parentElement (repliesContainer)
+    parentElement.appendChild(replyDiv);
+}
+
+// Function to render multiple replies under the message
 function renderReplies(replies, parentElement) {
-    // Clear existing replies
-    parentElement.innerHTML = '';
-
     replies.forEach(reply => {
-        const replyDiv = document.createElement('div');
-        replyDiv.className = 'message replyMessage';
-
-        const replyAvatar = document.createElement('img');
-        replyAvatar.className = 'usersOnline';
-        replyAvatar.src = reply.thumbnailUrl || `images/logo_rst.png`;
-
-        const replyTextSpan = document.createElement('span');
-        replyTextSpan.className = 'messageText';
-        replyTextSpan.textContent = reply.message || 'No reply text.';
-
-        replyDiv.appendChild(replyAvatar);
-        replyDiv.appendChild(replyTextSpan);
-
-        parentElement.appendChild(replyDiv);
+        renderSingleReply(reply, parentElement);
     });
 }
 
-function handleIconClick(action, postId, userId, e, isLiked) {
-    const tally = isLiked ? '--' : '++';  // Pass the tally based on the current like status
+// Function to handle like clicks
+function handleLikeClick(postId, userId, heartIcon, isLiked) {
+    const tally = isLiked ? '--' : '++';  // Toggle like/unlike
 
     fetch(`/users/chat/like`, {
         method: 'POST',
@@ -350,99 +386,43 @@ function handleIconClick(action, postId, userId, e, isLiked) {
     })
     .then(response => response.json())
     .then(data => {
-        const newTally = data.likes; // Fetch the updated number of likes from the response
-        const likesCounter = e.target.parentElement.querySelector('.likesCounter'); // Find the counter element
-
-        // Update the likes counter in the UI
-        if (likesCounter) {
-            likesCounter.textContent = `${newTally} likes`; // Update the text of the likes counter
-        }
-
-        // Update UI after like/unlike
-        if (!isLiked) {
-            e.target.textContent = '❤️'; // Filled heart for liked
-            e.target.style.filter = 'grayscale(0%)'; // Remove grayscale
-            e.target.dataset.isLiked = "true"; 
-        } else {
-            e.target.textContent = '❤️'; // Empty heart for unliked
-            e.target.style.filter = 'grayscale(50%)'; // Apply grayscale
-            e.target.dataset.isLiked = "false";
-        }
+        const newTally = data.likes;  // Get updated like count
+        heartIcon.textContent = '❤️';  // Ensure heart icon remains
+        heartIcon.nextElementSibling.textContent = newTally;  // Update the likes counter
+        heartIcon.style.filter = isLiked ? 'grayscale(100%)' : 'grayscale(0%)';  // Toggle grayscale based on like status
+        heartIcon.dataset.isLiked = isLiked ? "false" : "true";  // Update dataset
     })
     .catch(error => {
         console.error('Error updating like:', error);
     });
 }
-function handleReplyClick(postId, userId) {
-    const replyMessage = prompt("Enter your reply:");
-    if (replyMessage) {
-        fetch(`/users/chat/reply`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ userId, postId, replyMessage })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                // Check if the actions div and replies container exist before accessing them
-                const actionsDiv = document.getElementById(`${postId}_actions`);
-                if (!actionsDiv) {
-                    console.error(`Error: actionsDiv with ID ${postId}_actions not found`);
-                    return;
-                }
 
-                const repliesContainer = actionsDiv.parentElement.querySelector('.repliesContainer');
-                if (!repliesContainer) {
-                    console.error(`Error: repliesContainer not found for postId ${postId}`);
-                    return;
-                }
+// Function to handle reply submission
+function handleReplyClick(postId, userId, replyMessage, inputField, repliesContainer) {
+    fetch(`/users/chat/reply`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ userId, postId, replyMessage })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Append the new reply to the replies container
+            renderSingleReply(data.reply, repliesContainer);
 
-                // Append the new reply to the replies container
-                renderSingleReply(data.reply, repliesContainer);
+            // Clear the input field
+            inputField.value = '';
 
-                // Ensure the replies are visible
-                repliesContainer.style.display = 'block';
-
-                // Optionally update reply counter if you're showing one
-                const repliesCounter = actionsDiv.querySelector('.repliesCounter');
-                if (repliesCounter) {
-                    const currentRepliesCount = parseInt(repliesCounter.textContent) || 0;
-                    repliesCounter.textContent = `${currentRepliesCount + 1} ${currentRepliesCount + 1 === 1 ? 'reply' : 'replies'}`;
-                }
-            }
-        })
-        .catch(error => {
-            console.error('Error posting reply:', error);
-        });
-    }
-}
-
-// Function to render a single reply and append it to the replies container
-function renderSingleReply(reply, parentElement) {
-    const replyDiv = document.createElement('div');
-    replyDiv.className = 'replyMessage'; // Add a class for styling the reply
-
-    const replyAvatar = document.createElement('img');
-    replyAvatar.className = 'usersOnline';
-    replyAvatar.src = reply.thumbnailUrl || `/images/logo_rst.png`;
-replyAvatar.style.transform="scale(.5)"
-    const replyTextSpan = document.createElement('span');
-    replyTextSpan.className = 'replyText'; // Use a different class for reply text styling
-    replyTextSpan.textContent = reply.message || 'No reply text.';
-
-    replyDiv.appendChild(replyAvatar);
-    replyDiv.appendChild(replyTextSpan);
-
-    // Append the reply to the parentElement (messageText class element)
-    parentElement.appendChild(replyDiv);
-}
-
-// Update renderReplies to just render multiple replies in the container without replacing the message
-function renderReplies(replies, parentElement) {
-    replies.forEach(reply => {
-        renderSingleReply(reply, parentElement);
+            // Update the replies counter
+            const repliesCounter = document.querySelector(`#${postId}_actions .repliesCounter`);
+            const currentCount = parseInt(repliesCounter.textContent) || 0;
+            repliesCounter.textContent = `${currentCount + 1} 🗨️`;  // Increment the counter
+        }
+    })
+    .catch(error => {
+        console.error('Error posting reply:', error);
     });
 }
 
@@ -500,13 +480,13 @@ socket.on('user list', (users) => {
     userList.innerHTML = '';
     users.forEach((user) => {
         const div = document.createElement('div');
-        div.className = 'usersOnline';
+        div.className = '';
         div.dataset.userId = user.id;
         div.dataset.userName = user.name;
         div.dataset.userAvatar = user.avatarThumbnailUrl || '/images/logo_rst.png';
 
         const img = document.createElement('img');
-        img.className = 'userImage';
+        img.className = 'usersOnline';
         img.src = div.dataset.userAvatar;
         div.appendChild(img);
 
