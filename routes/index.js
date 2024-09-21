@@ -69,7 +69,7 @@ router.get('/', noNos, async (req, res) => {
 
     const myAvatar = await new Avatar().getAll({ userId: userId, assigned: true });
     user.myAvatar = myAvatar;
-    console.log(chalk.bgYellow(myAvatar[0].avatarUrl))
+   // console.log(chalk.bgYellow(myAvatar[0].avatarUrl))
     }
     const footer = await new Footer().getAll();
     const marquee = await new Marquee().getAll();
