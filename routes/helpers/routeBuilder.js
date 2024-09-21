@@ -1,6 +1,7 @@
 //routes/helpers/routeBuilder.js **GPT NOTE: DONT REMOVE THIS LINE IN EXAMPLES**
 import chalk from 'chalk';
 import { ObjectId } from 'mongodb';
+import User from '../../plugins/mongo/models/User.js'
 const permissionsChecker = async (req, res, next) => {
   // Check if user exists
   if (!req.user) {
@@ -35,7 +36,7 @@ const permissionsChecker = async (req, res, next) => {
 export const buildRoutes = (model, router) => {
   router.post(
     '/create',
-    permissionsChecker,
+   
     [...model.middlewareForCreateRoute()],
     async (req, res) => {
       try {
@@ -54,7 +55,9 @@ export const buildRoutes = (model, router) => {
   router.get('/all', async (req, res) => {
     try {
       const documents = await model.getAll();
-      res.render(model.pathForGetRouteView(), { documents: documents });
+      let user = await new User().getById(req.user._id);
+      user = {usid:user.shortId,_id:user._id}
+      res.render(model.pathForGetRouteView(), { documents: documents, user:user });
     } catch (error) {
       console.error(error);
       res.status(500).send({ error: error.message });
@@ -118,7 +121,7 @@ export const buildRoutes = (model, router) => {
 
   router.post(
     '/update/:id',
-    permissionsChecker,
+ 
     [...model.middlewareForEditRoute()],
     async (req, res) => {
       try {
@@ -152,7 +155,7 @@ export const buildRoutes = (model, router) => {
   
   router.post(
     '/delete/:id',
-    permissionsChecker,
+ 
     [...model.middlewareForDeleteRoute()],
     async (req, res) => {
       try {

@@ -152,6 +152,33 @@ $gradientEdge: #410b4b;
   left: 47%; /* Adjust this to move it horizontally */
   z-index: 0; /* Ensure it stays behind the text */
 }
+.adminWindow{transition:margin-bottom 1.2s ease-in 0s }
+.avatarSetup {
+  display: flex;
+  flex-grow: 1;
+  text-align: center;
+  justify-content: space-between; /* Distribute items evenly with space between */
+  align-items: center; /* Align items vertically in the center */
+  gap: 10px; /* Optional: Add spacing between items */
+}
+.avatarSetup button {
+  padding:2%;
+  font-size: 1.4rem;
+
+  border-radius: 50px;
+
+  background-color: purple;
+  color: white;
+}
+$glowClamp:10px;
+.glowGreen{
+  margin: 7%;
+height:clamp($glowClamp,$glowClamp,$glowClamp);
+width:clamp($glowClamp,$glowClamp,$glowClamp);
+border-radius: 5px;
+box-shadow:0px 0px 13px rgb(73, 235, 73);
+background-color: green;
+}
 
 .big_letter_q {
   font-family: 'Times New Roman', Times, serif;
@@ -631,6 +658,13 @@ height:34px;
     display: flex;
     justify-content: center; /* Center the content of loaderDiv */
     align-items: center; /* Align the items vertically */
+}
+#avatarTemplateMessage{
+  font-weight: 900;
+  font-size: 1.2rem;
+  color: greenyellow;
+  text-shadow: 1px 1px 0 black;
+  animation:fadeIn 0.3s ease-in 0s; 
 }
 .loaderWheel{
     min-height: 40px;

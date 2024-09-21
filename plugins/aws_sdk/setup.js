@@ -16,12 +16,13 @@ const s3 = new AWS.S3({
 });
 
 /**
- * Uploads a file or buffer to Linode Object Storage
+ * Uploads a file or buffer to Linode Object Storage and optionally deletes an old file.
  * @param {Buffer|string} input - A Buffer if the file is in memory or a string path if the file is on disk.
- * @param {String} fileKey Key under which to store the file in the bucket
- * @returns {Promise<String>} URL of the uploaded file
+ * @param {String} newFileKey - Key under which to store the file in the bucket (new unique file name).
+ * @param {String} [oldFileKey] - (Optional) Key of the old file to delete after the new one is uploaded.
+ * @returns {Promise<String>} URL of the uploaded file.
  */
-export const uploadToLinode = async (input, fileKey) => {
+export const uploadToLinode = async (input, newFileKey, oldFileKey = null) => {
   // Validate environment variables
   if (!process.env.LINODE_BUCKET) {
     throw new Error('LINODE_BUCKET environment variable is not set.');
@@ -46,14 +47,27 @@ export const uploadToLinode = async (input, fileKey) => {
 
   const params = {
     Bucket: process.env.LINODE_BUCKET,
-    Key: fileKey,
+    Key: newFileKey,
     Body: fileContent,
     ACL: 'public-read', // Adjust according to your privacy requirements
     ContentType: 'application/octet-stream', // Optional: set correct Content-Type based on file
   };
 
   try {
+    // Upload the new file to Linode
     const uploadResult = await s3.upload(params).promise();
+    console.log(`Uploaded file to Linode: ${uploadResult.Location}`);
+
+    // If an old file key is provided, delete the old file
+    if (oldFileKey) {
+      console.log(`Deleting old file: ${oldFileKey}`);
+      await s3.deleteObject({
+        Bucket: process.env.LINODE_BUCKET,
+        Key: oldFileKey,
+      }).promise();
+      console.log(`Old file deleted: ${oldFileKey}`);
+    }
+
     return uploadResult.Location; // URL of the uploaded file
   } catch (error) {
     console.error('Error uploading to Linode Object Storage:', error);

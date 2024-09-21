@@ -1,5 +1,18 @@
 import sharp from 'sharp';
 import path from 'path';
+export const rotateAndResizeAvatar = async (input, outputDirectory, filename, rotationAngle) => {
+  const outputPath = path.join(outputDirectory, filename);
+  const sharpInstance = sharp(input);
+
+  // Resize to 500x500 and apply rotation
+  await sharpInstance
+    .resize(500, 500) // Resize to 500x500
+    .rotate(Number(rotationAngle)) // Apply the rotation
+    .toFormat('jpeg', { quality: 80 }) // Convert to jpeg
+    .toFile(outputPath); // Save to output path
+
+  return outputPath;
+};
 export const resizeAndCropImage = async (
   input,
   outputDirectory,

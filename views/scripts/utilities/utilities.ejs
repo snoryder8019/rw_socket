@@ -97,6 +97,20 @@ element.remove()
 // }
 // resizeChat()
 //   })
+function addSpinner(){
+    console.log(`SPINNER&&&&&&&&&`)
+   const el = document.createElement('div');
+   el.className = "loaderWheel";
+   
+   const wheel = document.createElement('div');
+   wheel.className = "wheel";
+   
+   el.appendChild(wheel); // Append the wheel inside the loaderWheel
+
+   // Optionally append the loaderWheel to the document body or a specific container
+   document.body.appendChild(el); // You can change this to any container you prefer
+}
+
   // Initialize the observer or handler on page load if needed
   document.addEventListener('DOMContentLoaded', function () {
       console.log('Form loaded and event listeners ready.');

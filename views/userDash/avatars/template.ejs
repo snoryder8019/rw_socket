@@ -1,18 +1,44 @@
+<div id="avatarTemplateMessage"></div>
+<div id="avatarContainer"></div>
 <div class="adminWindow">
+  
+
+
+
+
     <div class="adminStatsRow">
-      <% documents.forEach(avatar => { %>
-        <div class="adminStat">
-          <p><%= avatar.altText %></p>
+      <div class="adminStat">
+        <%if(avatars.length<4){%>
+        <h2>Add New Avatar</h2>
+        <form method="post" action="/users/avatars/create" enctype="multipart/form-data">
+          <label>Upload Image</label>
+          <input required name="avatar"type="file">
+          <input hidden value="<%=user.shareId%>" name="usid" type="text">
+          <input required hidden value="<%=user._id%>" name="userId" type="text">
+          <label>Alternative Decription</label>
+          <input  name="alt" type="text">
+          <input value="Add Your Avatar" type="submit">
+        </form>
+        <%}else{%>
+          You have reached you max number of avatars, plase delete one or :
+          <button>purchase 4 slots 10gems</button>
+          <%}%>
+      </div>
+      <% avatars.forEach(avatar => { %>
+        <div class="avatarSetup">
+          <button class="rotateAvatar"data-avatarId="<%=avatar._id%>" data-avatarUrl="<%=avatar.avatarUrl%>" rotate-angle="-90">↪️</button>
           <img alt="Avatar image" src="<%= avatar.avatarUrl %>">
-          <button class="collapsible">view: <span class="carrot">&#9654;</span></button>
-          <div class="content" data-url="/avatars/renderEditForm/<%= avatar._id %>"></div>
-          <h3>add multiple images to avatar slides</h3>
-          <form action="/avatars/<%=avatar._id%>/upload-images" method="post" enctype="multipart/form-data">
-            <input type="file" name="images" multiple>
-            <button type="submit">Upload</button>
-          </form>
+          <button class="rotateAvatar"data-avatarId="<%=avatar._id%>" data-avatarUrl="<%=avatar.avatarUrl%>"  rotate-angle="90">↩️</button>
+         <%if(avatar.assigned===true){%>
+      <div class="glowGreen"></div>
+          <%}else{%>
+            <button class="assignAvatar" data-avatarId="<%=avatar._id%>">Assign</button>
+            <%}%>
+         
         </div>
       <% }) %>
     </div>
+
+    
   </div>
   

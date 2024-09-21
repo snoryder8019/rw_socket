@@ -7,9 +7,11 @@ export default class Avatar extends ModelHelper {
     super('avatars');
     this.modelFields = {
       usid: { type: 'text', value: null },
+      userId: { type: 'text', value: null },
       avatarUrl: { type: 'text', value: null },
       avatar: { type: 'file', value: null }, 
-      altText: { type: 'text', value: null },
+      alt: { type: 'text', value: null },
+      assigned:{type:'boolean',value:false},
     };
 
     if (avatarData) {

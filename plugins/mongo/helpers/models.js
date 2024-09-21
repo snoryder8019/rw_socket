@@ -23,6 +23,7 @@ export default class ModelHelper {
 
   async getAll(arg) {
     const db = getDb();
+    console.log(arg)
     const collection = db.collection(this.collectionName);
     const documents = await collection.find(arg).toArray();
     return documents;
