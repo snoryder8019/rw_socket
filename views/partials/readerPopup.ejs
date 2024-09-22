@@ -1,71 +1,70 @@
-
 <div class="readerpopupDiv">
-  <%if (typeof record =='object'&& record){%>
-      <div  class="readerpopupSection">
-         
-        
-        <%if(record.horizBkgd){%>
-          <div style="background-image: url('<%=record.horizBkgd%>');" class="readerHeader">        
-          </div>
-            <%}else{%>     
-              <div class="readerIcon">
-<img class="readerIcon" src="/images/logo_oval.png">
-              </div> 
-                <%}%>
+  <% if (typeof record == 'object' && record) { %>
+    <div class="readerpopupSection">
+
+      <% if (record.horizBkgd) { %>
+        <div style="background-image: url('<%=record.horizBkgd%>');" class="readerHeader"></div>
+      <% } else { %>
+        <div class="readerIcon">
+          <img class="readerIcon" src="/images/logo_oval.png">
+        </div>
+      <% } %>
+
       <div class="title bb1px">
-      <h1><%=record.title%></h1>
-      <%if(!record.title){%>
-        <h1><%=record.name%></h1>
-       <%}%>      
-      </div>       
-      <%if(record.author){%>
-      <div class="readerAuthor">by: <%=record.author%></div> 
-      <%}%>
-         <div>
-           <img class="readerMediumIcon" src="<%=record.mediumIcon%>" alt="">
-        <h2 style="color:black"><%=record.subTitle%></h2>
-        <p style="color:black"><%=record.description%></p>
-        <h2><%=record.location%></h2>
-        <h2><%=record.country%></h2>
-        <p><%-htmlLayout%></p>
-       
-        <div class="readerImagesArray">
-          <%if(record.imagesArray){%>
-            <%record.imagesArray.forEach((rec)=>{%>
-              <img src="<%=rec%>" alt="">
-            <%})%>
-            <%}%>
-             </div>
-      <%if(record.links){%>
-      <%record.links.forEach((link)=>{%>
-        <a href="<%=link%>"><%=link%></a>
-        <%})%>
-        <%}%>
-      <%if(record.travelTips){%>
-        <h2>Travel Tips for:    
-          <%=record.title%>
-          <%if(!record.title){%>
-            <h1><%=record.name%>
-              <%}%>  
-            </h2>
-            <ul>
-              <%record.travelTips.forEach((travelTip)=>{%>
-                <li><%=travelTip%></li>
-                <%})%>
-              </ul>
-              <%}%>
-              <% if (record.votes) { %>
-                <% record.votes.forEach(vote => { %>
-                  <p><%= vote.question %></p>
-                <% }) %>
-              <% } %>
-            </div>
-            
-            <button onclick="readerClose()" class="readerCloseButton">Close This Reader</button>
-          </div>
-  <%}%>
+        <h1><%= record.title || record.name %></h1>
+      </div>
 
+      <% if (record.author) { %>
+        <div class="readerAuthor">by: <%= record.author %></div>
+      <% } %>
 
+      <div>
+        <img class="readerMediumIcon" src="<%= record.mediumIcon %>" alt="">
+        <h2 style="color:black"><%= record.subTitle %></h2>
+        <p style="color:black"><%= record.description %></p>
+        <h2><%= record.location %></h2>
+        <h2><%= record.country %></h2>
+        <p><%- htmlLayout %></p>
 
+        <!-- Render dynamic content based on the model -->
+        <% if (additionalData.excursions) { %>
+          <h2>Excursions</h2>
+          <ul>
+            <% additionalData.excursions.forEach((excursion) => { %>
+              <li><%= excursion.name %>: <%= excursion.description %></li>
+            <% }) %>
+          </ul>
+        <% } %>
 
+        <% if (additionalData.vendors) { %>
+          <h2>Vendors</h2>
+          <ul>
+            <% additionalData.vendors.forEach((vendor) => { %>
+              <li><%= vendor.name %>: <%= vendor.services %></li>
+            <% }) %>
+          </ul>
+        <% } %>
 
+        <!-- Handle travel tips if available -->
+        <% if (record.travelTips) { %>
+          <h2>Travel Tips for: <%= record.title || record.name %></h2>
+          <ul>
+            <% record.travelTips.forEach((tip) => { %>
+              <li><%= tip %></li>
+            <% }) %>
+          </ul>
+        <% } %>
+
+        <!-- Handle votes if available -->
+        <% if (record.votes) { %>
+          <% record.votes.forEach((vote) => { %>
+            <p><%= vote.question %></p>
+          <% }) %>
+        <% } %>
+        
+      </div>
+
+      <button onclick="readerClose()" class="readerCloseButton">Close This Reader</button>
+    </div>
+  <% } %>
+</div>

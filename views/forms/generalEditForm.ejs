@@ -19,23 +19,24 @@
         <% } %>
         <input type="file" name="<%= field.name %>" id="<%= field.name %>">
 
-      <% } else if (field.type === 'select' || field.type === 'custom') { %>
-        <!-- Custom select for custom fields -->
-        <div id="<%= field.name %>-container">
-          <% field.value.forEach((item, index) => { %>
-            <div id="<%= field.name %>-<%= index %>">
-              <select name="<%= field.name %>[]">
-                <% field.options.forEach(option => { %>
-                  <option value="<%= option.value %>" <%= item.includes(option.value) ? 'selected' : '' %>><%= option.label %></option>
-                <% }) %>
-              </select>
-              <button type="button" onclick="removeField('<%= field.name %>-<%= index %>')">Remove</button>
-            </div>
-          <% }) %>
-        </div>
-        <button type="button" onclick="addField('<%= field.name %>', <%= JSON.stringify(field.options) %>)">Add more</button>
-
-      <% } else if (field.type === 'radio') { %>
+        <% } else if (field.type === 'select' || field.type === 'custom') { %>
+          <!-- Custom select for custom fields and boolean dropdowns -->
+          <div id="<%= field.name %>-container">
+            <% (Array.isArray(field.value) ? field.value : [field.value]).forEach((item, index) => { %>
+              <div id="<%= field.name %>-<%= index %>">
+                <select name="<%= field.name %>[]">
+                  <% field.options.forEach(option => { %>
+                    <option value="<%= option.value %>" <%= String(item) === String(option.value) ? 'selected' : '' %>>
+                      <%= option.label %>
+                    </option>
+                  <% }) %>
+                </select>
+                <button type="button" onclick="removeField('<%= field.name %>-<%= index %>')">Remove</button>
+              </div>
+            <% }) %>
+          </div>
+          <button type="button" onclick="addField('<%= field.name %>', <%= JSON.stringify(field.options) %>)">Add more</button>
+        <% } else if (field.type === 'radio') { %>
         <% field.options.forEach(option => { %>
           <input type="radio" name="<%= field.name %>" id="<%= field.name %>-<%= option.value %>" value="<%= option.value %>" <%= field.value === option.value ? 'checked' : '' %>>
           <label for="<%= field.name %>-<%= option.value %>"><%= option.label %></label>

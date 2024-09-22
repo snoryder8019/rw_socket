@@ -40,14 +40,18 @@ export default (fields, data = {}, additionalData = {}) => {
           options: field.options || [],
           value: data[field.name] || '',
         };
-      case 'boolean':
-        return {
-          label: field.name.charAt(0).toUpperCase() + field.name.slice(1),
-          name: field.name,
-          type: 'radio',
-          options: ['true', 'false'],  // Boolean as radio options
-          value: data[field.name] !== undefined ? String(data[field.name]) : '',  // Convert boolean to string
-        };
+        case 'boolean':
+          return {
+            label: field.name.charAt(0).toUpperCase() + field.name.slice(1),
+            name: field.name,
+            type: 'select',
+            options: [
+              { value: 'true', label: 'True' },
+              { value: 'false', label: 'False' }
+            ],
+            value: data[field.name] !== undefined ? String(data[field.name]) : '',  // Convert boolean to string
+          };
+        
       case 'custom':
         return {
           label: field.name.charAt(0).toUpperCase() + field.name.slice(1),

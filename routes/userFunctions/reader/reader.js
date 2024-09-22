@@ -5,7 +5,9 @@ import Help from "../../../plugins/mongo/models/help/Help.js";
 import Vote from "../../../plugins/mongo/models/blog/Vote.js";
 import Club from "../../../plugins/mongo/models/Club.js";
 import Video from '../../../plugins/mongo/models/Video.js'
+import Vendor from '../../../plugins/mongo/models/Vendor.js'
 import {marked} from 'marked';
+import Excursion from '../../../plugins/mongo/models/travel/Excursion.js'
 import Notification from '../../../plugins/mongo/models/notifications/Notification.js'
 import Notify from "../../../plugins/mongo/models/notifications/Notify.js";
 const router = express.Router();
@@ -51,33 +53,47 @@ catch(error){console.error(error)}
 router.get('/overlay/:model/:id', async (req, res) => {
   try {
     const { model, id } = req.params;
-    const modelParam = model.toLowerCase(); // Normalize to lowercase
+    const modelParam = model.toLowerCase();
 
-    // Check if the requested model exists in readerOptions
-    const Model = readerOptions[modelParam];
+    // Dynamic model mapping
+    const modelMap = {
+      destination: Destination,
+      club: Club,
+      blog: Blog,
+      excursion: Excursion,
+      vendor: Vendor,
+      video: Video // Assuming these classes are available
+    };
+
+    const Model = modelMap[modelParam];
     if (!Model) {
       return res.status(400).json({ message: 'Invalid model type' });
     }
 
-    // Dynamically fetch the data by ID from the specified model
-    const record = await new Model().getById(id); // Adjust method based on your ORM/ODM
-
-    const htmlLayout = marked(record.content)
-    console.log(htmlLayout)
-    if (record) {
-      // Render the EJS template to a string
-      res.render('partials/readerPopup', { record, htmlLayout })
-       
-    } else {
-      // Send a 404 response if data is not found
-      res.status(404).send('<p>Data not found</p>'); // Send a simple HTML response for not found
+    const record = await new Model().getById(id);
+    if (!record) {
+      return res.status(404).send('<p>Data not found</p>');
     }
+
+    // Convert content using markdown if necessary
+    const htmlLayout = marked(record.content);
+
+    // Prepare additional dynamic content based on the model
+    let additionalData = {};
+    if (modelParam === 'club' || modelParam === 'destination') {
+      additionalData = {
+        excursions: await new Excursion().getAll(),
+        vendors: modelParam === 'club' ? await new Vendor().getByClubId(id) : []
+      };
+    }
+
+    res.render('partials/readerPopup', { record, htmlLayout, additionalData });
   } catch (error) {
-    // Handle errors, such as invalid ID format or database errors
     console.error('Error fetching data:', error);
-    res.status(500).send('<p>Internal server error</p>'); // Send a simple HTML response for server error
+    res.status(500).send('<p>Internal server error</p>');
   }
 });
+
 
 
 export default router;

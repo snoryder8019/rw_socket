@@ -16,6 +16,7 @@ export default class Destination extends ModelHelper {
       location: { type: 'text', value: null },
       country: { type: 'text', value: null },
       attractions: { type: 'array', value: [] }, // List of major attractions at the destination
+      excursions: { type: 'array', value: [] }, // List of major attractions at the destination
       bestTimeToVisit: { type: 'text', value: null }, // Best time of the year to visit
       activities: { type: 'array', value: [] }, // Popular activities at the destination
       averageCost: { type: 'number', value: null }, // Average cost for visiting

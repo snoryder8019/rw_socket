@@ -1,21 +1,8 @@
 <div id="admin">
-    <button class="collapsible">Chat<span class="carrot">&#9654;</span></button>
-    <div class="content" ><%-include ("./chats/index")%></div>
 
     <button class="collapsible">Users<span class="carrot">&#9654;</span></button>
     <div class="content"data-url="/users/getSearchForm"></div>
-
-    <button class="collapsible">Games<span class="carrot">&#9654;</span></button>
-    <div class="content" ><%-include("./games/games")%></div>
-
-    <button class="collapsible">videoLead<span class="carrot">&#9654;</span></button>
-    <div class="content"><%-include("./videoLead/videoLead")%>>
-       </div>
-
-       <button class="collapsible">Marquees Admin<span class="carrot">&#9654;</span></button>
-<div class="content"><%- include('./marquees/index') %></div>
-
-
+    
     <button class="collapsible">VideoProduction<span class="carrot">&#9654;</span></button>
     <div class="content" ><%-include('./videoLead/videoProduction')%></div>
 
@@ -28,10 +15,8 @@
 
     <button class="collapsible">Clubs Admin<span class="carrot">&#9654;</span></button>
     <div class="content" ><%-include('./clubs/index')%></div>
-    
-    <button class="collapsible">Calendar Admin<span class="carrot">&#9654;</span></button>
-    <div class="content" ><%-include('./calendar/index')%></div>
-
+    <!--CALENDAR ADMIN ON NLY EJS INDEX NO DATA_URL YET-->
+  
     <button class="collapsible">Travel Admin<span class="carrot">&#9654;</span></button>
     <div class="content" ><%-include('./travels/index')%></div>
 
@@ -42,19 +27,9 @@
     <button class="collapsible">WebApp Settings<span class="carrot">&#9654;</span></button>
     <div class="content" ><%-include('./webapp/index',{webappSettings:webappSettings})%></div>
 
-
-
-    <button class="collapsible">Footers Admin<span class="carrot">&#9654;</span></button>
-<div class="content"><%- include('./footers/index') %></div>
-
-
     <button class="collapsible">Notifications<span class="carrot">&#9654;</span></button>
     <div class="content" ><%-include('./notifications/index')%></div>
-
- 
     
     <!--OBSERVER ON CLICK FOR LIGHTER LOAD append data-url for server rendering-->
-    <button class="collapsible">TRYCATCH<span class="carrot">&#9654;</span></button>
-    <div class="content" data-url="/admin/doSomething" ></div>
 </div>
 

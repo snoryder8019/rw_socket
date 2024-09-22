@@ -503,6 +503,7 @@ text-align: center;
 }
 
 .content {
+  color: $purple;
   border: 1px solid white;
   padding: 0 1px;
   display: none;
@@ -515,18 +516,21 @@ text-align: center;
   transition: transform 0.3s;
 }
 .content .content {
+  color:$gold;
   animation: slideIn .6s ease-out 0s ;
   box-shadow: inset $purple 1px 1px 2px;
   background-color: #441841; /* Darker shade for the second level of nesting */
 }
 
 .content .content .content {
+  color:$gold;
   box-shadow: inset $purple 1px 1px 2px;
   border: 1px dotted #1c0212;
   background-color: #1c0212; /* Even darker shade for the third level of nesting */
 }
 
 .content .content .content .content {
+  color:$gold;
   box-shadow: inset $purple 1px 1px 2px;
   background-color: #ffffff; /* Darkest shade for deeper nesting */
 }
@@ -1357,7 +1361,7 @@ color: white;
   transform: translate(-50%, -50%); /* Center the content */
   z-index: 2; /* Ensure text content is above the slides */
   text-align: center;
-  background-color: rgba(0, 0, 0, 0.5); /* Optional: Background for text to enhance readability */
+ // background-color: rgba(0, 0, 0, 0.5); /* Optional: Background for text to enhance readability */
   padding: 12%;
   border-radius: 8px;
 
@@ -1377,10 +1381,10 @@ color: white;
 }
 
 .slide_view h1 {
-  font-size: 2.5rem; /* Slightly larger size for more impact */
+  font-size: 4rem; /* Slightly larger size for more impact */
   font-weight: 900; /* Extra bold for maximum emphasis */
-  color: $gold; /* Bold color */
-  text-shadow: 1px 1px 0px $purple;
+  color: black; /* Bold color */
+  text-shadow: 1px 1px 0px white;
   font-family: $back; /* Distinctive typeface */
   
   
