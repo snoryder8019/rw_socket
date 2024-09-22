@@ -6,6 +6,8 @@ import Vote from "../../../plugins/mongo/models/blog/Vote.js";
 import Club from "../../../plugins/mongo/models/Club.js";
 import Video from '../../../plugins/mongo/models/Video.js'
 import {marked} from 'marked';
+import Notification from '../../../plugins/mongo/models/notifications/Notification.js'
+import Notify from "../../../plugins/mongo/models/notifications/Notify.js";
 const router = express.Router();
 const readerOptions = {
   blog: Blog,
@@ -59,7 +61,7 @@ router.get('/overlay/:model/:id', async (req, res) => {
 
     // Dynamically fetch the data by ID from the specified model
     const record = await new Model().getById(id); // Adjust method based on your ORM/ODM
-   
+
     const htmlLayout = marked(record.content)
     console.log(htmlLayout)
     if (record) {

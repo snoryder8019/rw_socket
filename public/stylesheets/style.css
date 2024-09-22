@@ -397,12 +397,29 @@
   padding: 0 1px;
   display: none;
   overflow: hidden;
-  background-color: #7b2d76;
+  background-color: #572153;
   transition: transform 1.8s ease-in-out, opacity 1.8s ease-in-out; }
 
 .carrot {
   float: right;
   transition: transform 0.3s; }
+
+.content .content {
+  animation: slideIn 0.6s ease-out 0s;
+  box-shadow: inset #711881 1px 1px 2px;
+  background-color: #441841;
+  /* Darker shade for the second level of nesting */ }
+
+.content .content .content {
+  box-shadow: inset #711881 1px 1px 2px;
+  border: 1px dotted #1c0212;
+  background-color: #1c0212;
+  /* Even darker shade for the third level of nesting */ }
+
+.content .content .content .content {
+  box-shadow: inset #711881 1px 1px 2px;
+  background-color: #ffffff;
+  /* Darkest shade for deeper nesting */ }
 
 .rotate {
   transform: rotate(90deg); }

@@ -5,6 +5,7 @@ import { getDb } from '../mongo/mongo.js';
 import { config } from '../../config/config.js';
 import { sendDynamicEmail } from '../nodemailer/setup.js';
 import chalk from 'chalk';
+import Notify from '../mongo/models/notifications/Notify.js';
 export const router = express.Router();
 import WebappSetting from '../mongo/models/WebappSetting.js'
 // Function to generate a random reset token
@@ -141,7 +142,13 @@ router.post('/regUser', async (req, res) => {
        dynamicLink,
         null
       );
-
+      const notify = await new Notify().send({
+        notificationId:"66ef4aa97528b8c20350b133",
+        recipientId:createUserResult.user._id.toString(),
+        status:'sent',
+        sentAt:new Date(),
+    
+       })
       // Registration and login succeeded
       req.logIn(createUserResult.user, (err) => {
         if (err) {

@@ -1,19 +1,22 @@
 import ModelHelper from '../../helpers/models.js';
+import { upload, processImages } from '../../../multer/subscriptionSetup.js';
+
+import { uploadToLinode } from '../../../aws_sdk/setup.js';
+
+const modelName = 'item';
 
 export default class Item extends ModelHelper {
   constructor(itemData) {
-    super('items');
+    super(`${modelName}s`);
     this.modelFields = {
-      name: { type: 'text', value: null },
-      description: { type: 'textarea', value: null },
-      price: { type: 'number', value: 0 },
-      stock: { type: 'number', value: 0 },
-      category: { type: 'text', value: null },
-      images: { type: 'array', value: [] }, // Array of image URLs
-      createdAt: { type: 'date', value: new Date() },
-      updatedAt: { type: 'date', value: new Date() }
+      name: { type: 'string',value:null },
+      description: { type: 'string',value:null },
+      imageUrl: { type: 'string',value:null },
+      price: { type: 'number',value:null },
+      backgroundImg: { type: 'file', value: null },
+      mediumIcon: { type: 'file', value: null },
+      available: { type: 'boolean' ,value:null}
     };
-
     if (itemData) {
       for (let key in this.modelFields) {
         if (itemData[key] !== undefined) {
@@ -32,60 +35,56 @@ export default class Item extends ModelHelper {
 
   middlewareForCreateRoute() {
     return [
-      this.validateItem.bind(this),
-      this.checkStockAvailability.bind(this),
+      upload.fields(this.fileFields),
+      processImages,
+      this.uploadImagesToLinode.bind(this),
     ];
   }
 
   middlewareForEditRoute() {
     return [
-      this.validateItem.bind(this),
+      upload.fields(this.fileFields),
+      processImages,
+      this.uploadImagesToLinode.bind(this),
+    ];
+  }
+  get fileFields() {
+    return [
+      //  { name: 'mediumIcon', maxCount: 1 },
+      { name: 'backgroundImg', maxCount: 1 },
+      { name: 'mediumIcon', maxCount: 1 },
     ];
   }
 
-  async validateItem(req, res, next) {
+
+  async uploadImagesToLinode(req, res, next) {
     try {
-      const { name, price, stock } = req.body;
-      if (!name || price < 0 || stock < 0) {
-        throw new Error('Invalid item data: Name, positive price, and stock are required.');
+      if (req.files) {
+        for (const key in req.files) {
+          const file = req.files[key][0];
+          const fileKey = `${modelName}s/${Date.now()}-${file.originalname}`;
+          const url = await uploadToLinode(file.path, fileKey);
+          req.body[key] = url; // Save the URL in the request body
+        }
       }
       next();
     } catch (error) {
-      console.error('Error in validateItem middleware:', error);
-      res.status(400).json({ error: error.message });
+      console.error('Error in uploadImagesToLinode middleware:', error);
+      next(error);
     }
   }
 
-  async checkStockAvailability(req, res, next) {
+  static async uploadToLinode(filePath, fileKey) {
     try {
-      const { stock } = req.body;
-      if (stock < 0) {
-        throw new Error('Invalid stock value: Stock cannot be negative.');
-      }
-      next();
+      const url = await uploadToLinode(filePath, fileKey);
+      return url;
     } catch (error) {
-      console.error('Error in checkStockAvailability middleware:', error);
-      res.status(400).json({ error: error.message });
+      console.error('Error uploading to Linode:', error);
+      throw error;
     }
   }
 
   pathForGetRouteView() {
-    return 'admin/items/template';
-  }
-
-  async updateStock(itemId, quantity) {
-    try {
-      const item = await this.getById(itemId);
-      if (!item) {
-        throw new Error('Item not found.');
-      }
-
-      item.stock = Math.max(0, item.stock - quantity);
-      item.updatedAt = new Date();
-      await this.update(itemId, item);
-    } catch (error) {
-      console.error('Error in updateStock method:', error);
-      throw error;
-    }
+    return `admin/${modelName}s/template`;
   }
 }

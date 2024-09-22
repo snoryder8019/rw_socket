@@ -1,0 +1,18 @@
+<div class="adminWindow">
+    <div class="adminStatsRow">
+      <% documents.forEach(userSetting => { %>
+        <div class="adminStat">
+          <p><%= userSetting.username %></p>
+          <img alt="User profile picture" src="<%= userSetting.profilePicture %>">
+          <button class="collapsible">view: <span class="carrot">&#9654;</span></button>
+          <div class="content" data-url="/userSettings/renderEditForm/<%= userSetting._id %>"></div>
+          
+          <form action="/userSettings/<%=userSetting._id%>/upload-images" method="post" enctype="multipart/form-data">
+            <input type="file" name="images" multiple>
+            <button type="submit">Upload</button>
+          </form>
+        </div>
+      <% }) %>
+    </div>
+  </div>
+  

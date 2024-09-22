@@ -1,9 +1,7 @@
 
-    <button class="collapsible">Get Images<span class="carrot">&#9654;</span></button>
-    <div class="content" data-url="/media/getDirectories"></div>
-    <div id="imageGrid"></div>
-    <button class="collapsible">Get Videos<span class="carrot">&#9654;</span></button>
-    <div class="content" data-url="/media/videos"></div>
+   <!--GET IMAGES  data-url="/media/getDirectories LINODE BUCKET REMOVED-->
+   <!--GET VIDEO data-url="/media/videos" LINODE BUCKET REMOVED-->
+   
     <div id="videoGrid"></div>
     <button class="collapsible">Get Sections<span class="carrot">&#9654;</span></button>
     <div class="content" data-url="/sectionSettings/all"></div>
@@ -12,10 +10,7 @@
     
     <button class="collapsible">Update Settings<span class="carrot">&#9654;</span></button>
     <div class="content" data-url="/webappSettings/renderEditForm/668ae7d245fe0f9cb72bf44f"></div>
-  
+  <!--GET / ADD GEMS MOVED TO EXCHANGE MENU-->
     
-    <button class="collapsible">Get Gems<span class="carrot">&#9654;</span></button>
-    <div class="content" data-url="/gems/all"></div>
-    <button class="collapsible">Add Gems<span class="carrot">&#9654;</span></button>
-    <div class="content" data-url="/gems/renderAddForm"></div>
-    
+  <button class="collapsible">Exchange Admin<span class="carrot">&#9654;</span></button>
+  <div class="content"><%- include('../exchanges/index')%></div>

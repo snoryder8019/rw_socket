@@ -1,16 +1,18 @@
-const ModelHelper = require('../../helpers/models');
-const { upload, processImages } = require('../../../multer/subscriptionSetup');
-const { uploadToLinode } = require('../../../aws_sdk/setup');
+import ModelHelper from '../../helpers/models.js';
+import { upload, processImages } from '../../../multer/subscriptionSetup.js';
+import { uploadToLinode } from '../../../aws_sdk/setup.js';
+import { getDb } from '../../../../plugins/mongo/mongo.js';
+
 const modelName = 'notify';
 
-class Notify extends ModelHelper {
+export default class Notify extends ModelHelper {
   constructor(notifyData) {
     super(`${modelName}s`);
     this.modelFields = {
       notificationId: { type: 'text', value: null },    // Reference to the notification
-      notifyType: { type: 'text', value: null },    // Reference to the notification
+      notifyType: { type: 'text', value: null },        // Type of notification
       recipientId: { type: 'text', value: null },       // ID of the recipient
-      recipientIds: { type: 'array', value: [] },       // ID of the recipient
+      recipientIds: { type: 'array', value: [] },       // List of recipient IDs
       recipientType: { type: 'text', value: null },     // Type of recipient (e.g., user, group)
       status: { type: 'text', value: 'pending' },       // Status of the notification (e.g., sent, seen, failed)
       sentAt: { type: 'date', value: null },            // Date and time when the notification was sent
@@ -35,6 +37,21 @@ class Notify extends ModelHelper {
       const field = new Notify().modelFields[key];
       return { name: key, type: field.type };
     });
+  }
+  middlewareForCreateRoute() {
+    return [
+     // upload.fields(this.fileFields),
+    //  processImages,
+    //  this.uploadImagesToLinode.bind(this),
+    ];
+  }
+
+  middlewareForEditRoute() {
+    return [
+    //  upload.fields(this.fileFields),
+    //  processImages,
+    //  this.uploadImagesToLinode.bind(this),
+    ];
   }
 
   async stampAsSent(notificationId, recipientId) {
@@ -69,9 +86,23 @@ class Notify extends ModelHelper {
     return updateResult;
   }
 
+  // Send notification method
+  async send(notification) {
+    const db = getDb();
+    const collection = db.collection(this.collectionName);
+    
+ 
+
+    try {
+      const result = await collection.insertOne(notification);
+      return result;
+    } catch (error) {
+      console.error('Error sending notification:', error);
+      throw new Error('Notification could not be sent');
+    }
+  }
+
   pathForGetRouteView() {
     return `admin/${modelName}s/template`;
   }
 }
-
-module.exports = Notify;

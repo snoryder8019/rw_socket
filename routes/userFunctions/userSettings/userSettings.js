@@ -1,16 +1,16 @@
 import express from 'express';
-import Item from '../../../plugins/mongo/models/exchange/Item.js';
+import UserSetting from '../../../plugins/mongo/models/user/UserSetting.js';
 import generateFormFields from '../../../plugins/helpers/formHelper.js';
 import { buildRoutes } from '../../helpers/routeBuilder.js';
 import { uploadMultiple } from '../../../plugins/multer/setup.js';
 import { imagesArray, getImagesArray, popImagesArray, popImagesArrayIndex } from '../../helpers/imagesArray.js';
 
 const router = express.Router();
-const modelName = 'item';
+const modelName = 'userSetting';
 
 router.get('/renderAddForm', (req, res) => {
   try {
-    const model = Item.getModelFields();
+    const model = UserSetting.getModelFields();
     const formFields = generateFormFields(model);
 
     res.render('forms/generalForm', {
@@ -27,21 +27,19 @@ router.get('/renderAddForm', (req, res) => {
 router.get('/renderEditForm/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    const item = await new Item().getById(id);
-    if (!item) {
-      return res.status(404).send({ error: 'Item not found' });
+    const userSetting = await new UserSetting().getById(id);
+    if (!userSetting) {
+      return res.status(404).send({ error: 'User setting not found' });
     }
 
-    const model = Item.getModelFields();
-    const formFields = generateFormFields(model, item);
+    const model = UserSetting.getModelFields();
+    const formFields = generateFormFields(model, userSetting);
 
     res.render('forms/generalEditForm', {
       title: `Edit ${modelName}`,
       action: `${modelName}s/update/${id}`,
       formFields: formFields,
-      data: item,
-      routeSub:'items',
-      method:'post',
+      data: userSetting,
     });
   } catch (error) {
     console.error(error);
@@ -49,11 +47,11 @@ router.get('/renderEditForm/:id', async (req, res) => {
   }
 });
 
-router.post('/:id/upload-images', uploadMultiple, imagesArray(Item));
-router.get('/renderImagesArray/:id', getImagesArray(Item));
-router.get('/popImagesArray/:id/:url', popImagesArray(Item));
-router.get('/popImagesArrayIndex/:id/:index', popImagesArrayIndex(Item));
+router.post('/:id/upload-images', uploadMultiple, imagesArray(UserSetting));
+router.get('/renderImagesArray/:id', getImagesArray(UserSetting));
+router.get('/popImagesArray/:id/:url', popImagesArray(UserSetting));
+router.get('/popImagesArrayIndex/:id/:index', popImagesArrayIndex(UserSetting));
 
-buildRoutes(new Item(), router);
+buildRoutes(new UserSetting(), router);
 
 export default router;

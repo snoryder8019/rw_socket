@@ -3,9 +3,9 @@
 
 <div>
     <h3>Display Name</h3>
-    <form action="/user/settings/displayName" method="POST">
+    <form action="/user/update/<%=user._id%>" method="POST">
         <label for="username"><%user.displayName%></label>
-        <input type="text" id="username" name="username" required>
+        <input type="text" id="displayName" name="displayName" required>
         <button type="submit">Save</button>
     </form>
 </div>

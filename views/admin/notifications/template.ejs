@@ -4,6 +4,7 @@
         <div class="adminStat">
           <p><%= notification.title %></p>
           <img alt="Notification icon" src="<%= notification.iconImage %>">
+          <img alt="Notification icon" src="<%= notification.backgroundImg %>">
           <button class="collapsible">view: <span class="carrot">&#9654;</span></button>
           <div class="content" data-url="/notifications/renderEditForm/<%= notification._id %>"></div>
         </div>

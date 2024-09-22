@@ -16,7 +16,7 @@ router.get('/renderAddForm', async (req, res) => {
   try {
     // Fetch votes or other dynamic data
     const votes = await new Vote().getAll();
-    const voteOptions = votes.map(vote => vote.question);  // Extract questions
+    const voteOptions = votes.map(vote => {vote.question});  // Extract questions
 console.log(votes)
     // Instantiate Blog
     const blog = new Blog();

@@ -9,6 +9,8 @@ export default class Notification extends ModelHelper {
     super(`${modelName}s`);
     this.modelFields = {
       type: { type: 'text', value: null },
+     singleUserTo:{type:'text',value:null},
+     sendGroup:{type:'array',value:[]},
       scheduledOutgoing: { type: 'date', value: null },
       autoSchedule: { type: 'boolean', value: false },
       actionTrigger: { type: 'array', value: [] },
@@ -18,7 +20,7 @@ export default class Notification extends ModelHelper {
       created: { type: 'date', value: null },
       backgroundImg: { type: 'file', value: null },
       iconImage: { type: 'file', value: null },
-      originalMessage: { type: 'text', value: null },
+      content: { type: 'textarea', value: null },
       subtitle: { type: 'text', value: null },
       title: { type: 'text', value: null },
       links: { type: 'text', value: [] },
