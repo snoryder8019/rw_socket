@@ -10,7 +10,16 @@ export default class UserShareCode extends ModelHelper {
         super('userShareCodes');
         this.modelFields = {
             userId: { type: "text", value: null },
-            shareId: { type: "text", value: null }
+            shareId: { type: "text", value: null },
+            actions:{type:"array",value:[]},
+            visits:{type:"array",value:[]},
+            clicks:{type:"array", value:[]},
+            messages:{type:"array", value:[]},
+            replies:{type:"array",value:[]},//messa
+            scores:{type:"array", value:[]},
+            achievements:{type:"array", value:[]},
+            analyticsLogIds:{type:"array",value:[]},
+
         };
     }
 

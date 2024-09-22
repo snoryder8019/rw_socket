@@ -10,13 +10,16 @@ export default class Notify extends ModelHelper {
     super(`${modelName}s`);
     this.modelFields = {
       notificationId: { type: 'text', value: null },    // Reference to the notification
-      notifyType: { type: 'text', value: null },        // Type of notification
       recipientId: { type: 'text', value: null },       // ID of the recipient
       recipientIds: { type: 'array', value: [] },       // List of recipient IDs
       recipientType: { type: 'text', value: null },     // Type of recipient (e.g., user, group)
       status: { type: 'text', value: 'pending' },       // Status of the notification (e.g., sent, seen, failed)
+      interval: { type: 'text', value: 'once' },       // Status of the notification (e.g., sent, seen, failed)
       sentAt: { type: 'date', value: null },            // Date and time when the notification was sent
-      seenAt: { type: 'date', value: null },            // Date and time when the notification was seen
+      usersSeen: { type: 'array', value: [] },
+      actionBy: { type: 'array', value: [] },
+      actionHookBy: { type: 'array', value: [] },
+      unsubscribedBy: { type: 'array', value: [] },       // Date and time when the notification was seen
       actionTaken: { type: 'boolean', value: false },   // Whether an action was taken on the notification
       actionTakenAt: { type: 'date', value: null },     // Date and time when the action was taken
       actionType: { type: 'text', value: null },        // Type of action taken (e.g., clicked, dismissed)

@@ -9,14 +9,12 @@ export default class Notification extends ModelHelper {
     super(`${modelName}s`);
     this.modelFields = {
       type: { type: 'text', value: null },
-     singleUserTo:{type:'text',value:null},
+  
      sendGroup:{type:'array',value:[]},
       scheduledOutgoing: { type: 'date', value: null },
       autoSchedule: { type: 'boolean', value: false },
       actionTrigger: { type: 'array', value: [] },
-      sender: { type: 'text', value: null },
       draft: { type: 'boolean', value: null },
-      sent: { type: 'boolean', value: null },
       created: { type: 'date', value: null },
       backgroundImg: { type: 'file', value: null },
       iconImage: { type: 'file', value: null },
@@ -24,11 +22,7 @@ export default class Notification extends ModelHelper {
       subtitle: { type: 'text', value: null },
       title: { type: 'text', value: null },
       links: { type: 'text', value: [] },
-      intervalSent: { type: 'text', value: null },
-      seenBy: { type: 'array', value: [] },
-      actionBy: { type: 'array', value: [] },
-      actionHookBy: { type: 'array', value: [] },
-      unsubscribedBy: { type: 'array', value: [] },
+ 
       recycle: { type: 'boolean', value: null },
     };
     if (notificationData) {
