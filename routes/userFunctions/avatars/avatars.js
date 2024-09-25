@@ -128,38 +128,39 @@ router.post('/assign/:id', async (req, res) => {
 router.post('/rotate/:deg', async (req, res) => {
   try {
     const rotation = req.params.deg;
-    const { avatarUrl,avatarId } = req.body;
+    const { avatarUrl, avatarId } = req.body;
     const user = req.user; // Assuming the user is attached to the request object
-const userId = user._id.toString();
-    const avatarIdStr=avatarId.toString()
-const avatarUrly = avatarUrl.toString()
-    // Get the avatar ID from the URL or request body
-
-    // Generate a unique file name for the new avatar
-    const newFileKey = `avatars/avatar_${Date.now()}.jpeg`; // New unique file name
-    const oldFileKey = `avatars/${path.basename(avatarUrly)}`; // The key of the old image to delete
+    const userId = user._id.toString();
+    const avatarIdStr = avatarId.toString();
+    const avatarUrly = avatarUrl.toString();
 
     console.log(`Received request to rotate avatar at: ${avatarUrly} with rotation angle: ${rotation}`);
 
-    // Call the rotate and resize function and delete the old file after uploading
-    const newAvatarUrl = await rotateAndResizeAvatar(avatarUrly, rotation, newFileKey, oldFileKey);
+    // Use the existing file key to overwrite the current avatar
+    const fileKey = `avatars/${path.basename(avatarUrly)}`; // Keep the same file name and path
 
-    console.log(`Avatar successfully processed and uploaded. New URL: ${newAvatarUrl}`);
+    // Call the rotate and resize function, overwriting the existing file
+    const updatedAvatarUrl = await rotateAndResizeAvatar(avatarUrly, rotation, fileKey, null); // Overwrite, no need to delete
 
-    // Update the avatar in the database with the new URL
-    const updateRes = await new Avatar().updateById(avatarIdStr, { avatarUrl: newAvatarUrl });
+    console.log(`Avatar successfully processed and updated at the same URL: ${updatedAvatarUrl}`);
 
-    console.log(`Avatar record updated in the database with new URL: ${newAvatarUrl}`);
-console.log(updateRes)
-const avatars = await new Avatar().getAll({"userId":userId})
-    // Render the template with the updated avatar data and user data
+    // Update the avatar record in the database (same URL)
+    const updateRes = await new Avatar().updateById(avatarIdStr, { avatarUrl: updatedAvatarUrl });
+
+    console.log(`Avatar record updated in the database with the same URL: ${updatedAvatarUrl}`);
+    console.log(updateRes);
+
+    // Retrieve updated avatar list
+    const avatars = await new Avatar().getAll({ userId: userId });
+
+    // Render the template with the updated avatar data
     res.render('./userDash/avatars/template', {
       user, // Pass the user object to the template
-     avatars:avatars // Pass the new avatar URL to the template
+      avatars // Pass the updated avatar list to the template
     });
   } catch (error) {
-    console.error('Error rotating and uploading avatar:', error);
-    res.status(500).send({ error: 'Failed to rotate and upload avatar' });
+    console.error('Error rotating and updating avatar:', error);
+    res.status(500).send({ error: 'Failed to rotate and update avatar' });
   }
 });
 
