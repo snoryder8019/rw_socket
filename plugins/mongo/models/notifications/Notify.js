@@ -1,7 +1,7 @@
 import { getDb } from '../../../mongo/mongo.js';
 import { ObjectId } from 'mongodb';
 import ModelHelper from '../../helpers/models.js';
-
+import Notification from './Notification.js'
 const modelName = 'notify';
 
 export default class Notify extends ModelHelper {
@@ -44,10 +44,20 @@ export default class Notify extends ModelHelper {
   }
 
   // Method to stamp the notification data inside the Notify object
-  async send(notificationData, notification) {
+  //Notification().getById(stringId) will get the entire constructor of the notification
+  async send(notificationData, notificationId) {
     const db = getDb();
     const collection = db.collection(this.collectionName);
-
+  const notyId = notificationId
+    // Fetch the notification object using the notificationId
+    const notification = await new Notification().getById(notyId);
+    console.log('Notification fetched:', notification); // Debugging to ensure the notification is correct
+  
+    // If notification is undefined, handle the error gracefully
+    if (!notification) {
+      throw new Error(`Notification with ID ${notificationId} not found.`);
+    }
+  
     // Stamping Notification fields into Notify object
     const notifyObject = {
       ...notificationData, // This will include recipient info, status, etc.
@@ -70,7 +80,7 @@ export default class Notify extends ModelHelper {
       },
       sentAt: new Date(),
     };
-
+  
     try {
       const result = await collection.insertOne(notifyObject);
       return result;
@@ -79,6 +89,7 @@ export default class Notify extends ModelHelper {
       throw new Error('Notification could not be sent');
     }
   }
+  
 
   // Other existing methods for stamping as sent, seen, etc.
 }

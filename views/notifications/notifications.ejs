@@ -1,16 +1,17 @@
 <% notifications.forEach(function(notification) { %>
-  <% if (!notification.notification) { %>
+  <% if (!notification) { %>
     <p>Error: Notification data is missing for this entry.</p>
   <% } else { %>
     <div class="notification">
+      <div style="background:url(<%=notification.notification.backgroundImg%>)"></div>
       <h3><%= notification.notification.title %></h3>
-      <p><%= notification.notification.subtitle %></p>
-      <p><%= notification.notification.content %></p>
+      <p><%= notification.notification.subTitle %></p>
+      <p><%- notification.notification.content %></p>
 
       <!-- Optional: Display links if they exist -->
-      <% if (notification.notification.links.length) { %>
+      <% if (notification.links) { %>
         <ul>
-          <% notification.notification.links.forEach(function(link) { %>
+          <% notification.links.forEach(function(link) { %>
             <li><a href="<%= link %>"><%= link %></a></li>
           <% }) %>
         </ul>

@@ -143,12 +143,15 @@ router.post('/regUser', async (req, res) => {
         null
       );
       const notify = await new Notify().send({
-        notificationId:"66ef4aa97528b8c20350b133",
-        recipientId:createUserResult.user._id.toString(),
-        status:'sent',
-        sentAt:new Date(),
     
-       })
+  type:'system',
+  recipientId:createUserResult.user._id.toString(),
+  created: new Date(),
+  active: true,
+  recycle: false,}
+,
+"66b3c9532b12a965ff4f2d9a"
+       )
       // Registration and login succeeded
       req.logIn(createUserResult.user, (err) => {
         if (err) {
