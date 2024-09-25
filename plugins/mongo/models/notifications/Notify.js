@@ -1,10 +1,4 @@
-import ModelHelper from '../../helpers/models.js';
-import { upload, processImages } from '../../../multer/subscriptionSetup.js';
-import { uploadToLinode } from '../../../aws_sdk/setup.js';
-import { getDb } from '../../../../plugins/mongo/mongo.js';
-
-const modelName = 'notify';
-
+import ModelHelper from "../../helpers/models.js";
 export default class Notify extends ModelHelper {
   constructor(notifyData) {
     super(`${modelName}s`);
@@ -14,12 +8,12 @@ export default class Notify extends ModelHelper {
       recipientIds: { type: 'array', value: [] },       // List of recipient IDs
       recipientType: { type: 'text', value: null },     // Type of recipient (e.g., user, group)
       status: { type: 'text', value: 'pending' },       // Status of the notification (e.g., sent, seen, failed)
-      interval: { type: 'text', value: 'once' },       // Status of the notification (e.g., sent, seen, failed)
+      interval: { type: 'text', value: 'once' },        // Interval for the notification (e.g., once, daily)
       sentAt: { type: 'date', value: null },            // Date and time when the notification was sent
-      usersSeen: { type: 'array', value: [] },
-      actionBy: { type: 'array', value: [] },
-      actionHookBy: { type: 'array', value: [] },
-      unsubscribedBy: { type: 'array', value: [] },       // Date and time when the notification was seen
+      usersSeen: { type: 'array', value: [] },          // Users who have seen the notification
+      actionBy: { type: 'array', value: [] },           // Users who took action on the notification
+      actionHookBy: { type: 'array', value: [] },       // Users who triggered action hooks
+      unsubscribedBy: { type: 'array', value: [] },     // Users who unsubscribed from the notification
       actionTaken: { type: 'boolean', value: false },   // Whether an action was taken on the notification
       actionTakenAt: { type: 'date', value: null },     // Date and time when the action was taken
       actionType: { type: 'text', value: null },        // Type of action taken (e.g., clicked, dismissed)
@@ -41,19 +35,20 @@ export default class Notify extends ModelHelper {
       return { name: key, type: field.type };
     });
   }
+
   middlewareForCreateRoute() {
     return [
-     // upload.fields(this.fileFields),
-    //  processImages,
-    //  this.uploadImagesToLinode.bind(this),
+      // upload.fields(this.fileFields),
+      // processImages,
+      // this.uploadImagesToLinode.bind(this),
     ];
   }
 
   middlewareForEditRoute() {
     return [
-    //  upload.fields(this.fileFields),
-    //  processImages,
-    //  this.uploadImagesToLinode.bind(this),
+      // upload.fields(this.fileFields),
+      // processImages,
+      // this.uploadImagesToLinode.bind(this),
     ];
   }
 
@@ -93,8 +88,6 @@ export default class Notify extends ModelHelper {
   async send(notification) {
     const db = getDb();
     const collection = db.collection(this.collectionName);
-    
- 
 
     try {
       const result = await collection.insertOne(notification);
@@ -102,6 +95,34 @@ export default class Notify extends ModelHelper {
     } catch (error) {
       console.error('Error sending notification:', error);
       throw new Error('Notification could not be sent');
+    }
+  }
+
+  // Add new functionality: Unsubscribe recipient
+  async unsubscribeRecipient(notificationId, recipientId) {
+    const db = getDb();
+    const collection = db.collection(this.collectionName);
+    const updateResult = await collection.updateOne(
+      { notificationId, recipientId },
+      { $addToSet: { unsubscribedBy: recipientId } }  // Add the recipient to unsubscribed list
+    );
+    return updateResult;
+  }
+
+  // Add new functionality: Schedule notifications
+  async scheduleNotification(notificationData, interval) {
+    const db = getDb();
+    const collection = db.collection(this.collectionName);
+
+    // Add logic for scheduling the notification
+    const notification = { ...notificationData, interval };
+
+    try {
+      const result = await collection.insertOne(notification);
+      return result;
+    } catch (error) {
+      console.error('Error scheduling notification:', error);
+      throw new Error('Notification could not be scheduled');
     }
   }
 

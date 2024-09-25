@@ -2,6 +2,7 @@ import express from 'express';
 import { Server } from 'socket.io';
 import { configureNamespace } from './namespace.js';
 import { mainChatHandlers } from './mainChat.js';
+import { notificationsHandlers } from './notifications.js';
 import { socketAdminHandlers } from './socketAdmin.js';
 import { socketP2PHandlers } from './videoStream.js';
 import { socketGamesHandlers } from './games.js';
@@ -18,6 +19,7 @@ router.use((req, res, Server, next) => {
 export const setupSocketIO = (server) => {
   const io = new Server(server);
   configureNamespace(io, '/main_chat', mainChatHandlers);
+  configureNamespace(io, '/notifications', notificationsHandlers);
   configureNamespace(io, '/socketAdmin', socketAdminHandlers);
   configureNamespace(io, '/videoStream', socketP2PHandlers);
   configureNamespace(io, '/games', socketGamesHandlers);
