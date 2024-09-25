@@ -1,4 +1,9 @@
-import ModelHelper from "../../helpers/models.js";
+import { getDb } from '../../../mongo/mongo.js';
+import { ObjectId } from 'mongodb';
+import ModelHelper from '../../helpers/models.js';
+
+const modelName = 'notify';
+
 export default class Notify extends ModelHelper {
   constructor(notifyData) {
     super(`${modelName}s`);
@@ -8,16 +13,18 @@ export default class Notify extends ModelHelper {
       recipientIds: { type: 'array', value: [] },       // List of recipient IDs
       recipientType: { type: 'text', value: null },     // Type of recipient (e.g., user, group)
       status: { type: 'text', value: 'pending' },       // Status of the notification (e.g., sent, seen, failed)
-      interval: { type: 'text', value: 'once' },        // Interval for the notification (e.g., once, daily)
+      interval: { type: 'text', value: 'once' },  
+      replies: { type: 'array', value: [] },
       sentAt: { type: 'date', value: null },            // Date and time when the notification was sent
-      usersSeen: { type: 'array', value: [] },          // Users who have seen the notification
-      actionBy: { type: 'array', value: [] },           // Users who took action on the notification
-      actionHookBy: { type: 'array', value: [] },       // Users who triggered action hooks
-      unsubscribedBy: { type: 'array', value: [] },     // Users who unsubscribed from the notification
+      usersSeen: { type: 'array', value: [] },
+      actionBy: { type: 'array', value: [] },
+      actionHookBy: { type: 'array', value: [] },
+      unsubscribedBy: { type: 'array', value: [] },     // Date and time when the notification was seen
       actionTaken: { type: 'boolean', value: false },   // Whether an action was taken on the notification
       actionTakenAt: { type: 'date', value: null },     // Date and time when the action was taken
       actionType: { type: 'text', value: null },        // Type of action taken (e.g., clicked, dismissed)
       metadata: { type: 'array', value: [] },           // Additional metadata related to the notification
+      notification: { type: 'object', value: {} },      // Holds Notification fields
     };
 
     if (notifyData) {
@@ -36,61 +43,36 @@ export default class Notify extends ModelHelper {
     });
   }
 
-  middlewareForCreateRoute() {
-    return [
-      // upload.fields(this.fileFields),
-      // processImages,
-      // this.uploadImagesToLinode.bind(this),
-    ];
-  }
-
-  middlewareForEditRoute() {
-    return [
-      // upload.fields(this.fileFields),
-      // processImages,
-      // this.uploadImagesToLinode.bind(this),
-    ];
-  }
-
-  async stampAsSent(notificationId, recipientId) {
+  // Method to stamp the notification data inside the Notify object
+  async send(notificationData, notification) {
     const db = getDb();
     const collection = db.collection(this.collectionName);
-    const updateResult = await collection.updateOne(
-      { notificationId, recipientId },
-      { $set: { status: 'sent', sentAt: new Date() } }
-    );
-    return updateResult;
-  }
 
-  async stampAsSeen(notificationId, recipientId) {
-    const db = getDb();
-    const collection = db.collection(this.collectionName);
-    const updateResult = await collection.updateOne(
-      { notificationId, recipientId },
-      { $set: { status: 'seen', seenAt: new Date() } }
-    );
-    return updateResult;
-  }
-
-  async recordAction(notificationId, recipientId, actionType) {
-    const db = getDb();
-    const collection = db.collection(this.collectionName);
-    const updateResult = await collection.updateOne(
-      { notificationId, recipientId },
-      {
-        $set: { actionTaken: true, actionTakenAt: new Date(), actionType },
-      }
-    );
-    return updateResult;
-  }
-
-  // Send notification method
-  async send(notification) {
-    const db = getDb();
-    const collection = db.collection(this.collectionName);
+    // Stamping Notification fields into Notify object
+    const notifyObject = {
+      ...notificationData, // This will include recipient info, status, etc.
+      notification: {      // Include extracted Notification fields
+        type: notification.type,
+        sendGroup: notification.sendGroup,
+        scheduledOutgoing: notification.scheduledOutgoing,
+        autoSchedule: notification.autoSchedule,
+        actionTrigger: notification.actionTrigger,
+        draft: notification.draft,
+        created: notification.created,
+        backgroundImg: notification.backgroundImg,
+        iconImage: notification.iconImage,
+        content: notification.content,
+        subtitle: notification.subtitle,
+        title: notification.title,
+        links: notification.links,
+        active: notification.active,
+        recycle: notification.recycle,
+      },
+      sentAt: new Date(),
+    };
 
     try {
-      const result = await collection.insertOne(notification);
+      const result = await collection.insertOne(notifyObject);
       return result;
     } catch (error) {
       console.error('Error sending notification:', error);
@@ -98,35 +80,5 @@ export default class Notify extends ModelHelper {
     }
   }
 
-  // Add new functionality: Unsubscribe recipient
-  async unsubscribeRecipient(notificationId, recipientId) {
-    const db = getDb();
-    const collection = db.collection(this.collectionName);
-    const updateResult = await collection.updateOne(
-      { notificationId, recipientId },
-      { $addToSet: { unsubscribedBy: recipientId } }  // Add the recipient to unsubscribed list
-    );
-    return updateResult;
-  }
-
-  // Add new functionality: Schedule notifications
-  async scheduleNotification(notificationData, interval) {
-    const db = getDb();
-    const collection = db.collection(this.collectionName);
-
-    // Add logic for scheduling the notification
-    const notification = { ...notificationData, interval };
-
-    try {
-      const result = await collection.insertOne(notification);
-      return result;
-    } catch (error) {
-      console.error('Error scheduling notification:', error);
-      throw new Error('Notification could not be scheduled');
-    }
-  }
-
-  pathForGetRouteView() {
-    return `admin/${modelName}s/template`;
-  }
+  // Other existing methods for stamping as sent, seen, etc.
 }

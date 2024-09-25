@@ -25,21 +25,23 @@ import users from './userFunctions/index.js';
 import Footer from '../plugins/mongo/models/footer/Footer.js';
 import Marquee from '../plugins/mongo/models/Marquee.js';
 import Avatar from '../plugins/mongo/models/Avatar.js';
+import Notify from '../plugins/mongo/models/notifications/Notify.js';
+import Notification from '../plugins/mongo/models/notifications/Notification.js';
 
 const router = express.Router();
 // Middleware to use cookieParser
 router.use(cookieParser());
 
 router.use(pluginsRouter);
-//focus test below:
+// focus test below:
 router.use('/', adminFunctionsRouter);
-//focus test below:
+// focus test below:
 router.use('/users', users);
-//focus test below:
+// focus test below:
 router.use('/', cookiesRouter);
 router.use(userBucketRouter);
 router.use('/games', gamesRouter);
-//ignore these
+// ignore these
 router.get('/getNotifications', getNotifications);
 router.post('/deleteAvatar', deleteAvatar);
 router.post('/assignAvatar', assignAvatar);
@@ -51,10 +53,10 @@ router.get('/reset-password/:token', handleResetPasswordGet);
 router.post('/updateBanned', updateBanned);
 router.post('/userDataUpload', userDataUpload);
 router.post('/saveRotation', saveRotation);
-//focus test below:
-
+// focus test below:
 router.get('/', noNos, async (req, res) => {
   let user = req.user;
+  let notifications = [];
 
   const db = getDb();
   const collection = db.collection('webappSettings');
@@ -64,13 +66,41 @@ router.get('/', noNos, async (req, res) => {
   const collection4 = db.collection('p2p_rooms');
 
   try {
-    if(typeof user =='object' && user){
-    let userId = user._id.toString() || "";
+    if (user && typeof user === 'object') {
+      const userId = user._id.toString();
 
-    const myAvatar = await new Avatar().getAll({ userId: userId, assigned: true });
-    user.myAvatar = myAvatar;
-   // console.log(chalk.bgYellow(myAvatar[0].avatarUrl))
+      // Fetch user avatar
+      const myAvatar = await new Avatar().getAll({ userId: userId, assigned: true });
+      user.myAvatar = myAvatar;
+
+      // Fetch notifications where recipientId matches the userId
+      const generalNotifications = await new Notify().getAll({ recipientId: userId });
+
+      // Fetch notifications where recipientIds array includes the userId (for group notifications)
+      const notifyGroup = await new Notify().getAll({ recipientIds: { $gt: [] } });
+      const groupNotifications = notifyGroup.filter(notification => notification.recipientIds.includes(userId));
+
+      // Fetch p2p notifications where recipientId matches the userId
+      const p2pNotifications = await new Notify().getAll({ type: 'p2p', recipientId: userId });
+
+      // Process all fetched notifications to add sender and recipient avatars if available
+      const allNotifications = [...generalNotifications, ...groupNotifications, ...p2pNotifications];
+
+      for (let notification of allNotifications) {
+        // Fetch sender and recipient avatars
+        const senderAvatar = await new Avatar().getAll({ userId: notification.senderId, assigned: true });
+        const recipientAvatar = await new Avatar().getAll({ userId: notification.recipientId, assigned: true });
+
+        // Attach sender and recipient avatars to the notification object
+        notification.senderAvatarUrl = senderAvatar.length > 0 ? senderAvatar[0].avatarUrl : '/images/LogoTransp.png';
+        notification.recipientAvatarUrl = recipientAvatar.length > 0 ? recipientAvatar[0].avatarUrl : '/images/LogoTransp.png';
+      }
+
+      // Combine all notifications into a single array
+      notifications = allNotifications;
     }
+
+    // Fetch other data for rendering
     const footer = await new Footer().getAll();
     const marquee = await new Marquee().getAll();
     const webappSettings = await collection.find().toArray();
@@ -86,15 +116,19 @@ router.get('/', noNos, async (req, res) => {
     const chatRooms = await collection2.find().toArray();
     const videos = await collection3.find().toArray();
     const p2p_rooms = await collection4.find().toArray();
+
     const cookieData = {
       lastVisit: req.cookies.lastVisit,
       userName: req.cookies.userName,
       visitCount: parseInt(req.cookies.visitCount),
     };
+
     console.log(cookieData);
 
+    // Render the index page with all the required data, including notifications
     res.render('index', {
       user: user,
+      notifications: notifications, // Send all notifications to the template
       footer: footer,
       marquee: marquee,
       cookieData: cookieData,

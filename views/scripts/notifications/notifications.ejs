@@ -1,0 +1,56 @@
+
+<script>
+  const socket = io('/user_notifications'); // Connect to the notifications namespace
+
+  // Listen for user avatar data
+  socket.on('user avatar', (data) => {
+    const { thumbnailUrl } = data;
+    document.getElementById('user-avatar').src = thumbnailUrl; // Update avatar on the UI
+  });
+
+  // Listen for new notifications
+  socket.on('newNotification', (data) => {
+    const { title, message, thumbnailUrl } = data;
+    renderNotification(title, message, thumbnailUrl);
+  });
+
+  // Fetch notifications when the page loads
+  socket.emit('fetch notifications', { userId: '<%= user._id %>', page: 1, notificationsPerPage: 10 });
+
+  // Listen for fetched notifications
+  socket.on('notifications fetched', (notifications) => {
+    const notificationsList = document.getElementById('notifications-list');
+    notificationsList.innerHTML = ''; // Clear the current list
+    notifications.forEach(notification => {
+      renderNotification(notification.title, notification.message, notification.avatarThumbnail);
+    });
+  });
+
+  // Mark a notification as seen
+  function markAsSeen(notificationId) {
+    socket.emit('notificationSeen', { notificationId, recipientId: '<%= user._id %>' });
+  }
+
+  // Unsubscribe from a notification
+  function unsubscribe(notificationId) {
+    socket.emit('unsubscribe', { notificationId, recipientId: '<%= user._id %>' });
+  }
+
+  // Schedule a notification (example use case)
+  function scheduleNotification(notificationData, interval) {
+    socket.emit('scheduleNotification', { notificationData, interval });
+  }
+
+  // Render a single notification
+  function renderNotification(title, message, thumbnailUrl) {
+    const notificationsList = document.getElementById('notifications-list');
+    const li = document.createElement('li');
+    li.innerHTML = `
+      <img src="${thumbnailUrl}" alt="Avatar" style="width:30px; height:30px; border-radius:50%;">
+      <strong>${title}</strong>: ${message}
+      <button onclick="markAsSeen('${title}')">Mark as Seen</button>
+      <button onclick="unsubscribe('${title}')">Unsubscribe</button>
+    `;
+    notificationsList.appendChild(li);
+  }
+</script>

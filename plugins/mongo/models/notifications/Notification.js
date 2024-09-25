@@ -22,7 +22,7 @@ export default class Notification extends ModelHelper {
       subtitle: { type: 'text', value: null },
       title: { type: 'text', value: null },
       links: { type: 'text', value: [] },
- 
+      active:{type:'boolean', value:false},
       recycle: { type: 'boolean', value: null },
     };
     if (notificationData) {
@@ -63,7 +63,11 @@ export default class Notification extends ModelHelper {
       { name: 'iconImage', maxCount: 1 },
     ];
   }
+  async getTemplates(notificationId) {
 
+    const id = notificationId.toString()
+    return await new Notification().getAll({ id });
+  }
   async uploadImagesToLinode(req, res, next) {
     try {
       if (req.files) {
