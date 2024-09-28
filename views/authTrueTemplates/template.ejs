@@ -10,10 +10,10 @@
         <div class="collectionId" hidden collection-id="<%=setting._id%>"></div>
         <div class="modelInfo" hidden model-info="<%=setting.mane%>"></div>
         <div class="<%=setting.innerStyle%>">
-          <% if (setting.title) { %>
+          <% if (setting.title || setting.title !== "") { %>
             <h1><%= setting.title %></h1>
-          <% } %>
-
+          <% }else{ %> <div class="spacer_50"></div>
+           <%}%>
           <% if (setting.subtitle) { %>
             <h1><%= setting.subtitle %></h1>
           <% } %>

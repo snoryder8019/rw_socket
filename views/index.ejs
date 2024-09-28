@@ -25,10 +25,13 @@
       <div id="bannerControls">
         <% if (typeof user === 'object' && user) { %>
           <button id="dashToggle"></button>
+          <h3>DASHBOARD</h3>
           <button id="chatToggle"></button>
+          <h3>CHAT</h3>
           <% } else { %>
             <%if(typeof webappSettings === 'object'&& webappSettings){%>
               <button style="background-image: url('<%=webappSettings[0].signInIcon%>');" id="dashToggle"></button>
+             <h3>Sign In</h3>
               <%}%>
         <% } %>
       </div>
