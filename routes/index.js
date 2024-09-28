@@ -1,5 +1,7 @@
 import express from 'express';
 import chalk from 'chalk';
+import {marked} from 'marked';
+
 import cookieParser from 'cookie-parser';
 import pluginsRouter from '../plugins/index.js';
 import cookiesRouter from './userFunctions/cookies.js';
@@ -54,6 +56,7 @@ router.post('/updateBanned', updateBanned);
 router.post('/userDataUpload', userDataUpload);
 router.post('/saveRotation', saveRotation);
 // focus test below:
+
 router.get('/', noNos, async (req, res) => {
   let user = req.user;
   let notifications = [];
@@ -83,18 +86,15 @@ router.get('/', noNos, async (req, res) => {
       // Fetch p2p notifications where recipientId matches the userId
       const p2pNotifications = await new Notify().getAll({ type: 'p2p', recipientId: userId });
 
-      // Process all fetched notifications to add sender and recipient avatars if available
+      // Process all fetched notifications
       const allNotifications = [...generalNotifications, ...groupNotifications, ...p2pNotifications];
 
-      for (let notification of allNotifications) {
-        // Fetch sender and recipient avatars
-        const senderAvatar = await new Avatar().getAll({ userId: notification.senderId, assigned: true });
-        const recipientAvatar = await new Avatar().getAll({ userId: notification.recipientId, assigned: true });
-
-        // Attach sender and recipient avatars to the notification object
-        notification.senderAvatarUrl = senderAvatar.length > 0 ? senderAvatar[0].avatarUrl : '/images/LogoTransp.png';
-        notification.recipientAvatarUrl = recipientAvatar.length > 0 ? recipientAvatar[0].avatarUrl : '/images/LogoTransp.png';
-      }
+      // Use marked to convert notification.content from Markdown to HTML
+      allNotifications.forEach(notification => {
+        if (notification.notification && notification.notification.content) {
+          notification.notification.content = marked(notification.notification.content);
+        }
+      });
 
       // Combine all notifications into a single array
       notifications = allNotifications;
