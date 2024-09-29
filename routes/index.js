@@ -25,10 +25,18 @@ import users from './userFunctions/index.js';
 import Footer from '../plugins/mongo/models/footer/Footer.js';
 import Marquee from '../plugins/mongo/models/Marquee.js';
 import Avatar from '../plugins/mongo/models/Avatar.js';
+import {
+  initializeAuth,
+  handleAuthCallback,
+  testEmail,
+} from '../plugins/nodemailer/ms_mailer.js';
 
 const router = express.Router();
 // Middleware to use cookieParser
 router.use(cookieParser());
+router.get('/auth', initializeAuth);
+router.get('/oauth/ms/callback', handleAuthCallback);
+router.get('/test_email', testEmail);
 
 router.use(pluginsRouter);
 //focus test below:
@@ -64,17 +72,20 @@ router.get('/', noNos, async (req, res) => {
   const collection4 = db.collection('p2p_rooms');
 
   try {
-    if(typeof user =='object' && user){
-    let userId = user._id.toString() || "";
+    if (typeof user == 'object' && user) {
+      let userId = user._id.toString() || '';
 
-    const myAvatar = await new Avatar().getAll({ userId: userId, assigned: true });
-    user.myAvatar = myAvatar;
-   // console.log(chalk.bgYellow(myAvatar[0].avatarUrl))
+      const myAvatar = await new Avatar().getAll({
+        userId: userId,
+        assigned: true,
+      });
+      user.myAvatar = myAvatar;
+      // console.log(chalk.bgYellow(myAvatar[0].avatarUrl))
     }
     const footer = await new Footer().getAll();
     const marquee = await new Marquee().getAll();
     const webappSettings = await collection.find().toArray();
-    
+
     // Fetch and sort sectionSettings by `order`, placing undefined or 0 last
     const sectionSettings = await collection1.find().toArray();
     sectionSettings.sort((a, b) => {

@@ -4,17 +4,11 @@
   <link rel="stylesheet" href="/stylesheets/style.css">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title><%=config.title%></title>
-  
 </head>
-<body>      
-  
+<body>
   <!--ALL FIXED PARTIALS OUTSIDE THE MAIN DIV-->
-  <div id="flashErrors"><%- include('./partials/flashErrors',{message:message})%></div>  
-  
-  <d
-  
-  
-  iv id="main">
+  <div id="flashErrors"><%- include('./partials/flashErrors',{message:message})%></div>
+  <div id="main">
 <!--includeLIGHT BOXES HERE-->
   <!--div class="client_camera">
     <video  id="myVideo" autoplay></video>
@@ -32,14 +26,14 @@
               <%}%>
         <% } %>
       </div>
- 
+
     </div>
     <% if (typeof user === 'object' && user) { %>
       <%- include('./authTrueTemplates/template') %>
     <% } else { %>
       <%- include('./authFalseTemplates/template') %>
     <% } %>
-  </div>    
+  </div>
 
   <% if (typeof user === 'object' && user) { %>
     <%- include('./chat/basicChat', {user: user}) %>
@@ -48,14 +42,14 @@
     <%- include('./chat/basicChat', {user: ""}) %>
     <%- include('./userDash/userDash', {user: ""}) %>
   <% } %>
-  <div id="footer"><%- include('./partials/footer') %></div>      
+  <div id="footer"><%- include('./partials/footer') %></div>
 
   <script>
     // window.addEventListener('scroll', function() {
     //   var banner = document.getElementById('mainBanner');
     //   var bannerControls = document.getElementById('bannerControls');
     //   var bannerHeight = banner.offsetHeight;
-      
+
     //   if (window.pageYOffset > bannerHeight) {
     //     banner.classList.add('sticky');
     //     banner.classList.add('shrunk');
@@ -65,7 +59,7 @@
     //   }
     // });
 
- 
+
 
     function playVideo(url) {
       var videoPlayer = document.getElementById('videoPlayer');
