@@ -34,7 +34,7 @@ const initializeOAuth2Client = async () => {
     cca
       .acquireTokenByRefreshToken({
         refreshToken: tokenDoc.refresh_token,
-        scopes: ['https://graph.microsoft.com/.default'],
+        scopes: ['https://graph.microsoft.com/.default', 'offline_access'],
       })
       .then((response) => {
         cca.setCredentials({
@@ -70,7 +70,7 @@ const initializeOAuth2Client = async () => {
 const createTransporter = async () => {
   const accessToken = await cca.acquireTokenSilent({
     account: cca.getAccountByHomeId(process.env.MS_ACCOUNT_ID),
-    scopes: ['https://graph.microsoft.com/.default'],
+    scopes: ['https://graph.microsoft.com/.default', 'offline_access'],
   });
 
   // Create a transporter object using the default SMTP transport
@@ -117,7 +117,7 @@ export const sendEmail = async (to, subject, text) => {
 
 export const initializeAuth = (req, res) => {
   const authCodeUrlParameters = {
-    scopes: ['https://graph.microsoft.com/.default'],
+    scopes: ['https://graph.microsoft.com/.default', 'offline_access'],
     redirectUri: process.env.MS_REDIRECT_URL,
   };
 
@@ -132,7 +132,7 @@ export const initializeAuth = (req, res) => {
 export const handleAuthCallback = async (req, res) => {
   const tokenRequest = {
     code: req.query.code,
-    scopes: ['https://graph.microsoft.com/.default'],
+    scopes: ['https://graph.microsoft.com/.default', 'offline_access'],
     redirectUri: process.env.MS_REDIRECT_URL,
   };
 
