@@ -158,7 +158,12 @@ $cont4:purple;
   left: 47%; /* Adjust this to move it horizontally */
   z-index: 0; /* Ensure it stays behind the text */
 }
-.adminWindow{transition:margin-bottom 1.2s ease-in 0s }
+#chatTextDisplay{
+  @media (min-width:768px){
+    display: none;
+  }
+}
+.adminWindow{transition:margin-bottom 1.2s ease-in 0s; h2, p, input{color:black} }
 .avatarSetup {
   display: flex;
   flex-grow: 1;
@@ -1063,16 +1068,18 @@ grid-template-columns: 1fr 10fr;
     padding: 5px 10px; /* Reduced padding for buttons */
     font-size: 0.8rem; /* Smaller text size */
   }
+
   #bannerControls{
-    h3{color:$gold}
-    grid-template-columns: 1fr 1fr ;
+    h3{ width: 100%;color:$gold;font-size: .6rem;transform:translateY(-12px)}
     text-align: center;
    width: 100%;
     position: fixed;
     bottom: 0;
+    text-align: center;
     left: 0;
-    display: grid;
-    margin: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+      margin: 0;
     padding: 2%;
     z-index: 1005;
     align-self: center;
@@ -1081,6 +1088,25 @@ grid-template-columns: 1fr 10fr;
       padding:0;
     }
   }
+  #bannerControls > .bannerDiv > button,
+#bannerControls > .bannerDiv > h3 {
+  text-align: center;
+  margin-bottom: 10px; /* Space between h3 and button */
+}
+
+#bannerControls > .bannerDiv > button {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+#bannerControls > .bannerDiv > h3 {
+  font-size: 20px;
+  color: $gold;
+}
+
 #userGreeting{
   font-size: .8rem;
  
@@ -1319,7 +1345,7 @@ color: white;
 
 @media (max-width: 768px) {
   .slide_view {
-    width: 94%;
+    width: 92%;
   }
 }
 
@@ -1363,7 +1389,7 @@ color: white;
 .slideShowInner {
   
   position: absolute; /* Ensure content is positioned over slides */
-  top: 50%; /* Center vertically */
+  top: 42%; /* Center vertically */
   left: 50%; /* Center horizontally */
   transform: translate(-50%, -50%); /* Center the content */
   z-index: 2; /* Ensure text content is above the slides */
@@ -1382,18 +1408,20 @@ color: white;
 }
 
 .slideShowInner {
+  
     @media (min-width: 768px) {
    // max-width: 52%;
   }
 }
 
 .slide_view h1 {
-  font-size: 4rem; /* Slightly larger size for more impact */
+  font-size: 6rem; /* Slightly larger size for more impact */
   font-weight: 900; /* Extra bold for maximum emphasis */
-  color: black; /* Bold color */
-  text-shadow: 1px 1px 0px white;
+  color: $purple; /* Bold color */
+  text-shadow: 2px 2px 0px rgb(0, 0, 0),-1px -1px 0px white;
+transition:1.2s ease-in-out 1s;
   font-family: $back; /* Distinctive typeface */
-  
+  transform: translateY(-55%);
   
 }
 
@@ -1791,6 +1819,9 @@ max-width: 75px;
         white-space: nowrap;
         transition: transform 12s linear; /* Faster scroll effect */
       }
+      .marquee-item img{
+        width:100%;
+      }
       .marquee span {
         display: inline-block;
         padding-left: 100%;
@@ -2097,7 +2128,7 @@ li{color:black;text-align: left;font-size: 1.2rem;}
 }
 .readerHeader{
   background-repeat: no-repeat;
-background-size: cover;
+background-size: contain;
   min-width: 100%;
   min-height: 35%;
   @media (min-width:768px) {

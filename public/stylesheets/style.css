@@ -87,8 +87,14 @@
   z-index: 0;
   /* Ensure it stays behind the text */ }
 
+@media (min-width: 768px) {
+  #chatTextDisplay {
+    display: none; } }
+
 .adminWindow {
   transition: margin-bottom 1.2s ease-in 0s; }
+  .adminWindow h2, .adminWindow p, .adminWindow input {
+    color: black; }
 
 .avatarSetup {
   display: flex;
@@ -927,23 +933,44 @@
   /* Smaller text size */ }
 
 #bannerControls {
-  grid-template-columns: 1fr 1fr;
   text-align: center;
   width: 100%;
   position: fixed;
   bottom: 0;
+  text-align: center;
   left: 0;
   display: grid;
+  grid-template-columns: 1fr 1fr;
   margin: 0;
   padding: 2%;
   z-index: 1005;
   align-self: center;
   background-color: black; }
   #bannerControls h3 {
-    color: #ffde68; }
+    width: 100%;
+    color: #ffde68;
+    font-size: .6rem;
+    transform: translateY(-12px); }
   @media (min-width: 768px) {
     #bannerControls {
       padding: 0; } }
+
+#bannerControls > .bannerDiv > button,
+#bannerControls > .bannerDiv > h3 {
+  text-align: center;
+  margin-bottom: 10px;
+  /* Space between h3 and button */ }
+
+#bannerControls > .bannerDiv > button {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  cursor: pointer; }
+
+#bannerControls > .bannerDiv > h3 {
+  font-size: 20px;
+  color: #ffde68; }
 
 #userGreeting {
   font-size: .8rem;
@@ -1194,7 +1221,7 @@
 
 @media (max-width: 768px) {
   .slide_view {
-    width: 94%; } }
+    width: 92%; } }
 /* General slide styling */
 .slide {
   position: absolute;
@@ -1228,7 +1255,7 @@
 .slideShowInner {
   position: absolute;
   /* Ensure content is positioned over slides */
-  top: 50%;
+  top: 42%;
   /* Center vertically */
   left: 50%;
   /* Center horizontally */
@@ -1246,15 +1273,17 @@
     color: white; }
 
 .slide_view h1 {
-  font-size: 4rem;
+  font-size: 6rem;
   /* Slightly larger size for more impact */
   font-weight: 900;
   /* Extra bold for maximum emphasis */
-  color: black;
+  color: #551360;
   /* Bold color */
-  text-shadow: 1px 1px 0px white;
+  text-shadow: 2px 2px 0px black, -1px -1px 0px white;
+  transition: 1.2s ease-in-out 1s;
   font-family: "backlash";
-  /* Distinctive typeface */ }
+  /* Distinctive typeface */
+  transform: translateY(-55%); }
 
 .linkTable_alt a {
   color: #ffde68;
@@ -1611,6 +1640,9 @@
   transition: transform 12s linear;
   /* Faster scroll effect */ }
 
+.marquee-item img {
+  width: 100%; }
+
 .marquee span {
   display: inline-block;
   padding-left: 100%;
@@ -1904,7 +1936,7 @@ button good {
 
 .readerHeader {
   background-repeat: no-repeat;
-  background-size: cover;
+  background-size: contain;
   min-width: 100%;
   min-height: 35%; }
   @media (min-width: 768px) {

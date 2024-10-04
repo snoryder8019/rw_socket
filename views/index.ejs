@@ -24,10 +24,22 @@
       <%}%>
       <div id="bannerControls">
         <% if (typeof user === 'object' && user) { %>
-          <button id="dashToggle"></button>
-          <h3>DASHBOARD</h3>
-          <button id="chatToggle"></button>
-          <h3>CHAT</h3>
+<div>
+  <div><button id="dashToggle"></button></div>
+</div>
+<div>
+  <div><button id="chatToggle"></button></div>
+</div>
+
+         
+      
+
+        
+    
+            
+       
+       
+       
           <% } else { %>
             <%if(typeof webappSettings === 'object'&& webappSettings){%>
               <button style="background-image: url('<%=webappSettings[0].signInIcon%>');" id="dashToggle"></button>
