@@ -1002,7 +1002,7 @@ transition-duration: .6s;
 #mainBanner{
   height: 16vh;
  // background-image: url('/images/MainBanner.png');
-  background-size: 90%;
+  background-size: 69%;
   background-position: center;
   background-repeat: no-repeat;
   //background-color: #410b4b;
@@ -1012,7 +1012,7 @@ transition-duration: .6s;
   @media (min-width:768px) {
     width: 56%;
     margin: 0%;
-    background-size: contain;
+    background-size: 30%;
     z-index: 8001;
 }
 }
@@ -1421,7 +1421,7 @@ color: white;
   text-shadow: 2px 2px 0px rgb(0, 0, 0),-1px -1px 0px white;
 transition:1.2s ease-in-out 1s;
   font-family: $back; /* Distinctive typeface */
-  transform: translateY(-55%);
+  transform: translateY(-69%);
   
 }
 
