@@ -647,7 +647,14 @@
       width: 95vw;
       top: 0%;
       left: 102%;
-      height: 87%;
+      height: 82%;
+      z-index: 10002; } }
+  @media (max-height: 600px) and (max-width: 768px) {
+    #chat-window-basic {
+      width: 92vw;
+      top: 0%;
+      left: 105%;
+      height: 77%;
       z-index: 10002; } }
 
 .contrast_basic {
