@@ -6,14 +6,26 @@
        </div>
    </div>
    <div id="chatTabs">
-      <%if (typeof chatRooms == 'object' && chatRooms){%>
-    <%for(let i=0; i<chatRooms.length;i++){%>
-       <div onclick="changeRooms()" id="tab_section_<%=chatRooms[i]._id%>" class="tab_section"><%=chatRooms[i].roomName%></div>
-       <%}%>
-       <%}%>
-    <!--this will ultimately pull up a list of rooms you have permission to join-->
+    <% if (typeof chatRooms == 'object' && chatRooms) { %>
+      <% for (let i = 0; i < chatRooms.length; i++) { %>
+        <%if(chatRooms[i].roomName !== 'ADMIN'){%>
+        <div onclick="changeRooms()" id="tab_section_<%= chatRooms[i]._id %>" class="tab_section">
+          <%= chatRooms[i].roomName %>
+        </div>
+      <% } %>
+      <% } %>
+    <% } %>
     
-   </div>
+    <% if (user && user.isAdmin) { %>
+      <!-- Add the ADMIN chat tab for admins -->
+      <div onclick="changeRooms('ADMIN')" id="tab_section_66f4a68103b41328183b02a0" class="tab_section">
+        ADMIN
+      </div>
+    <% } %>
+    
+    <!-- this will ultimately pull up a list of rooms you have permission to join -->
+  </div>
+  
   
   <% if(typeof user === 'object' && user) { %>
     <div id="chatContainer">
@@ -238,7 +250,7 @@ socket.on('newReply', ({ postId, reply }) => {
 
     const messageDiv = document.createElement('div');
     messageDiv.className = isOwnMessage ? 'message ownMessage' : 'message';
-    
+
     // Apply CSS Grid to messageDiv
     messageDiv.style.display = 'grid';
     messageDiv.style.gridTemplateColumns = '2fr 8fr 1fr';  // Define the grid layout: avatar, message, actions
@@ -278,7 +290,12 @@ socket.on('newReply', ({ postId, reply }) => {
     // Single Heart with counter
     const likesCounter = document.createElement('span');
     likesCounter.className = 'likesCounter';
-    likesCounter.textContent = `${messageObject.likedBy?.length || 0} ❤️`;  // One heart icon with counter
+    likesCounter.textContent = `❤️`;  // Heart icon only, no count displayed
+
+    // Apply greyscale if the message has not been liked by the current user
+    const isLikedByCurrentUser = messageObject.likedBy?.includes(userId);
+    likesCounter.style.filter = isLikedByCurrentUser ? 'grayscale(0%)' : 'grayscale(100%)'; // Only based on user's like status
+    likesCounter.dataset.isLiked = isLikedByCurrentUser ? "true" : "false";  // Set the data attribute for like status
 
     // Single Comment bubble with counter
     const repliesCounter = document.createElement('span');
@@ -331,7 +348,7 @@ socket.on('newReply', ({ postId, reply }) => {
     // Like click handler
     likesCounter.addEventListener('click', (e) => {
         const isLiked = e.target.dataset.isLiked === "true";
-        handleLikeClick(postId, userId, e, isLiked);
+        handleLikeClick(postId, userId, e.target, isLiked);
     });
 
     // Reply click handler to toggle reply input field and replies
@@ -348,6 +365,8 @@ socket.on('newReply', ({ postId, reply }) => {
         }
     });
 }
+
+
 
 // Function to render replies under the main message
 function renderSingleReply(reply, parentElement) {
@@ -385,28 +404,36 @@ function renderReplies(replies, parentElement) {
 }
 
 // Function to handle like clicks
+// Function to handle like clicks
+// Function to handle like clicks
 function handleLikeClick(postId, userId, heartIcon, isLiked) {
-    const tally = isLiked ? '--' : '++';  // Toggle like/unlike
+  if (!heartIcon || !heartIcon.style) {
+    console.error('heartIcon or its style is undefined');
+    return;
+  }
 
-    fetch(`/users/chat/like`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ userId, tally, postId })
-    })
-    .then(response => response.json())
-    .then(data => {
-        const newTally = data.likes;  // Get updated like count
-        heartIcon.textContent = '❤️';  // Ensure heart icon remains
-        heartIcon.nextElementSibling.textContent = newTally;  // Update the likes counter
-        heartIcon.style.filter = isLiked ? 'grayscale(100%)' : 'grayscale(0%)';  // Toggle grayscale based on like status
-        heartIcon.dataset.isLiked = isLiked ? "false" : "true";  // Update dataset
-    })
-    .catch(error => {
-        console.error('Error updating like:', error);
-    });
+  const tally = isLiked ? '--' : '++';  // Toggle like/unlike
+
+  fetch(`/users/chat/like`, {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ userId, tally, postId })
+  })
+  .then(response => response.json())
+  .then(data => {
+      const newTally = data.likes;  // Get updated like count
+      heartIcon.textContent = `${newTally} ❤️`;  // Update the likes counter inside the heart icon itself
+      heartIcon.style.filter = isLiked ? 'grayscale(100%)' : 'grayscale(0%)';  // Toggle grayscale based on like status
+      heartIcon.dataset.isLiked = isLiked ? "false" : "true";  // Update dataset for next click
+  })
+  .catch(error => {
+      console.error('Error updating like:', error);
+  });
 }
+
+
 
 // Function to handle reply submission
 function handleReplyClick(postId, userId, replyMessage, inputField, repliesContainer) {
