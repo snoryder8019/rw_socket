@@ -797,19 +797,20 @@ height:34px;
   
 }
 #userDash{
-    @include sliderWindows();
-    right:100%;
-    top:0%;
-    z-index: 1001;
-@media (min-width:768px) {
-  font-size: smaller;
-  width: 93%;
+  @include sliderWindows();
+  right:100%;
   top:0%;
-  height:80vh;
   z-index: 1001;
-  box-shadow: 0px 0px 120px rgba(53, 0, 52, 0.865);
-}
-    @media (max-width:768px) {
+  @media (min-width:768px) {
+    font-size: smaller;
+    width: 93%;
+    top:0%;
+    height:80vh;
+    z-index: 1001;
+    box-shadow: 0px 0px 120px rgba(53, 0, 52, 0.865);
+  }
+  @media (max-width:768px) {
+      overflow-y:scroll; 
         width: 92%;
         height:87%;
       //  margin-top: 41%;

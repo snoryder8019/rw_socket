@@ -27,24 +27,29 @@
         <p><%- htmlLayout %></p>
 
         <!-- Render dynamic content based on the model -->
-        <% if (additionalData.excursions) { %>
-          <h2>Excursions</h2>
+        <% if (additionalData.excursions.length > 0) { %>
+          <h3>Excursions</h3>
           <ul>
             <% additionalData.excursions.forEach((excursion) => { %>
-              <li><%= excursion.name %>: <%= excursion.description %></li>
+              <li><%= excursion.title %>: <%= excursion.description %></li>
             <% }) %>
           </ul>
         <% } %>
-
-        <% if (additionalData.vendors) { %>
-          <h2>Vendors</h2>
+        
+        <% if (additionalData.vendors.length > 0) { %>
+          <h3>Vendors</h3>
           <ul>
             <% additionalData.vendors.forEach((vendor) => { %>
-              <li><%= vendor.name %>: <%= vendor.services %></li>
+              <li>
+                <h4><%= vendor.title %></h4>
+                <p><%= vendor.subTitle %></p>
+                <p><%= vendor.description %></p>
+                <img src="<%= vendor.mediumIcon %>" alt="" class="readerMediumIcon">
+              </li>
             <% }) %>
           </ul>
         <% } %>
-
+        
         <!-- Handle travel tips if available -->
         <% if (record.travelTips) { %>
           <h2>Travel Tips for: <%= record.title || record.name %></h2>

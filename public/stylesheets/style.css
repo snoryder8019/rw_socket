@@ -695,6 +695,7 @@
       box-shadow: 0px 0px 120px rgba(53, 0, 52, 0.865); } }
   @media (max-width: 768px) {
     #userDash {
+      overflow-y: scroll;
       width: 92%;
       height: 87%; } }
 

@@ -10,12 +10,15 @@ import {marked} from 'marked';
 import Excursion from '../../../plugins/mongo/models/travel/Excursion.js'
 import Notification from '../../../plugins/mongo/models/notifications/Notification.js'
 import Notify from "../../../plugins/mongo/models/notifications/Notify.js";
+import chalk from 'chalk';
 const router = express.Router();
 const readerOptions = {
   blog: Blog,
   destination: Destination,
   help: Help,
   vote: Vote,
+  excursion:Excursion,
+  vendor:Vendor,
   club : Club,
 };
 
@@ -70,6 +73,7 @@ router.get('/overlay/:model/:id', async (req, res) => {
       return res.status(400).json({ message: 'Invalid model type' });
     }
 
+    // Fetch the record
     const record = await new Model().getById(id);
     if (!record) {
       return res.status(404).send('<p>Data not found</p>');
@@ -78,21 +82,52 @@ router.get('/overlay/:model/:id', async (req, res) => {
     // Convert content using markdown if necessary
     const htmlLayout = marked(record.content);
 
-    // Prepare additional dynamic content based on the model
+    // Initialize additionalData and populate it if necessary
     let additionalData = {};
+
     if (modelParam === 'club' || modelParam === 'destination') {
+      // Check if record.excursions and record.vendors are arrays of IDs
+      const excursionIds = Array.isArray(record.excursions)
+        ? record.excursions.filter(id => typeof id === 'string' && id.trim() !== '')
+        : [];
+
+      const vendorIds = Array.isArray(record.vendors)
+        ? record.vendors.filter(id => typeof id === 'string' && id.trim() !== '')
+        : [];
+
+      // Log the IDs for debugging
+      console.log('Excursion IDs:', excursionIds);
+      console.log('Vendor IDs:', vendorIds);
+
+      // Fetch actual excursions and vendors by their IDs
+      const excursions = excursionIds.length > 0
+        ? await Promise.all(excursionIds.map(id => new Excursion().getById(id)))
+        : [];
+
+      const vendors = vendorIds.length > 0
+        ? await Promise.all(vendorIds.map(id => new Vendor().getById(id)))
+        : [];
+
+      // Log fetched data for debugging
+      console.log('Fetched Excursions:', excursions);
+      console.log('Fetched Vendors:', vendors);
+
       additionalData = {
-        excursions: await new Excursion().getAll(),
-        vendors: modelParam === 'club' ? await new Vendor().getByClubId(id) : []
+        excursions,
+        vendors,
       };
     }
 
+    console.log('Additional Data:', additionalData); // Log the entire additionalData object
+
+    // Render the popup with the fetched data
     res.render('partials/readerPopup', { record, htmlLayout, additionalData });
   } catch (error) {
     console.error('Error fetching data:', error);
     res.status(500).send('<p>Internal server error</p>');
   }
 });
+
 
 
 
