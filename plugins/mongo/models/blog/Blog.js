@@ -33,6 +33,8 @@ export default class Blog extends ModelHelper {
       shares: { type: 'number', value: 0 },
       likes: { type: 'number', value: 0 },
       comments: { type: 'array', value: [] },
+      excursions: { type: 'array', value: [] },
+      vendors: { type: 'array', value: [] },
       vote:{type:'dropdown',value:['none']}
       // Add more fields as necessary...
     };
