@@ -1,4 +1,5 @@
 <div id="chat-window-basic">
+  <%if (typeof user=='object'&& user){%>
   <div id="userList">
        <div class="loaderWheel">
            <div class="loaderDiv"><h3>loading chatroom...</h3></div>
@@ -45,6 +46,16 @@
   <% } else { %>
       <p>Please log in to join the chat.</p>
   <% } %>
+  <% }else{ %>
+    <div class="chat_greeting">
+    <img src="<%=webappSettings[0].mainBannerCell%>" style="width:100%">
+    <h1>Welcome to the NEW Royal Splendor Experience!</h1>
+    <h2>Create an Account Today!</h2>
+    <h3>Browse as a guest and check out our Travel and other articles, before you sign up!</h3>
+ <p>Royal Splendor is a community driven website .We Advocate to the Woman seeking connections, support, and entertainment all in one place.</p>
+
+ </div>
+    <%}%>
 </div>
 
 
