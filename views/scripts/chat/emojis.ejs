@@ -1,0 +1,62 @@
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+      function observeEmojiSlider() {
+        const emojiSlider = document.querySelector('.emojiSlider');
+        
+        if (!emojiSlider) {
+          // If emojiSlider is not found, retry after a short delay
+          setTimeout(observeEmojiSlider, 100); // Adjust the delay as needed
+          return;
+        }
+  
+        // Create an Intersection Observer
+        const observer = new IntersectionObserver((entries, observer) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              // Element is in view, load the .ejs content
+              loadEmojiContent();
+              // Stop observing once the content is loaded
+              observer.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.1 }); // Adjust the threshold as needed
+  
+        // Observe the emojiSlider element
+        observer.observe(emojiSlider);
+  
+        // Function to load the .ejs file content
+        function loadEmojiContent() {
+          fetch('/getEmojis')
+            .then(response => response.text())
+            .then(data => {
+              emojiSlider.innerHTML = data; // Insert the loaded content into the div
+              attachEmojiClickHandlers(); // Attach click handlers to the loaded emojis
+            })
+            .catch(error => console.error('Error loading the .ejs file:', error));
+        }
+  
+        // Function to attach click handlers to each emoji
+        function attachEmojiClickHandlers() {
+          const emojis = emojiSlider.querySelectorAll('.emoji-option');
+          emojis.forEach(emoji => {
+            emoji.addEventListener('click', () => {
+              const emojiValue = emoji.getAttribute('data-emoji');
+              selectEmoji(emojiValue);
+            });
+          });
+        }
+  
+        // Function to handle emoji selection
+        function selectEmoji(emoji) {
+          const inputField = document.querySelector('input.chatInput'); // Ensure the correct input selector is used
+          if (inputField) {
+            const currentValue = inputField.value; // Get the current value of the input field
+            inputField.value = currentValue + emoji; // Append the emoji to the current value
+          }
+        }
+      }
+  
+      // Call the function to start observing emojiSlider
+      observeEmojiSlider();
+    });
+  </script>
