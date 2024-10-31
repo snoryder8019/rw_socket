@@ -2319,3 +2319,14 @@ background-size: contain;
   display: grid;
   grid-template-columns: 1fr 1fr;
 }
+#userAction{
+  //
+  background-color: white;
+  position: fixed;
+  left: 0;
+  top: 0;
+  min-width: 100%;
+  min-height: 100%;
+  z-index: 2003;
+h1{color: black;}
+}

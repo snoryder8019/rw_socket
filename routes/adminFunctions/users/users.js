@@ -265,12 +265,19 @@ const user = await new User().getById(userId)
   }
 });
 //USER ACTIONS EXECUTE
-router.get('/userAction',async(req,res)=>{
-try{
+router.post('/userAction', async (req, res) => {
+  try {
+      const { action } = req.body;
+      res.render(`admin/users/actionTemplates/${action}`, { data: req.body });
+  } catch (error) {
+      console.error('Error rendering user action:', error);
+      res.status(500).send('Error rendering template');
+  }
+});
 
-  console.log('userAction')
-}
-catch(error){console.error(error)}
-})
+
+
+
+
 
 export default router;
