@@ -1,0 +1,17 @@
+<script>
+    document.addEventListener('DOMContentLoaded',()=>{
+        document.addEventListener('click',(e)=>{
+            if (e.target.className == 'action-button'){
+               let userAction =  e.target.innerHTML;
+               fetch('/users/userAction',{
+                method:'GET',
+                headers:{
+                    'Content-Type':'application/json'
+                }
+               })
+                
+
+            }
+        })
+    })
+</script>

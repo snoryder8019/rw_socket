@@ -239,6 +239,7 @@ router.get('/paginateUsers', async (req, res) => {
       .send({ error: 'An error occurred while fetching user data' });
   }
 });
+//This pulls the views/partials/actionButtons
 router.post('/actions', async(req, res) => {
   try {
       const { userId } = req.body;
@@ -263,6 +264,13 @@ const user = await new User().getById(userId)
       return res.status(500).json({ error: 'Internal server error' });
   }
 });
+//USER ACTIONS EXECUTE
+router.get('/userAction',async(req,res)=>{
+try{
 
+  console.log('userAction')
+}
+catch(error){console.error(error)}
+})
 
 export default router;

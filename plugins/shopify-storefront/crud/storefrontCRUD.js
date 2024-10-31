@@ -3,6 +3,9 @@ import path from 'path';
 import fs from 'fs';
 import '@shopify/shopify-api/adapters/web-api';
 import {shopifyApi, LATEST_API_VERSION} from '@shopify/shopify-api';
+import express from 'express';
+import chalk from 'chalk';
+const router = express.Router();
 
 
 const shopify = shopifyApi({
@@ -14,6 +17,23 @@ const shopify = shopifyApi({
   apiVersion: '2023-10',  // or the current version you are using
   isEmbeddedApp: false,
 });
+
+const fetchCollections = async (req, res) => {
+  try {
+    const collections = await shopify.api.rest.CustomCollection.all({
+      session: {
+        accessToken: process.env.SHOP_API, // Use the correct access token here
+      },
+    });
+console.log(chalk.bgBlue(collections))
+    res.json(collections);
+  } catch (error) {
+    console.error('Error fetching collections:', error);
+    res.status(500).send('Error fetching collections');
+  }
+};
+
+// Route definition using the async function
 
 
 // Mimic __dirname in ES6
@@ -123,3 +143,5 @@ export const renderHtml = (templateName, products) => {
 
   return html;
 };
+router.get('/collections', fetchCollections);
+export default router;
