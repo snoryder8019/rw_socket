@@ -267,8 +267,10 @@ const user = await new User().getById(userId)
 //USER ACTIONS EXECUTE
 router.post('/userAction', async (req, res) => {
   try {
-      const { action } = req.body;
-      res.render(`admin/users/actionTemplates/${action}`, { data: req.body });
+      const { action, userId } = req.body;
+      const user = await new User().getById(userId)
+      console.log(user.displayName)
+      res.render(`admin/users/actionTemplates/${action}`, { data: req.body, selectedUser:user });
   } catch (error) {
       console.error('Error rendering user action:', error);
       res.status(500).send('Error rendering template');
