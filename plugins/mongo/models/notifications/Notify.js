@@ -89,7 +89,7 @@ export default class Notify extends ModelHelper {
       throw new Error('Notification could not be sent');
     }
   }
-  
+  //async notifyP2p()
 
   // Other existing methods for stamping as sent, seen, etc.
 }

@@ -267,41 +267,37 @@ const user = await new User().getById(userId)
 //USER ACTIONS EXECUTE
 router.post('/userAction', async (req, res) => {
   try {
-      const { action, userId } = req.body;
+      const { action, userId, recipientId, selectedData, quantity } = req.body;
       const modelName = action.charAt(0).toUpperCase() + action.slice(1);
       let Model, modelArray;
 
-      // Bypass dynamic model import for specific actions
       if (action === 'ban' || action === 'email' || action === 'register') {
-          modelArray = []; // Set modelArray as an empty array or a specific value if needed
+          modelArray = [];
       } else {
           try {
-              // Try importing with the action directory
               const moduleWithAction = await import(`../../../plugins/mongo/models/${action}s/${modelName}.js`);
               Model = moduleWithAction.default;
           } catch (error) {
               if (error.code === 'ERR_MODULE_NOT_FOUND') {
-                  // Fallback to the base directory if file is not found
                   const moduleWithoutAction = await import(`../../../plugins/mongo/models/${modelName}.js`);
                   Model = moduleWithoutAction.default;
               } else {
-                  throw error; // Re-throw if it's a different error
+                  throw error;
               }
           }
           modelArray = await new Model().getAll();
       }
 
-      console.log(modelArray);
-
       const user = await new User().getById(userId);
-      console.log(user.displayName);
 
-      res.render(`admin/users/actionTemplates/${action}`, { data: req.body, selectedUser: user });
+      // Render the template with modelArray and selected user
+      res.render(`admin/users/actionTemplates/${action}`, { data: modelArray, selectedUser: user });
   } catch (error) {
       console.error('Error rendering user action:', error);
       res.status(500).send('Error rendering template');
   }
 });
+
 
 
 
