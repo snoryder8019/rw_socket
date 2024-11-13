@@ -147,6 +147,34 @@ export default class ModelHelper {
     return await collection.findOne({ _id: new ObjectId(id) });
   }
   
+
+  async addToSet(id, updateObject) {
+    if (!ObjectId.isValid(id)) {
+      throw new Error('Invalid ID format');
+    }
+  
+    const db = getDb();
+    const collection = db.collection(this.collectionName);
+  
+    // Use $addToSet to add the item to the array without duplicates
+    const result = await collection.updateOne(
+      { _id: new ObjectId(id) },
+      { $addToSet: updateObject }
+    );
+  
+    if (result.matchedCount === 0) {
+      throw new Error('No document found with that ID');
+    }
+  
+    if (result.modifiedCount === 0) {
+      console.warn('Document matched but not modified. Item may already be in the array.');
+    }
+  
+    return result;
+  }
+  
+
+
   async deleteById(id) {
     if (!ObjectId.isValid(id)) {
       throw new Error('Invalid ID format');

@@ -2,6 +2,7 @@
 //routes/adminFunctions/clubs/clubs.js
 import express from 'express';
 import Club from '../../../plugins/mongo/models/Club.js';
+import Users from '../../../plugins/mongo/models/User.js';
 import generateFormFields from '../../../plugins/helpers/formHelper.js';
 import { buildRoutes } from '../../helpers/routeBuilder.js';
 import { uploadMultiple } from '../../../plugins/multer/setup.js';
@@ -111,6 +112,32 @@ router.post('/:id/upload-images',uploadMultiple, imagesArray(Club), async (req, 
     res.status(500).send('Internal Server Error');
   }
 });
+router.post('/assignClub', async (req, res) => {
+  try {
+    const { userId, clubId } = req.body;
+
+    // Check if the user is already assigned to the club
+    const user = await new Users().getById(userId);
+    if (user.clubs && user.clubs.includes(clubId)) {
+      return res.status(400).json({ success: false, message: 'User is already assigned to this club' });
+    }
+const updatedData = {clubs:clubId}
+    // Add the club to the user's clubs array without duplication
+    const result = await new Users().addToSet(userId,updatedData );
+
+    // Check if the update was successful
+    if (!result || result.modifiedCount === 0) {
+      return res.status(500).json({ success: false, message: 'Failed to assign club or no changes detected' });
+    }
+
+    res.status(200).json({ success: true, message: 'Club assigned successfully' });
+  } catch (error) {
+    console.error('Error assigning club:', error);
+    res.status(500).json({ success: false, message: 'Failed to assign club' });
+  }
+});
+
+
 buildRoutes(new Club(), router);
 
 export default router;
