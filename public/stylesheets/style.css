@@ -1393,11 +1393,6 @@
 @media (min-width: 768px) {
   .index-container {
     overflow-y: scroll; } }
-.container-scrollbox-x {
-  display: flex;
-  width: auto;
-  overflow-x: scroll; }
-
 .index-card {
   width: 90%;
   margin: 5%;
