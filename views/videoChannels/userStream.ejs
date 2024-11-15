@@ -1,33 +1,24 @@
-
 <div class="index-container">
   <div class="container-scrollbox-x">
-    <div class="index-card active">
-      <div class="client_window">
-        <button class="videoControls start" onclick="startCamera()">Start Camera</button>
-        <button class="videoControls stop" onclick="stopCamera()">Stop Camera</button>
-        <button class="go-back" onclick="showPreviousCard()">Go Back</button>
-      </div>
-    </div>
-    <div class="">
-      <div class="p2pRoomsList">
+    <div class="client_window">
+      <button class="videoControls start" onclick="startCamera()">Start Camera</button>
+      <button class="videoControls stop" onclick="stopCamera()">Stop Camera</button>
+      <div>
         <h3>Join a Parlor Room:</h3>
         <% if (typeof rooms == 'object' && rooms) { %>
           <% rooms.forEach(room => { %>
             <div>
-              <button class="videoControls" button-data="<%= room._id %>" onclick="joinRoom('<%= room._id %>')"><h4> <%= room.name || room._id %></h4></button>
+              <button class="videoControls" onclick="joinRoom('<%= room._id %>')">
+                <h4><%= room.name || room._id %></h4>
+              </button>
               <% if (user.isAdmin) { %>
-                <button class="videoControls stop" button-data="<%= room._id %>" onclick="deleteRoom('<%= room._id %>')">Delete</button>
+                <button class="videoControls stop" onclick="deleteRoom('<%= room._id %>')">Delete</button>
               <% } %>
             </div>
           <% }) %>
         <% } %>
-    
       </div>
-    </div>
-    <div class="">
       <div class="peers"></div>
-      <div class="P2Pcontrols"></div>
-    
     </div>
   </div>
 </div>
@@ -35,72 +26,48 @@
 <script src="/socket.io/socket.io.js"></script>
 <script>
   const socket = io('/videoStream');
-  let localStream;
+  let localStream = null;
   let peers = {};
 
-  async function getMedia() {
+  async function startCamera() {
+    if (!user.isAdmin) {
+      console.warn('Only admin can start the camera');
+      return;
+    }
+
     try {
-      localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false});
-      const videoElement = document.getElementById('myVideo');
+      // Admin starts broadcasting
+      localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+      console.log('Admin camera started');
+      const videoElement = document.createElement('video');
+      videoElement.id = 'myVideo';
       videoElement.srcObject = localStream;
-    } catch (err) {
-      console.error(err);
+      videoElement.autoplay = true;
+      videoElement.muted = true; // Admin mutes their own video
+      document.querySelector('.client_window').appendChild(videoElement);
+    } catch (error) {
+      console.error('Failed to start camera:', error);
     }
   }
 
-  function startCamera() {
-    getMedia();
-    showNextCard();
-  }
-
   function stopCamera() {
-    const tracks = localStream.getTracks();
-    tracks.forEach(track => track.stop());
-    localStream = null;
-    document.getElementById('myVideo').srcObject = null;
-    showNextCard();
-  }
+    if (!user.isAdmin) {
+      console.warn('Only admin can stop the camera');
+      return;
+    }
 
-
-  async function createRoom() {
-    const roomName = document.getElementById('roomName').value;
-    try {
-      const response = await fetch('/videoStream/createRoom', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ roomName })
-      });
-      const data = await response.json();
-      console.log(`Room created with ID: ${data.roomId}`);
-    } catch (error) {
-      console.error('Failed to create room', error);
+    if (localStream) {
+      localStream.getTracks().forEach((track) => track.stop());
+      localStream = null;
+      const videoElement = document.getElementById('myVideo');
+      if (videoElement) videoElement.remove();
+      console.log('Admin camera stopped');
     }
   }
 
   function joinRoom(roomId) {
+    console.log(`Joining room: ${roomId}`);
     socket.emit('joinRoom', roomId);
-    showNextCard();
-  }
-
-  async function deleteRoom(roomId) {
-    try {
-      const response = await fetch('/videoStream/deleteRoom', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ roomId })
-      });
-      const data = await response.json();
-      if (data.success) {
-        console.log(`Room deleted: ${roomId}`);
-        document.querySelector(`button[onclick="joinRoom('${roomId}')"]`).parentElement.remove();
-      }
-    } catch (error) {
-      console.error('Failed to delete room', error);
-    }
   }
 
   function setupPeerConnection(peerId) {
@@ -110,9 +77,12 @@
 
     peers[peerId] = peerConnection;
 
-    localStream.getTracks().forEach(track => peerConnection.addTrack(track, localStream));
+    // Admin adds tracks to the peer connection
+    if (user.isAdmin && localStream) {
+      localStream.getTracks().forEach((track) => peerConnection.addTrack(track, localStream));
+    }
 
-    peerConnection.onicecandidate = event => {
+    peerConnection.onicecandidate = (event) => {
       if (event.candidate) {
         socket.emit('p2pCandidate', {
           peerId: peerId,
@@ -121,31 +91,49 @@
       }
     };
 
-    peerConnection.ontrack = event => {
-      const videoElement = document.createElement('video');
-      videoElement.srcObject = event.streams[0];
-      videoElement.autoplay = true;
-      videoElement.className = "peer";
-      document.querySelector('.peers').appendChild(videoElement);
+    peerConnection.ontrack = (event) => {
+      console.log('Track received:', event.streams[0]);
+      if (!document.getElementById(`peerVideo-${peerId}`)) {
+        const videoElement = document.createElement('video');
+        videoElement.id = `peerVideo-${peerId}`;
+        videoElement.srcObject = event.streams[0];
+        videoElement.autoplay = true;
+        videoElement.className = 'peer';
+        document.querySelector('.peers').appendChild(videoElement);
+      }
     };
 
     return peerConnection;
   }
 
   function startCall(peerId) {
+    if (!user.isAdmin) {
+      console.warn('Only admin can start a call');
+      return;
+    }
+
     const peerConnection = setupPeerConnection(peerId);
 
     peerConnection.createOffer()
-      .then(offer => peerConnection.setLocalDescription(offer))
+      .then((offer) => {
+        console.log('Admin created offer:', offer);
+        return peerConnection.setLocalDescription(offer);
+      })
       .then(() => {
+        console.log('Admin localDescription set:', peerConnection.localDescription);
         socket.emit('p2pInit', {
           peerId: peerId,
           offer: peerConnection.localDescription
         });
+      })
+      .catch((error) => {
+        console.error('Error in startCall:', error);
       });
   }
 
   socket.on('p2pOffer', async (data) => {
+    console.log('Viewer received offer:', data.offer);
+
     const peerConnection = setupPeerConnection(data.from);
 
     await peerConnection.setRemoteDescription(new RTCSessionDescription(data.offer));
@@ -158,53 +146,24 @@
   });
 
   socket.on('p2pAnswer', async (data) => {
+    console.log('Admin received answer:', data.answer);
     const peerConnection = peers[data.from];
-    await peerConnection.setRemoteDescription(new RTCSessionDescription(data.answer));
+    if (peerConnection) {
+      await peerConnection.setRemoteDescription(new RTCSessionDescription(data.answer));
+    }
   });
 
   socket.on('p2pCandidate', async (data) => {
     const peerConnection = peers[data.from];
-    await peerConnection.addIceCandidate(new RTCIceCandidate(data.candidate));
-  });
-
-  socket.on('updateRooms', (rooms) => {
-    const roomsList = document.querySelector('.p2pRoomsList');
-    roomsList.innerHTML = '';
-    rooms.forEach(room => {
-      const roomElement = document.createElement('div');
-      roomElement.classList.add('room');
-      roomElement.innerHTML = `
-        <span>${room.name || room.id}</span>
-        <span>Guests: ${room.guests}</span>
-        <button onclick="joinRoom('${room.id}')">Join</button>
-        <button onclick="deleteRoom('${room.id}')">Delete</button>
-      `;
-      roomsList.appendChild(roomElement);
-    });
-  });
-
-  socket.on('roomState', (room) => {
-    if (room.offer && !peers[room._id]) {
-      startCall(room._id);
+    if (peerConnection) {
+      await peerConnection.addIceCandidate(new RTCIceCandidate(data.candidate));
     }
-    if (room.answer) {
-      const peerConnection = peers[room._id];
-      peerConnection.setRemoteDescription(new RTCSessionDescription(room.answer));
-    }
-    room.candidates.forEach(candidate => {
-      const peerConnection = peers[room._id];
-      peerConnection.addIceCandidate(new RTCIceCandidate(candidate));
-    });
   });
 
   socket.on('userJoined', (data) => {
-    startCall(data.userId);
-  });
-
-  // Handle marquee updates
-  socket.on('marquee', (message) => {
-    const marqueeText = document.getElementById('marquee-text');
-    marqueeText.innerHTML += ` ${message} `;
+    console.log('User joined:', data);
+    if (user.isAdmin) {
+      startCall(data.userId);
+    }
   });
 </script>
-
