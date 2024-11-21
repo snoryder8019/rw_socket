@@ -42,9 +42,9 @@ export const socketP2PHandlers = {
 
     // Handle P2P offer from admin to viewer
     socket.on('p2pInit', async (data) => {
-      console.log(`Admin ${user.firstName} initialized P2P connection`, data);
-
       if (user.isAdmin) {
+        console.log(`Admin ${user.firstName} initialized P2P connection`, data);
+
         const db = getDb();
         const roomIdObj = new ObjectId(data._id);
 
@@ -63,7 +63,7 @@ export const socketP2PHandlers = {
     });
 
     // Handle P2P answer from viewer to admin
-    socket.on('p2pAnswer', async (data) => {
+    socket.on('p2pAnswer', (data) => {
       console.log(`Viewer sent answer to admin:`, data);
 
       // Relay the answer back to the admin
@@ -74,7 +74,7 @@ export const socketP2PHandlers = {
     });
 
     // Handle ICE candidates
-    socket.on('p2pCandidate', async (data) => {
+    socket.on('p2pCandidate', (data) => {
       console.log(`Received ICE candidate from ${user.firstName}:`, data.candidate);
 
       // Relay the ICE candidate to the target peer

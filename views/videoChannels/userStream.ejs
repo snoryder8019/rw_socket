@@ -1,10 +1,12 @@
 <div class="index-container">
   <div class="container-scrollbox-x">
     <div class="client_window">
+      <%if (user.isAdmin){%>
       <button class="videoControls start" onclick="startCamera()">Start Camera</button>
       <button class="videoControls stop" onclick="stopCamera()">Stop Camera</button>
+     <%}%>
       <div>
-        <h3>Join a Parlor Room:</h3>
+        <h3>Join Us Live!!</h3>
         <% if (typeof rooms == 'object' && rooms) { %>
           <% rooms.forEach(room => { %>
             <div>
@@ -22,7 +24,6 @@
     </div>
   </div>
 </div>
-
 <script src="/socket.io/socket.io.js"></script>
 <script>
   const socket = io('/videoStream');
