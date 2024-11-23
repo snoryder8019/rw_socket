@@ -1,0 +1,60 @@
+<script>
+ const acceptedCharSet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#$%!";
+    // Validates if the string only contains valid characters
+  function validateString(str) {
+      const regex = /^[a-zA-Z0-9%$@#&!]+$/;
+      return regex.test(str);
+  }
+  
+  // Sends a request to check if the share code is in use
+  function requestShareCode() {
+    const requestedId = document.getElementById('shareCodeRequestId').value;
+    console.log(`Requesting share code: ${requestedId}`);
+
+    fetch(`/users/userShareCodes/checkForUse?requestedId=${requestedId}`, { method: 'GET' })
+        .then(response => response.json())  // Expect JSON response
+        .then(data => {
+            if (data.inUse) {
+                console.log('Share code is already in use.');
+            } else {
+                console.log('Share code is available.');
+
+                // If share code is available, send POST request to add shareId to the user
+                fetch('/users/userShareCodes/addShareIdToUser', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({requestedId: requestedId }) // Send data in request body
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data.message);  // Log success message
+                })
+                .catch(error => {
+                    console.error('Error adding share code to user:', error);
+                });
+            }
+        })
+        .catch(error => {
+            console.error('Error checking for share code use:', error);
+        });
+}
+  
+  // Generates a random string based on the accepted character set
+  function sendRandomReq() {
+      const randomArray = [];
+      for (let i = 0; i < 5; i++) {
+          const randLetter = Math.floor(Math.random() * acceptedCharSet.length);
+          const rando = acceptedCharSet[randLetter];
+          randomArray.push(rando);
+      }
+      const randoString = randomArray.join('');
+      console.log(`Generated random string: ${randoString}`);
+  
+      const input = document.getElementById('shareCodeRequestId');
+      input.value = randoString;
+      input.placeholder = randoString;
+  }
+
+
+
+</script>

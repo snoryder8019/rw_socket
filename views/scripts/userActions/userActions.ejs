@@ -1,0 +1,34 @@
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('click', async (e) => {
+            if (e.target.className === 'action-button') {
+                const userAction = e.target.innerHTML;
+                const userId=e.target.dataset.userid
+                console.log(userId)
+                try {
+                    const response = await fetch('/users/userAction', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ action: userAction, userId:userId })
+                    });
+
+                    const html = await response.text();
+
+                    // Check if .userAction element exists; if not, create it
+                    let userActionContainer = document.querySelector('.userAction');
+                    if (!userActionContainer) {
+                        userActionContainer = document.createElement('div');
+                        userActionContainer.id='userAction';
+                        document.body.appendChild(userActionContainer);
+                    }
+
+                    userActionContainer.innerHTML = html; // Insert rendered HTML
+                } catch (error) {
+                    console.error('Error fetching user action:', error);
+                }
+            }
+        });
+    });
+</script>

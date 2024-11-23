@@ -1,0 +1,19 @@
+<div id="userAction">
+    <h1>SUBSCRIBE USER TO CLUB</h1>
+  
+    <form action="/clubs/assignClub" method="POST">
+      <input type="hidden" name="userId" value="<%= selectedUser._id %>">
+  
+      <label for="clubSelect">Select Club:</label>
+      <select name="clubId" id="clubSelect">
+        <% data.forEach(club => { %>
+          <option value="<%= club.name %>"><%= club.name %></option>
+        <% }) %>
+      </select>
+  
+      <button type="submit">Assign Club</button>
+    </form>
+  
+    <button onClick='removeEl("userAction")'>Close Action Window</button>
+  </div>
+  

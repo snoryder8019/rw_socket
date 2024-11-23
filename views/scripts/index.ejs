@@ -3,15 +3,25 @@
 <%-include('./utilities/utilities.ejs')%>
 <%-include('./reader/reader.ejs')%>
 <%-include('./slideShows/slides.ejs')%>
-<%-include('./filters/users.ejs')%>
 <%-include('./media/media.ejs')%>
-<%-include('./games/games.ejs')%>
 <%-include('./avatars/avatars.ejs')%>
-<%-include('./games/animations.ejs')%>
 <%-include('./shopify/shopify.ejs')%>
-<%-include('./games/dominoes.ejs')%>
 <%-include('./blogs/blogs.ejs')%>
 <!-- include loginAnimation/loginAnimation.ejs-->
 <%-include('./marquees/marquees.ejs')%>
 <%-include('./popButtons/popButtons.ejs')%>
-<%-include('./sockets/userData.ejs')%>
+<%if(typeof user == 'object' && user){%>
+    <%-include('./games/games.ejs')%>
+    <%-include('./shareId/shareId.ejs')%>
+    <%-include('./games/animations.ejs')%>
+    <%-include('./sockets/userData.ejs')%>
+    
+    <%-include('./chat/emojis.ejs')%>
+    <%-include('./chat/animations.ejs')%>
+    <%-include('./chat/main_chat.ejs')%>
+    <%-include('./games/dominoes.ejs')%>
+    <%}%>
+    <%if(typeof user == 'object' && user.isAdmin){%>
+    <%-include('./filters/users.ejs')%>
+    <%-include('./userActions/userActions.ejs')%>
+    <%}%>

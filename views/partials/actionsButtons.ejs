@@ -13,7 +13,7 @@
 
 <div class="buttonGrid">
       <% actionsArray.forEach(action => { %>
-            <button class="action-button"><%= action %></button>
+            <button data-userid="<%=user._id%>" class="action-button"><%= action %></button>
         <% }) %>
     </div>
         <button class="bg_color_red fontColor_white" onclick="removeEl('actionsContainer')">Close Actions Window</button>

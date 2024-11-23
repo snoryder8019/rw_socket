@@ -239,6 +239,7 @@ router.get('/paginateUsers', async (req, res) => {
       .send({ error: 'An error occurred while fetching user data' });
   }
 });
+//This pulls the views/partials/actionButtons
 router.post('/actions', async(req, res) => {
   try {
       const { userId } = req.body;
@@ -251,10 +252,10 @@ const user = await new User().getById(userId)
       const actionsArray = [
         'notification', 
         'email', 
-        'permissions',
-        'subscribeApp', 
-        'subscribeClub', 
-        'giftGems', 
+        'permission',
+        'subscription', 
+        'club', 
+        'gem', 
         'register', 
         'ban', 
       ]; // Could be dynamic
@@ -263,6 +264,45 @@ const user = await new User().getById(userId)
       return res.status(500).json({ error: 'Internal server error' });
   }
 });
+//USER ACTIONS EXECUTE
+router.post('/userAction', async (req, res) => {
+  try {
+      const { action, userId, recipientId, selectedData, quantity } = req.body;
+      const modelName = action.charAt(0).toUpperCase() + action.slice(1);
+      let Model, modelArray;
+
+      if (action === 'ban' || action === 'email' || action === 'register') {
+          modelArray = [];
+      } else {
+          try {
+              const moduleWithAction = await import(`../../../plugins/mongo/models/${action}s/${modelName}.js`);
+              Model = moduleWithAction.default;
+          } catch (error) {
+              if (error.code === 'ERR_MODULE_NOT_FOUND') {
+                  const moduleWithoutAction = await import(`../../../plugins/mongo/models/${modelName}.js`);
+                  Model = moduleWithoutAction.default;
+              } else {
+                  throw error;
+              }
+          }
+          modelArray = await new Model().getAll();
+      }
+
+      const user = await new User().getById(userId);
+
+      // Render the template with modelArray and selected user
+      res.render(`admin/users/actionTemplates/${action}`, { data: modelArray, selectedUser: user });
+  } catch (error) {
+      console.error('Error rendering user action:', error);
+      res.status(500).send('Error rendering template');
+  }
+});
+
+
+
+
+
+
 
 
 export default router;

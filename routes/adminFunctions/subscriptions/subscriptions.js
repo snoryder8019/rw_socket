@@ -1,5 +1,6 @@
 import express from 'express';
 import Subscription from '../../../plugins/mongo/models/Subscription.js';
+import Users from '../../../plugins/mongo/models/User.js'
 import generateFormFields from '../../../plugins/helpers/formHelper.js';
 import { buildRoutes } from '../../helpers/routeBuilder.js';
 
@@ -73,6 +74,27 @@ router.get('/sectionSlide', async (req, res) => {
     res.status(500).send({ error: error.message });
   }
 });
+router.post('/assignSub', async (req, res) => {
+  try {
+    const { userId, subscriptionType } = req.body;
+
+    // Directly pass the new subscription data to update the user's subscriptions field
+    const updatedData = { subscription: subscriptionType };
+    const result = await new Users().updateById(userId, updatedData);
+
+    // Check if the update was successful
+    if (!result || result.modifiedCount === 0) {
+      return res.status(500).json({ success: false, message: 'Failed to assign subscription or no changes detected' });
+    }
+
+    res.status(200).json({ success: true, message: 'Subscription assigned successfully' });
+  } catch (error) {
+    console.error('Error assigning subscription:', error);
+    res.status(500).json({ success: false, message: 'Failed to assign subscription' });
+  }
+});
+
+
 
 buildRoutes(new Subscription(), router);
 

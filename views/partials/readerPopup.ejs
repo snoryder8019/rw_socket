@@ -27,7 +27,7 @@
         <p><%- htmlLayout %></p>
 
         <!-- Render dynamic content based on the model -->
-        <% if (additionalData.excursions.length > 0) { %>
+        <% if (additionalData.excursions && additionalData.excursions.length > 0) { %>
           <h3>Excursions</h3>
           <ul>
             <% additionalData.excursions.forEach((excursion) => { %>
@@ -36,7 +36,7 @@
           </ul>
         <% } %>
         
-        <% if (additionalData.vendors.length > 0) { %>
+        <% if (additionalData.vendors && additionalData.vendors.length > 0) { %>
           <h3>Vendors</h3>
           <ul>
             <% additionalData.vendors.forEach((vendor) => { %>
@@ -44,14 +44,16 @@
                 <h4><%= vendor.title %></h4>
                 <p><%= vendor.subTitle %></p>
                 <p><%= vendor.description %></p>
-                <img src="<%= vendor.mediumIcon %>" alt="" class="readerMediumIcon">
+                <% if (vendor.mediumIcon) { %>
+                  <img src="<%= vendor.mediumIcon %>" alt="" class="readerMediumIcon">
+                <% } %>
               </li>
             <% }) %>
           </ul>
         <% } %>
         
         <!-- Handle travel tips if available -->
-        <% if (record.travelTips) { %>
+        <% if (record.travelTips && record.travelTips.length > 0) { %>
           <h2>Travel Tips for: <%= record.title || record.name %></h2>
           <ul>
             <% record.travelTips.forEach((tip) => { %>
@@ -61,7 +63,7 @@
         <% } %>
 
         <!-- Handle votes if available -->
-        <% if (record.votes) { %>
+        <% if (record.votes && record.votes.length > 0) { %>
           <% record.votes.forEach((vote) => { %>
             <p><%= vote.question %></p>
           <% }) %>

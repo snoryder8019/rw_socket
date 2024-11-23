@@ -1,64 +1,85 @@
+
+
 <script>
-  const acceptedCharSet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#$%!";
+    document.addEventListener('DOMContentLoaded', () => {
+      const collapsibles = document.querySelectorAll('.collapsible');
   
-  // Validates if the string only contains valid characters
-  function validateString(str) {
-      const regex = /^[a-zA-Z0-9%$@#&!]+$/;
-      return regex.test(str);
-  }
-  
-  // Sends a request to check if the share code is in use
-  function requestShareCode() {
-    const requestedId = document.getElementById('shareCodeRequestId').value;
-    console.log(`Requesting share code: ${requestedId}`);
-
-    fetch(`/users/userShareCodes/checkForUse?requestedId=${requestedId}`, { method: 'GET' })
-        .then(response => response.json())  // Expect JSON response
-        .then(data => {
-            if (data.inUse) {
-                console.log('Share code is already in use.');
-            } else {
-                console.log('Share code is available.');
-
-                // If share code is available, send POST request to add shareId to the user
-                fetch('/users/userShareCodes/addShareIdToUser', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({requestedId: requestedId }) // Send data in request body
-                })
-                .then(response => response.json())
-                .then(data => {
-                    console.log(data.message);  // Log success message
-                })
-                .catch(error => {
-                    console.error('Error adding share code to user:', error);
-                });
-            }
-        })
-        .catch(error => {
-            console.error('Error checking for share code use:', error);
+      collapsibles.forEach(collapsible => {
+        collapsible.addEventListener('click', function () {
+          this.classList.toggle('active');
+          const content = this.nextElementSibling;
+          const carrot = this.querySelector('.carrot');
+          if (content.style.display === "block") {
+            content.style.display = "none";
+            carrot.classList.remove('rotate');
+          } else {
+            content.style.display = "block";
+            carrot.classList.add('rotate');
+            observeAndLoadContent(content);
+          }
         });
-}
-
-
-
-
+      });
   
-  // Generates a random string based on the accepted character set
-  function sendRandomReq() {
-      const randomArray = [];
-      for (let i = 0; i < 5; i++) {
-          const randLetter = Math.floor(Math.random() * acceptedCharSet.length);
-          const rando = acceptedCharSet[randLetter];
-          randomArray.push(rando);
+      const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const content = entry.target;
+            if (!content.dataset.loaded) {
+              loadContent(content);
+            }
+          }
+        });
+      });
+  
+      function observeAndLoadContent(content) {
+        if (content && content.getAttribute('data-url')) {
+          observer.observe(content);
+        }
       }
-      const randoString = randomArray.join('');
-      console.log(`Generated random string: ${randoString}`);
   
-      const input = document.getElementById('shareCodeRequestId');
-      input.value = randoString;
-      input.placeholder = randoString;
-  }
+      async function loadContent(content) {
+        const url = content.getAttribute('data-url');
+        if (!url || url === 'false') {
+          return; // Skip loading if data-url is false or not provided
+        }
+        try {
+          const response = await fetch(url);
+          const data = await response.text();
+          content.innerHTML = data;
+          content.dataset.loaded = true; // Mark as loaded
+          observer.unobserve(content); // Stop observing once loaded
+          initializeDynamicContent(content); // Initialize JS for newly loaded content
+        } catch (error) {
+          console.error(`Error loading content from ${url}:`, error);
+          content.innerHTML = '<p>Error loading content</p>';
+        }
+      }
+  
+      // Function to initialize event listeners for dynamically loaded content
+      function initializeDynamicContent(parent) {
+        const newCollapsibles = parent.querySelectorAll('.collapsible');
+  
+        newCollapsibles.forEach(collapsible => {
+          collapsible.addEventListener('click', function () {
+            this.classList.toggle('active');
+            const content = this.nextElementSibling;
+            const carrot = this.querySelector('.carrot');
+            if (content.style.display === "block") {
+              content.style.display = "none";
+              carrot.classList.remove('rotate');
+            } else {
+              content.style.display = "block";
+              carrot.classList.add('rotate');
+              observeAndLoadContent(content);
+            }
+          });
+        });
+      }
+    });
+  </script>
+  
+<script>
+ 
   
   // Adds a new field dynamically to a container
   function addField(name) {
@@ -97,6 +118,190 @@ element.remove()
 // }
 // resizeChat()
 //   })
+
+
+
+// observerCarrots.js
+document.addEventListener('DOMContentLoaded', ()=>{
+    
+    function observeCarrots() {
+    const carrots = document.querySelectorAll('.carrot');
+    
+    console.log('Observing carrots:', carrots);
+    
+    if (!('IntersectionObserver' in window)) {
+        carrots.forEach(carrot => {
+            carrot.style.display = 'block';
+            console.log('Fallback: Showing carrot:', carrot);
+        });
+        return;
+    }
+    
+    const observer = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.display = 'block';
+                observer.unobserve(entry.target);
+                console.log('Carrot is intersecting and shown:', entry.target);
+            }
+        });
+    }, { threshold: 0.1 });
+    
+    carrots.forEach(carrot => {
+        observer.observe(carrot);
+        console.log('Observer attached to carrot:', carrot);
+    });
+}
+window.observeCarrots = observeCarrots;  // Make sure this function is globally accessible
+console.log('observers')
+})
+  
+
+//backendCONTROLLERS
+
+const backendButtonControl= ()=> {
+    //note
+    //controller || button
+    const toggleUsers = document.getElementById('toggleUsers');
+    const toggleTicketsAdmin = document.getElementById('toggleTicketsAdmin');
+    const toggleLogs = document.getElementById('toggleLogs');
+    
+    //div || window
+    const usersDiv = document.getElementById('users');
+    const ticketsAdminDiv = document.getElementById('ticketsAdmin');
+    const logs = document.getElementById('logs')
+    const buttonCtlGroups = [
+        { button: toggleUsers, div:usersDiv  },
+        { button: toggleTicketsAdmin, div:ticketsAdminDiv  },  
+        { button: toggleLogs, div:logs  },
+        
+    ];
+    // console.log('backendButtonControl() ran');
+    for (let i = 0; i < buttonCtlGroups.length; i++) {
+        const btn = buttonCtlGroups[i].button;
+        const div = buttonCtlGroups[i].div;
+        // console.log(div)
+        // console.log(btn)
+        btn.addEventListener('click', function () {
+            if (div.style.display === "block") {
+                div.style.display = 'none';
+            } else {
+                for(let i =0;i<buttonCtlGroups.length;i++){
+                    buttonCtlGroups[i].div.style.display='none'
+                }
+                div.style.display = 'block';
+            }
+        });
+    }
+}
+//document.addEventListener('onload', backendButtonControl())
+//buttonControl();
+const mainButtonControl= ()=> {  
+    const div0 = document.getElementById('div0');
+    const toggleDiv = document.getElementById('toggleDiv');
+    const login_div = document.getElementById('login_div');
+    const reg_div = document.getElementById('register_div');
+    const reg_ctrl = document.getElementById('reg_ctrl');
+    // const tickets = document.getElementById('tickets');
+    const login_ctrl = document.getElementById('login_ctrl');
+    const buttonCtlGroups = [
+        { button: toggleDiv, div: div0 },
+        { button: login_ctrl, div: login_div },
+    { button: reg_ctrl, div: reg_div },   
+];
+// console.log('mainButtonControl() ran');
+for (let i = 0; i < buttonCtlGroups.length; i++) {
+    const btn = buttonCtlGroups[i].button;
+    const div = buttonCtlGroups[i].div;
+    //console.log(div)
+    //console.log(btn)
+    btn.addEventListener('click', function () {
+        if (div.style.display === "block") {
+        div.style.display = 'none';
+    } else {
+        for(let i =0;i<buttonCtlGroups.length;i++){
+            buttonCtlGroups[i].div.style.display='none'
+        }
+        div.style.display = 'block';
+    }
+});
+}
+}
+//document.addEventListener('onload', buttonControl())
+//buttonControl();
+
+const closeControl= ()=> {
+    const tickets_ctrl = document.getElementById('tickets_ctrl');
+    const regClose = document.getElementById('regClose');
+    const loginClose = document.getElementById('loginClose');
+    // console.log('closeControl() ran');
+    const closeCtlGroups = [
+        { button: loginClose, div: login_div },
+        { button: regClose, div: reg_div },
+        // { button:tickets_ctrl , div: tickets },
+        
+    ]
+    for (let i = 0; i < closeCtlGroups.length; i++) {
+        const btn = closeCtlGroups[i].button;
+        const div = closeCtlGroups[i].div;
+        //console.log(div)
+        //console.log(btn)
+        btn.addEventListener('click', function () {
+            
+            div.style.display = 'none';
+            
+        });
+  }
+}
+//document.addEventListener('onload', closeControl())
+//buttonControl();
+const userButtonControl = (user) => {
+    // controller || button
+    const toggleNotifications = document.getElementById('toggleNotifications');
+    const toggleSettings = document.getElementById('toggleSettings');
+    const toggleHelp = document.getElementById('toggleHelp');
+    const toggleAdmin = user.isAdmin ? document.getElementById('toggleAdmin') : null; // Admin button
+    
+    const notificationsDiv = document.getElementById('notifications');
+    const settingsDiv = document.getElementById('settings');
+    const helpDiv = document.getElementById('help');
+    const adminDiv = user.isAdmin ? document.getElementById('admin') : null; // Admin div
+    
+    const buttonCtlGroups = [
+        { button: toggleNotifications, div: notificationsDiv },
+        { button: toggleSettings, div: settingsDiv },
+        { button: toggleHelp, div: helpDiv },
+    ];
+
+    if (user.isAdmin) {
+        buttonCtlGroups.push({ button: toggleAdmin, div: adminDiv });
+    }
+    
+    //console.log('userButtonControl() ran');
+    
+    for (let i = 0; i < buttonCtlGroups.length; i++) {
+        const btn = buttonCtlGroups[i].button;
+    const div = buttonCtlGroups[i].div;
+    
+    // Check if both button and div are not null
+    if (btn && div) {
+        // console.log(div);
+        // console.log(btn);
+        btn.addEventListener('click', function () {
+            if (div.style.display === "block") {
+                div.style.display = 'none';
+            } else {
+                for (let j = 0; j < buttonCtlGroups.length; j++) {
+                    if (buttonCtlGroups[j].div) {
+                        buttonCtlGroups[j].div.style.display = 'none';
+                    }
+                }
+                div.style.display = 'block';
+            }
+        });
+    }
+}
+};
 function addSpinner(){
     console.log(`SPINNER&&&&&&&&&`)
    const el = document.createElement('div');
@@ -111,9 +316,12 @@ function addSpinner(){
    document.body.appendChild(el); // You can change this to any container you prefer
 }
 
-  // Initialize the observer or handler on page load if needed
-  document.addEventListener('DOMContentLoaded', function () {
-      console.log('Form loaded and event listeners ready.');
-  });
-  </script>
+// Example usage: call the function with user object
+const user = {
+    isAdmin: true // Set to true if the user is an admin
+};
+
+userButtonControl(user);
+
+</script>
   

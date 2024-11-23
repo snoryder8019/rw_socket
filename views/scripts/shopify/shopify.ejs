@@ -1,6 +1,31 @@
 
 <script>
- window.addEventListener('load', () => {
+ document.addEventListener('DOMContentLoaded', () => {
+    const fetchCollections = async () => {
+  try {
+    const response = await fetch('/shopify-storefront/collections', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        // Include any necessary authorization headers if required
+        // 'Authorization': `Bearer ${YOUR_ACCESS_TOKEN}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error('Network response was not ok ' + response.statusText);
+    }
+
+    const collections = await response.json();
+    console.log('Collections:', collections);
+    return collections;
+  } catch (error) {
+    console.error('Error fetching collections:', error);
+  }
+};
+
+// Call the function to fetch collections
+
     const list = document.querySelector('#productList');
     let listItems = document.querySelectorAll('#productList li'); // NodeList of product items
     const sortSelect = document.getElementById('sortProducts');

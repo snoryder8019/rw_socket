@@ -1,0 +1,30 @@
+<div id="userAction">
+    <h1>GIFT USER GEMS to:</h1>
+    <h2><%= selectedUser.displayName %></h2>
+    <h2>ID to verify: <%= selectedUser._id %></h2>
+    <form action="/gems/giftGems" method="POST">
+        <input type="hidden" name="recipientId" value="<%= selectedUser._id %>">
+    
+        <label for="dataSelect">Select Item:</label>
+        <select name="selectedData" id="dataSelect">
+            <% data.forEach(item => { %>
+                <option value="<%= item.name %>"><%= item.name %></option>
+            <% }) %>
+        </select>
+    
+        <label for="quantity">Select Quantity:</label>
+        <select name="quantity" id="quantity">
+            <option value="10">10</option>
+            <option value="50">50</option>
+            <option value="100">100</option>
+            <option value="250">250</option>
+            <option value="500">500</option>
+            <option value="1000">1000</option>
+        </select>
+    
+        <button id="giftGems" type="submit">Gift Gems</button>
+    </form>
+    
+    <button onClick='removeEl("userAction")'>Close Action Window</button>
+  </div>
+  

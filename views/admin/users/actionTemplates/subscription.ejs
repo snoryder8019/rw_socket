@@ -1,0 +1,20 @@
+<div id="userAction">
+    <h1>SUBSCRIBE USER TO APP</h1>
+    <h2><%= selectedUser.displayName %></h2>
+    <h2>ID to verify: <%= selectedUser._id %></h2>
+    <form action="/subscriptions/assignSub" method="POST">
+      <input type="hidden" name="userId" value="<%= selectedUser._id%>">
+  
+      <label for="subscriptionType">Select Subscription Type:</label>
+      <select name="subscriptionType" id="subscriptionType">
+        <% data.forEach(item => { %>
+          <option value="<%= item.type %>"><%= item.type %></option>
+        <% }) %>
+      </select>
+  
+      <button type="submit">Assign Subscription</button>
+    </form>
+  
+    <button onClick='removeEl("userAction")'>Close Action Window</button>
+  </div>
+  

@@ -1393,11 +1393,6 @@
 @media (min-width: 768px) {
   .index-container {
     overflow-y: scroll; } }
-.container-scrollbox-x {
-  display: flex;
-  width: auto;
-  overflow-x: scroll; }
-
 .index-card {
   width: 90%;
   margin: 5%;
@@ -1730,6 +1725,17 @@ button good {
 
 /* Add this CSS to your stylesheet */
 /* Flex container */
+.chat_greeting {
+  border: 4px solid #551360;
+  background-color: rgba(113, 73, 111, 0.666);
+  box-shadow: inset 2px 2px 2px rgba(128, 128, 128, 0.878);
+  color: white;
+  text-shadow: #71188100; }
+  @media (min-width: 768px) {
+    .chat_greeting {
+      width: 91%;
+      margin: 4%; } }
+
 .peers {
   display: flex;
   flex-wrap: wrap;
@@ -1917,6 +1923,8 @@ button good {
   align-items: center;
   /* Centers content horizontally */
   background-color: rgba(255, 255, 255, 0.788);
+  height: 90vh;
+  /* Adjust height to limit the container height */
   padding: 30px;
   margin: 2%;
   height: 90vh;
@@ -1929,6 +1937,10 @@ button good {
   /* Ensure the section does not exceed the screen width */ }
   .readerpopupSection h2 {
     color: black; }
+  @media (min-width: 768px) {
+    .readerpopupSection {
+      height: 80vh;
+      /* Adjust height to limit the container height */ } }
   .readerpopupSection h1 {
     font-family: "backlash";
     color: black;
@@ -2105,5 +2117,16 @@ button good {
   margin: 2%;
   display: grid;
   grid-template-columns: 1fr 1fr; }
+
+#userAction {
+  background-color: white;
+  position: fixed;
+  left: 0;
+  top: 0;
+  min-width: 100%;
+  min-height: 100%;
+  z-index: 2003; }
+  #userAction h1 {
+    color: black; }
 
 /*# sourceMappingURL=style.css.map */

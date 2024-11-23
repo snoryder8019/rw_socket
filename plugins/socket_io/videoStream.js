@@ -4,109 +4,108 @@ import { ObjectId } from 'mongodb';
 export const socketP2PHandlers = {
   onConnection: (nsp, socket, users) => {
     const user = socket.request.user;
-    const userId = user._id;
 
-    console.log(
-      `VIDEOSTREAM.JS ~ User: ${user.firstName} connected to videoStream`
-    );
+    console.log(`${user.firstName} connected to the video stream`);
 
-    // Emit activity to the marquee
-    const emitActivity = (message) => {
-      nsp.emit('marquee', message);
-    };
-
+    // Handle room joining
     socket.on('joinRoom', async (roomId) => {
-      console.log(
-        `VIDEOSTREAM.JS ~ User: ${user.firstName} joined room ${roomId}`
-      );
+      console.log(`${user.firstName} joined room ${roomId}`);
       const db = getDb();
       const roomIdObj = new ObjectId(roomId);
 
-      // Fetch the room details
+      // Fetch room details from the database
       const room = await db.collection('p2p_rooms').findOne({ _id: roomIdObj });
       if (room) {
-        // Send the current room state to the new user
-        socket.emit('roomState', room);
-
-        // Notify other users in the room
-        socket
-          .to(roomId)
-          .emit('userJoined', { userId: socket.id, userName: user.firstName });
-
-        // Add the user to the room
         socket.join(roomId);
 
-        // Update the guest count
-        await db
-          .collection('p2p_rooms')
-          .updateOne({ _id: roomIdObj }, { $inc: { guests: 1 } });
+        // Send the current room state to the joining user
+        socket.emit('roomState', room);
+
+        // Notify the admin when a viewer joins
+        if (!user.isAdmin) {
+          console.log(`${user.firstName} is a viewer`);
+          socket.to(roomId).emit('userJoined', {
+            userId: socket.id,
+            userName: user.firstName
+          });
+        } else {
+          console.log(`${user.firstName} is the admin`);
+        }
+
+        // Increment guest count in the database
+        await db.collection('p2p_rooms').updateOne({ _id: roomIdObj }, { $inc: { guests: 1 } });
       } else {
+        console.error(`Room with ID ${roomId} not found`);
         socket.emit('error', 'Room not found');
       }
     });
 
+    // Handle P2P offer from admin to viewer
     socket.on('p2pInit', async (data) => {
-      try {
-        // console.log(`VIDEOSTREAM.JS ~ User: ${user.firstName} initiated P2P connection`);
+      if (user.isAdmin) {
+        console.log(`Admin ${user.firstName} initialized P2P connection`, data);
+
         const db = getDb();
         const roomIdObj = new ObjectId(data._id);
-        await db
-          .collection('p2p_rooms')
-          .updateOne({ _id: roomIdObj }, { $set: { offer: data.offer } });
+
+        // Update the room with the offer in the database
+        await db.collection('p2p_rooms').updateOne({ _id: roomIdObj }, { $set: { offer: data.offer } });
+
+        // Relay the offer to the viewer
         socket.to(data.peerId).emit('p2pOffer', {
           from: socket.id,
-          offer: data.offer,
+          offer: data.offer
         });
-        emitActivity(`${user.firstName} initiated a video chat session.`);
-      } catch (error) {
-        console.error('Error in p2pInit:', error);
+        console.log(`Offer sent to viewer: ${data.peerId}`);
+      } else {
+        console.error(`Non-admin ${user.firstName} attempted to initiate P2P connection`);
       }
     });
 
-    socket.on('p2pAnswer', async (data) => {
-      try {
-        //  console.log(`VIDEOSTREAM.JS ~ User: ${user.firstName} answered P2P connection`);
-        const db = getDb();
-        const roomIdObj = new ObjectId(data._id);
-        await db
-          .collection('p2p_rooms')
-          .updateOne({ _id: roomIdObj }, { $set: { answer: data.answer } });
-        socket.to(data.peerId).emit('p2pAnswer', {
-          from: socket.id,
-          answer: data.answer,
-        });
-        emitActivity(`Hi ${user.firstName}, welcome to the stream.`);
-      } catch (error) {
-        console.error('Error in p2pAnswer:', error);
-      }
+    // Handle P2P answer from viewer to admin
+    socket.on('p2pAnswer', (data) => {
+      console.log(`Viewer sent answer to admin:`, data);
+
+      // Relay the answer back to the admin
+      socket.to(data.peerId).emit('p2pAnswer', {
+        from: socket.id,
+        answer: data.answer
+      });
     });
 
-    socket.on('p2pCandidate', async (data) => {
-      try {
-        console.log(
-          `VIDEOSTREAM.JS ~ User: ${user.firstName} sent ICE candidate`
-        );
-        const db = getDb();
-        const roomIdObj = new ObjectId(data._id);
-        await db
-          .collection('p2p_rooms')
-          .updateOne(
-            { _id: roomIdObj },
-            { $push: { candidates: data.candidate } }
-          );
-        socket.to(data.peerId).emit('p2pCandidate', {
-          from: socket.id,
-          candidate: data.candidate,
-        });
-        //   emitActivity(`${user.firstName} sent an ICE candidate.`);
-      } catch (error) {
-        console.error('Error in p2pCandidate:', error);
-      }
+    // Handle ICE candidates
+    socket.on('p2pCandidate', (data) => {
+      console.log(`Received ICE candidate from ${user.firstName}:`, data.candidate);
+
+      // Relay the ICE candidate to the target peer
+      socket.to(data.peerId).emit('p2pCandidate', {
+        from: socket.id,
+        candidate: data.candidate
+      });
     });
 
+    // Handle room deletion (admin only)
+    socket.on('deleteRoom', async (roomId) => {
+      if (!user.isAdmin) {
+        console.error(`Non-admin ${user.firstName} attempted to delete a room`);
+        return;
+      }
+
+      console.log(`Admin ${user.firstName} is deleting room: ${roomId}`);
+      const db = getDb();
+      const roomIdObj = new ObjectId(roomId);
+
+      // Remove the room from the database
+      await db.collection('p2p_rooms').deleteOne({ _id: roomIdObj });
+
+      // Notify all users in the room
+      socket.to(roomId).emit('roomDeleted', { roomId });
+      socket.leave(roomId);
+    });
+
+    // Handle disconnection
     socket.on('disconnect', () => {
-      console.log(`VIDEOSTREAM.JS ~ User: ${user.firstName} disconnected`);
-      emitActivity(`${user.firstName} disconnected.`);
+      console.log(`${user.firstName} disconnected from the video stream`);
     });
-  },
+  }
 };

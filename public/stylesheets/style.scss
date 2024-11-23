@@ -1551,9 +1551,9 @@ animation:flashMsg 2.8s ease-in-out 0s 1 ;
   }
 }
 .container-scrollbox-x {
-  display: flex;
-  width: auto;
-  overflow-x: scroll;
+ /// display: flex;
+//  width: auto;
+ // overflow-x: scroll;
 }
 .index-card {
   width: 90%;
@@ -1885,6 +1885,7 @@ max-width: 75px;
         border-radius: 6px;
         background-repeat: no-repeat;
         background-size: cover;
+     
         h1{
           text-shadow:8px 5px 8px #000000;
           font-family: $mini;
@@ -1898,15 +1899,26 @@ max-width: 75px;
         border: 4px solid $purple;
         background-color: rgba(113, 73, 111, 0.666);
         box-shadow: inset 2px 2px 2px rgba(128, 128, 128, 0.878);
-     color:white;
-     text-shadow:$purpleFade0;
-     @media (min-width:768px) {
-      width: 52%;
-      margin: 2%;;
-     }
+        color:white;
+        text-shadow:$purpleFade0;
+        @media (min-width:768px) {
+          width: 52%;
+          margin: 2%;;
+        }
       }
       /* Add this CSS to your stylesheet */
-    /* Flex container */
+      /* Flex container */
+      .chat_greeting{
+        border: 4px solid $purple;
+        background-color: rgba(113, 73, 111, 0.666);
+        box-shadow: inset 2px 2px 2px rgba(128, 128, 128, 0.878);
+        color:white;
+        text-shadow:$purpleFade0;
+        @media (min-width:768px) {
+          width:91%;
+          margin:4%;
+        }
+        }
 .peers {
   display: flex;
   flex-wrap: wrap;
@@ -2115,6 +2127,7 @@ flex-direction: column; /* Align children vertically */
 align-items: center; /* Centers content horizontally */
 background-color: rgba(255, 255, 255, 0.788);
 //background:linear-gradient(to bottom, $purple 2%, rgba(255, 255, 255, 0.86) 30%);
+height: 90vh; /* Adjust height to limit the container height */
 
 padding: 30px;
 margin: 2%;
@@ -2122,6 +2135,10 @@ height: 90vh; /* Adjust height to limit the container height */
 overflow-y: auto; /* Enables vertical scrolling if content exceeds the container height */
 box-sizing: border-box; /* Include padding in the height calculation */
 max-width: 100%; /* Ensure the section does not exceed the screen width */
+@media (min-width:768px) {
+  height: 80vh; /* Adjust height to limit the container height */
+
+}
 h1{
   @media (min-width:768px) {
     
@@ -2301,4 +2318,15 @@ background-size: contain;
   margin:2%;
   display: grid;
   grid-template-columns: 1fr 1fr;
+}
+#userAction{
+  //
+  background-color: white;
+  position: fixed;
+  left: 0;
+  top: 0;
+  min-width: 100%;
+  min-height: 100%;
+  z-index: 2003;
+h1{color: black;}
 }

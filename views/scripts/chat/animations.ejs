@@ -1,0 +1,14 @@
+
+<script>
+    document.addEventListener('DOMContentLoaded',()=>{
+  
+  
+    })
+        document.addEventListener('DOMContentLoaded', () => {
+            const elements = document.querySelectorAll('.message');
+            elements.forEach((element, index) => {
+                const delay = index * 0.2; // Adjust the multiplier for different delays
+                element.style.animationDelay = `${delay}s`;
+            });
+        });
+    </script>
