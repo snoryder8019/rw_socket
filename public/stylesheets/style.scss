@@ -1137,7 +1137,7 @@ grid-template-columns: 1fr 10fr;
 
 }
 }
-$headshotPx:60px;
+$headshotPx:40px;
 .userInfoBox {
   position: absolute;
   background-color: white;
@@ -1238,7 +1238,7 @@ border-top: 2px solid purple;
 	display: flex;
 	align-items: center; /* Vertically centers the text */
 //	justify-content: center; /* Horizontally centers the text */
-margin-left: 10%;
+margin-left: 1%;
 text-align: left; /* Centers text if it's multiple lines */
 }
 
@@ -1423,13 +1423,13 @@ color: white;
 }
 
 .slide_view h1 {
-  font-size: 6rem; /* Slightly larger size for more impact */
+ // font-size: 6rem; /* Slightly larger size for more impact */
   font-weight: 900; /* Extra bold for maximum emphasis */
   color: $purple; /* Bold color */
   text-shadow: 2px 2px 0px rgb(0, 0, 0),-1px -1px 0px white;
 transition:1.2s ease-in-out 1s;
   font-family: $back; /* Distinctive typeface */
-  transform: translateY(-69%);
+ // transform: translateY(-69%);
   
 }
 
@@ -1795,7 +1795,7 @@ max-width: 75px;
       .peers {
   
         background-color: blueviolet;
-     display: flex;
+    // display: flex;
 
       }
       // .peer {
@@ -1920,18 +1920,20 @@ max-width: 75px;
         }
         }
 .peers {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px; /* Optional: Add some space between items */
+ // display: flex;
+ // flex-wrap: wrap;
+ // gap: 10px; /* Optional: Add some space between items */
+ width: 100%;
 }
 
 /* Flex items */
 .peer {
-  flex: 1 1 calc(25% - 10px); /* Adjust the percentage (25%) to control max number of items per row */
-  max-width: calc(25% - 10px); /* Adjust the percentage (25%) to control max number of items per row */
-  box-sizing: border-box; /* Ensures padding and border are included in the width calculation */
+  width: 100%;
+ // flex: 1 1 calc(25% - 10px); /* Adjust the percentage (25%) to control max number of items per row */
+ // max-width: calc(25% - 10px); /* Adjust the percentage (25%) to control max number of items per row */
+ // box-sizing: border-box; /* Ensures padding and border are included in the width calculation */
   @media (max-width:768px) {
-  max-width: calc(50% - 10px); /* Adjust the percentage (25%) to control max number of items per row */
+ // max-width: calc(50% - 10px); /* Adjust the percentage (25%) to control max number of items per row */
   
 }
 }

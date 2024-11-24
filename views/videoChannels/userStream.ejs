@@ -14,9 +14,7 @@
               <button class="videoControls" onclick="joinRoom('<%= room._id %>')">
                 <h4><%= room.name || room._id %></h4>
               </button>
-              <% if (user.isAdmin) { %>
-                <button class="videoControls stop" onclick="deleteRoom('<%= room._id %>')">Delete</button>
-              <% } %>
+          
             </div>
           <% }) %>
         <% } %>

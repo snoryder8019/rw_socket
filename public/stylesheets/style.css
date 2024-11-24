@@ -1054,9 +1054,9 @@
 
 .usersOnline {
   background-color: #410b4b;
-  max-width: 60px;
-  min-width: 60px;
-  min-height: 60px;
+  max-width: 40px;
+  min-width: 40px;
+  min-height: 40px;
   border-radius: 50%;
   border: 3px solid gold;
   /* Assuming $gold is a variable, replace it with an actual color if you're not using a preprocessor */
@@ -1095,7 +1095,7 @@
   display: flex;
   align-items: center;
   /* Vertically centers the text */
-  margin-left: 10%;
+  margin-left: 1%;
   text-align: left;
   /* Centers text if it's multiple lines */ }
 
@@ -1105,9 +1105,9 @@
   margin-right: 5px; }
 
 .message img {
-  max-width: 60px;
-  min-width: 60px;
-  min-height: 60px;
+  max-width: 40px;
+  min-width: 40px;
+  min-height: 40px;
   border-radius: 50%;
   border: 3px solid gold;
   margin-left: 10%; }
@@ -1281,8 +1281,6 @@
     color: white; }
 
 .slide_view h1 {
-  font-size: 6rem;
-  /* Slightly larger size for more impact */
   font-weight: 900;
   /* Extra bold for maximum emphasis */
   color: #551360;
@@ -1290,8 +1288,7 @@
   text-shadow: 2px 2px 0px black, -1px -1px 0px white;
   transition: 1.2s ease-in-out 1s;
   font-family: "backlash";
-  /* Distinctive typeface */
-  transform: translateY(-69%); }
+  /* Distinctive typeface */ }
 
 .linkTable_alt a {
   color: #ffde68;
@@ -1619,8 +1616,7 @@
   max-width: 75px; }
 
 .peers {
-  background-color: blueviolet;
-  display: flex; }
+  background-color: blueviolet; }
 
 .marquee {
   color: #ffde68;
@@ -1737,23 +1733,11 @@ button good {
       margin: 4%; } }
 
 .peers {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  /* Optional: Add some space between items */ }
+  width: 100%; }
 
 /* Flex items */
 .peer {
-  flex: 1 1 calc(25% - 10px);
-  /* Adjust the percentage (25%) to control max number of items per row */
-  max-width: calc(25% - 10px);
-  /* Adjust the percentage (25%) to control max number of items per row */
-  box-sizing: border-box;
-  /* Ensures padding and border are included in the width calculation */ }
-  @media (max-width: 768px) {
-    .peer {
-      max-width: calc(50% - 10px);
-      /* Adjust the percentage (25%) to control max number of items per row */ } }
+  width: 100%; }
 
 /* Example of video styling */
 #myVideo {
