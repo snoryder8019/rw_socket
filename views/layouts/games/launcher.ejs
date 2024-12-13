@@ -34,8 +34,12 @@
     <% }) %>
 
     <!-- If no game session is available to the user, show 'Create New Game Session' button -->
-    <button class="createSessionButton" action-game="/games/launcher/create-session" data-game-id="<%= selectedGameId %>">
-      <h2>Create New Game Session</h2>
-    </button>
+    <% games.forEach(game => { %>
+      <button 
+        class="createSessionButton" 
+        data-game-id="<%= game._id %>">
+        Create Session for <%= game.name %>
+      </button>
+    <% }) %>
   <% } %>
 </div>

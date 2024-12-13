@@ -67,7 +67,7 @@ export const socketGamesHandlers = {
     socket.on('pong', async (data) => {
       const latency = Date.now() - data.startTime;
       const gameSessionId = data.gameSessionId; // Ensure this is the session ID, not game settings ID
-      console.log(`Received pong with gameSessionId: ${gameSessionId}`); // Log for debugging
+      console.log(`Received pong with gameSessionId: ${userId}`); // Log for debugging
     
       if (!gameSessionId) {
         console.error('gameSessionId is not available for this socket.');

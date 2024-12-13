@@ -34,12 +34,12 @@ router.post('/create-session', async (req, res) => {
       gameSettings:game.gameSettings,
       gameName: game.name,
       players: [{
-        id: JSON.stringify(user._id),
+        id: user._id.toString(),
         displayName: user.displayName,
         lastMove: null
       }],
       status: 'waiting for players',
-      currentState: {},
+      currentState: {"state":"waiting for other players"},
     });
     
     const gameSettingsData = await new GameSetting().getById(game.gameSettings);
@@ -145,6 +145,7 @@ router.get('/getLauncher', async (req, res) => {
 
     // Render the launcher with the user's game if found, or the full list
     res.render('layouts/games/launcher', {
+      games:games,
       gameSessions: gameSessions,
       userGame: userGameSession, // Pass the game session where the user is a player, if found
       user: req.user,

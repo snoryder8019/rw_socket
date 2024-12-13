@@ -49,14 +49,9 @@
       const gameSessionId = document.querySelector('.cardTableGameDiv').getAttribute('data-game-session-id');
       socket.emit('requestStateUpdate', { gameSessionId });
     });
-
-    function updatePlayerTurn(currentTurnId, players) {
-      const turnElement = document.querySelector('.cardTableGameDiv h2');
-      if (turnElement) {
-        const currentPlayer = players.find(player => player._id === currentTurnId);
-        turnElement.textContent = currentPlayer ? `Player turn: ${currentPlayer.displayName}` : 'Player turn: Unknown';
-      }
-    }
+socket.on('deal deck', ()=>{
+console.log('dealing deck')
+})
     // Update state and controls based on the new game state
     function updateStateAndControls(gameState) {
       const stateElement = document.querySelector('.cardTableGameDiv h4');
@@ -68,7 +63,7 @@
       }
 
       // Update the controls based on the game state
-      if (gameState.state === 'dealing') {
+      if (gameState.state === 'game initialized') {
         controlButtons.innerHTML = `
           <button class="controlButton">Wait for dealing...</button>
           <button onclick="exitSession('${gameState.gameSessionId}')" style="background-color: red;" class="controlButton">Exit Game</button>
@@ -83,92 +78,40 @@
       }
     }
 
-// Listen for state updates from the server
-socket.on('state update', async (updatedState) => {
-  console.log("Received state update:", updatedState);
+    // Listen for state updates from the server
+    socket.on('state update', (updatedState) => {
+      console.log("Received state update:", updatedState);
 
-  // Re-render the controls based on the new state
-  updateStateAndControls(updatedState);
+      // Re-render the controls based on the new state
+      updateStateAndControls(updatedState);
 
-  // Trigger domino-specific logic based on the updated game state
-  if (updatedState.state === 'dealing') {
-    console.log("Dealing phase initiated");
-    await handleDealingPhase(updatedState);
-  } else if (updatedState.state === 'playing') {
-    console.log("Playing phase initiated");
-    handlePlayingPhase(updatedState);
-  }
-});
+      // Handle game phases
+      if (updatedState.state === 'playing') {
+        console.log("Playing phase initiated");
+        handlePlayingPhase(updatedState);
+      }
+    });
 
-// Function to update the UI and controls based on the game state
-function updateStateAndControls(gameState) {
-  const stateElement = document.querySelector('.cardTableGameDiv h4');
-  const controlButtons = document.querySelector('.userControls');
+    // Handle the playing phase (update players, moves, turns, etc.)
+    function handlePlayingPhase(updatedState) {
+      console.log("Handling playing phase logic...");
 
-  // Update the state text
-  if (stateElement) {
-    stateElement.textContent = `Current State: ${gameState.state}`;
-  }
+      // Update the player turn UI
+      const currentTurnId = updatedState.currentTurn;
+      const players = updatedState.players;
+      updatePlayerTurn(currentTurnId, players);
+    }
 
-  // Update the controls based on the game state
-  if (gameState.state === 'dealing') {
-    controlButtons.innerHTML = `
-      <button class="controlButton">Wait for dealing...</button>
-      <button onclick="exitSession('${gameState.gameSessionId}')" style="background-color: red;" class="controlButton">Exit Game</button>
-    `;
-  } else if (gameState.state === 'playing') {
-    controlButtons.innerHTML = `
-      <button class="controlButton">Draw Tile</button>
-      <button class="controlButton">Play Tile</button>
-      <button class="controlButton">Pass Turn</button>
-      <button onclick="exitSession('${gameState.gameSessionId}')" style="background-color: red;" class="controlButton">Exit Game</button>
-    `;
-  }
-}
-
-// Handle the dealing phase (start animations, dealing dominoes, etc.)
-async function handleDealingPhase(updatedState) {
-  const gameSessionId = updatedState.gameSessionId;
-  const cardTableGameDiv = document.querySelector('.cardTableGameDiv');
-  initializeCanvasContext();
-  const gameSettingsData = extractGameSettingsData(cardTableGameDiv);
-
-  console.log("Starting dealing animation for players..."+ctx);
-  if (gameSettingsData && ctx) {
-    const playerPositions = [
-      { x: 50, y: 350 },  // Player 1 position
-      { x: 250, y: 350 }, // Player 2 position
-      { x: 450, y: 350 }, // Player 3 position
-      { x: 650, y: 350 }  // Player 4 position
-    ];
-
-    startDealingAnimation(ctx, playerPositions, gameSessionId);
-  } else {
-    console.error("Error: Game settings or canvas context not available.");
-  }
-}
-
-// Handle the playing phase (update players, moves, turns, etc.)
-function handlePlayingPhase(updatedState) {
-  console.log("Handling playing phase logic...");
-
-  // Update the player turn UI
-  const currentTurnId = updatedState.currentTurn;
-  const players = updatedState.players;
-  updatePlayerTurn(currentTurnId, players);
-}
-
-// Function to update the current player's turn in the UI
-function updatePlayerTurn(currentTurnId, players) {
-  const turnElement = document.querySelector('.cardTableGameDiv h2');
-  if (turnElement) {
-    const currentPlayer = players.find(player => player._id === currentTurnId);
-    turnElement.textContent = currentPlayer
-      ? `Player turn: ${currentPlayer.displayName}`
-      : 'Player turn: Unknown';
-  }
-}
-
+    // Function to update the current player's turn in the UI
+    function updatePlayerTurn(currentTurnId, players) {
+      const turnElement = document.querySelector('.cardTableGameDiv h2');
+      if (turnElement) {
+        const currentPlayer = players.find(player => player._id === currentTurnId);
+        turnElement.textContent = currentPlayer
+          ? `Player turn: ${currentPlayer.displayName}`
+          : 'Player turn: Unknown';
+      }
+    }
 
     socket.on('ping', (data) => {
       const gameSessionId = document.querySelector('.cardTableGameDiv')?.getAttribute('data-game-session-id');
@@ -227,11 +170,11 @@ function updatePlayerTurn(currentTurnId, players) {
     document.body.addEventListener('click', (event) => {
       if (event.target && event.target.matches('.joinGameButton')) {
         const gameId = event.target.getAttribute('data-game-id');
-        const action = 'games/launcher/join';  // Updated path for joining
+        const action = 'games/launcher/join';
 
         // Emit the player join event and fetch the game
         socket.emit('playerJoin', { gameSessionId: gameId });
-        fetchGame(action, gameId);  // Now using 'games/launcher/join'
+        fetchGame(action, gameId);
       }
 
       // Handle create session button

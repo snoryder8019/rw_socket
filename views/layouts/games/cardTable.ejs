@@ -15,7 +15,7 @@
 
   <!-- Game Title and Status Messages -->
   <% if (gameSession.status === "waiting for players") { %>
-    <h2>WELCOME to Dominoes!! </h2>
+    <h2 style="color:white;">WELCOME to Dominoes!! </h2>
   <% } else if (gameSession.status === "playing") { %>
     <h2>Player turn: ____</h2>
   <% } %>
@@ -32,7 +32,7 @@
   </h4>
 
   <!-- Player Seats (opponents only) -->
-  <div class="playerSeatsTop" id="playerSeats">
+  <div style="color:white" class="playerSeatsTop" id="playerSeats">
     <% if (gameSession.players && gameSession.players.length > 0) { %>
       <% gameSession.players.forEach((player, index) => { %>
         <% if (player._id !== user._id) { %> <!-- Only opponents -->

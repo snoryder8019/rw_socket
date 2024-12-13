@@ -10,7 +10,7 @@
     <% if (typeof chatRooms == 'object' && chatRooms) { %>
       <% for (let i = 0; i < chatRooms.length; i++) { %>
         <%if(chatRooms[i].roomName !== 'ADMIN'){%>
-        <div onclick="changeRooms()" id="tab_section_<%= chatRooms[i]._id %>" class="tab_section">
+        <div  id="tab_section_<%= chatRooms[i]._id %>" class="tab_section">
           <%= chatRooms[i].roomName %>
         </div>
       <% } %>
@@ -19,7 +19,7 @@
     
     <% if (user && user.isAdmin) { %>
       <!-- Add the ADMIN chat tab for admins -->
-      <div onclick="changeRooms('ADMIN')" id="tab_section_66f4a68103b41328183b02a0" class="tab_section">
+      <div  id="tab_section_66f4a68103b41328183b02a0" class="tab_section">
         ADMIN
       </div>
     <% } %>

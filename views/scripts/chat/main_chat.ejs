@@ -85,6 +85,7 @@
   });
   
   socket.on('newReply', ({ postId, reply }) => {
+    console.log(`newReply`)
     const actionsDiv = document.getElementById(`${postId}_actions`);
     if (!actionsDiv) return;
   
@@ -119,132 +120,123 @@
         });
         let userId = "<%=user._id%>";
         function addMessage(messageObject, isOwnMessage = false) {
-      const userId = "<%= user._id %>";  // Ensure userId is declared at the top
-      const messagesContainer = document.getElementById('chat');
-      const shouldScroll = messagesContainer.scrollTop + messagesContainer.clientHeight + 50 >= messagesContainer.scrollHeight;
-  
-      const messageDiv = document.createElement('div');
-      messageDiv.className = isOwnMessage ? 'message ownMessage' : 'message';
-  
-      // Apply CSS Grid to messageDiv
-      messageDiv.style.display = 'grid';
-      messageDiv.style.gridTemplateColumns = '2fr 8fr 1fr';  // Define the grid layout: avatar, message, actions
-      messageDiv.style.alignItems = 'center';  // Vertically align the content in the center
-  
-      // Avatar and Display Name (2fr)
-      const avatarContainer = document.createElement('div');
-      avatarContainer.className = 'avatarContainer';
-      avatarContainer.style.gridColumn = '1';  // Place avatar in the first column
-  
-      const messageAvatar = document.createElement('img');
-      messageAvatar.className = 'usersOnline';
-      messageAvatar.src = messageObject.thumbnailUrl || `/images/logo_rst.png`;
-  
-      const displayName = document.createElement('span');
-      displayName.className = 'userDisplayName';
-      displayName.textContent = messageObject.user || 'Unknown User';  // Show user display name
-  
-      avatarContainer.appendChild(messageAvatar);
-      avatarContainer.appendChild(displayName);  // Place username under avatar
-  
-      // Message text and replies (8fr)
-      const messageTextContainer = document.createElement('div');
-      messageTextContainer.style.gridColumn = '2';  // Place message text in the second column
-  
-      const messageTextSpan = document.createElement('span');
-      messageTextSpan.className = 'messageText';
-      messageTextSpan.textContent = messageObject.message || 'No message text.';
-  
-      messageTextContainer.appendChild(messageTextSpan);  // Display the message text
-  
-      // Action div (1fr) - Likes and Replies
-      const actionsDiv = document.createElement('div');
-      actionsDiv.className = 'messageActions';
-      actionsDiv.style.gridColumn = '3';  // Place actions in the third column
-  
-      // Single Heart with counter
-      const likesCounter = document.createElement('span');
-      likesCounter.className = 'likesCounter';
-      likesCounter.textContent = `❤️`;  // Heart icon only, no count displayed
-  
-      // Apply greyscale if the message has not been liked by the current user
-      const isLikedByCurrentUser = messageObject.likedBy?.includes(userId);
-      likesCounter.style.filter = isLikedByCurrentUser ? 'grayscale(0%)' : 'grayscale(100%)'; // Only based on user's like status
-      likesCounter.dataset.isLiked = isLikedByCurrentUser ? "true" : "false";  // Set the data attribute for like status
-  
-      // Single Comment bubble with counter
-      const repliesCounter = document.createElement('span');
-      repliesCounter.className = 'repliesCounter';
-      repliesCounter.textContent = `${messageObject.replies?.length || 0} 🗨️`;  // One comment bubble with counter
-  
-      actionsDiv.appendChild(likesCounter);
-      actionsDiv.appendChild(repliesCounter);
-  
-      messageDiv.appendChild(avatarContainer);  // Avatar and user name (2fr)
-      messageDiv.appendChild(messageTextContainer);  // Message text (8fr)
-      messageDiv.appendChild(actionsDiv);  // Likes and replies (1fr)
-  
-      // Replies container (initially hidden)
-      const repliesContainer = document.createElement('div');
-      repliesContainer.className = 'repliesContainer';
-      repliesContainer.style.display = 'none';  // Initially hidden
-  
-      // If there are replies, render them
-      renderReplies(messageObject.replies || [], repliesContainer);
-  
-      // Input field for new reply
-      const replyInputDiv = document.createElement('div');
-      replyInputDiv.className = 'replyInputDiv';
-  
-      const replyInputField = document.createElement('input');
-      replyInputField.type = 'text';
-      replyInputField.className = 'replyInputField';
-      replyInputField.placeholder = 'Write a reply...';
-  
-      const replySubmitButton = document.createElement('button');
-      replySubmitButton.textContent = 'Reply';
-      replySubmitButton.className = 'replySubmitButton';
-  
-      replyInputDiv.appendChild(replyInputField);
-      replyInputDiv.appendChild(replySubmitButton);
-  
-      repliesContainer.appendChild(replyInputDiv);  // Add reply input to replies container
-      messageTextContainer.appendChild(repliesContainer);  // Place the replies under the message text
-  
-      messagesContainer.appendChild(messageDiv);
-  
-      // Scroll the container if needed
-      if (shouldScroll) {
-          messagesContainer.scrollTop = messagesContainer.scrollHeight;
-      }
-  
-      const postId = messageObject._id;
-  
-      // Like click handler
-      likesCounter.addEventListener('click', (e) => {
-          const isLiked = e.target.dataset.isLiked === "true";
-          handleLikeClick(postId, userId, e.target, isLiked);
-      });
-  
-      // Reply click handler to toggle reply input field and replies
-      repliesCounter.addEventListener('click', () => {
-          const isVisible = repliesContainer.style.display === 'block';
-          repliesContainer.style.display = isVisible ? 'none' : 'block';
-      });
-  
-      // Submit reply handler
-      replySubmitButton.addEventListener('click', () => {
-          const replyMessage = replyInputField.value.trim();
-          if (replyMessage) {
-              handleReplyClick(postId, userId, replyMessage, replyInputField, repliesContainer);
-          }
-      });
-  }
-  
-  
-  
+    console.log(`addMessage ${messageObject}`);
+    const userId = "<%= user._id %>";  // Ensure userId is declared at the top
+    const chatContainer = document.getElementById('chat');
+
+    const messageDiv = document.createElement('div');
+    messageDiv.className = isOwnMessage ? 'message ownMessage' : 'message';
+
+    // Apply CSS Grid to messageDiv
+    messageDiv.style.display = 'grid';
+    messageDiv.style.gridTemplateColumns = '2fr 8fr 1fr';
+    messageDiv.style.alignItems = 'center';
+
+    // Avatar and Display Name (2fr)
+    const avatarContainer = document.createElement('div');
+    avatarContainer.className = 'avatarContainer';
+    avatarContainer.style.gridColumn = '1';
+
+    const messageAvatar = document.createElement('img');
+    messageAvatar.className = 'usersOnline';
+    messageAvatar.src = messageObject.thumbnailUrl || `/images/logo_rst.png`;
+
+    const displayName = document.createElement('span');
+    displayName.className = 'userDisplayName';
+    displayName.textContent = messageObject.user || 'Unknown User';
+
+    avatarContainer.appendChild(messageAvatar);
+    avatarContainer.appendChild(displayName);
+
+    // Message text and replies (8fr)
+    const messageTextContainer = document.createElement('div');
+    messageTextContainer.style.gridColumn = '2';
+
+    const messageTextSpan = document.createElement('span');
+    messageTextSpan.className = 'messageText';
+    messageTextSpan.textContent = messageObject.message || 'No message text.';
+
+    messageTextContainer.appendChild(messageTextSpan);
+
+    // Action div (1fr) - Likes and Replies
+    const actionsDiv = document.createElement('div');
+    actionsDiv.className = 'messageActions';
+    actionsDiv.style.gridColumn = '3';
+
+    const likesCounter = document.createElement('span');
+    likesCounter.className = 'likesCounter';
+    likesCounter.textContent = `❤️`;
+
+    const isLikedByCurrentUser = messageObject.likedBy?.includes(userId);
+    likesCounter.style.filter = isLikedByCurrentUser ? 'grayscale(30%)' : 'grayscale(100%)';
+    likesCounter.dataset.isLiked = isLikedByCurrentUser ? "true" : "false";
+
+    const repliesCounter = document.createElement('span');
+    repliesCounter.className = 'repliesCounter';
+    repliesCounter.textContent = `${messageObject.replies?.length || 0} 🗨️`;
+
+    actionsDiv.appendChild(likesCounter);
+    actionsDiv.appendChild(repliesCounter);
+
+    messageDiv.appendChild(avatarContainer);
+    messageDiv.appendChild(messageTextContainer);
+    messageDiv.appendChild(actionsDiv);
+
+    const repliesContainer = document.createElement('div');
+    repliesContainer.className = 'repliesContainer';
+    repliesContainer.style.display = 'none';
+
+    renderReplies(messageObject.replies || [], repliesContainer);
+
+    const replyInputDiv = document.createElement('div');
+    replyInputDiv.className = 'replyInputDiv';
+
+    const replyInputField = document.createElement('input');
+    replyInputField.type = 'text';
+    replyInputField.className = 'replyInputField';
+    replyInputField.placeholder = 'Write a reply...';
+
+    const replySubmitButton = document.createElement('button');
+    replySubmitButton.textContent = 'Reply';
+    replySubmitButton.className = 'replySubmitButton';
+
+    replyInputDiv.appendChild(replyInputField);
+    replyInputDiv.appendChild(replySubmitButton);
+
+    repliesContainer.appendChild(replyInputDiv);
+    messageTextContainer.appendChild(repliesContainer);
+
+    chatContainer.appendChild(messageDiv);
+
+    // Defer scroll to bottom
+    setTimeout(() => {
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+    }, 0);
+
+    const postId = messageObject._id;
+
+    likesCounter.addEventListener('click', (e) => {
+        const isLiked = e.target.dataset.isLiked === "true";
+        handleLikeClick(postId, userId, e.target, isLiked);
+    });
+
+    repliesCounter.addEventListener('click', () => {
+        const isVisible = repliesContainer.style.display === 'block';
+        repliesContainer.style.display = isVisible ? 'none' : 'block';
+    });
+
+    replySubmitButton.addEventListener('click', () => {
+        const replyMessage = replyInputField.value.trim();
+        if (replyMessage) {
+            handleReplyClick(postId, userId, replyMessage, replyInputField, repliesContainer);
+        }
+    });
+}
+
+
   // Function to render replies under the main message
   function renderSingleReply(reply, parentElement) {
+    console.log(`render single`)
       const replyDiv = document.createElement('div');
       replyDiv.className = 'replyMessage';  // Add a class for styling the reply
   
@@ -255,7 +247,7 @@
       // Avatar for reply (2fr)
       const replyAvatar = document.createElement('img');
       replyAvatar.className = 'usersOnline';
-      replyAvatar.src = reply.thumbnailUrl || `/images/logo_rst.png`;
+      replyAvatar.src = reply.avatarThumbnailUrl || `/images/logo_rst.png`;
       replyAvatar.style.gridColumn = '1';  // Place avatar in the first column
   
       // Reply text (8fr)
@@ -348,8 +340,8 @@
         console.log(roomId == msg.roomId)
            if (roomId == msg.roomId){addMessage(msg, msg.user === 'You')};
             
-            const messagesContainer = document.getElementById('messages');
-            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            const chatContainer = document.getElementById('messages');
+            chatContainer.scrollTop = chatContainer.scrollHeight;
         });
         
         document.getElementById('submitChat').addEventListener('click', sendMessage);
@@ -375,9 +367,9 @@
     currentPage = 1; // Reset the page to 1 when changing rooms        
     roomId = newRoomId; // Update the roomId to the new room's ID
   console.log(`changing rooms ${newRoomId}`)    
-  const messagesContainer = document.getElementById('chat');
-  console.log(`changing rooms ${messagesContainer}`)
-    messagesContainer.innerHTML = ''; // Clear the current chat messages
+  const chatContainer = document.getElementById('chat');
+  console.log(`changing rooms ${chatContainer}`)
+    chatContainer.innerHTML = ''; // Clear the current chat messages
     socket.emit('fetch messages', { roomId: roomId, page: currentPage, messagesPerPage: messagesPerPage });
   }    
   
