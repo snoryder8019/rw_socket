@@ -3,7 +3,7 @@
     <div class="readerpopupSection">
 
       <% if (record.horizBkgd) { %>
-        <div style="background-image: url('<%=record.horizBkgd%>');" class="readerHeader"></div>
+       
       <% } else { %>
         <div class="readerIcon">
           <img class="readerIcon" src="/images/logo_oval.png">
@@ -61,7 +61,11 @@
             <% }) %>
           </ul>
         <% } %>
-
+        <% if (record.links && record.links.length > 0) { %>
+          <% record.links.forEach((link) => { %>
+            <a href="<%=link%>"><%= link %></a>
+          <% }) %>
+<%}%>
         <!-- Handle votes if available -->
         <% if (record.votes && record.votes.length > 0) { %>
           <% record.votes.forEach((vote) => { %>
@@ -71,7 +75,7 @@
         
       </div>
 
-      <button onclick="readerClose()" class="readerCloseButton">Close This Reader</button>
+      <button onclick="readerClose()" class="readerCloseButton">EXIT</button>
     </div>
   <% } %>
 </div>

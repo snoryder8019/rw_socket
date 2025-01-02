@@ -163,6 +163,12 @@
 .margin_small {
   margin: 16px; }
 
+.chat_greeting .brand_title_font {
+  font-family: "mayphylla";
+  color: #ffde68;
+  font-size: 2rem;
+  text-shadow: 2px 2px 2px #551360; }
+
 .brand_title_font {
   font-family: "mayphylla";
   color: #ffde68;
@@ -252,9 +258,47 @@
 #notifications, #cart, #rewards, #help, #settings, #admin, #wallet {
   display: none; }
 
+.footerHardLinks {
+  display: grid;
+  grid-template-columns: 1fr; }
+  .footerHardLinks h2 {
+    margin: 4% 0 1% 0;
+    padding: 1%;
+    font-family: "darker";
+    font-size: 1.8rem; }
+  .footerHardLinks a {
+    box-shadow: inset 1px 1px rgba(229, 219, 31, 0.309);
+    background-color: #410b4b;
+    min-width: 100%;
+    margin-left: 0;
+    margin-bottom: 2%;
+    list-style-type: none;
+    text-decoration-line: none;
+    font-size: 1.3rem;
+    min-width: 100%;
+    text-decoration: none;
+    color: #ffde68; }
+  .footerHardLinks .footerHardLinks div {
+    min-width: 100%; }
+  .footerHardLinks .footerDropdown div {
+    display: none; }
+  .footerHardLinks .footerDropdown div.active {
+    display: block; }
+  .footerHardLinks .footerDropdown {
+    margin: 5% 0%;
+    padding: 2%;
+    border-top: 1px solid #ffde68;
+    border-bottom: 1px solid #ffde68; }
+
+.footerDropdown:hover, .footerHardLinks a:hover {
+  box-shadow: inset 1px 1px rgba(229, 219, 31, 0.309);
+  background-color: #ffde68;
+  color: #551360;
+  transition: .8s ease-in-out; }
+
 .footerImg {
-  margin-left: 10%;
-  width: 80%; }
+  margin-left: 35%;
+  width: 30%; }
   .footerImg img {
     width: 100%; }
 
@@ -264,6 +308,8 @@
   color: #ffde68;
   width: 90%;
   margin-left: 3%;
+  margin-top: 5%;
+  margin-bottom: 22%;
   box-shadow: inset 5px 5px 12px #1a0a1b; }
   @media (min-width: 768px) {
     #footer {
@@ -280,6 +326,9 @@
 
 .footerDiv h1 {
   vertical-align: middle; }
+
+.footerDiv .brand_title_font {
+  font-size: 1.9rem; }
 
 .footerDiv {
   text-align: center; }
@@ -540,8 +589,8 @@
 
 .chatInput {
   margin: 1% 0%;
-  width: 55%;
-  height: 34px;
+  width: 77%;
+  height: 47px;
   font-size: 1.2rem;
   font-weight: 900; }
   @media screen and (max-width: 768px) {
@@ -556,7 +605,9 @@
 
 #submitChat {
   width: 16%;
-  height: 34px; }
+  height: 34px;
+  font-family: "darker";
+  font-size: 1.4rem; }
 
 .loaderDiv {
   padding: 2%;
@@ -862,6 +913,9 @@
 #chatContainer {
   max-height: 68%;
   overflow-y: scroll; }
+  @media (min-width: 768px) {
+    #chatContainer {
+      max-height: 62%; } }
 
 #chat {
   width: 96%;
@@ -1731,7 +1785,10 @@ button good {
   @media (min-width: 768px) {
     .chat_greeting {
       width: 91%;
-      margin: 4%; } }
+      margin: 4%;
+      height: 91%; }
+      .chat_greeting img {
+        max-width: 200px; } }
 
 .peers {
   width: 100%; }
@@ -1827,7 +1884,7 @@ button good {
   transition: transform 0.3s;
   min-width: 225px;
   min-height: 70%; }
-  .readerContainer h2 {
+  .readerContainer h2, .readerContainer p {
     color: #551360; }
   .readerContainer:hover {
     transform: translateY(-5px); }
@@ -1901,8 +1958,6 @@ button good {
   border: 9px solid #551360;
   border-radius: 22px;
   text-shadow: 1px 1px 0 white;
-  display: flex;
-  /* Enables Flexbox layout */
   flex-direction: column;
   /* Align children vertically */
   align-items: center;

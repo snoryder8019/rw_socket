@@ -232,6 +232,13 @@ background-color: green;
 .margin_small{
   margin:16px;
 }
+
+.chat_greeting .brand_title_font{
+  font-family: $maph;
+  color: $gold;
+  font-size: 2rem;
+  text-shadow: 2px 2px 2px $purple;
+}
 .brand_title_font{
   font-family: $maph;
   color: $gold;
@@ -335,10 +342,53 @@ font-size: 1.2rem;
   #notifications, #cart, #rewards, #help, #settings, #admin, #wallet{
     display: none;
   }
-  
+  .footerHardLinks{
+    display: grid;
+    grid-template-columns: 1fr;
+
+    h2{margin: 4% 0 1% 0;
+    padding: 1%;
+font-family: $dark;
+    font-size: 1.8rem;
+  }
+    a{
+      box-shadow:inset 1px 1px rgba(229, 219, 31, 0.309) ;
+      background-color: #410b4b;
+      min-width: 100%;
+      margin-left: 0;
+      margin-bottom: 2%;
+      list-style-type:none;
+      text-decoration-line: none;
+      font-size: 1.3rem;
+      min-width: 100%;
+      text-decoration: none;
+      color:$gold;
+      // text-align: left;
+      // margin:1% 30%;
+    }
+    
+    .footerHardLinks div{
+      min-width: 100%;
+    }
+    
+    .footerDropdown div { display: none; }
+    .footerDropdown div.active { display: block; }
+    .footerDropdown{
+      margin: 5% 0%;
+      padding: 2%;
+      border-top: 1px solid $gold;
+      border-bottom: 1px solid $gold;
+    }
+    }
+    .footerDropdown:hover, .footerHardLinks a:hover{
+    box-shadow:inset 1px 1px rgba(229, 219, 31, 0.309) ;
+    background-color: $gold;
+    color: $purple;
+    transition: .8s ease-in-out;
+  }
   .footerImg{
-    margin-left: 10%;;
-    width: 80%;
+    margin-left: 35%;
+    width: 30%;
     img{width: 100%;}
   }
   #footer{
@@ -347,6 +397,8 @@ font-size: 1.2rem;
     color: $gold;
     width: 90%;
     margin-left: 3%;
+    margin-top: 5%;
+    margin-bottom: 22%;
     box-shadow: inset 5px 5px 12px $black;
     @media (min-width:768px){
       width:46%;
@@ -367,8 +419,12 @@ text-align: center;
 .footerDiv h1{
   vertical-align: middle;
 }
+.footerDiv .brand_title_font{
+  font-size: 1.9rem;
+}
 .footerDiv{
     text-align: center;
+ 
   //  flex-shrink: 0;
   //  width:33%;
 }
@@ -661,10 +717,11 @@ text-align: center;
 }
 .chatInput{
     margin: 1% 0%;
-    width:55%;
-    height:34px;
+    width:77%;
+    height:47px;
     font-size: 1.2rem;
     font-weight: 900;
+   
     @media screen  and (max-width: 768px) {
       
       width:78%;
@@ -679,6 +736,8 @@ height:34px;
 #submitChat{
   width: 16%;
   height:34px;
+  font-family: $dark;
+  font-size: 1.4rem;
 }
 
 .loaderDiv {
@@ -986,6 +1045,10 @@ align-content: center;
 #chatContainer{
 max-height: 68%;
 overflow-y: scroll;
+@media (min-width:768px) {
+  
+  max-height: 62%;
+}
 }
 
 #chat{
@@ -1915,8 +1978,12 @@ max-width: 75px;
         color:white;
         text-shadow:$purpleFade0;
         @media (min-width:768px) {
+          img{
+            max-width: 200px;
+          }
           width:91%;
           margin:4%;
+          height: 91%;
         }
         }
 .peers {
@@ -2030,7 +2097,7 @@ left:2%;
   background-size: cover;
 }
 .readerContainer {
-  h2{color:$purple;}
+  h2,p{color:$purple;}
   color:black;
 
   border: 1px solid #ddd;
@@ -2124,7 +2191,7 @@ h1{color:black}
 border-radius: $borderRadius_primary;
   text-shadow: 1px 1px 0 white;
   h2{color: black;}
-display: flex; /* Enables Flexbox layout */
+//display: flex; /* Enables Flexbox layout */
 flex-direction: column; /* Align children vertically */
 align-items: center; /* Centers content horizontally */
 background-color: rgba(255, 255, 255, 0.788);

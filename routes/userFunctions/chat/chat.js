@@ -1,5 +1,6 @@
 import express from 'express';
 import { ObjectId } from 'mongodb';
+import Avatar from '../../../plugins/mongo/models/Avatar.js';
 import { getDb } from '../../../plugins/mongo/mongo.js';
 import ChatMessage from '../../../plugins/mongo/models/ChatMessage.js';
 import generateFormFields from '../../../plugins/helpers/formHelper.js';
@@ -54,12 +55,12 @@ const likePost = async (req, res) => {
 
 // Fetch user's avatar
 const getUserAvatar = async (userId) => {
-  const user = await new User().getById(userId);
-  if (!user || !user.images || !Array.isArray(user.images)) {
-    return '/path/to/default/avatar.jpg';  // Default avatar
+  const avatars = await new Avatar().getAll({ userId, assigned: true });
+  if (!avatars || !Array.isArray(avatars) || avatars.length === 0) {
+    return '/path/to/default/avatar.jpg';
   }
-  const avatarImage = user.images.find(img => img.avatarTag === true);
-  return avatarImage ? avatarImage.url : '/path/to/default/avatar.jpg';
+  const { avatarUrl } = avatars[0]; // Use the first result
+  return avatarUrl || '/path/to/default/avatar.jpg';
 };
 
 // Reply post logic, callable from both routes and socket
@@ -79,30 +80,25 @@ const replyPost = async (req, res) => {
       return res.status(404).json({ error: 'Chat message not found' });
     }
 
-    // Fetch the user's avatar URL using the getUserAvatar function
     const avatarUrl = await getUserAvatar(userId);
-
-    // Create the reply object
+    console.log(`reply post route: ${avatarUrl}`)
     const reply = {
       userId,
       message: replyMessage,
       date: new Date(),
-      thumbnailUrl: avatarUrl,  // Use the avatar URL fetched from user
+      thumbnailUrl: avatarUrl,
     };
 
-    // Add the new reply to the `replies` array
-    chatMessage.replies = chatMessage.replies || [];  // Ensure replies array exists
+    chatMessage.replies = chatMessage.replies || [];
     chatMessage.replies.push(reply);
 
-    // Update the message in MongoDB
     await new ChatMessage().updateById(postIdObj, { replies: chatMessage.replies });
-
     res.json({ success: true, reply });
   } catch (error) {
-    console.error('Error posting reply:', error);
     res.status(500).json({ error: 'An error occurred while posting the reply' });
   }
 };
+
 
 
 router.post('/reply',replyPost)

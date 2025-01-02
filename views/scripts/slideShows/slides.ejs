@@ -6,6 +6,7 @@
         const fetchImages = async (modelType, modelId) => {
             try {
                 const url = `/${modelType}s/imagesArray/${modelId}`; // Construct the URL dynamically
+               
                 const response = await fetch(url);
                 if (!response.ok) {
                     throw new Error('Network response was not ok: ' + response.statusText);
@@ -20,24 +21,28 @@
 
         // Initialize a single slideshow for a given slide container
         const initSlideshow = async (slideContainer) => {
+
+            console.log(`slides initiated`)
             const modelInfoElement = slideContainer.querySelector('.modelInfo');
+          //  console.log(`slides initiated ${modelInfoElement}`)
             const collectionIdElement = slideContainer.querySelector('.collectionId');
+          //  console.log(`slides initiated ${collectionIdElement}`)
             
             if (!modelInfoElement || !collectionIdElement) {
                 console.error('Model information or collection ID element is missing.');
                 return;
             }
 
-            const modelType = modelInfoElement.getAttribute('model-info'); // Extract model type
+            const modelType = "sectionSetting"; // Extract model type
             const modelId = collectionIdElement.getAttribute('collection-id'); // Extract collection ID
-
+console.log(modelType)
             if (!modelType || !modelId) {
                 console.error('Model type or model ID is missing.');
                 return;
             }
 
             const images = await fetchImages(modelType, modelId);
-
+console.log(images)
             if (images.length === 0) {
                 console.warn('No images found for slideshow.');
                 return;

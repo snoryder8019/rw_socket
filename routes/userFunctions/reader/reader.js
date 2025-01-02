@@ -3,7 +3,11 @@ import Blog from "../../../plugins/mongo/models/blog/Blog.js";
 import Destination from "../../../plugins/mongo/models/travel/Destination.js";
 import Help from "../../../plugins/mongo/models/help/Help.js";
 import Vote from "../../../plugins/mongo/models/blog/Vote.js";
+import Dollywood from "../../../plugins/mongo/models/Dollywood.js";
+import Greece from "../../../plugins/mongo/models/Greece.js";
+import Alaska from "../../../plugins/mongo/models/Alaska.js";
 import Club from "../../../plugins/mongo/models/Club.js";
+import Club1 from "../../../plugins/mongo/models/Club1.js";
 import Video from '../../../plugins/mongo/models/Video.js'
 import Vendor from '../../../plugins/mongo/models/Vendor.js'
 import {marked} from 'marked';
@@ -20,6 +24,10 @@ const readerOptions = {
   excursion:Excursion,
   vendor:Vendor,
   club : Club,
+  greece : Greece,
+  alaska : Alaska,
+  dollywood : Dollywood,
+  club1 : Club1,
 };
 
 // Route handler to dynamically render data based on the model parameter
@@ -62,6 +70,10 @@ router.get('/overlay/:model/:id', async (req, res) => {
     const modelMap = {
       destination: Destination,
       club: Club,
+      alaska: Alaska,
+      dollywood: Dollywood,
+      greece: Greece,
+      club1: Club1,
       blog: Blog,
       excursion: Excursion,
       vendor: Vendor,

@@ -1,0 +1,19 @@
+<div class="adminWindow">
+  <div class="adminStatsRow">
+    <% documents.forEach(greece => { %>
+      <div class="adminStat">
+        <p><%= greece.name %></p>
+        <img alt="Greece image" src="<%= greece.mediumIcon %>">
+        <button class="collapsible">view: <span class="carrot">&#9654;</span></button>
+        <div class="content" data-url="/greeces/renderEditForm/<%= greece._id %>"></div>
+     <h3>add multiple images to slides</h3>
+        <form action="/greeces/<%=greece._id%>/upload-images" method="post" enctype="multipart/form-data">
+          <input type="file" name="images" multiple>
+          <button type="submit">Upload</button>
+      </form>
+            </div>
+    <% }) %>
+  </div>
+</div>
+
+

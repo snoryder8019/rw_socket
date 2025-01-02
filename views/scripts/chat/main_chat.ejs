@@ -211,6 +211,7 @@
     // Defer scroll to bottom
     setTimeout(() => {
         chatContainer.scrollTop = chatContainer.scrollHeight;
+        console.log(  chatContainer.scrollTop = chatContainer.scrollHeight)
     }, 0);
 
     const postId = messageObject._id;
@@ -247,7 +248,7 @@
       // Avatar for reply (2fr)
       const replyAvatar = document.createElement('img');
       replyAvatar.className = 'usersOnline';
-      replyAvatar.src = reply.avatarThumbnailUrl || `/images/logo_rst.png`;
+      replyAvatar.src = reply.avatarUrl || `/images/logo_rst.png`;
       replyAvatar.style.gridColumn = '1';  // Place avatar in the first column
   
       // Reply text (8fr)
@@ -335,14 +336,19 @@
   
   
   
-        socket.on('chat message', (msg, roomyId) => {
-            console.log(`chatting..${msg.user} room:${roomId}`)
-        console.log(roomId == msg.roomId)
-           if (roomId == msg.roomId){addMessage(msg, msg.user === 'You')};
-            
-            const chatContainer = document.getElementById('messages');
-            chatContainer.scrollTop = chatContainer.scrollHeight;
-        });
+  socket.on('chat message', (msg, roomyId) => {
+    console.log(`chatting..${msg.user} room:${roomId}`)
+    console.log(roomId == msg.roomId)
+    if (roomId == msg.roomId){addMessage(msg, msg.user === 'You')};
+    
+    const chatContainer = document.getElementById('chatContainer');
+            console.log(`scrolling scrollTop ${chatContainer.scrollTop}`)
+    console.log(`scrolling scrollHeight ${chatContainer.scrollHeight}`)
+    console.log(`scrolling clientHeight ${chatContainer.clientHeight}`)
+if(chatContainer.scrollTop!=chatContainer.scrollHeight-chatContainer.clientHeight)
+{chatContainer.scrollTop=chatContainer.scrollHeight-chatContainer.clientHeight}
+ 
+          });
         
         document.getElementById('submitChat').addEventListener('click', sendMessage);
         document.getElementById('chatInput').addEventListener('keypress', (e) => {

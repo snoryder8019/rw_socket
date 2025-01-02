@@ -1,7 +1,7 @@
 
+<!--div id="marquee" style="overflow: hidden; white-space: nowrap; width: 100%; position: relative;"></div-->
 <!--HERAT ANIMATION WAS INCLUDED HERE-->
 <% if (typeof sectionSettings === 'object' && sectionSettings && sectionSettings.length > 0) { %>
-  <% let iterationCount = 0; %> <!-- Initialize a counter outside the loop -->
 
   <% sectionSettings.forEach(function(setting) { %>
     <% if (setting.visible && setting.authView) { %>
@@ -37,12 +37,9 @@
         </div>
       </div>
       
-      <% iterationCount++; %> <!-- Increment the counter after each iteration -->
 
-      <!-- Insert the marquee div only after the second iteration -->
-      <% if (iterationCount === 2) { %>
-        <div id="marquee" style="overflow: hidden; white-space: nowrap; width: 100%; position: relative;"></div>
-      <% } %>
+  
+    
     <% } %>
   <% }); %>
 <% } %>

@@ -30,29 +30,25 @@ export const mainChatHandlers = {
     });
 
     // Handle incoming replies from socket
-    socket.on('replyMessage', async (data) => {
+    socket.on('replyMessage', (data) => {
       const { postId, replyMessage } = data;
       const userId = user._id;
-    
-      // Ensure the avatar is always available before sending a reply
-      const avatarThumbnail = users[socket.id]?.avatarThumbnailUrl || 'images/logo_rst.png'; // Use fallback if not available
-    
-      try {
-        const replyData = { postId, userId, replyMessage,avatarThumbnail };
-        
-        // Call the replyPost logic from routes
-        const result = await replyPost(replyData);
-    
-        if (result.error) {
-          socket.emit('replyError', result.error);  // Send error to client if any
-        } else {
-          nsp.to('General').emit('newReply', { postId, reply: result.reply, thumbnailUrl: avatarThumbnail });
+      avatarGetter(userId.toString(), async (avatarThumbnailUrl) => {
+        try {
+          console.log(`socketon replyMessage plugin: ${avatarUrl}`)
+          const replyData = { postId, userId, replyMessage, avatarThumbnail: avatarThumbnailUrl };
+          const result = await replyPost(replyData);
+          if (result.error) {
+            socket.emit('replyError', result.error);
+          } else {
+            nsp.to('General').emit('newReply', { postId, reply: result.reply, thumbnailUrl: avatarThumbnailUrl });
+          }
+        } catch (error) {
+          socket.emit('replyError', 'Error handling reply');
         }
-      } catch (error) {
-        console.error('Error handling reply:', error);
-        socket.emit('replyError', 'Error handling reply');
-      }
+      });
     });
+    
     
     // Existing chat message logic
     socket.on('chat message', async (message, roomId) => {

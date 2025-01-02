@@ -1,0 +1,19 @@
+<div class="adminWindow">
+  <div class="adminStatsRow">
+    <% documents.forEach(alaska => { %>
+      <div class="adminStat">
+        <p><%= alaska.name %></p>
+        <img alt="Alaska image" src="<%= alaska.mediumIcon %>">
+        <button class="collapsible">view: <span class="carrot">&#9654;</span></button>
+        <div class="content" data-url="/alaskas/renderEditForm/<%= alaska._id %>"></div>
+     <h3>add multiple images to slides</h3>
+        <form action="/alaskas/<%=alaska._id%>/upload-images" method="post" enctype="multipart/form-data">
+          <input type="file" name="images" multiple>
+          <button type="submit">Upload</button>
+      </form>
+            </div>
+    <% }) %>
+  </div>
+</div>
+
+
